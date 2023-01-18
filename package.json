@@ -1,0 +1,20 @@
+{
+  "name": "at-two-way",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "author": "Muhani",
+  "license": "ISC",
+  "dependencies": {
+    "-": "^0.0.1",
+    "africastalking": "^0.5.7",
+    "express": "^4.18.2",
+    "express-session": "^1.17.3",
+    "querystring": "^0.2.1",
+    "save": "^2.9.0"
+  },
+  "description": ""
+}
