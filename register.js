@@ -217,9 +217,7 @@ app.post("/webhook", (req, res) => {
                     break;
             }
         }
-        if(isRating){
-            
-        }
+        
             res.send("Webhook received");
         });
 
