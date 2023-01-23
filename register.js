@@ -16,7 +16,7 @@ app.listen(3000, function() {
 
 const options = {
     apiKey: 'b3aa70ace9f3c5e9458fac4ce13affa4854b810be6f500a866784d01fc74a7d4',
-    username: 'sandbox',
+    username: 'prevailer',
 };
 const AfricasTalking = require('africastalking')(options);
 
@@ -51,7 +51,7 @@ app.post("/webhook", (req, res) => {
         'nyandarua', 'nairobi city'];
 
     switch (textMessage.toLowerCase()) {
-        case 'Test4':
+        case 'test4':
             //reset isRegistering flag and registrationStep
             isRegistering = false;
             registrationStep = 0;
