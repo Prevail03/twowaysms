@@ -15,8 +15,8 @@ app.listen(3000, function() {
 });
 
 const options = {
-    apiKey: 'b3aa70ace9f3c5e9458fac4ce13affa4854b810be6f500a866784d01fc74a7d4',
-    username: 'sandbox',
+    apiKey: 'c54df3b5a0bfde4199a490ff6ce639e0511a851a0d540b5c37bddfd2d7636c79',
+    username: 'prevailer',
 };
 const AfricasTalking = require('africastalking')(options);
 
@@ -40,7 +40,9 @@ app.post("/webhook", (req, res) => {
     const payload = req.body;
     console.log(payload);
     const sender = payload.from;
+    console.log(sender);
     const textMessage = payload.text;
+    console.log(textMessage);
     const sms = AfricasTalking.SMS;
     let messageToCustomer;
     const kenyanCounties = ['nairobi', 'mombasa', 'kisumu', 'nakuru', 'eldoret',
@@ -60,12 +62,13 @@ app.post("/webhook", (req, res) => {
                 pin: generateRandom4DigitNumber()
             };
             //send message with credentials
-            messageToCustomer = 'Hello Our Esteemed Customer, Welcome to Octagon Africa your credentials are: Username -' +sender + ' Pin- ' + user.pin + '.';
+            messageToCustomer = 'Hello Our Esteemed Customer, Welcome to Octagon Africa your credentials are: Username - ' +sender + ' Pin- ' + user.pin + '.';
             sms.send({
                 to: sender,
-                from:'65615',
+                from:'20880',
                 message: messageToCustomer
             });
+            
 
             //set a flag to indicate that the user is in the process of registering
             isRegistering = true;
@@ -133,11 +136,11 @@ app.post("/webhook", (req, res) => {
                 break;
             default:
                 messageToCustomer = 'Welcome To Octagon africa you can access our services by sending the word register,save, balance,statement,products';
-                // sms.send({
-                //     to: sender,
-                //     from:'20880',
-                //     message: messageToCustomer
-                // });
+                sms.send({
+                    to: sender,
+                    from:'20880',
+                    message: messageToCustomer
+                });
                 break;
         }
         //check if the user is in the process of registering
@@ -147,7 +150,7 @@ app.post("/webhook", (req, res) => {
                     // request for ID number
                     sms.send({
                         to: sender,
-                        from:'65615',
+                        from:'20880',
                         message: "Please enter your ID number:"
                     });
                     registrationStep = 2;
@@ -162,7 +165,7 @@ app.post("/webhook", (req, res) => {
                         messageToCustomer = "ID number verified. Please enter your county: ";
                         sms.send({
                             to: sender,
-                            from:'65615',
+                            from:'20880',
                             message: messageToCustomer
                         });
                         registrationStep = 3;
@@ -176,14 +179,14 @@ app.post("/webhook", (req, res) => {
                         user.county = textMessage;
                         sms.send({
                             to: sender,
-                            from:'65615',
+                            from:'20880',
                             message: "Please enter your full name:"
                         });
                         registrationStep = 4;
                     }else {
                         sms.send({
                             to: sender,
-                            from: '65615',
+                            from: '20880',
                             message: "Invalid county. Please enter a valid county of residence in Kenya."
                         });
                     }
@@ -193,7 +196,7 @@ app.post("/webhook", (req, res) => {
                     user.name = textMessage;
                     sms.send({
                         to: sender,
-                        from:'65615',
+                        from:'20880',
                         message: "Congratulations!! "+user.name+". You have successfully registered with Octagon Africa. Your credentials are: username: " + sender + " pin: " + user.pin
                     });
                     isRegistering = false;
@@ -204,7 +207,7 @@ app.post("/webhook", (req, res) => {
                     // do sthg
                     sms.send({
                         to: sender,
-                        from:'65615',
+                        from:'20880',
                         message: "Invalid response:!!"
                     });
                     break;
