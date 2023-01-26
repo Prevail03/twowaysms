@@ -1,6 +1,6 @@
 const options = {
-    apiKey: 'c54df3b5a0bfde4199a490ff6ce639e0511a851a0d540b5c37bddfd2d7636c79',
-    username: 'prevailer',
+    apiKey: 'b3aa70ace9f3c5e9458fac4ce13affa4854b810be6f500a866784d01fc74a7d4',
+    username: 'sandbox',
 };
 
 module.exports = options;

@@ -1,11 +1,13 @@
 const http = require('http');
 const querystring = require('querystring');
 
+
+
 let registerInputs = [];
 
-function sendDataToPHPAPI(data) {
+const  sendDataToPHPAPI = (data) => {
     let options = {
-        hostname: 'yourdomain.com',
+        hostname: 'https://12dc-41-90-228-226.eu.ngrok.io',
         port: 80,
         path: '/register.php',
         method: 'POST',
@@ -30,3 +32,4 @@ function sendDataToPHPAPI(data) {
     req.end();
 }
 
+module.exports = sendDataToPHPAPI;
