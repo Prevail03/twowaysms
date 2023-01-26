@@ -1,11 +1,11 @@
 const http = require('http');
 const querystring = require('querystring');
 
-let registrationInputs = [];
+let registerInputs = [];
 
 function sendDataToPHPAPI(data) {
     let options = {
-        hostname: 'https://3715-41-90-228-226.eu.ngrok.io/',
+        hostname: 'yourdomain.com',
         port: 80,
         path: '/register.php',
         method: 'POST',
@@ -30,6 +30,3 @@ function sendDataToPHPAPI(data) {
     req.end();
 }
 
-// Example of how to use the function
-registerInputs.push({ name: 'John Doe', email: 'johndoe@example.com', password: 'password123' });
-sendDataToPHPAPI(registerInputs[0]);

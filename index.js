@@ -10,7 +10,7 @@ const AfricasTalking = require('africastalking')(options);
 const generateRandom4DigitNumber = require('./src/generateRandom4DigitNumber.js');
 const app = express();
 
-const keyword = /^test4/;
+// const keyword = /^test4/;
 
 app.use(session({
     secret: 'mysecret',
@@ -34,7 +34,7 @@ let registrationStep = 0;
 let isRating=false;
 let ratingStep=0;
 let user;
-
+let phoneNumberVerified = false
 let rate;
 const registrationInputs = [];//Array for user inputs
 
@@ -49,12 +49,15 @@ app.post("/webhook", (req, res) => {
     const sms = AfricasTalking.SMS;
     let messageToCustomer;
 
-    const text = textMessage.toLowerCase().replace(keyword, '').trim();
+    // const text = textMessage.toLowerCase().replace(keyword, '').trim();
+    const text = textMessage.toLowerCase();
+
 
     if(!isRegistering){
         switch (text) {
             case '':
             case 'register':
+                
                 //reset isRegistering flag and registrationStep
                 isRegistering = false;
                 registrationStep = 0;
@@ -72,7 +75,17 @@ app.post("/webhook", (req, res) => {
                 });
 
                 registrationInputs.push(user.pin);
+                if(phoneNumberVerified){
 
+                }
+                else{
+                    sms.send(register.enterId(sender));
+                    //set a flag to indicate that the user is in the process of registering
+                    isRegistering = true;
+                    
+                    //request for ID number
+                    registrationStep = 2;
+                }
                 sms.send(register.enterId(sender));
                 //set a flag to indicate that the user is in the process of registering
                 isRegistering = true;
@@ -192,6 +205,7 @@ app.post("/webhook", (req, res) => {
                     user.name = text;
                     
                     registrationInputs.push(user.name);  
+
                     sms.send({
                         to: sender,
                         from:'20880',
@@ -213,10 +227,14 @@ app.post("/webhook", (req, res) => {
                     break;
             }
         }
-        
+        sendDataToPHPAPI(registerInputs[0]);
+        sendDataToPHPAPI(registerInputs[1]);
+        sendDataToPHPAPI(registerInputs[2]);
+        sendDataToPHPAPI(registerInputs[3]);
+        sendDataToPHPAPI(registerInputs[4]);
         console.log(registrationInputs);
             res.send("Webhook received");
-        });
+});       
 
     
        
