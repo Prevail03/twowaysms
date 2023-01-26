@@ -15,35 +15,35 @@ const register = {
 
         return {
             to: sender,
-            from:'65615',
+            from:'20880',
             message: messageToCustomer
         };
     },
 
     enterId: (sender) => ({
         to: sender,
-        from:'65615',
+        from:'20880',
         message: "Please enter your ID number:"
     }),
 
     enterCounty: (sender) => ({
         
             to: sender,
-            from:'65615',
+            from:'20880',
             message: "ID number verified. Please enter your county: "
         
     }),
     enterName: (sender) => ({
         
         to: sender,
-        from:'65615',
+        from:'20880',
         message: "Please enter your full name:"
     
     }),
     congratulations: (sender) => ({
             
         to: sender,
-        from:'65615',
+        from:'20880',
         message: "Congratulations!! "+ customersName +".  You have successfully registered with Octagon Africa."
 
     })

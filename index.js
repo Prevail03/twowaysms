@@ -70,7 +70,7 @@ app.post("/webhook", (req, res) => {
                 messageToCustomer = 'Hello Our Esteemed Customer, Welcome to Octagon Africa your credentials are: Username - ' +sender + ' Pin- ' + user.pin + '.';
                 sms.send({
                     to: sender,
-                    from:'65615',
+                    from:'20880',
                     message: messageToCustomer
                 });
 
@@ -98,7 +98,7 @@ app.post("/webhook", (req, res) => {
                 messageToCustomer = 'Hello Our Dear Esteemed Customer, Welcome to Octagon Services. Enter your 4 digit pin - balance ';
                 sms.send({
                     to: sender,
-                    from:'65615',
+                    from:'20880',
                     message: messageToCustomer
                 });
                 break;
@@ -106,7 +106,7 @@ app.post("/webhook", (req, res) => {
                 messageToCustomer = 'Hello Our Dear Esteemed Customer, Welcome to Octagon Services. Enter your 4 digit pin - statement';
                 sms.send({
                     to: sender,
-                    from:'65615',
+                    from:'20880',
                     message: messageToCustomer
                 });
                 break;
@@ -114,7 +114,7 @@ app.post("/webhook", (req, res) => {
                     messageToCustomer = 'Hello Our Dear Esteemed Customer, Welcome to Octagon Services. Enter your 4 digit pin - deposit';
                     sms.send({
                         to: sender,
-                        from:'65615',
+                        from:'20880',
                         message: messageToCustomer
                     });
                     break;
@@ -122,7 +122,7 @@ app.post("/webhook", (req, res) => {
                     messageToCustomer = 'Hello Our Dear Esteemed Customer, Welcome to Octagon Services. Enter your 4 digit pin - claims';
                     sms.send({
                         to: sender,
-                        from:'65615',
+                        from:'20880',
                         message: messageToCustomer
                     });
                     break;
@@ -130,7 +130,7 @@ app.post("/webhook", (req, res) => {
                     messageToCustomer = 'Hello Our Dear Esteemed Customer, Welcome to Octagon Services. Enter your 4 digit pin - products';
                     sms.send({
                         to: sender,
-                        from:'65615',
+                        from:'20880',
                         message: messageToCustomer
                     });
                     break;
@@ -139,7 +139,7 @@ app.post("/webhook", (req, res) => {
                     messageToCustomer = 'Hello Our Dear Esteemed Customer, Welcome to Octagon Services. Enter your 4 digit pin - accounts';
                     sms.send({
                         to: sender,
-                        from:'65615',
+                        from:'20880',
                         message: messageToCustomer
                     });
                     break;
@@ -147,7 +147,7 @@ app.post("/webhook", (req, res) => {
                     messageToCustomer = 'Hello Our Dear Esteemed Customer, Welcome to Octagon Services. Enter your 4 digit pin - rate';
                     sms.send({
                         to: sender,
-                        from:'65615',
+                        from:'20880',
                         message: messageToCustomer
                     });
     
@@ -156,7 +156,7 @@ app.post("/webhook", (req, res) => {
                     messageToCustomer = 'Welcome To Octagon africa you can access our services by sending the word register,save, balance,statement,products';
                     sms.send({
                         to: sender,
-                        from:'65615',
+                        from:'20880',
                         message: messageToCustomer
                     });
                     break;
@@ -194,7 +194,7 @@ app.post("/webhook", (req, res) => {
                     }else {
                         sms.send({
                             to: sender,
-                            from: '65615',
+                            from: '20880',
                             message: "Invalid county. Please enter a valid county of residence in Kenya."
                         });
                         registrationStep = 3;
@@ -208,7 +208,7 @@ app.post("/webhook", (req, res) => {
 
                     sms.send({
                         to: sender,
-                        from:'65615',
+                        from:'20880',
                         message: "Congratulations!! "+user.name+". You have successfully registered with Octagon Africa. Your credentials are: username: " + sender + " pin: " + user.pin
                     });
                     isRegistering = false;
@@ -221,7 +221,7 @@ app.post("/webhook", (req, res) => {
                     // do sthg
                     sms.send({
                         to: sender,
-                        from:'65615',
+                        from:'20880',
                         message: "Invalid response:!!"
                     });
                     break;
