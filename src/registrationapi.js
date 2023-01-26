@@ -9,7 +9,7 @@ const  sendDataToPHPAPI = (data) => {
     let options = {
         hostname: 'https://12dc-41-90-228-226.eu.ngrok.io',
         port: 80,
-        path: '/registeration.php',
+        path: 'C:/xampp/htdocs/Octagon/projects/TestAPI/registeration.php',
         method: 'POST',
         headers: {
             'Content-Type': 'application/x-www-form-urlencoded',
