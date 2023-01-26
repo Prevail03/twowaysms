@@ -4,7 +4,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node server.js"
+    "start": "node index.js"
   },
   "author": "Muhani",
   "license": "ISC",
@@ -14,6 +14,7 @@
     "express": "^4.18.2",
     "express-session": "^1.17.3",
     "querystring": "^0.2.1",
+    "request": "^2.88.2",
     "save": "^2.9.0"
   },
   "description": ""
