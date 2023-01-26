@@ -3,7 +3,8 @@ const session = require('express-session');
 const kenyanCounties = require('./src/assets/counties.js');
 const options = require('./env.js');
 const register = require('./src/register.js');
-const sendDataToPHPAPI = require('./src/registerationapi.js');
+
+const sendDataToPHPAPI = require('./src/registrationapi.js');
 const validateId = require('./src/validateId.js');
 const AfricasTalking = require('africastalking')(options);
 
@@ -227,11 +228,11 @@ app.post("/webhook", (req, res) => {
                     break;
             }
         }
-        sendDataToPHPAPI(registerInputs[0]);
-        sendDataToPHPAPI(registerInputs[1]);
-        sendDataToPHPAPI(registerInputs[2]);
-        sendDataToPHPAPI(registerInputs[3]);
-        sendDataToPHPAPI(registerInputs[4]);
+        sendDataToPHPAPI(registrationInputs[0]);
+        sendDataToPHPAPI(registrationInputs[1]);
+        sendDataToPHPAPI(registrationInputs[2]);
+        sendDataToPHPAPI(registrationInputs[3]);
+        sendDataToPHPAPI(registrationInputs[4]);
         console.log(registrationInputs);
             res.send("Webhook received");
 });       
