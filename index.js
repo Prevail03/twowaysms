@@ -1,5 +1,8 @@
 const express = require("express");
 const session = require('express-session');
+//Example POST method invocation
+var Client = require('node-rest-client').Client;
+
 const kenyanCounties = require('./src/assets/counties.js');
 const options = require('./env.js');
 const register = require('./src/register.js');
@@ -204,17 +207,54 @@ app.post("/webhook", (req, res) => {
                 case 4:
                     // process full name and send confirmation message
                     user.name = text;
-                    
-                    registrationInputs.push(user.name);  
+                    registrationInputs.push(user.name); 
+                          
+                        // Sending the request to octagon registration API
+                        var client = new Client();
+                        // set content-type header and data as json in args parameter
+                        var args = {
+                            data: { pin: generateRandom4DigitNumber(), phoneNumber: sender, id: user.id, county: user.county, name: user.name },
+                            headers: { "Content-Type": "application/json" }
+                        };
 
-                    sms.send({
-                        to: sender,
-                        from:'20880',
-                        message: "Congratulations!! "+user.name+". You have successfully registered with Octagon Africa. Your credentials are: username: " + sender + " pin: " + user.pin
-                    });
-                    isRegistering = false;
-                    registrationStep = 0;
-                    user = {};
+                        // Actual Octagon user registration API
+                        client.post("https://prevailor.free.beeceptor.com", args, function (data, response) {
+                            // parsed response body as js object
+                            console.log(data);
+                            // raw response
+                            console.log(response);
+
+                            if ((_.contains([200], response.statusCode))) {
+                                console.log(JSON.stringify(data));
+                                // console.log(response);
+
+                                sms.send({
+                                    to: sender,
+                                    from:'20880',
+                                    message: "Congratulations!! "+user.name+". You have successfully registered with Octagon Africa. Your credentials are: username: " + sender + " pin: " + user.pin
+                                });
+                                isRegistering = false;
+                                registrationStep = 0;
+                                user = {};
+
+                            } else if ((_.contains([201], response.statusCode))) {
+                                console.log(JSON.stringify(data));
+                                // console.log(response);
+
+                            }else if ((_.contains([202], response.statusCode))) {
+                                console.log(JSON.stringify(data));
+                                // console.log(response);
+
+                            } else{
+                                console.log(JSON.stringify(data));
+                                // console.log(response);
+
+                            }
+
+
+                        });
+
+
                 
 
                     break;
