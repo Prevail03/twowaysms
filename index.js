@@ -10,7 +10,7 @@ const AfricasTalking = require('africastalking')(options);
 const generateRandom4DigitNumber = require('./src/generateRandom4DigitNumber.js');
 const app = express();
 
-// const keyword = /^test4/;
+const keyword = /^test4/;
 
 app.use(session({
     secret: 'mysecret',
@@ -49,8 +49,8 @@ app.post("/webhook", (req, res) => {
     const sms = AfricasTalking.SMS;
     let messageToCustomer;
 
-    // const text = textMessage.toLowerCase().replace(keyword, '').trim();
-    const text = textMessage.toLowerCase();
+    const text = textMessage.toLowerCase().replace(keyword, '').trim();
+   
 
 
     if(!isRegistering){
