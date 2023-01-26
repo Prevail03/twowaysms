@@ -1,27 +1,35 @@
 const http = require('http');
+const querystring = require('querystring');
 
-const options = {
-  hostname: 'api.example.com',
-  port: 80,
-  path: '/register',
-  method: 'POST',
-  headers: {
-    'Content-Type': 'application/json',
-  }
-};
+let registrationInputs = [];
 
-const req = http.request(options, (res) => {
-  console.log(`statusCode: ${res.statusCode}`);
+function sendDataToPHPAPI(data) {
+    let options = {
+        hostname: 'https://3715-41-90-228-226.eu.ngrok.io/',
+        port: 80,
+        path: '/register.php',
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'Content-Length': Buffer.byteLength(querystring.stringify(data))
+        }
+    };
 
-  res.on('data', (d) => {
-    process.stdout.write(d);
-  });
-});
+    let req = http.request(options, (res) => {
+        res.setEncoding('utf8');
+        res.on('data', (chunk) => {
+            console.log(`Response: ${chunk}`);
+        });
+    });
 
-req.on('error', (error) => {
-  console.error(error);
-});
+    req.on('error', (e) => {
+        console.error(`Error: ${e.message}`);
+    });
 
-const clientData = { name: 'John Doe', email: 'johndoe@example.com' };
-req.write(JSON.stringify(clientData));
-req.end();
+    req.write(querystring.stringify(data));
+    req.end();
+}
+
+// Example of how to use the function
+registerInputs.push({ name: 'John Doe', email: 'johndoe@example.com', password: 'password123' });
+sendDataToPHPAPI(registerInputs[0]);

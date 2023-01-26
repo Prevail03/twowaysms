@@ -3,6 +3,7 @@ const session = require('express-session');
 const kenyanCounties = require('./src/assets/counties.js');
 const options = require('./env.js');
 const register = require('./src/register.js');
+const sendDataToPHPAPI = require('./src/registerationapi.js');
 const validateId = require('./src/validateId.js');
 const AfricasTalking = require('africastalking')(options);
 
