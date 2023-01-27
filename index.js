@@ -1,5 +1,7 @@
 const express = require("express");
 const session = require('express-session');
+const _ = require('lodash');
+
 //Example POST method invocation
 var Client = require('node-rest-client').Client;
 
@@ -7,7 +9,6 @@ const kenyanCounties = require('./src/assets/counties.js');
 const options = require('./env.js');
 const register = require('./src/register.js');
 
-const sendDataToPHPAPI = require('./src/registrationapi.js');
 const validateId = require('./src/validateId.js');
 const AfricasTalking = require('africastalking')(options);
 
@@ -41,6 +42,7 @@ let user;
 let phoneNumberVerified = false
 let rate;
 const registrationInputs = [];//Array for user inputs
+let generatedPin; ///generated pin
 
 app.post("/webhook", (req, res) => {
     const payload = req.body;
@@ -65,31 +67,19 @@ app.post("/webhook", (req, res) => {
                 //reset isRegistering flag and registrationStep
                 isRegistering = false;
                 registrationStep = 0;
-                //generate username and pin
-                user = {
-                pin: generateRandom4DigitNumber()
-                 };
+                //generate  pin
+                
+                 generatedPin = generateRandom4DigitNumber();
                 registrationInputs.push(sender);
                   
-                messageToCustomer = 'Hello Our Esteemed Customer, Welcome to Octagon Africa your credentials are: Username - ' +sender + ' Pin- ' + user.pin + '.';
+                messageToCustomer = 'Hello Our Esteemed Customer, Welcome to Octagon Africa your credentials are: Username - ' +sender + ' Pin- ' + generatedPin + '.';
                 sms.send({
                     to: sender,
                     from:'20880',
                     message: messageToCustomer
                 });
 
-                registrationInputs.push(user.pin);
-                if(phoneNumberVerified){
-
-                }
-                else{
-                    sms.send(register.enterId(sender));
-                    //set a flag to indicate that the user is in the process of registering
-                    isRegistering = true;
-                    
-                    //request for ID number
-                    registrationStep = 2;
-                }
+                registrationInputs.push(generatedPin);
                 sms.send(register.enterId(sender));
                 //set a flag to indicate that the user is in the process of registering
                 isRegistering = true;
@@ -213,43 +203,36 @@ app.post("/webhook", (req, res) => {
                         var client = new Client();
                         // set content-type header and data as json in args parameter
                         var args = {
-                            data: { pin: generateRandom4DigitNumber(), phoneNumber: sender, id: user.id, county: user.county, name: user.name },
+                            data: { pin: generatedPin, phoneNumber: sender, id: user.id, county: user.county, name: user.name },
                             headers: { "Content-Type": "application/json" }
                         };
 
                         // Actual Octagon user registration API
-                        client.post("https://prevailor.free.beeceptor.com", args, function (data, response) {
+                        client.post("https://eo5ymx08ccjvivs.m.pipedream.net", args, function (data, response) {
                             // parsed response body as js object
                             console.log(data);
                             // raw response
                             console.log(response);
+                           
 
-                            if ((_.contains([200], response.statusCode))) {
-                                console.log(JSON.stringify(data));
-                                // console.log(response);
-
+                            if ([200].includes(response.statusCode)) {
+                                // success code
                                 sms.send({
                                     to: sender,
                                     from:'20880',
-                                    message: "Congratulations!! "+user.name+". You have successfully registered with Octagon Africa. Your credentials are: username: " + sender + " pin: " + user.pin
+                                    message: "Congratulations!! "+user.name+". You have successfully registered with Octagon Africa. Your credentials are: username: " + sender + " pin: " + generatedPin
                                 });
                                 isRegistering = false;
                                 registrationStep = 0;
                                 user = {};
-
-                            } else if ((_.contains([201], response.statusCode))) {
-                                console.log(JSON.stringify(data));
-                                // console.log(response);
-
-                            }else if ((_.contains([202], response.statusCode))) {
-                                console.log(JSON.stringify(data));
-                                // console.log(response);
-
-                            } else{
-                                console.log(JSON.stringify(data));
-                                // console.log(response);
-
+                                console.log(response.statusCode)
+                            } else if ([201].includes(response.statusCode)) {
+                                console.log(response.statusCode);
+                            } else {
+                                // error code
+                                console.log(response.statusCode);
                             }
+                            
 
 
                         });
@@ -268,11 +251,7 @@ app.post("/webhook", (req, res) => {
                     break;
             }
         }
-        sendDataToPHPAPI(registrationInputs[0]);
-        sendDataToPHPAPI(registrationInputs[1]);
-        sendDataToPHPAPI(registrationInputs[2]);
-        sendDataToPHPAPI(registrationInputs[3]);
-        sendDataToPHPAPI(registrationInputs[4]);
+      
         console.log(registrationInputs);
             res.send("Webhook received");
 });       
