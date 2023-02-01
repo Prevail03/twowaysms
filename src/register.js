@@ -3,16 +3,8 @@ const customersName = require('../index.js');
 
 const register = {
     newCustomer: (sender) => {
-        
-        
-        
-        let generatedPin = generateRandom4DigitNumber();
-
         //send message with credentials
-        messageToCustomer = 'Hello Our Esteemed Customer, Welcome to Octagon Africa your credentials are: Username - ' + sender + ' Pin- ' + generatedPin + '.';
-
-         
-
+        messageToCustomer = 'Hello Our Esteemed Customer, Welcome to Octagon Africa. To complete the registration process, please provide us with the following information...';         
         return {
             to: sender,
             from:'20880',
@@ -26,26 +18,33 @@ const register = {
         message: "Please enter your ID number:"
     }),
 
-    enterCounty: (sender) => ({
+    enterEmail: (sender) => ({
         
             to: sender,
             from:'20880',
-            message: "ID number verified. Please enter your county: "
+            message: "ID number verified. Please enter your Email: "
         
     }),
-    enterName: (sender) => ({
+    enterPassword: (sender) => ({
         
         to: sender,
         from:'20880',
-        message: "Please enter your full name:"
+        message: "Please enter a 6 or more Characters password: "
+    
+}),
+    enterFirstName: (sender) => ({
+        
+        to: sender,
+        from:'20880',
+        message: "Please enter your first name:"
     
     }),
-    congratulations: (sender) => ({
-            
+    enterLastName: (sender) => ({
+        
         to: sender,
         from:'20880',
-        message: "Congratulations!! "+ customersName +".  You have successfully registered with Octagon Africa."
-
+        message: "Please enter your Last name:"
+    
     })
 }
 

@@ -36,18 +36,17 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 let isRegistering = false;
 let registrationStep = 0;
-let isRating=false;
-let ratingStep=0;
+let isDeleting=false;
+let deletingStep=0;
 let user;
 let phoneNumberVerified = false
 let rate;
 const registrationInputs = [];//Array for user inputs
 let generatedPin; ///generated pin
 
+
 app.post("/webhook", (req, res) => {
     const payload = req.body;
-    console.log(payload);
-    console.log(isRegistering);
     const sender = payload.from;
     console.log(sender);
     const textMessage = payload.text;
@@ -59,7 +58,7 @@ app.post("/webhook", (req, res) => {
    
 
 
-    if(!isRegistering){
+    if(!isRegistering && !isDeleting){
         switch (text) {
             case '':
             case 'register':
@@ -70,15 +69,8 @@ app.post("/webhook", (req, res) => {
                 //generate  pin
                 
                  generatedPin = generateRandom4DigitNumber();
-                registrationInputs.push(sender);
-                  
-                messageToCustomer = 'Hello Our Esteemed Customer, Welcome to Octagon Africa your credentials are: Username - ' +sender + ' Pin- ' + generatedPin + '.';
-                sms.send({
-                    to: sender,
-                    from:'20880',
-                    message: messageToCustomer
-                });
-
+                registrationInputs.push(sender);      
+                sms.send(register.newCustomer(sender));
                 registrationInputs.push(generatedPin);
                 sms.send(register.enterId(sender));
                 //set a flag to indicate that the user is in the process of registering
@@ -144,10 +136,25 @@ app.post("/webhook", (req, res) => {
                         from:'20880',
                         message: messageToCustomer
                     });
-    
+                    
+                    break;
+                case 'delete':
+                    isDeleting=false;
+                    deletingStep=0;
+                    messageToCustomer = 'Hello Our Dear Esteemed Customer, Welcome to Octagon Services.';
+                    
+                    sms.send({
+                        to: sender,
+                        from:'20880',
+                        message: messageToCustomer
+                    });
+                   
+                    sms.send(register.enterId(sender));
+                    isDeleting =true;
+                    deletingStep=2;
                     break;
                 default:
-                    messageToCustomer = 'Welcome To Octagon africa you can access our services by sending the word register,save, balance,statement,products';
+                    messageToCustomer = 'Welcome To Octagon Africa you can access our services by sending the word register,save, balance,statement,products';
                     sms.send({
                         to: sender,
                         from:'20880',
@@ -158,7 +165,7 @@ app.post("/webhook", (req, res) => {
     }
     
         //check if the user is in the process of registering
-      else {
+      else if(isRegistering) {
             switch (registrationStep) {
                 case 1:
                     // request for ID number  
@@ -170,45 +177,56 @@ app.post("/webhook", (req, res) => {
                     if(validateId(text)) {
                         user = user ? {...user, id: text} : {id: text};  
                         registrationInputs.push(user.id);              
-                        sms.send(register.enterCounty(sender));
+                        sms.send(register.enterEmail(sender));
                         registrationStep = 3;
                     } else {
-                        registrationStep = 1;
+                        
                         messageToCustomer = "Invalid ID number. Please enter a valid 6-digit ID number";
+                        registrationStep = 1;
                     }
   
                     break;
+
                 case 3:
-                    // process county and request for full name
-                    if (kenyanCounties.includes(text.toLowerCase())) {
-                        user.county = text;
-                        registrationInputs.push(user.county);  
-                        sms.send(register.enterName(sender));
-                        registrationStep = 4;
-                    }else {
-                        sms.send({
-                            to: sender,
-                            from: '20880',
-                            message: "Invalid county. Please enter a valid county of residence in Kenya."
-                        });
-                        registrationStep = 3;
-                    }
+                    //request 6 character password
+                    user.email=text
+                    registrationInputs.push(user.email);              
+                    sms.send(register.enterPassword(sender));
+                    registrationStep = 4;
                     break;
+
                 case 4:
+                    //request for fname
+                    user.password=text;
+                    //validate password
+                    registrationInputs.push(user.password);              
+                    sms.send(register.enterFirstName(sender));
+                    registrationStep = 5;
+                    break;
+                case 5:
+                    //request for lname
+                    user.firstname=text;
+                   
+                    registrationInputs.push(user.firstname);              
+                    sms.send(register.enterLastName(sender));
+                    registrationStep = 6;
+                    break;
+                case 6:
                     // process full name and send confirmation message
-                    user.name = text;
-                    registrationInputs.push(user.name); 
-                          
+                    user.lastname=text;
+                    
+                    registrationInputs.push(user.lastname); 
+                       
                         // Sending the request to octagon registration API
                         var client = new Client();
                         // set content-type header and data as json in args parameter
                         var args = {
-                            data: { pin: generatedPin, phoneNumber: sender, id: user.id, county: user.county, name: user.name },
+                            data: { firstname: user.firstname, lastname: user.lastname, ID: user.id, email: user.email, password: user.password, phonenumber: sender },
                             headers: { "Content-Type": "application/json" }
                         };
-
+                            // username= data[0]+"."+data[1];
                         // Actual Octagon user registration API
-                        client.post("https://eo5ymx08ccjvivs.m.pipedream.net", args, function (data, response) {
+                        client.post("https://api.octagonafrica.com/v1/register", args, function (data, response) {
                             // parsed response body as js object
                             console.log(data);
                             // raw response
@@ -220,15 +238,47 @@ app.post("/webhook", (req, res) => {
                                 sms.send({
                                     to: sender,
                                     from:'20880',
-                                    message: "Congratulations!! "+user.name+". You have successfully registered with Octagon Africa. Your credentials are: username: " + sender + " pin: " + generatedPin
+                                    message: "Congratulations!! "+user.firstname.toUpperCase() + " "+ user.lastname.toUpperCase() +". You have successfully registered with Octagon Africa. Your credentials are: username: " + user.firstname+"."+user.lastname + " Password: " + user.password
+
+                                    
                                 });
                                 isRegistering = false;
                                 registrationStep = 0;
                                 user = {};
+                                
                                 console.log(response.statusCode)
+                                
                             } else if ([201].includes(response.statusCode)) {
                                 console.log(response.statusCode);
-                            } else {
+                                isRegistering = false;
+                                registrationStep = 0;
+                                user = {};
+                            }else if ([400].includes(response.statusCode)) {
+                                console.log(response.statusCode);
+                                sms.send({
+                                    to: sender,
+                                    from:'20880',
+                                    message: "Registration unsuccesfull. Invalid Details or Username Exists . Please try again Later "
+
+                                    
+                                });
+                                isRegistering = false;
+                                registrationStep = 0;
+                                user = {};
+                            }else if ([500].includes(response.statusCode)) {
+                                console.log(response.statusCode);
+                                sms.send({
+                                    to: sender,
+                                    from:'20880',
+                                    message: "Registration unsuccesfull. Internal Server Error. Please try again Later "
+
+                                    
+                                });
+                                isRegistering = false;
+                                registrationStep = 0;
+                                user = {};
+                            }
+                            else {
                                 // error code
                                 console.log(response.statusCode);
                             }
@@ -236,10 +286,6 @@ app.post("/webhook", (req, res) => {
 
 
                         });
-
-
-                
-
                     break;
                 default:
                     // do sthg
@@ -250,9 +296,97 @@ app.post("/webhook", (req, res) => {
                     });
                     break;
             }
+        }else if(isDeleting){
+            switch(deletingStep){
+                case 1:
+                    // request for ID number  
+                    sms.send(register.enterId(sender));
+                    registrationStep = 2;
+                    break;
+                case 2:
+                    //recieve id and request password
+                    user = user ? {...user, id: text} : {id: text}; 
+                    sms.send({
+                        to: sender,
+                        from:'20880',
+                        message: "Enter Password"
+                    });
+                    deletingStep=3;
+                   
+                    break;
+
+                case 3:
+                    user.password=text;
+                     // Sending the request to octagon registration API
+                     var deleteClient = new Client();
+                     // set content-type header and data as json in args parameter
+                     var args = {
+                         data: { ID: user.id, password: user.password },
+                         headers: { "Content-Type": "application/json" }
+                     };
+                         // username= data[0]+"."+data[1];
+                     // Actual Octagon user registration API
+                     deleteClient.post("https://prevailer.free.beeceptor.com", args, function (data, response) {
+                        // parsed response body as js object
+                        console.log(data);
+                        // raw response
+                        console.log(response);
+                     
+                        if ([200].includes(response.statusCode)) {
+                            // success code
+                            sms.send({
+                               to: sender,
+                               from:'20880',
+                               message: "Account Deleted Successfully. It was a pleasure doing Business with you"
+                            });
+                            deletingStep=0;
+                            isDeleting;
+                            user = {};
+                            console.log(response.statusCode)
+                     
+                        } else if ([201].includes(response.statusCode)) {
+                            console.log(response.statusCode);
+                        } else if ([400].includes(response.statusCode)) {
+                            console.log(response.statusCode);
+                            sms.send({
+                                to: sender,
+                                from:'20880',
+                                message: " Invalid Details!!. Check your details and please try again Later "
+                            });
+                        } else if ([500].includes(response.statusCode)) { 
+                            console.log(response.statusCode);
+                            sms.send({
+                                to: sender,
+                                from:'20880',
+                                message: " Internal Server Error. Please try again Later "
+                            });
+                        } else {
+                            // error code
+                            console.log(response.statusCode);
+                        }
+                     });
+                     
+                    break;
+
+                default:
+                    // do sthg
+                    sms.send({
+                        to: sender,
+                        from:'20880',
+                        message: "Invalid response:!!"
+                    });
+                    break;
+                     
         }
+    }      
+                      
+
+
+                   
+        
+   
       
-        console.log(registrationInputs);
+        
             res.send("Webhook received");
 });       
 

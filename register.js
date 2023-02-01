@@ -1,5 +1,18 @@
 const express = require("express");
 const session = require('express-session');
+const _ = require('lodash');
+
+//Example POST method invocation
+var Client = require('node-rest-client').Client;
+
+const kenyanCounties = require('./src/assets/counties.js');
+const options = require('./env.js');
+const register = require('./src/register.js');
+
+const validateId = require('./src/validateId.js');
+const AfricasTalking = require('africastalking')(options);
+
+const generateRandom4DigitNumber = require('./src/generateRandom4DigitNumber.js');
 const app = express();
 
 const keyword = /^test4/;
@@ -16,69 +29,64 @@ app.listen(3000, function() {
     console.log("Started at localhost 3000");
 });
 
-const options = {
-    apiKey: 'c54df3b5a0bfde4199a490ff6ce639e0511a851a0d540b5c37bddfd2d7636c79',
-    username: 'prevailer',
-};
-const AfricasTalking = require('africastalking')(options);
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 
-const adjectives = ['happy', 'exciting', 'courageous', 'loving', 'funny'];
-const nouns = ['dog', 'cat', 'tree', 'ocean', 'flower'];
-
 let isRegistering = false;
 let registrationStep = 0;
-let isRating=false;
-let ratingStep=0;
+let isDeleting=false;
+let deletingStep=0;
 let user;
+let phoneNumberVerified = false
 let rate;
+const registrationInputs = [];//Array for user inputs
+let generatedPin; ///generated pin
+
 
 app.post("/webhook", (req, res) => {
     const payload = req.body;
     console.log(payload);
-    console.log(isRegistering);
+    console.log(isDeleting);
     const sender = payload.from;
     console.log(sender);
     const textMessage = payload.text;
     console.log(textMessage);
     const sms = AfricasTalking.SMS;
     let messageToCustomer;
-    const kenyanCounties = ['nairobi', 'mombasa', 'kisumu', 'nakuru', 'eldoret',
-        'machakos', 'meru', 'thika', 'kitui', 'garissa', 'embu', 'kiambu', 'murang’a',
-        'nyeri', 'kirinyaga', 'bungoma', 'busia', 'vihiga', 'trans-Nzoia', 'uasin gishu',
-        'turkana', 'nandi', 'west pokot', 'samburu', 'siaya', 'Migori', 'homa bay', 
-        'kakamega', 'kericho', 'kisii', 'laikipia', 'lamu', 'narok', 'nyamira',
-        'nyandarua', 'nairobi city'];
 
     const text = textMessage.toLowerCase().replace(keyword, '').trim();
-    if(!isRegistering){
+   
+
+
+    if(!isRegistering || !isDeleting){
         switch (text) {
             case '':
             case 'register':
+                
                 //reset isRegistering flag and registrationStep
-                // isRegistering = false;
-                // registrationStep = 0;
-                //generate username and pin
-                user = {
-                    pin: generateRandom4DigitNumber()
-                };
-                //send message with credentials
-                messageToCustomer = 'Hello Our Esteemed Customer, Welcome to Octagon Africa your credentials are: Username - ' +sender + ' Pin- ' + user.pin + '.';
+                isRegistering = false;
+                registrationStep = 0;
+                //generate  pin
+                
+                 generatedPin = generateRandom4DigitNumber();
+                registrationInputs.push(sender);
+                  
+                messageToCustomer = 'Hello Our Esteemed Customer, Welcome to Octagon Africa. To complete the registration process, please provide us with the following information  ';
                 sms.send({
                     to: sender,
                     from:'20880',
                     message: messageToCustomer
                 });
-                
-    
+
+                registrationInputs.push(generatedPin);
+                sms.send(register.enterId(sender));
                 //set a flag to indicate that the user is in the process of registering
                 isRegistering = true;
                 
                 //request for ID number
-                registrationStep = 1;
+                registrationStep = 2;
                 break;
     
             case 'balance':
@@ -137,10 +145,25 @@ app.post("/webhook", (req, res) => {
                         from:'20880',
                         message: messageToCustomer
                     });
-    
+                    
+                    break;
+                case 'delete':
+                    isDeleting=false;
+                    deletingStep=0;
+                    messageToCustomer = 'Hello Our Dear Esteemed Customer, Welcome to Octagon Services.';
+                    
+                    sms.send({
+                        to: sender,
+                        from:'20880',
+                        message: messageToCustomer
+                    });
+
+                    sms.send(register.enterId(sender));
+                    isDeleting =true;
+                    deletingStep=2;
                     break;
                 default:
-                    messageToCustomer = 'Welcome To Octagon africa you can access our services by sending the word register,save, balance,statement,products';
+                    messageToCustomer = 'Welcome To Octagon Africa you can access our services by sending the word register,save, balance,statement,products';
                     sms.send({
                         to: sender,
                         from:'20880',
@@ -149,66 +172,120 @@ app.post("/webhook", (req, res) => {
                     break;
             }
     }
-   
+    
         //check if the user is in the process of registering
-        else if (isRegistering) {
+      else if(isRegistering) {
             switch (registrationStep) {
                 case 1:
-                    // request for ID number
-                    sms.send({
-                        to: sender,
-                        from:'20880',
-                        message: "Please enter your ID number:"
-                    });
+                    // request for ID number  
+                    sms.send(register.enterId(sender));
                     registrationStep = 2;
                     break;
                 case 2:
                     // process ID number and request for county
-                    user.id = textMessage;
-                    if(textMessage.length !== 6 || isNaN(textMessage)) {
-                        messageToCustomer = "Invalid ID number. Please enter a valid 6-digit ID number";
-                    } else {
-                        user.id = textMessage;                  
-                        messageToCustomer = "ID number verified. Please enter your county: ";
-                        sms.send({
-                            to: sender,
-                            from:'20880',
-                            message: messageToCustomer
-                        });
+                    if(validateId(text)) {
+                        user = user ? {...user, id: text} : {id: text};  
+                        registrationInputs.push(user.id);              
+                        sms.send(register.enterEmail(sender));
                         registrationStep = 3;
+                    } else {
+                        
+                        messageToCustomer = "Invalid ID number. Please enter a valid 6-digit ID number";
+                        registrationStep = 1;
                     }
-                    
-                    
+  
                     break;
+
                 case 3:
-                    // process county and request for full name
-                    if (kenyanCounties.includes(textMessage.toLowerCase())) {
-                        user.county = textMessage;
-                        sms.send({
-                            to: sender,
-                            from:'20880',
-                            message: "Please enter your full name:"
-                        });
-                        registrationStep = 4;
-                    }else {
-                        sms.send({
-                            to: sender,
-                            from: '20880',
-                            message: "Invalid county. Please enter a valid county of residence in Kenya."
-                        });
-                    }
+                    //request 6 character password
+                    user.email=text
+                    registrationInputs.push(user.email);              
+                    sms.send(register.enterPassword(sender));
+                    registrationStep = 4;
                     break;
+
                 case 4:
+                    //request for fname
+                    user.password=text;
+                    //validate password
+                    registrationInputs.push(user.password);              
+                    sms.send(register.enterFirstName(sender));
+                    registrationStep = 5;
+                    break;
+                case 5:
+                    //request for lname
+                    user.firstname=text;
+                   
+                    registrationInputs.push(user.firstname);              
+                    sms.send(register.enterLastName(sender));
+                    registrationStep = 6;
+                    break;
+                case 6:
                     // process full name and send confirmation message
-                    user.name = textMessage;
-                    sms.send({
-                        to: sender,
-                        from:'20880',
-                        message: "Congratulations!! "+user.name+". You have successfully registered with Octagon Africa. Your credentials are: username: " + sender + " pin: " + user.pin
-                    });
-                    isRegistering = false;
-                    registrationStep = 0;
-                    user = {};
+                    user.lastname=text;
+                    
+                    registrationInputs.push(user.lastname); 
+                       
+                        // Sending the request to octagon registration API
+                        var client = new Client();
+                        // set content-type header and data as json in args parameter
+                        var args = {
+                            data: { firstname: user.firstname, lastname: user.lastname, ID: user.id, email: user.email, password: user.password, phone_number: sender },
+                            headers: { "Content-Type": "application/json" }
+                        };
+                            // username= data[0]+"."+data[1];
+                        // Actual Octagon user registration API
+                        client.post("https://api.octagonafrica.com/v1/register", args, function (data, response) {
+                            // parsed response body as js object
+                            console.log(data);
+                            // raw response
+                            console.log(response);
+                           
+
+                            if ([200].includes(response.statusCode)) {
+                                // success code
+                                sms.send({
+                                    to: sender,
+                                    from:'20880',
+                                    message: "Congratulations!! "+user.firstname.toUpperCase() + " "+ user.lastname.toUpperCase() +". You have successfully registered with Octagon Africa. Your credentials are: username: " + user.firstname+"."+user.lastname + " Password: " + user.password
+
+                                    
+                                });
+                                isRegistering = false;
+                                registrationStep = 0;
+                                user = {};
+                                
+                                console.log(response.statusCode)
+                                
+                            } else if ([201].includes(response.statusCode)) {
+                                console.log(response.statusCode);
+                            }else if ([400].includes(response.statusCode)) {
+                                console.log(response.statusCode);
+                                sms.send({
+                                    to: sender,
+                                    from:'20880',
+                                    message: "Registration unsuccesfull. Invalid Details or Username Existsnpm . Please try again Later "
+
+                                    
+                                });
+                            }else if ([500].includes(response.statusCode)) {
+                                console.log(response.statusCode);
+                                sms.send({
+                                    to: sender,
+                                    from:'20880',
+                                    message: "Registration unsuccesfull. Internal Server Error. Please try again Later "
+
+                                    
+                                });
+                            }
+                            else {
+                                // error code
+                                console.log(response.statusCode);
+                            }
+                            
+
+
+                        });
                     break;
                 default:
                     // do sthg
@@ -219,10 +296,55 @@ app.post("/webhook", (req, res) => {
                     });
                     break;
             }
-        }
+        }else if(isDeleting){
+            switch(deletingStep){
+                case 1:
+                    // request for ID number  
+                    sms.send(register.enterId(sender));
+                    registrationStep = 2;
+                    break;
+                case 2:
+                    //recieve id and request password
+                    user.id=text;
+                    sms.send({
+                        to: sender,
+                        from:'20880',
+                        message: "Enter Password"
+                    });
+                    deletingStep=3;
+                   
+                    break;
+                case 3:
+                    user.password=text;
+                    sms.send({
+                        to: sender,
+                        from:'20880',
+                        message: "Account Deleted Successfully. It was a pleasure doing Business with you"
+                    });
+                    deletingStep=0;
+                    isDeleting;
+                    user = {};
+                    break;
+                default:
+                    // do sthg
+                    sms.send({
+                        to: sender,
+                        from:'20880',
+                        message: "Invalid response:!!"
+                    });
+                    break;  
+            }
+              
+                      
+
+
+                   
+        
+    }
+      
         
             res.send("Webhook received");
-        });
+});       
 
     
        
