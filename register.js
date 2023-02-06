@@ -8,6 +8,7 @@ var Client = require('node-rest-client').Client;
 const kenyanCounties = require('./src/assets/counties.js');
 const options = require('./env.js');
 const register = require('./src/register.js');
+const account = require('./src/account.js');
 
 const validateId = require('./src/validateId.js');
 const AfricasTalking = require('africastalking')(options);
@@ -15,7 +16,7 @@ const AfricasTalking = require('africastalking')(options);
 const generateRandom4DigitNumber = require('./src/generateRandom4DigitNumber.js');
 const app = express();
 
-const keyword = /^test4/;
+const keyword = "Test4 ";
 
 app.use(session({
     secret: 'mysecret',
@@ -38,17 +39,18 @@ let isRegistering = false;
 let registrationStep = 0;
 let isDeleting=false;
 let deletingStep=0;
-let user;
-let phoneNumberVerified = false
+let isCheckingAccount=false;
+let accountStep=0;
+let user={};
+// let phoneNumberVerified = false
 let rate;
 const registrationInputs = [];//Array for user inputs
 let generatedPin; ///generated pin
 
 
+
 app.post("/webhook", (req, res) => {
     const payload = req.body;
-    console.log(payload);
-    console.log(isDeleting);
     const sender = payload.from;
     console.log(sender);
     const textMessage = payload.text;
@@ -56,13 +58,12 @@ app.post("/webhook", (req, res) => {
     const sms = AfricasTalking.SMS;
     let messageToCustomer;
 
-    const text = textMessage.toLowerCase().replace(keyword, '').trim();
+    const text = textMessage.replace(keyword, '').trim();//remove "Key Word"
    
-
-
-    if(!isRegistering || !isDeleting){
-        switch (text) {
-            case '':
+    console.log(text);
+    if(!isRegistering && !isDeleting && !isCheckingAccount){
+        switch (text.toLowerCase()) {
+            // case '':
             case 'register':
                 
                 //reset isRegistering flag and registrationStep
@@ -71,15 +72,8 @@ app.post("/webhook", (req, res) => {
                 //generate  pin
                 
                  generatedPin = generateRandom4DigitNumber();
-                registrationInputs.push(sender);
-                  
-                messageToCustomer = 'Hello Our Esteemed Customer, Welcome to Octagon Africa. To complete the registration process, please provide us with the following information  ';
-                sms.send({
-                    to: sender,
-                    from:'20880',
-                    message: messageToCustomer
-                });
-
+                registrationInputs.push(sender);      
+                sms.send(register.newCustomer(sender));
                 registrationInputs.push(generatedPin);
                 sms.send(register.enterId(sender));
                 //set a flag to indicate that the user is in the process of registering
@@ -130,13 +124,12 @@ app.post("/webhook", (req, res) => {
                     });
                     break;
                 case 'accounts':
-    
-                    messageToCustomer = 'Hello Our Dear Esteemed Customer, Welcome to Octagon Services. Enter your 4 digit pin - accounts';
-                    sms.send({
-                        to: sender,
-                        from:'20880',
-                        message: messageToCustomer
-                    });
+                    isCheckingAccount=false;
+                    accountStep=0;
+                    sms.send(account.welcomeMessageAccount(sender));
+                    sms.send(account.provideUserName(sender));
+                    isCheckingAccount=true;
+                    accountStep=2;
                     break;
                 case 'rate':
                     messageToCustomer = 'Hello Our Dear Esteemed Customer, Welcome to Octagon Services. Enter your 4 digit pin - rate';
@@ -157,7 +150,7 @@ app.post("/webhook", (req, res) => {
                         from:'20880',
                         message: messageToCustomer
                     });
-
+                   
                     sms.send(register.enterId(sender));
                     isDeleting =true;
                     deletingStep=2;
@@ -171,10 +164,7 @@ app.post("/webhook", (req, res) => {
                     });
                     break;
             }
-    }
-    
-        //check if the user is in the process of registering
-      else if(isRegistering) {
+        }else if(isRegistering) {
             switch (registrationStep) {
                 case 1:
                     // request for ID number  
@@ -195,7 +185,6 @@ app.post("/webhook", (req, res) => {
                     }
   
                     break;
-
                 case 3:
                     //request 6 character password
                     user.email=text
@@ -203,7 +192,6 @@ app.post("/webhook", (req, res) => {
                     sms.send(register.enterPassword(sender));
                     registrationStep = 4;
                     break;
-
                 case 4:
                     //request for fname
                     user.password=text;
@@ -230,7 +218,7 @@ app.post("/webhook", (req, res) => {
                         var client = new Client();
                         // set content-type header and data as json in args parameter
                         var args = {
-                            data: { firstname: user.firstname, lastname: user.lastname, ID: user.id, email: user.email, password: user.password, phone_number: sender },
+                            data: { firstname: user.firstname, lastname: user.lastname, ID: user.id, email: user.email, password: user.password, phonenumber: sender },
                             headers: { "Content-Type": "application/json" }
                         };
                             // username= data[0]+"."+data[1];
@@ -247,9 +235,7 @@ app.post("/webhook", (req, res) => {
                                 sms.send({
                                     to: sender,
                                     from:'20880',
-                                    message: "Congratulations!! "+user.firstname.toUpperCase() + " "+ user.lastname.toUpperCase() +". You have successfully registered with Octagon Africa. Your credentials are: username: " + user.firstname+"."+user.lastname + " Password: " + user.password
-
-                                    
+                                    message: "Congratulations!! "+user.firstname.toUpperCase() + " "+ user.lastname.toUpperCase() +". You have successfully registered with Octagon Africa. Your credentials are: username: " + user.firstname.toLowerCase()+"."+user.lastname.toLowerCase() + " Password: " + user.password
                                 });
                                 isRegistering = false;
                                 registrationStep = 0;
@@ -259,15 +245,21 @@ app.post("/webhook", (req, res) => {
                                 
                             } else if ([201].includes(response.statusCode)) {
                                 console.log(response.statusCode);
+                                isRegistering = false;
+                                registrationStep = 0;
+                                user = {};
                             }else if ([400].includes(response.statusCode)) {
                                 console.log(response.statusCode);
                                 sms.send({
                                     to: sender,
                                     from:'20880',
-                                    message: "Registration unsuccesfull. Invalid Details or Username Existsnpm . Please try again Later "
+                                    message: "Registration unsuccesfull. Invalid Details or Username Exists . Please try again Later "
 
                                     
                                 });
+                                isRegistering = false;
+                                registrationStep = 0;
+                                user = {};
                             }else if ([500].includes(response.statusCode)) {
                                 console.log(response.statusCode);
                                 sms.send({
@@ -277,6 +269,9 @@ app.post("/webhook", (req, res) => {
 
                                     
                                 });
+                                isRegistering = false;
+                                registrationStep = 0;
+                                user = {};
                             }
                             else {
                                 // error code
@@ -301,11 +296,11 @@ app.post("/webhook", (req, res) => {
                 case 1:
                     // request for ID number  
                     sms.send(register.enterId(sender));
-                    registrationStep = 2;
+                    deletingStep = 2;
                     break;
                 case 2:
                     //recieve id and request password
-                    user.id=text;
+                    user = user ? {...user, id: text} : {id: text}; 
                     sms.send({
                         to: sender,
                         from:'20880',
@@ -314,17 +309,60 @@ app.post("/webhook", (req, res) => {
                     deletingStep=3;
                    
                     break;
+
                 case 3:
                     user.password=text;
-                    sms.send({
-                        to: sender,
-                        from:'20880',
-                        message: "Account Deleted Successfully. It was a pleasure doing Business with you"
-                    });
-                    deletingStep=0;
-                    isDeleting;
-                    user = {};
+                     // Sending the request to octagon Delete User Account  API
+                     var deleteClient = new Client();
+                     // set content-type header and data as json in args parameter
+                     var args = {
+                         data: { ID: user.id, password: user.password },
+                         headers: { "Content-Type": "application/json" }
+                     };
+                         // username= data[0]+"."+data[1];
+                     // Actual Octagon Delete User Account API
+                     deleteClient.post("https://api.octagonafrica.com/v1/user/delete", args, function (data, response) {
+                        // parsed response body as js object
+                        console.log(data);
+                        // raw response
+                        console.log(response);
+                     
+                        if ([200].includes(response.statusCode)) {
+                            // success code
+                            sms.send({
+                               to: sender,
+                               from:'20880',
+                               message: "Account Deleted Successfully. It was a pleasure doing Business with you"
+                            });
+                            deletingStep=0;
+                            isDeleting=false;
+                            user = {};
+                            console.log(response.statusCode)
+                     
+                        } else if ([201].includes(response.statusCode)) {
+                            console.log(response.statusCode);
+                        } else if ([400].includes(response.statusCode)) {
+                            console.log(response.statusCode);
+                            sms.send({
+                                to: sender,
+                                from:'20880',
+                                message: " Invalid Details!!. Check your details and please try again Later "
+                            });
+                        } else if ([500].includes(response.statusCode)) { 
+                            console.log(response.statusCode);
+                            sms.send({
+                                to: sender,
+                                from:'20880',
+                                message: " Invalid request. Please input your National Id and password. "
+                            });
+                        } else {
+                            // error code
+                            console.log(response.statusCode);
+                        }
+                     });
+                     
                     break;
+
                 default:
                     // do sthg
                     sms.send({
@@ -332,17 +370,91 @@ app.post("/webhook", (req, res) => {
                         from:'20880',
                         message: "Invalid response:!!"
                     });
-                    break;  
-            }
-              
-                      
-
-
+                    break;
+                     
+        }
+    }else if(isCheckingAccount){
+        switch(accountStep){
+            case 1:
+                //request username
+                sms.send(account.provideUserName(sender));
+                accountStep = 2;
+            break;
+            case 2:
+                //request password
+                user.username=text;
+                sms.send(account.providePassword(sender));  
+                accountStep =3;
+            break;
+            case 3:
+                user.password=text;
+                //send to octagon Login API
+                //confirm login
+                var deleteClient = new Client();
+                // set content-type header and data as json in args parameter
+                var args = {
+                    data: { username: user.username, password: user.password },
+                    headers: { "Content-Type": "application/json" }
+                };
+                    // username= data[0]+"."+data[1];
+                // Actual Octagon Delete User Account API
+                deleteClient.post("https://api.octagonafrica.com/v1/login", args, function (data, response) {
+                   // parsed response body as js object
+                   console.log(data);
+                   // raw response
+                   console.log(response);
+                
+                   if ([200].includes(response.statusCode)) {
+                       // success code
+                       sms.send(account.confirmLogin(sender));  
+                       accountStep=0;
+                       isCheckingAccount=false;
+                       user = {};
+                       console.log(response.statusCode)
+                
+                   } else if ([201].includes(response.statusCode)) {
+                       console.log(response.statusCode);
+                   } else if ([400].includes(response.statusCode)) {
+                       console.log(response.statusCode);
+                       sms.send({
+                           to: sender,
+                           from:'20880',
+                           message: " Invalid Details!!. Check your details and please try again Later "
+                       });
+                    } else if ([401].includes(response.statusCode)) {
+                        console.log(response.statusCode);
+                        sms.send({
+                            to: sender,
+                            from:'20880',
+                            message: " Authentication failed. Incorrect password or username. Access denied "
+                        });
+                    }
                    
-        
-    }
-      
-        
+                   else if ([500].includes(response.statusCode)) { 
+                       console.log(response.statusCode);
+                       sms.send({
+                           to: sender,
+                           from:'20880',
+                           message: " Invalid request. Please input your National Id and password. "
+                       });
+                   } else {
+                       // error code
+                       console.log(response.statusCode);
+                   }
+                });
+               
+            break;
+            default:
+                // do sthg
+                sms.send(account.wrongResponse(sender));
+            break;
+
+        }
+
+    }  
+    
+    
+        console.log(registrationInputs);
             res.send("Webhook received");
 });       
 
