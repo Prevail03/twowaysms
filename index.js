@@ -1,12 +1,13 @@
 const express = require("express");
 const session = require('express-session');
 const _ = require('lodash');
+const sql = require('mssql');
 
-//Example POST method invocation
 var Client = require('node-rest-client').Client;
 
 const kenyanCounties = require('./src/assets/counties.js');
 const options = require('./env.js');
+const config = require('./dbconnect.js');
 const register = require('./src/register.js');
 const account = require('./src/account.js');
 const reset = require('./src/reset.js');
@@ -402,7 +403,7 @@ app.post("/webhook", (req, res) => {
                 user.password=text;
                 //send to octagon Login API
                 //confirm login
-                var deleteClient = new Client();
+                var accountsClient = new Client();
                 // set content-type header and data as json in args parameter
                 var args = {
                     data: { username: user.username, password: user.password },
@@ -410,7 +411,7 @@ app.post("/webhook", (req, res) => {
                 };
                     // username= data[0]+"."+data[1];
                 // Actual Octagon Delete User Account API
-                deleteClient.post("https://api.octagonafrica.com/v1/login", args, function (data, response) {
+                accountsClient.post("https://api.octagonafrica.com/v1/login", args, function (data, response) {
                    // parsed response body as js object
                    console.log(data);
                    // raw response
@@ -419,9 +420,10 @@ app.post("/webhook", (req, res) => {
                    if ([200].includes(response.statusCode)) {
                        // success code
                        sms.send(account.confirmLogin(sender));  
-                       accountStep=0;
-                       isCheckingAccount=false;
-                       user = {};
+                       sms.send(account.enterUserID(sender)); 
+                       accountStep=4;
+                    //    isCheckingAccount=false;
+                    //    user = {};
                        console.log(response.statusCode)
                 
                    } else if ([201].includes(response.statusCode)) {
@@ -455,6 +457,9 @@ app.post("/webhook", (req, res) => {
                    }
                 });
                
+            break;
+            case 4:
+                user.userid=text;
             break;
             default:
                 // do sthg
@@ -571,14 +576,12 @@ app.post("/webhook", (req, res) => {
                
                 
             break;
-
             case 4:
                 //request new Password
                 user.otp=text;
                 sms.send(reset.enterNewPassword(sender));  
                 resetStep = 5;
-            break;
-      
+            break; 
             case 5:
                 //confirmation of password reset
                 user.newPassword=text;

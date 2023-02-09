@@ -9,7 +9,7 @@ const kenyanCounties = require('./src/assets/counties.js');
 const options = require('./env.js');
 const register = require('./src/register.js');
 const account = require('./src/account.js');
-
+const reset = require('./src/reset.js');
 const validateId = require('./src/validateId.js');
 const AfricasTalking = require('africastalking')(options);
 
@@ -41,6 +41,8 @@ let isDeleting=false;
 let deletingStep=0;
 let isCheckingAccount=false;
 let accountStep=0;
+let ResetingPassword=false;
+let resetStep=0
 let user={};
 // let phoneNumberVerified = false
 let rate;
@@ -57,11 +59,12 @@ app.post("/webhook", (req, res) => {
     console.log(textMessage);
     const sms = AfricasTalking.SMS;
     let messageToCustomer;
+    console.log(ResetingPassword);
 
     const text = textMessage.replace(keyword, '').trim();//remove "Key Word"
    
     console.log(text);
-    if(!isRegistering && !isDeleting && !isCheckingAccount){
+    if(!isRegistering && !isDeleting && !isCheckingAccount && !ResetingPassword){
         switch (text.toLowerCase()) {
             // case '':
             case 'register':
@@ -154,6 +157,15 @@ app.post("/webhook", (req, res) => {
                     sms.send(register.enterId(sender));
                     isDeleting =true;
                     deletingStep=2;
+                    break;
+                case 'reset':
+                    ResetingPassword=false;
+                    resetStep=0;
+                    sms.send(reset.welcomeMessage(sender));
+                    sms.send(reset.enterEmail(sender));
+                    ResetingPassword=true;
+                    resetStep=2;
+                    
                     break;
                 default:
                     messageToCustomer = 'Welcome To Octagon Africa you can access our services by sending the word register,save, balance,statement,products';
@@ -451,7 +463,182 @@ app.post("/webhook", (req, res) => {
 
         }
 
-    }  
+    }else if (ResetingPassword){
+        switch(resetStep){
+            case 1:
+                //request username
+                sms.send(reset.enterEmail(sender));
+                resetStep = 2;
+            break;
+
+            case 2:
+                //request current password 
+                user.email=text;
+                sms.send(reset.enterCurrentPassword(sender));  
+                resetStep =3;
+            break;
+            //send to login and reset Password
+            case 3:
+                //request OTP
+                user.currentPassword=text;
+                //send to octagon Login API
+                //confirm login
+                var deleteClient = new Client();
+                // set content-type header and data as json in args parameter
+                var args = {
+                    data: { username: user.email, password: user.currentPassword },
+                    headers: { "Content-Type": "application/json" }
+                };
+                    // username= data[0]+"."+data[1];
+                // Actual Octagon Login To Account API
+                deleteClient.post("https://api.octagonafrica.com/v1/login", args, function (data, response) {
+                   // parsed response body as js object
+                   console.log(data);
+                   // raw response
+                   console.log(response);
+                
+                   if ([200].includes(response.statusCode)) {
+                       // success code
+                       sms.send(reset.verifyPassword(sender)); 
+                       //send email to reset Password API
+                       var deleteClient = new Client();
+                            // set content-type header and data as json in args parameter
+                            var args = {
+                                data: { identifier: user.email },
+                                headers: { "Content-Type": "application/json" }
+                            };
+                                // username= data[0]+"."+data[1];
+                            // Actual Octagon Delete User Account API
+                            deleteClient.post("https://api.octagonafrica.com/v1/password_reset", args, function (data, response) {
+                            // parsed response body as js object
+                            console.log(data);
+                            // raw response
+                            console.log(response);
+                            
+                            if ([200].includes(response.statusCode)) {
+                                // success code 
+                                
+                                sms.send(reset.enterOTP(sender));  
+                                    resetStep = 4; 
+                                
+                                console.log(response.statusCode);
+                            
+                            } else if ([201].includes(response.statusCode)) {
+                                console.log(response.statusCode);
+                            } else if ([400].includes(response.statusCode)) {
+                                console.log(response.statusCode);
+                                sms.send({
+                                    to: sender,
+                                    from:'20880',
+                                    message: " Invalid Details!!. Check your details and please try again Later "
+                                });
+                            } else {
+                                // error code
+                                console.log(response.statusCode);
+                            }
+                            });
+                   } else if ([201].includes(response.statusCode)) {
+                       console.log(response.statusCode);
+                   } else if ([400].includes(response.statusCode)) {
+                       console.log(response.statusCode);
+                       sms.send({
+                           to: sender,
+                           from:'20880',
+                           message: " Invalid Details!!. Check your details and please try again Later "
+                       });
+                       
+                    } else if ([401].includes(response.statusCode)) {
+                        console.log(response.statusCode);
+                        sms.send({
+                            to: sender,
+                            from:'20880',
+                            message: " Authentication failed. Incorrect password or username. Access denied "
+                        });
+                    }
+                   
+                   else if ([500].includes(response.statusCode)) { 
+                       console.log(response.statusCode);
+                       sms.send({
+                           to: sender,
+                           from:'20880',
+                           message: " Invalid request.  "
+                       });
+                   } else {
+                       // error code
+                       console.log(response.statusCode);
+                   }
+                });
+               
+                
+            break;
+
+            case 4:
+                //request new Password
+                user.otp=text;
+                sms.send(reset.enterNewPassword(sender));  
+                resetStep = 5;
+            break;
+      
+            case 5:
+                //confirmation of password reset
+                user.newPassword=text;
+                 //confirm login
+                 var deleteClient = new Client();
+                 // set content-type header and data as json in args parameter
+                 var args = {
+                     data: { code: user.otp, password: user.newPassword },
+                     headers: { "Content-Type": "application/json" }
+                 };
+                     // username= data[0]+"."+data[1];
+                 // Actual Octagon Delete User Account API
+                 deleteClient.put("https://api.octagonafrica.com/v1/new_password", args, function (data, response) {
+                    // parsed response body as js object
+                    console.log(data);
+                    // raw response
+                    console.log(response);
+                 
+                    if ([200].includes(response.statusCode)) {
+                        // success code
+                        sms.send(reset.confirmation(sender));   
+                        resetStep=0;
+                        ResetingPassword=false;
+                        user = {};
+                        console.log(response.statusCode)
+                    }else if ([400].includes(response.statusCode)) {
+                        console.log(response.statusCode);
+                        sms.send({
+                            to: sender,
+                            from:'20880',
+                            message: " Invalid Details!!. Check your details and please try again Later "
+                        });
+                    }
+                    else if ([404].includes(response.statusCode)) {
+                        console.log(response.statusCode);
+                        sms.send({
+                            to: sender,
+                            from:'20880',
+                            message: " Invalid or Expired Password Reset Token !!!"
+                        });
+                    }else if ([500].includes(response.statusCode)) { 
+                        console.log(response.statusCode);
+                        sms.send({
+                            to: sender,
+                            from:'20880',
+                            message: " Invalid request.  "
+                        });
+                    } else {
+                        // error code
+                        console.log(response.statusCode);
+                    }
+                 });
+                 
+                
+            break;
+
+
+
+        }
+    }
     
     
         console.log(registrationInputs);
@@ -460,5 +647,6 @@ app.post("/webhook", (req, res) => {
 
     
        
+
 
 

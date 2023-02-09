@@ -33,6 +33,14 @@ const account = {
             message: messageToCustomer
         };
     },
+    enterUserID: (sender) => {
+        messageToCustomer = 'Enter User ID';
+        return {
+            to: sender,
+            from:'20880',
+            message: messageToCustomer
+        };
+    },
     wrongResponse: (sender) => {
         return {
             to: sender,
