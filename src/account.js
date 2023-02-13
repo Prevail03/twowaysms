@@ -33,7 +33,7 @@ const account = {
             message: messageToCustomer
         };
     },
-    enterUserID: (sender) => {
+    enterRequestStatements: (sender) => {
         messageToCustomer = 'Enter User ID';
         return {
             to: sender,

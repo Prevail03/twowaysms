@@ -1,11 +1,9 @@
 let username = "test-hr";
 var accountIDClient = new Client();
-
 var args = {
   data: { identifier: username },
   headers: { "Content-Type": "application/json" }
 };
-
 accountIDClient.get("https://api.octagonafrica.com/v1/accountsid", args, function (data, response) {
   if (response.statusCode === 200) {
     const ID = data.data;
