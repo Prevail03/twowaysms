@@ -60,7 +60,7 @@ app.post("/webhook", (req, res) => {
     console.log(textMessage);
     const sms = AfricasTalking.SMS;
     let messageToCustomer;
-    console.log(ResetingPassword);
+    
 
     const text = textMessage.replace(keyword, '').trim();//remove "Key Word"
    
@@ -76,9 +76,8 @@ app.post("/webhook", (req, res) => {
                 //generate  pin
                 
                  generatedPin = generateRandom4DigitNumber();
-                registrationInputs.push(sender);      
+                   
                 sms.send(register.newCustomer(sender));
-                registrationInputs.push(generatedPin);
                 sms.send(register.enterId(sender));
                 //set a flag to indicate that the user is in the process of registering
                 isRegistering = true;
@@ -188,7 +187,7 @@ app.post("/webhook", (req, res) => {
                     // process ID number and request for county
                     if(validateId(text)) {
                         user = user ? {...user, id: text} : {id: text};  
-                        registrationInputs.push(user.id);              
+                                    
                         sms.send(register.enterEmail(sender));
                         registrationStep = 3;
                     } else {
@@ -201,7 +200,7 @@ app.post("/webhook", (req, res) => {
                 case 3:
                     //request 6 character password
                     user.email=text
-                    registrationInputs.push(user.email);              
+                               
                     sms.send(register.enterPassword(sender));
                     registrationStep = 4;
                     break;
@@ -209,24 +208,19 @@ app.post("/webhook", (req, res) => {
                     //request for fname
                     user.password=text;
                     //validate password
-                    registrationInputs.push(user.password);              
+                                 
                     sms.send(register.enterFirstName(sender));
                     registrationStep = 5;
                     break;
                 case 5:
                     //request for lname
-                    user.firstname=text;
-                   
-                    registrationInputs.push(user.firstname);              
+                    user.firstname=text;             
                     sms.send(register.enterLastName(sender));
                     registrationStep = 6;
                     break;
                 case 6:
                     // process full name and send confirmation message
                     user.lastname=text;
-                    
-                    registrationInputs.push(user.lastname); 
-                       
                         // Sending the request to octagon registration API
                         var client = new Client();
                         // set content-type header and data as json in args parameter
@@ -240,7 +234,7 @@ app.post("/webhook", (req, res) => {
                             // parsed response body as js object
                             console.log(data);
                             // raw response
-                            console.log(response);
+                        
                            
 
                             if ([200].includes(response.statusCode)) {
@@ -248,7 +242,7 @@ app.post("/webhook", (req, res) => {
                                 sms.send({
                                     to: sender,
                                     from:'20880',
-                                    message: "Congratulations!! "+user.firstname.toUpperCase() + " "+ user.lastname.toUpperCase() +". You have successfully registered with Octagon Africa. Your credentials are: username: " + user.firstname.toLowerCase()+"."+user.lastname.toLowerCase() + " Password: " + user.password
+                                    message: "Congratulations!! "+user.firstname.toUpperCase() + " "+ user.lastname.toUpperCase() +". You have successfully registered with Octagon Africa. It has been sent to our team and it is awaiting Approval.Incase of any queries contact support@octagonafrica.com' "
                                 });
                                 isRegistering = false;
                                 registrationStep = 0;
@@ -338,20 +332,147 @@ app.post("/webhook", (req, res) => {
                         // parsed response body as js object
                         console.log(data);
                         // raw response
-                        console.log(response);
+                    
                      
                         if ([200].includes(response.statusCode)) {
-                            // success code
-                            sms.send({
-                               to: sender,
-                               from:'20880',
-                               message: "Account Deleted Successfully. It was a pleasure doing Business with you"
+                                    // success code
+                                    sms.send({
+                                    to: sender,
+                                    from:'20880',
+                                    message: "Account Deleted Successfully. It was a pleasure doing Business with you"
+                                    });
+                                    deletingStep=0;
+                                    isDeleting=false;
+                                    user = {};
+                                    console.log(response.statusCode)
+                            
+                                } else if ([201].includes(response.statusCode)) {
+                                    console.log(response.statusCode);
+                                } else if ([400].includes(response.statusCode)) {
+                                    console.log(response.statusCode);
+                                    sms.send({
+                                        to: sender,
+                                        from:'20880',
+                                        message: " Invalid Details!!. Check your details and please try again Later "
+                                    });
+                                } else if ([500].includes(response.statusCode)) { 
+                                    console.log(response.statusCode);
+                                    sms.send({
+                                        to: sender,
+                                        from:'20880',
+                                        message: " Invalid request. Please input your National Id and password. "
+                                    });
+                                } else {
+                                    // error code
+                                    console.log(response.statusCode);
+                                }
                             });
-                            deletingStep=0;
-                            isDeleting=false;
-                            user = {};
-                            console.log(response.statusCode)
-                     
+                            
+                            break;
+
+                        default:
+                            // do sthg
+                            sms.send({
+                                to: sender,
+                                from:'20880',
+                                message: "Invalid response:!!"
+                            });
+                            break;
+                            
+                }
+        }else if(isCheckingAccount){
+                switch(accountStep){
+                    case 1:
+                        //request username
+                        sms.send(account.provideUserName(sender));
+                        accountStep = 2;
+                    break;
+                    case 2:
+                        //request password
+                        user.username=text;
+                        sms.send(account.providePassword(sender));  
+                        accountStep =3;
+                    break;
+                    case 3:
+                        user.password=text;
+                        //send to octagon Login API
+                        //confirm login
+                        var accountsClient = new Client();
+                        // set content-type header and data as json in args parameter
+                        var args = {
+                            data: { username: user.username, password: user.password },
+                            headers: { "Content-Type": "application/json" }
+                        };
+                          
+                        accountsClient.post("https://api.octagonafrica.com/v1/login", args, function (data, response) {                        
+                        if ([200].includes(response.statusCode)) {
+                            // success code
+                            sms.send(account.confirmLogin(sender));  
+                            accountStep=4;
+                            
+                            var accountIDClient = new Client();
+                            var args = {
+                            data: { identifier: user.username },
+                            headers: { "Content-Type": "application/json" }
+                            };
+                            accountIDClient.get("https://api.octagonafrica.com/v1/accountsid", args, function (data, response) {
+                            if (response.statusCode === 200) {
+                                const ID = data.data;
+                                console.log(ID);
+                                        var fetchClient = new Client();
+                                    // set content-type header and data as json in args parameter
+                                    var args = {
+                                        data: { user_id:ID },
+                                        headers: { "Content-Type": "application/json" }
+                                    };
+                                    fetchClient.get("https://api.octagonafrica.com/v1/accounts", args, function (data, response) {
+
+                                    if ([200].includes(response.statusCode)) {
+                                        // success code
+                                            console.log(response.statusCode)
+                                            
+                                            const insurance = data.insurance;
+                                            const pension = data.pension;
+                                            const trust = data.trust;
+                                            // const totalAccounts = insurance.total_accounts;
+                                            const totalAccountsInsurance = insurance.total_accounts;
+                                            const insuranceData = insurance.data;
+                                            const totalAccountsPension = pension.total_accounts;
+                                            const pensionData = pension.data;
+                                               //Dear custoomer here are yoour accoiunt     
+                                            let insuranceMessage = "";
+                                            for (let i = 0; i < totalAccountsInsurance; i++) {
+                                                insuranceMessage += " Insurance Account Description: " + insuranceData[i].Code + " Name: " + insuranceData[i].Description + " .Active Since: " + insuranceData[i].dateFrom + ".\n";
+                                                console.log("Account Description:", insuranceData[i].Code, "Name: ", insuranceData[i].Description, ". Active Since: ", insuranceData[i].dateFrom);
+                                            }
+                                            let pensionMessage = "";
+                                            for (let i = 0; i < totalAccountsPension; i++) {
+                                                pensionMessage += " Pension Account Description: " + pensionData[i].Code + " Name: " + pensionData[i].scheme_name + " .Active Since: " + pensionData[i].dateFrom + ".\n";
+                                                console.log("Account Description:", pensionData[i].Code, "Name: ", pensionData[i].scheme_name, ".Active Since: ", pensionData[i].dateFrom);
+                                            }
+
+                                            const finalMessage = insuranceMessage + pensionMessage;
+                                                //Send your 
+                                            sms.send({
+                                                to: sender,
+                                                from: '20880',
+                                                message: finalMessage
+                                            });
+                                    
+                                } else if ([400].includes(response.statusCode)) {
+                                    console.log(response.statusCode);
+                                } else {
+                                    // error code
+                                    console.log(response.statusCode);
+                                }
+                                });
+                            } else if (response.statusCode === 400) {
+                                console.log(response.statusCode);
+                            } else {
+                                console.error(response.statusCode, data);
+                                console.log(response.statusCode);
+                            }
+                            });
                         } else if ([201].includes(response.statusCode)) {
                             console.log(response.statusCode);
                         } else if ([400].includes(response.statusCode)) {
@@ -361,88 +482,14 @@ app.post("/webhook", (req, res) => {
                                 from:'20880',
                                 message: " Invalid Details!!. Check your details and please try again Later "
                             });
-                        } else if ([500].includes(response.statusCode)) { 
-                            console.log(response.statusCode);
-                            sms.send({
-                                to: sender,
-                                from:'20880',
-                                message: " Invalid request. Please input your National Id and password. "
-                            });
-                        } else {
-                            // error code
-                            console.log(response.statusCode);
-                        }
-                     });
-                     
-                    break;
-
-                default:
-                    // do sthg
-                    sms.send({
-                        to: sender,
-                        from:'20880',
-                        message: "Invalid response:!!"
-                    });
-                    break;
-                     
-        }
-    }else if(isCheckingAccount){
-        switch(accountStep){
-            case 1:
-                //request username
-                sms.send(account.provideUserName(sender));
-                accountStep = 2;
-            break;
-            case 2:
-                //request password
-                user.username=text;
-                sms.send(account.providePassword(sender));  
-                accountStep =3;
-            break;
-            case 3:
-                user.password=text;
-                //send to octagon Login API
-                //confirm login
-                var accountsClient = new Client();
-                // set content-type header and data as json in args parameter
-                var args = {
-                    data: { username: user.username, password: user.password },
-                    headers: { "Content-Type": "application/json" }
-                };
-                    // username= data[0]+"."+data[1];
-                // Actual Octagon Delete User Account API
-                accountsClient.post("https://api.octagonafrica.com/v1/login", args, function (data, response) {
-                   // parsed response body as js object
-                   console.log(data);
-                   // raw response
-                   console.log(response);
-                
-                   if ([200].includes(response.statusCode)) {
-                       // success code
-                       sms.send(account.confirmLogin(sender));  
-                       sms.send(account.enterUserID(sender)); 
-                       accountStep=4;
-                    //    isCheckingAccount=false;
-                    //    user = {};
-                       console.log(response.statusCode)
-                
-                   } else if ([201].includes(response.statusCode)) {
-                       console.log(response.statusCode);
-                   } else if ([400].includes(response.statusCode)) {
-                       console.log(response.statusCode);
-                       sms.send({
-                           to: sender,
-                           from:'20880',
-                           message: " Invalid Details!!. Check your details and please try again Later "
-                       });
-                    } else if ([401].includes(response.statusCode)) {
-                        console.log(response.statusCode);
-                        sms.send({
-                            to: sender,
-                            from:'20880',
-                            message: " Authentication failed. Incorrect password or username. Access denied "
-                        });
-                    }
+                            } else if ([401].includes(response.statusCode)) {
+                                console.log(response.statusCode);
+                                sms.send({
+                                    to: sender,
+                                    from:'20880',
+                                    message: " Authentication failed. Incorrect password or username. Access denied "
+                                });
+                            }
                    
                    else if ([500].includes(response.statusCode)) { 
                        console.log(response.statusCode);
@@ -459,7 +506,8 @@ app.post("/webhook", (req, res) => {
                
             break;
             case 4:
-                user.userid=text;
+                
+
             break;
             default:
                 // do sthg
@@ -468,163 +516,100 @@ app.post("/webhook", (req, res) => {
 
         }
 
-    }else if (ResetingPassword){
-        switch(resetStep){
-            case 1:
-                //request username
-                sms.send(reset.enterEmail(sender));
-                resetStep = 2;
-            break;
+        }else if (ResetingPassword){
+            switch(resetStep){
+                case 1:
+                    //request username
+                    sms.send(reset.enterEmail(sender));
+                    resetStep = 2;
+                break;
 
-            case 2:
-                //request current password 
-                user.email=text;
-                sms.send(reset.enterCurrentPassword(sender));  
-                resetStep =3;
-            break;
-            //send to login and reset Password
-            case 3:
-                //request OTP
-                user.currentPassword=text;
-                //send to octagon Login API
-                //confirm login
-                var deleteClient = new Client();
-                // set content-type header and data as json in args parameter
-                var args = {
-                    data: { username: user.email, password: user.currentPassword },
-                    headers: { "Content-Type": "application/json" }
-                };
-                    // username= data[0]+"."+data[1];
-                // Actual Octagon Login To Account API
-                deleteClient.post("https://api.octagonafrica.com/v1/login", args, function (data, response) {
-                   // parsed response body as js object
-                   console.log(data);
-                   // raw response
-                   console.log(response);
-                
-                   if ([200].includes(response.statusCode)) {
-                       // success code
-                       sms.send(reset.verifyPassword(sender)); 
-                       //send email to reset Password API
-                       var deleteClient = new Client();
-                            // set content-type header and data as json in args parameter
-                            var args = {
-                                data: { identifier: user.email },
-                                headers: { "Content-Type": "application/json" }
-                            };
-                                // username= data[0]+"."+data[1];
-                            // Actual Octagon Delete User Account API
-                            deleteClient.post("https://api.octagonafrica.com/v1/password_reset", args, function (data, response) {
-                            // parsed response body as js object
-                            console.log(data);
-                            // raw response
-                            console.log(response);
-                            
-                            if ([200].includes(response.statusCode)) {
-                                // success code 
-                                
-                                sms.send(reset.enterOTP(sender));  
-                                    resetStep = 4; 
-                                
-                                console.log(response.statusCode);
-                            
-                            } else if ([201].includes(response.statusCode)) {
-                                console.log(response.statusCode);
-                            } else if ([400].includes(response.statusCode)) {
-                                console.log(response.statusCode);
-                                sms.send({
-                                    to: sender,
-                                    from:'20880',
-                                    message: " Invalid Details!!. Check your details and please try again Later "
-                                });
-                            } else {
-                                // error code
-                                console.log(response.statusCode);
-                            }
-                            });
-                   } else if ([201].includes(response.statusCode)) {
-                       console.log(response.statusCode);
-                   } else if ([400].includes(response.statusCode)) {
-                       console.log(response.statusCode);
-                       sms.send({
-                           to: sender,
-                           from:'20880',
-                           message: " Invalid Details!!. Check your details and please try again Later "
-                       });
-                       
-                    } else if ([401].includes(response.statusCode)) {
-                        console.log(response.statusCode);
-                        sms.send({
-                            to: sender,
-                            from:'20880',
-                            message: " Authentication failed. Incorrect password or username. Access denied "
-                        });
-                    }
-                   
-                   else if ([500].includes(response.statusCode)) { 
-                       console.log(response.statusCode);
-                       sms.send({
-                           to: sender,
-                           from:'20880',
-                           message: " Invalid request.  "
-                       });
-                   } else {
-                       // error code
-                       console.log(response.statusCode);
-                   }
-                });
-               
-                
-            break;
-
-            case 4:
-                //request new Password
-                user.otp=text;
-                sms.send(reset.enterNewPassword(sender));  
-                resetStep = 5;
-            break;
-      
-            case 5:
-                //confirmation of password reset
-                user.newPassword=text;
-                 //confirm login
-                 var deleteClient = new Client();
-                 // set content-type header and data as json in args parameter
-                 var args = {
-                     data: { code: user.otp, password: user.newPassword },
-                     headers: { "Content-Type": "application/json" }
-                 };
-                     // username= data[0]+"."+data[1];
-                 // Actual Octagon Delete User Account API
-                 deleteClient.put("https://api.octagonafrica.com/v1/new_password", args, function (data, response) {
+                case 2:
+                    //request current password 
+                    user.email=text;
+                    sms.send(reset.enterCurrentPassword(sender));  
+                    resetStep =3;
+                break;
+                //send to login and reset Password
+                case 3:
+                    //request OTP
+                    user.currentPassword=text;
+                    //send to octagon Login API
+                    //confirm login
+                    var deleteClient = new Client();
+                    // set content-type header and data as json in args parameter
+                    var args = {
+                        data: { username: user.email, password: user.currentPassword },
+                        headers: { "Content-Type": "application/json" }
+                    };
+                        // username= data[0]+"."+data[1];
+                    // Actual Octagon Login To Account API
+                    deleteClient.post("https://api.octagonafrica.com/v1/login", args, function (data, response) {
                     // parsed response body as js object
                     console.log(data);
                     // raw response
-                    console.log(response);
-                 
+                    
+                    
                     if ([200].includes(response.statusCode)) {
                         // success code
-                        sms.send(reset.confirmation(sender));   
-                        resetStep=0;
-                        ResetingPassword=false;
-                        user = {};
-                        console.log(response.statusCode)
-                    }else if ([400].includes(response.statusCode)) {
+                        sms.send(reset.verifyPassword(sender)); 
+                        //send email to reset Password API
+                        var deleteClient = new Client();
+                                // set content-type header and data as json in args parameter
+                                var args = {
+                                    data: { identifier: user.email },
+                                    headers: { "Content-Type": "application/json" }
+                                };
+                                    // username= data[0]+"."+data[1];
+                                // Actual Octagon Delete User Account API
+                                deleteClient.post("https://api.octagonafrica.com/v1/password_reset", args, function (data, response) {
+                                // parsed response body as js object
+                                console.log(data);
+                                // raw response
+                            
+                                
+                                if ([200].includes(response.statusCode)) {
+                                    // success code 
+                                    
+                                    sms.send(reset.enterOTP(sender));  
+                                        resetStep = 4; 
+                                    
+                                    console.log(response.statusCode);
+                                
+                                } else if ([201].includes(response.statusCode)) {
+                                    console.log(response.statusCode);
+                                } else if ([400].includes(response.statusCode)) {
+                                    console.log(response.statusCode);
+                                    sms.send({
+                                        to: sender,
+                                        from:'20880',
+                                        message: " Invalid Details!!. Check your details and please try again Later "
+                                    });
+                                } else {
+                                    // error code
+                                    console.log(response.statusCode);
+                                }
+                                });
+                    } else if ([201].includes(response.statusCode)) {
+                        console.log(response.statusCode);
+                    } else if ([400].includes(response.statusCode)) {
                         console.log(response.statusCode);
                         sms.send({
                             to: sender,
                             from:'20880',
                             message: " Invalid Details!!. Check your details and please try again Later "
                         });
-                    }
-                    else if ([404].includes(response.statusCode)) {
-                        console.log(response.statusCode);
-                        sms.send({
-                            to: sender,
-                            from:'20880',
-                            message: " Invalid or Expired Password Reset Token !!!"
-                        });
-                    }else if ([500].includes(response.statusCode)) { 
+                        
+                        } else if ([401].includes(response.statusCode)) {
+                            console.log(response.statusCode);
+                            sms.send({
+                                to: sender,
+                                from:'20880',
+                                message: " Authentication failed. Incorrect password or username. Access denied "
+                            });
+                        }
+                    
+                    else if ([500].includes(response.statusCode)) { 
                         console.log(response.statusCode);
                         sms.send({
                             to: sender,
@@ -635,15 +620,76 @@ app.post("/webhook", (req, res) => {
                         // error code
                         console.log(response.statusCode);
                     }
-                 });
-                 
+                    });
                 
-            break;
+                    
+                break;
+                case 4:
+                    //request new Password
+                    user.otp=text;
+                    sms.send(reset.enterNewPassword(sender));  
+                    resetStep = 5;
+                break; 
+                case 5:
+                    //confirmation of password reset
+                    user.newPassword=text;
+                    //confirm login
+                    var deleteClient = new Client();
+                    // set content-type header and data as json in args parameter
+                    var args = {
+                        data: { code: user.otp, password: user.newPassword },
+                        headers: { "Content-Type": "application/json" }
+                    };
+                        // username= data[0]+"."+data[1];
+                    // Actual Octagon Delete User Account API
+                    deleteClient.put("https://api.octagonafrica.com/v1/new_password", args, function (data, response) {
+                        // parsed response body as js object
+                        console.log(data);
+                        // raw response
+                    
+                    
+                        if ([200].includes(response.statusCode)) {
+                            // success code
+                            sms.send(reset.confirmation(sender));   
+                            resetStep=0;
+                            ResetingPassword=false;
+                            user = {};
+                            console.log(response.statusCode)
+                        }else if ([400].includes(response.statusCode)) {
+                            console.log(response.statusCode);
+                            sms.send({
+                                to: sender,
+                                from:'20880',
+                                message: " Invalid Details!!. Check your details and please try again Later "
+                            });
+                        }
+                        else if ([404].includes(response.statusCode)) {
+                            console.log(response.statusCode);
+                            sms.send({
+                                to: sender,
+                                from:'20880',
+                                message: " Invalid or Expired Password Reset Token !!!"
+                            });
+                        }else if ([500].includes(response.statusCode)) { 
+                            console.log(response.statusCode);
+                            sms.send({
+                                to: sender,
+                                from:'20880',
+                                message: " Invalid request.  "
+                            });
+                        } else {
+                            // error code
+                            console.log(response.statusCode);
+                        }
+                    });
+                    
+                    
+                break;
 
 
 
+            }
         }
-    }
     
     
         console.log(registrationInputs);
@@ -652,6 +698,5 @@ app.post("/webhook", (req, res) => {
 
     
        
-
 
 

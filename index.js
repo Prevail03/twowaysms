@@ -439,7 +439,7 @@ app.post("/webhook", (req, res) => {
                                             const insuranceData = insurance.data;
                                             const totalAccountsPension = pension.total_accounts;
                                             const pensionData = pension.data;
-
+                                               //Dear custoomer here are yoour accoiunt     
                                             let insuranceMessage = "";
                                             for (let i = 0; i < totalAccountsInsurance; i++) {
                                                 insuranceMessage += " Insurance Account Description: " + insuranceData[i].Code + " Name: " + insuranceData[i].Description + " .Active Since: " + insuranceData[i].dateFrom + ".\n";
@@ -452,7 +452,7 @@ app.post("/webhook", (req, res) => {
                                             }
 
                                             const finalMessage = insuranceMessage + pensionMessage;
-
+                                                //Send your 
                                             sms.send({
                                                 to: sender,
                                                 from: '20880',
@@ -695,9 +695,3 @@ app.post("/webhook", (req, res) => {
         console.log(registrationInputs);
             res.send("Webhook received");
 });       
-
-    
-       
-
-
-

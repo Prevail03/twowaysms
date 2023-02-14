@@ -1,69 +1,42 @@
-let username = "test-hr";
-var accountIDClient = new Client();
-var args = {
-  data: { identifier: username },
-  headers: { "Content-Type": "application/json" }
-};
-accountIDClient.get("https://api.octagonafrica.com/v1/accountsid", args, function (data, response) {
-  if (response.statusCode === 200) {
-    const ID = data.data;
-    console.log(ID);
-            var fetchClient = new Client();
+        var accountsClient = new Client();
         // set content-type header and data as json in args parameter
         var args = {
-            data: { user_id:ID },
+            data: { username: user.username, password: user.password },
             headers: { "Content-Type": "application/json" }
         };
-            // username= data[0]+"."+data[1];
-        // Actual Octagon Delete User Account API
-        fetchClient.get("https://api.octagonafrica.com/v1/accounts", args, function (data, response) {
-        // parsed response body as js object
-        //    console.log(data);
-        // raw response
-        //    console.log(response);
-
+            
+        accountsClient.post("https://api.octagonafrica.com/v1/login", args, function (data, response) {                        
         if ([200].includes(response.statusCode)) {
             // success code
-            console.log(response.statusCode)
-            
-            const insurance = data.insurance;
-            const pension = data.pension;
-            const trust = data.trust;
-            // const totalAccounts = insurance.total_accounts;
-            const totalAccountsInsurance = insurance.total_accounts;
-            const insuranceData = insurance.data;
-            const totalAccountsPension = pension.total_accounts;
-            const pensionData = pension.data;
-
-            console.log("Insurance");
-            console.log("Total Accounts: ",totalAccountsInsurance );
-            for (let i = 0; i < totalAccountsInsurance; i++) {
-            console.log("Account Description:", insuranceData[i].Code,"Name: ",insuranceData[i].Description,".Active Since: ", insuranceData[i].dateFrom );
+            sms.send(account.confirmLogin(sender));  
+            accountStep=4;
+        } else if ([201].includes(response.statusCode)) {
+            console.log(response.statusCode);
+        } else if ([400].includes(response.statusCode)) {
+            console.log(response.statusCode);
+            sms.send({
+                to: sender,
+                from:'20880',
+                message: " Invalid Details!!. Check your details and please try again Later "
+            });
+            } else if ([401].includes(response.statusCode)) {
+                console.log(response.statusCode);
+                sms.send({
+                    to: sender,
+                    from:'20880',
+                    message: " Authentication failed. Incorrect password or username. Access denied "
+                });
             }
-            console.log("Pension");
-            console.log("Total Accounts: ",totalAccountsPension );
-            for (let i = 0; i < totalAccountsPension; i++) {
-                console.log("Account Description:", pensionData[i].Code,"Name: ",pensionData[i].scheme_name,".Active Since: ", pensionData[i].dateFrom );
-            }
-      
-}else if ([201].includes(response.statusCode)) {
-       console.log(response.statusCode);
-   } else if ([400].includes(response.statusCode)) {
-       console.log(response.statusCode);
-       
-   } else if ([500].includes(response.statusCode)) { 
-       console.log(response.statusCode);
-   } else {
-    // error code
-       console.log(response.statusCode);
-   }
-});
 
-
-  } else if (response.statusCode === 400) {
-    console.log(response.statusCode);
-  } else {
-    console.error(response.statusCode, data);
-    console.log(response.statusCode);
-  }
-});
+        else if ([500].includes(response.statusCode)) { 
+        console.log(response.statusCode);
+        sms.send({
+            to: sender,
+            from:'20880',
+            message: " Invalid request. Please input your National Id and password. "
+        });
+        } else {
+        // error code
+        console.log(response.statusCode);
+        }
+        });
