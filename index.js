@@ -439,7 +439,8 @@ app.post("/webhook", (req, res) => {
                                             const insuranceData = insurance.data;
                                             const totalAccountsPension = pension.total_accounts;
                                             const pensionData = pension.data;
-                                               //Dear custoomer here are yoour accoiunt     
+                                               //Dear custoomer here are yoour accoiunt  
+                                            let preAccounts= "Dear "+user.username+ ", Here are your accounts \n "      
                                             let insuranceMessage = "";
                                             for (let i = 0; i < totalAccountsInsurance; i++) {
                                                 insuranceMessage += " Insurance Account Description: " + insuranceData[i].Code + " Name: " + insuranceData[i].Description + " .Active Since: " + insuranceData[i].dateFrom + ".\n";
@@ -450,8 +451,8 @@ app.post("/webhook", (req, res) => {
                                                 pensionMessage += " Pension Account Description: " + pensionData[i].Code + " Name: " + pensionData[i].scheme_name + " .Active Since: " + pensionData[i].dateFrom + ".\n";
                                                 console.log("Account Description:", pensionData[i].Code, "Name: ", pensionData[i].scheme_name, ".Active Since: ", pensionData[i].dateFrom);
                                             }
-
-                                            const finalMessage = insuranceMessage + pensionMessage;
+                                            let postAccounts = "Please provide us with the account description so that we can provide you with a member statement "
+                                            const finalMessage =  preAccounts + insuranceMessage + pensionMessage + postAccountsf;
                                                 //Send your 
                                             sms.send({
                                                 to: sender,
