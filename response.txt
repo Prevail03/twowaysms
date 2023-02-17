@@ -1,42 +1,332 @@
-        var accountsClient = new Client();
-        // set content-type header and data as json in args parameter
-        var args = {
-            data: { username: user.username, password: user.password },
-            headers: { "Content-Type": "application/json" }
-        };
-            
-        accountsClient.post("https://api.octagonafrica.com/v1/login", args, function (data, response) {                        
-        if ([200].includes(response.statusCode)) {
-            // success code
-            sms.send(account.confirmLogin(sender));  
-            accountStep=4;
-        } else if ([201].includes(response.statusCode)) {
-            console.log(response.statusCode);
-        } else if ([400].includes(response.statusCode)) {
-            console.log(response.statusCode);
-            sms.send({
-                to: sender,
-                from:'20880',
-                message: " Invalid Details!!. Check your details and please try again Later "
-            });
-            } else if ([401].includes(response.statusCode)) {
-                console.log(response.statusCode);
+const express = require("express");
+const session = require('express-session');
+const _ = require('lodash');
+const sql = require('mssql');
+
+var Client = require('node-rest-client').Client;
+
+const kenyanCounties = require('./src/assets/counties.js');
+const options = require('./env.js');
+const config = require('./dbconnect.js');
+const register = require('./src/register.js');
+const account = require('./src/account.js');
+const reset = require('./src/reset.js');
+const validateId = require('./src/validateId.js');
+const AfricasTalking = require('africastalking')(options);
+
+const generateRandom4DigitNumber = require('./src/generateRandom4DigitNumber.js');
+const app = express();
+
+const keyword = "Test4 ";
+
+app.use(session({
+    secret: 'mysecret',
+    resave: false,
+    saveUninitialized: true
+}));
+const bodyParser = require("body-parser");
+const { urlencoded } = require("express");
+app.use(bodyParser.json());
+app.listen(3000, function() {
+    console.log("Started at localhost 3000");
+});
+
+
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+var fetchPeriodsClient = new Client();
+// set content-type header and data as json in args parameter
+let desc = "KE001:IPP/3000/23";
+var args = {
+    data: { description: desc },
+    headers: { "Content-Type": "application/json" }
+};
+    
+fetchPeriodsClient.get("https://api.octagonafrica.com/v1/accounts/pension/periods/twoway", args, function (data, response) {
+    if ([200].includes(response.statusCode)) {
+        const periods = data.data;
+        console.log("Available periods are: ");
+        for (let i = 0; i < periods.length; i++) {
+            const period_name = periods[i].period_name;
+            console.log(`${i + 1}. ${period_name}`);
+        }
+    } else if ([201].includes(response.statusCode)) {
+        console.log(response.statusCode);
+    } else if ([400].includes(response.statusCode)) {
+        console.log(response.statusCode);
+    } else if ([401].includes(response.statusCode)) {
+        console.log(response.statusCode);
+    } else if ([500].includes(response.statusCode)) {
+        console.log(response.statusCode);
+    } else {
+        console.log(response.statusCode);
+    }
+});
+
+const express = require("express");
+const session = require('express-session');
+const options = require('./env.js');
+const AfricasTalking = require('africastalking')(options);
+const _ = require('lodash');
+const Client = require('node-rest-client').Client;
+const register = require('./src/register.js');
+const account = require('./src/account.js');
+const reset = require('./src/reset.js');
+const validateId = require('./src/validateId.js');
+const app = express();
+const keyword = "Test4 ";
+const uuid = require('uuid');
+const sessions = AfricasTalking.SESSION;
+const sms = AfricasTalking.SMS;
+
+const sessionIdStore = {};
+app.use(session({// Configure session middleware
+  secret: 'mysecret',
+  resave: false,
+  saveUninitialized: true
+}));
+const bodyParser = require("body-parser");
+const { urlencoded } = require("express");
+app.use(bodyParser.json());
+app.listen(3000, function() {
+  console.log("Started at localhost 3000");
+});
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+
+app.post("/webhook", (req, res) => {
+  const payload = req.body;
+  const sender = payload.from;
+  const textMessage = payload.text;
+  let messageToCustomer;
+  const text = textMessage.replace(keyword, '').trim(); //remove "Key Word"
+  const sessionId = req.session.id;
+    console.log(sessionId);
+    
+
+  // Check if there is a session associated with this ID
+  let sessionData = sessionIdStore[sessionId];
+
+  if (!sessionData) {
+    // Create a new session object and associate it with the session ID
+    sessionData = {
+    isRegistering: false,registrationStep: 0, isDeleting: false,deletingStep: 0, isCheckingAccount: false, accountStep: 0,isResettingPassword: false,resetStep: 0,user: {} };
+    sessionIdStore[sessionId] = sessionData;
+  }
+
+  const {
+    isRegistering,registrationStep, user} = sessionData;
+        if (!isRegistering) {
+            switch (text.toLowerCase()) {
+            case 'register':
+                
+            sessionData.isRegistering = false;//reset isRegistering flag and registrationStep
+            sessionData.registrationStep = 0;
+            sms.send(register.newCustomer(sender));
+            sms.send(register.enterId(sender));
+            //set a flag to indicate that the user is in the process of registering
+            sessionData.isRegistering = true;
+            //request for ID number
+            sessionData.registrationStep = 2; ///move to else if(isRegistering) {
+            break;
+            case 'balance':
+                messageToCustomer = 'Hello Our Dear Esteemed Customer, Welcome to Octagon Services. Enter your 4 digit pin - balance ';
                 sms.send({
                     to: sender,
                     from:'20880',
-                    message: " Authentication failed. Incorrect password or username. Access denied "
+                    message: messageToCustomer
                 });
+                break;
+            case 'statement':
+                messageToCustomer = 'Hello Our Dear Esteemed Customer, Welcome to Octagon Services. Enter your 4 digit pin - statement';
+                sms.send({
+                    to: sender,
+                    from:'20880',
+                    message: messageToCustomer
+                });
+                break;
+                case 'deposit':
+                    messageToCustomer = 'Hello Our Dear Esteemed Customer, Welcome to Octagon Services. Enter your 4 digit pin - deposit';
+                    sms.send({
+                        to: sender,
+                        from:'20880',
+                        message: messageToCustomer
+                    });
+                    break;
+                case 'claims':
+                    messageToCustomer = 'Hello Our Dear Esteemed Customer, Welcome to Octagon Services. Enter your 4 digit pin - claims';
+                    sms.send({
+                        to: sender,
+                        from:'20880',
+                        message: messageToCustomer
+                    });
+                    break;
+                case 'products':
+                    messageToCustomer = 'Hello Our Dear Esteemed Customer, Welcome to Octagon Services. Enter your 4 digit pin - products';
+                    sms.send({
+                        to: sender,
+                        from:'20880',
+                        message: messageToCustomer
+                    });
+                    break;
+                case 'accounts':
+                    isCheckingAccount=false;
+                    accountStep=0;
+                    sms.send(account.welcomeMessageAccount(sender));
+                    sms.send(account.provideUserName(sender));
+                    isCheckingAccount=true;
+                    accountStep=2;
+                    break;
+                case 'rate':
+                    messageToCustomer = 'Hello Our Dear Esteemed Customer, Welcome to Octagon Services. Enter your 4 digit pin - rate';
+                    sms.send({
+                        to: sender,
+                        from:'20880',
+                        message: messageToCustomer
+                    });
+                    
+                    break;
+                case 'delete':
+                    isDeleting=false;
+                    deletingStep=0;
+                    messageToCustomer = 'Hello Our Dear Esteemed Customer, Welcome to Octagon Services.';
+                    
+                    sms.send({
+                        to: sender,
+                        from:'20880',
+                        message: messageToCustomer
+                    });
+                   
+                    sms.send(register.enterId(sender));
+                    isDeleting =true;
+                    deletingStep=2;
+                    break;
+                case 'reset':
+                    ResetingPassword=false;
+                    resetStep=0;
+                    sms.send(reset.welcomeMessage(sender));
+                    sms.send(reset.enterEmail(sender));
+                    ResetingPassword=true;
+                    resetStep=2;
+                    
+                    break;
+                default:
+                    messageToCustomer = 'Welcome To Octagon Africa you can access our services by sending the word register,save, balance,statement,products';
+                    sms.send({
+                        to: sender,
+                        from:'20880',
+                        message: messageToCustomer
+                    });
+                    break;
+            }
+        }else if(isRegistering) {
+            switch (registrationStep) {
+                case 1:
+                    // request for ID number  
+                    sms.send(register.enterId(sender));
+                    sessionData.registrationStep = 2;
+                    break;
+                case 2:
+                    // process ID number and request for county
+                    if(validateId(text)) {
+                        sessionData.user = user ? {...user, id: text} : {id: text};                     
+                        sms.send(register.enterEmail(sender));
+                        sessionData.registrationStep = 3;
+                    } else {
+                        messageToCustomer = "Invalid ID number. Please enter a valid 6-digit ID number";
+                        sessionData.registrationStep = 1;
+                    }
+                    break;
+                case 3:
+                    //request 6 character password
+                    sessionData.user.email=text
+                               
+                    sessionData.sms.send(register.enterPassword(sender));
+                    sessionData.registrationStep = 4;
+                    break;
+                case 4:
+                    //request for fname
+                    sessionData.user.password=text;
+                    //validate password
+                                 
+                    sms.send(register.enterFirstName(sender));
+                    sessionData.registrationStep = 5;
+                    break;
+                case 5:
+                    //request for lname
+                    sessionData.user.firstname=text;             
+                    sms.send(register.enterLastName(sender));
+                    sessionData.registrationStep = 6;
+                    break;
+                case 6:
+                    // process full name and send confirmation message
+                    sessionData.user.lastname=text;
+                        // Sending the request to octagon registration API
+                        var client = new Client();
+                        // set content-type header and data as json in args parameter
+                        var args = {
+                            data: { firstname: sessionData.user.firstname, lastname: sessionData.user.lastname, ID: sessionData.user.id, email: sessionData.user.email, password: sessionData.user.password, phonenumber: sender },
+                            headers: { "Content-Type": "application/json" }
+                        };
+                        // Actual Octagon user registration API
+                        client.post("https://api.octagonafrica.com/v1/register", args, function (data, response) {
+                            // parsed response body as js object
+                            console.log(data);
+                            if ([200].includes(response.statusCode)) {
+                                // success code
+                                sms.send({
+                                    to: sender,
+                                    from:'20880',
+                                    message: "Congratulations!! "+user.firstname.toUpperCase() + " "+ user.lastname.toUpperCase() +". You have successfully registered with Octagon Africa. It has been sent to our team and it is awaiting Approval.Incase of any queries contact support@octagonafrica.com' "
+                                });
+                                sessionData.isRegistering = false;
+                                sessionData.registrationStep = 0;
+                                user = {};
+                                console.log(response.statusCode)  
+                            } else if ([201].includes(response.statusCode)) {
+                                console.log(response.statusCode);
+                                isRegistering = false;
+                                registrationStep = 0;
+                                user = {};
+                            }else if ([400].includes(response.statusCode)) {
+                                console.log(response.statusCode);
+                                sms.send({
+                                    to: sender,
+                                    from:'20880',
+                                    message: "Registration unsuccesfull. Invalid Details or Username Exists . Please try again Later "   
+                                });
+                                isRegistering = false;
+                                registrationStep = 0;
+                                user = {};
+                            }else if ([500].includes(response.statusCode)) {
+                                console.log(response.statusCode);
+                                sms.send({
+                                    to: sender,
+                                    from:'20880',
+                                    message: "Registration unsuccesfull. Internal Server Error. Please try again Later "    
+                                });
+                                isRegistering = false;
+                                registrationStep = 0;
+                                user = {};
+                            }
+                            else {
+                                // error code
+                                console.log(response.statusCode);
+                            }
+                        });
+                    break;
+                default:
+                    // do sthg
+                    sms.send({
+                        to: sender,
+                        from:'20880',
+                        message: "Invalid response:!!"
+                    });
+                    break;
             }
 
-        else if ([500].includes(response.statusCode)) { 
-        console.log(response.statusCode);
-        sms.send({
-            to: sender,
-            from:'20880',
-            message: " Invalid request. Please input your National Id and password. "
-        });
-        } else {
-        // error code
-        console.log(response.statusCode);
         }
-        });
+        console.log(sessionData.registrationStep);
+        console.log(sessionData.isRegistering);
+    res.send("Webhook received");
+});       

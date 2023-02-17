@@ -54,6 +54,7 @@ let generatedPin; ///generated pin
 
 app.post("/webhook", (req, res) => {
     const payload = req.body;
+    console.log(payload);
     const sender = payload.from;
     console.log(sender);
     const textMessage = payload.text;
@@ -61,7 +62,6 @@ app.post("/webhook", (req, res) => {
     const sms = AfricasTalking.SMS;
     let messageToCustomer;
     
-
     const text = textMessage.replace(keyword, '').trim();//remove "Key Word"
    
     console.log(text);
@@ -69,7 +69,7 @@ app.post("/webhook", (req, res) => {
         switch (text.toLowerCase()) {
             // case '':
             case 'register':
-                
+                africasTalking.SMS.createSession(sender, from, keyword);
                 //reset isRegistering flag and registrationStep
                 isRegistering = false;
                 registrationStep = 0;
@@ -84,6 +84,9 @@ app.post("/webhook", (req, res) => {
                 
                 //request for ID number
                 registrationStep = 2;
+                africasTalking.SMS.createSession(sender, from, keyword);
+                const sessionId = res.data.sessionId;
+                console.log(`Session ID: ${sessionId}`);
                 break;
     
             case 'balance':
@@ -439,7 +442,8 @@ app.post("/webhook", (req, res) => {
                                             const insuranceData = insurance.data;
                                             const totalAccountsPension = pension.total_accounts;
                                             const pensionData = pension.data;
-                                               //Dear custoomer here are yoour accoiunt     
+                                               //Dear custoomer here are yoour accoiunt  
+                                            let preAccounts= "Dear "+user.username+ ", Here are your accounts \n "      
                                             let insuranceMessage = "";
                                             for (let i = 0; i < totalAccountsInsurance; i++) {
                                                 insuranceMessage += " Insurance Account Description: " + insuranceData[i].Code + " Name: " + insuranceData[i].Description + " .Active Since: " + insuranceData[i].dateFrom + ".\n";
@@ -450,8 +454,8 @@ app.post("/webhook", (req, res) => {
                                                 pensionMessage += " Pension Account Description: " + pensionData[i].Code + " Name: " + pensionData[i].scheme_name + " .Active Since: " + pensionData[i].dateFrom + ".\n";
                                                 console.log("Account Description:", pensionData[i].Code, "Name: ", pensionData[i].scheme_name, ".Active Since: ", pensionData[i].dateFrom);
                                             }
-
-                                            const finalMessage = insuranceMessage + pensionMessage;
+                                            let postAccounts = "Please provide us with the account description so that we can provide you with a member statement "
+                                            const finalMessage =  preAccounts + insuranceMessage + pensionMessage + postAccountsf;
                                                 //Send your 
                                             sms.send({
                                                 to: sender,
@@ -695,8 +699,5 @@ app.post("/webhook", (req, res) => {
         console.log(registrationInputs);
             res.send("Webhook received");
 });       
-
-    
-       
 
 

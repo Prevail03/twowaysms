@@ -2,9 +2,7 @@ const express = require("express");
 const session = require('express-session');
 const _ = require('lodash');
 const sql = require('mssql');
-
 var Client = require('node-rest-client').Client;
-
 const kenyanCounties = require('./src/assets/counties.js');
 const options = require('./env.js');
 const config = require('./dbconnect.js');
@@ -13,12 +11,9 @@ const account = require('./src/account.js');
 const reset = require('./src/reset.js');
 const validateId = require('./src/validateId.js');
 const AfricasTalking = require('africastalking')(options);
-
 const generateRandom4DigitNumber = require('./src/generateRandom4DigitNumber.js');
 const app = express();
-
 const keyword = "Test4 ";
-
 app.use(session({
     secret: 'mysecret',
     resave: false,
@@ -30,12 +25,8 @@ app.use(bodyParser.json());
 app.listen(3000, function() {
     console.log("Started at localhost 3000");
 });
-
-
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-
-
 let isRegistering = false;
 let registrationStep = 0;
 let isDeleting=false;
@@ -45,47 +36,36 @@ let accountStep=0;
 let ResetingPassword=false;
 let resetStep=0
 let user={};
-// let phoneNumberVerified = false
 let rate;
 const registrationInputs = [];//Array for user inputs
 let generatedPin; ///generated pin
-
-
-
 app.post("/webhook", (req, res) => {
     const payload = req.body;
+    console.log(payload);
     const sender = payload.from;
     console.log(sender);
     const textMessage = payload.text;
     console.log(textMessage);
     const sms = AfricasTalking.SMS;
-    let messageToCustomer;
-    
-
-    const text = textMessage.replace(keyword, '').trim();//remove "Key Word"
-   
+    let messageToCustomer;    
+    const text = textMessage.replace(keyword, '').trim();//remove "Key Word" 
     console.log(text);
     if(!isRegistering && !isDeleting && !isCheckingAccount && !ResetingPassword){
         switch (text.toLowerCase()) {
             // case '':
             case 'register':
-                
                 //reset isRegistering flag and registrationStep
                 isRegistering = false;
                 registrationStep = 0;
                 //generate  pin
-                
-                 generatedPin = generateRandom4DigitNumber();
-                   
+                 generatedPin = generateRandom4DigitNumber();      
                 sms.send(register.newCustomer(sender));
                 sms.send(register.enterId(sender));
                 //set a flag to indicate that the user is in the process of registering
-                isRegistering = true;
-                
+                isRegistering = true;         
                 //request for ID number
                 registrationStep = 2;
                 break;
-    
             case 'balance':
                 messageToCustomer = 'Hello Our Dear Esteemed Customer, Welcome to Octagon Services. Enter your 4 digit pin - balance ';
                 sms.send({
@@ -693,6 +673,8 @@ app.post("/webhook", (req, res) => {
         }
     
     
-        console.log(registrationInputs);
+        console.log(isRegistering);
             res.send("Webhook received");
 });       
+
+
