@@ -57,55 +57,62 @@ app.post("/webhook", (req, res) => {
 
     function handleIncomingMessage(text, sender, textId, phoneNumber, time) {
         // Check if user exists in database
-        const checkIfExistsQuery = "SELECT TOP 1 * FROM two_way_sms_tb WHERE phoneNumber = @phoneNumber AND isActive = 1";
-        const checkIfExistsRequest = new sql.Request(connection);
-        checkIfExistsRequest.input('phoneNumber', sql.VarChar, phoneNumber);
-        checkIfExistsRequest.query(checkIfExistsQuery, function(checkErr, checkResults) {
-          if (checkErr) {
-            console.error('Error executing checkIfExistsQuery: ' + checkErr.stack);
-            sql.close();
-            return;
-          }
-          if (checkResults.recordset.length > 0) {
-            console.log('User already exists');
-            const status = checkResults.recordset[0].status;
-            const messagingStep = checkResults.recordset[0].messagingStep;
-            switch (status) {
-              case 'isRegistering':
-                handleRegister(text, sender, messagingStep);
-                break;
-              case 'isDeleting':
-                handleDelete(text, sender, messagingStep);
-                break;
-              case 'isCheckingAccount':
-                handleAccountCheck(text, sender, messagingStep);
-                break;
-              case 'ResetingPassword':
-                handlePasswordReset(text, sender, messagingStep);
-                break;
-              default:
-                console.log('Unknown status: ' + status);
-                break;
-            }
-          } else {
-            //new user in the system
-            const insertQuery = "INSERT INTO two_way_sms_tb (text, text_id_AT, phoneNumber, isActive, time) VALUES (@text, @text_id_AT, @phoneNumber, @isActive, @time)";
-      
-            const insertRequest = new sql.Request(connection);
-            insertRequest.input('text', sql.VarChar, text);
-            insertRequest.input('text_id_AT', sql.VarChar, textId);
-            insertRequest.input('phoneNumber', sql.VarChar, phoneNumber);
-            insertRequest.input('isActive', sql.Bit, 1);
-            insertRequest.input('time', sql.DateTime2, time);
-            insertRequest.query(insertQuery, function(insertErr, insertResults) {
-              if (insertErr) {
-                console.error('Error executing insertQuery: ' + insertErr.stack);
+            sql.connect(config, function(err, connection) {
+                if (err) {
+                    console.error('Error connecting to database: ' + err.stack);
+                    return;
+                }
+                console.log('Connected to database');
+            const checkIfExistsQuery = "SELECT TOP 1 * FROM two_way_sms_tb WHERE phoneNumber = @phoneNumber AND isActive = 1";
+            const checkIfExistsRequest = new sql.Request(connection);
+            checkIfExistsRequest.input('phoneNumber', sql.VarChar, phoneNumber);
+            checkIfExistsRequest.query(checkIfExistsQuery, function(checkErr, checkResults) {
+            if (checkErr) {
+                console.error('Error executing checkIfExistsQuery: ' + checkErr.stack);
                 sql.close();
                 return;
-              }
-              console.log('INSERT successful');
+            }
+            if (checkResults.recordset.length > 0) {
+                console.log('User already exists');
+                const status = checkResults.recordset[0].status;
+                const messagingStep = checkResults.recordset[0].messagingStep;
+                switch (status) {
+                case 'isRegistering':
+                    handleRegister(text, sender, messagingStep);
+                    break;
+                case 'isDeleting':
+                    handleDelete(text, sender, messagingStep);
+                    break;
+                case 'isCheckingAccount':
+                    handleAccountCheck(text, sender, messagingStep);
+                    break;
+                case 'ResetingPassword':
+                    handlePasswordReset(text, sender, messagingStep);
+                    break;
+                default:
+                    console.log('Unknown status: ' + status);
+                    break;
+                }
+            } else {
+                //new user in the system
+                const insertQuery = "INSERT INTO two_way_sms_tb (text, text_id_AT, phoneNumber, isActive, time) VALUES (@text, @text_id_AT, @phoneNumber, @isActive, @time)";
+        
+                const insertRequest = new sql.Request(connection);
+                insertRequest.input('text', sql.VarChar, text);
+                insertRequest.input('text_id_AT', sql.VarChar, textId);
+                insertRequest.input('phoneNumber', sql.VarChar, phoneNumber);
+                insertRequest.input('isActive', sql.Bit, 1);
+                insertRequest.input('time', sql.DateTime2, time);
+                insertRequest.query(insertQuery, function(insertErr, insertResults) {
+                if (insertErr) {
+                    console.error('Error executing insertQuery: ' + insertErr.stack);
+                    sql.close();
+                    return;
+                }
+                console.log('INSERT successful');
+                });
+            }
             });
-          }
         });
       }
       handleIncomingMessage(text, sender, textId, phoneNumber, time);
@@ -127,7 +134,7 @@ app.post("/webhook", (req, res) => {
             break;
         }
       }
-      
+
       
       function handleDelete(text, sender, messagingStep) {
         switch (messagingStep) {
