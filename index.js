@@ -60,7 +60,7 @@ app.post("/webhook", (req, res) => {
           }
         console.log('Connected to database');  
         const request = new sql.Request();
-        const queryString = `INSERT INTO twowaysms_tb (text, text_id_AT, phoneNumber, isActive, time)
+        const queryString = `INSERT INTO two_way_sms_tb (text, text_id_AT, phoneNumber, isActive, time)
                             VALUES (@text, @textId, @phoneNumber, @isActive, @time)`;
         request.input('text', sql.VarChar, text);
         request.input('textId', sql.VarChar, textId);
