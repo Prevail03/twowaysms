@@ -108,11 +108,13 @@ app.post("/webhook", (req, res) => {
           }
         });
       }
-      
+      handleIncomingMessage(text, sender, textId, phoneNumber, time);
+
       
       function handleRegister(text, sender, messagingStep) {
         switch (messagingStep) {
           case '1':
+            
             // Handle step 1 of registration process
             break;
           case '2':
@@ -125,6 +127,7 @@ app.post("/webhook", (req, res) => {
             break;
         }
       }
+      
       
       function handleDelete(text, sender, messagingStep) {
         switch (messagingStep) {
