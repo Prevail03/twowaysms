@@ -30,7 +30,7 @@ let isCheckingAccount=false;
 let accountStep=0;
 let ResetingPassword=false;
 let resetStep=0
-let user={};
+
 
 app.post("/webhook", (req, res) => {
     const payload = req.body;
@@ -50,7 +50,7 @@ app.post("/webhook", (req, res) => {
 
     
     handleIncomingMessage(text, sender, textId, phoneNumber, time, config ,sms ,register);
-    handleRegister(text, sender, messagingStep ,sms, register, config, phoneNumber, time, validateId, user);
+    handleRegister(text, sender, messagingStep ,sms, register, config, phoneNumber, time, validateId);
       
       function handleDelete(text, sender, messagingStep) {
         switch (parseInt(messagingStep)) {
