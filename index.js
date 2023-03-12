@@ -59,7 +59,7 @@ app.post("/webhook", (req, res) => {
         // Check if user exists in database
         const checkIfExistsQuery = "SELECT TOP 1 * FROM two_way_sms_tb WHERE phoneNumber = @phoneNumber AND isActive = 1";
         const checkIfExistsRequest = new sql.Request(connection);
-        checkIfExistsRequest.input('phoneNumber', sql.VarChar, sender);
+        checkIfExistsRequest.input('phoneNumber', sql.VarChar, phoneNumber);
         checkIfExistsRequest.query(checkIfExistsQuery, function(checkErr, checkResults) {
           if (checkErr) {
             console.error('Error executing checkIfExistsQuery: ' + checkErr.stack);
