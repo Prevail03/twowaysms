@@ -53,30 +53,52 @@ app.post("/webhook", (req, res) => {
     let messageToCustomer;    
     const text = textMessage.replace(keyword, '').trim();//remove "Key Word" 
     const time = new Date();
-    sql.connect(config, function(err) {
+    sql.connect(config, function(err, connection) {
         if (err) {
-            console.error('Error connecting to database: ' + err.stack);
+          console.error('Error connecting to database: ' + err.stack);
+          return;
+        }
+        console.log('Connected to database');
+       const checkIfExistsQuery = "SELECT TOP 1 * FROM two_way_sms_tb WHERE phoneNumber = @phoneNumber AND isActive = 1";
+        const checkIfExistsRequest = new sql.Request(connection);
+        checkIfExistsRequest.input('phoneNumber', sql.VarChar, phoneNumber);
+        checkIfExistsRequest.query(checkIfExistsQuery, function(checkErr, checkResults) {
+          if (checkErr) {
+            console.error('Error executing checkIfExistsQuery: ' + checkErr.stack);
+            sql.close();
             return;
           }
-        console.log('Connected to database');  
-        const request = new sql.Request();
-        const queryString = `INSERT INTO two_way_sms_tb (text, text_id_AT, phoneNumber, isActive, time)
-                            VALUES (@text, @textId, @phoneNumber, @isActive, @time)`;
-        request.input('text', sql.VarChar, text);
-        request.input('textId', sql.VarChar, textId);
-        request.input('phoneNumber', sql.VarChar, phoneNumber);
-        request.input('isActive', sql.Bit, isActive);
-        request.input('time', sql.DateTime2, time);
-        request.query(queryString, function(err, results) {
-        if (err) {
-            console.error('Error executing query: ' + err.stack);
+          if (checkResults.recordset.length > 0) {
+            console.log('User already exists');
+            sql.close();
             return;
-        }
-        console.log('INSERT successful');
-        sql.close();
-        });  
-        
-    });
+          }
+          const insertQuery = "INSERT INTO two_way_sms_tb (text, text_id_AT, phoneNumber, isActive, time) VALUES (@text, @textId, @phoneNumber, @isActive, @time)";
+          const insertRequest = new sql.Request(connection);
+          insertRequest.input('text', sql.VarChar, text);
+          insertRequest.input('textId', sql.VarChar, textId);
+          insertRequest.input('phoneNumber', sql.VarChar, phoneNumber);
+          insertRequest.input('isActive', sql.Bit, isActive);
+          insertRequest.input('time', sql.DateTime2, time);
+          insertRequest.query(insertQuery, function(insertErr, insertResults) {
+            if (insertErr) {
+              console.error('Error executing insertQuery: ' + insertErr.stack);
+              sql.rollback(function() {
+                sql.close();
+              });
+              return;
+            }
+            console.log('INSERT successful');
+            sql.commit(function(commitErr) {
+              if (commitErr) {
+                console.error('Error committing transaction: ' + commitErr.stack);
+              }
+              sql.close();
+            });
+          });
+        });
+      });
+      
     if(!isRegistering && !isDeleting && !isCheckingAccount && !ResetingPassword){
         switch (text.toLowerCase()) {
             // case '':
@@ -95,23 +117,20 @@ app.post("/webhook", (req, res) => {
                 const messagingStep= "2";
                 sql.connect(config, function(err) {
                     const request = new sql.Request();
-                    const queryString = `UPDATE two_way_sms_tb SET status = @status, messagingStep = @messagingStep WHERE phoneNumber = @phoneNumber AND time = (
+                    const updateRegister1 = `UPDATE two_way_sms_tb SET status = @status, messagingStep = @messagingStep WHERE phoneNumber = @phoneNumber AND time = (
                         SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumber )`;
                     request.input('status', sql.VarChar, status);
                     request.input('messagingStep', sql.VarChar, messagingStep);
                     request.input('phoneNumber', sql.VarChar, phoneNumber);
-                    request.query(queryString, function(err, results) {
+                    request.query(updateRegister1, function(err, results) {
                       if (err) {
                         console.error('Error executing query: ' + err.stack);
                         return;
                       }
-                  
                       console.log('UPDATE successful');
                       sql.close();
                     });
                   });
-                  
-
                 break;
         ///other Cases
                 default:
