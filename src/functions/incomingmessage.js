@@ -1,5 +1,5 @@
 const sql = require('mssql');
-const config = require('../dbconnect.js');
+const config = require('../dbconect.js');
 function handleIncomingMessage(text, sender, textId, phoneNumber, time) {
     // Check if user exists in database
         sql.connect(config, function(err, connection) {
