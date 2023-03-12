@@ -48,7 +48,7 @@ app.post("/webhook", (req, res) => {
     let status = '';
     let messagingStep = '';
 
-    handleIncomingMessage(text, sender, textId, phoneNumber, time, config ,sms);
+    handleIncomingMessage(text, sender, textId, phoneNumber, time, config ,sms ,register);
 
       
       function handleRegister(text, sender, messagingStep ,sms) {
