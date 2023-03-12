@@ -71,8 +71,8 @@ app.post("/webhook", (req, res) => {
           }
           if (checkResults.recordset.length > 0) {
             console.log('User already exists');
-            let status = statusResults.recordset[0].status;
-            let messagingStep = statusResults.recordset[0].messagingStep;
+            let status = checkIfExistsRequest.recordset[0].status;
+            let messagingStep = checkIfExistsRequest.recordset[0].messagingStep;
             console.log(status);
             console.log(messagingStep);
             sql.close();
