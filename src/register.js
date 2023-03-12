@@ -1,6 +1,3 @@
-const generateRandom4DigitNumber = require ('./generateRandom4DigitNumber.js');
-const customersName = require('../index.js');
-
 const register = {
     newCustomer: (sender) => {
         //send message with credentials

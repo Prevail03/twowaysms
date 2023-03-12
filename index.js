@@ -14,15 +14,6 @@ const validateId = require('./src/validateId.js');
 const AfricasTalking = require('africastalking')(options);
 const app = express();
 const keyword = "Test4 ";
-app.use(session({
-    cookie: { maxAge: 86400000 },
-    store: new MemoryStore({
-        checkPeriod: 86400000 // prune expired entries every 24h
-    }),
-    secret: 'octagonafrica',
-    resave: false,
-    saveUninitialized: true
-}));
 const bodyParser = require("body-parser");
 const { urlencoded } = require("express");
 app.use(bodyParser.json());
@@ -65,11 +56,22 @@ app.post("/webhook", (req, res) => {
           case 1:
             
             // Handle step 1 of registration process
-            break;
+            sms.send(register.enterId(sender));
+            registrationStep = 2;
+          break;
           case 2:
-
-            // Handle step 2 of registration process
-            break;
+            // process ID number and request for county
+            if(validateId(text)) {
+                user = user ? {...user, id: text} : {id: text};  
+                            
+                sms.send(register.enterEmail(sender));
+                registrationStep = 3;
+            } else {
+                
+                messageToCustomer = "Invalid ID number. Please enter a valid 6-digit ID number";
+                registrationStep = 1;
+            }
+          break;
           // ...
           default:
             console.log('Unknown registration step: ' + messagingStep);
