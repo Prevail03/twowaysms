@@ -1,6 +1,7 @@
 const sql = require('mssql');
 const validateId = require('../validateId');
 const handleRegister = require('./handleRegister');
+let user={};
 // const config = require('/var/www/twowaysms/dbconnect.js');
 function handleIncomingMessage(text, sender, textId, phoneNumber, time, config, sms , register) {
     // Check if user exists in database
