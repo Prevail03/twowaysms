@@ -45,7 +45,6 @@ app.post("/webhook", (req, res) => {
     const sender = payload.from;
     const textId =payload.id;
     const phoneNumber=sender;
-    const isActive=1;
     console.log(sender);
     const textMessage = payload.text;
     console.log(textMessage);
@@ -56,7 +55,7 @@ app.post("/webhook", (req, res) => {
     let status = '';
     let messagingStep = '';
 
-    function handleIncomingMessage(text, sender) {
+    function handleIncomingMessage(text, sender, textId, phoneNumber, time) {
         // Check if user exists in database
         const checkIfExistsQuery = "SELECT TOP 1 * FROM two_way_sms_tb WHERE phoneNumber = @phoneNumber AND isActive = 1";
         const checkIfExistsRequest = new sql.Request(connection);
@@ -88,29 +87,28 @@ app.post("/webhook", (req, res) => {
                 console.log('Unknown status: ' + status);
                 break;
             }
-            } else {
-                //new user in the system
-                const insertQuery = "INSERT INTO two_way_sms_tb (text, text_id_AT, phoneNumber, isActive, time) VALUES (@text, @text_id_AT, @phoneNumber, @isActive, @time)";
-
-                const insertRequest = new sql.Request(connection);
-                insertRequest.input('text', sql.VarChar, text);
-                insertRequest.input('text_id_AT', sql.VarChar, textId);
-                insertRequest.input('phoneNumber', sql.VarChar, phoneNumber);
-                insertRequest.input('isActive', sql.Bit, 1);
-                insertRequest.input('time', sql.DateTime2, time);
-                insertRequest.query(insertQuery, function(insertErr, insertResults) {
-                    if (insertErr) {
-                    console.error('Error executing insertQuery: ' + insertErr.stack);
-                    sql.close();
-                    return;
-                    }
-                    console.log('INSERT successful');
-                });
-            }
+          } else {
+            //new user in the system
+            const insertQuery = "INSERT INTO two_way_sms_tb (text, text_id_AT, phoneNumber, isActive, time) VALUES (@text, @text_id_AT, @phoneNumber, @isActive, @time)";
+      
+            const insertRequest = new sql.Request(connection);
+            insertRequest.input('text', sql.VarChar, text);
+            insertRequest.input('text_id_AT', sql.VarChar, textId);
+            insertRequest.input('phoneNumber', sql.VarChar, phoneNumber);
+            insertRequest.input('isActive', sql.Bit, 1);
+            insertRequest.input('time', sql.DateTime2, time);
+            insertRequest.query(insertQuery, function(insertErr, insertResults) {
+              if (insertErr) {
+                console.error('Error executing insertQuery: ' + insertErr.stack);
+                sql.close();
+                return;
+              }
+              console.log('INSERT successful');
+            });
+          }
         });
-
-           
-    }
+      }
+      
       
       function handleRegister(text, sender, messagingStep) {
         switch (messagingStep) {
