@@ -78,7 +78,7 @@ app.post("/webhook", (req, res) => {
             break;
         }
       }
-
+      handleRegister(text, sender, messagingStep ,sms)
       
       function handleDelete(text, sender, messagingStep) {
         switch (parseInt(messagingStep)) {
