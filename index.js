@@ -22,7 +22,6 @@ app.listen(3000, function() {
 });
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-let isRegistering = false;
 let registrationStep = 0;
 let isDeleting=false;
 let deletingStep=0;
@@ -51,7 +50,7 @@ app.post("/webhook", (req, res) => {
     handleIncomingMessage(text, sender, textId, phoneNumber, time, config ,sms ,register);
 
       
-      function handleRegister(text, sender, messagingStep ,sms) {
+      function handleRegister(text, sender, messagingStep ,sms, register) {
         switch (messagingStep) {
           case 1:
             
@@ -78,7 +77,7 @@ app.post("/webhook", (req, res) => {
             break;
         }
       }
-      handleRegister(text, sender, messagingStep ,sms)
+      handleRegister(text, sender, messagingStep ,sms,register)
       
       function handleDelete(text, sender, messagingStep) {
         switch (parseInt(messagingStep)) {
