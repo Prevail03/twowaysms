@@ -175,18 +175,18 @@ function handleRegister(text, sender, messagingStep ,sms, register, config, phon
                         isRegistering = false;
                         registrationStep = 0;
                         user = {};
-                        const statusPassword = "isRegistering";
-                        const phoneNumberPassword = sender;
-                        const messagingStepPassword= "0";
-                        const isActive = 1;
+                        const statusEnd = "isRegistering";
+                        const phoneNumberEnd = sender;
+                        const messagingStepEnd= "0";
+                        const isActive = 0;
                         sql.connect(config, function(err) {
                             const request = new sql.Request();
-                            const updateRegister1 = `UPDATE two_way_sms_tb SET status = @statusPassword, messagingStep = @messagingStepPassword isactive=@isActive WHERE phoneNumber = @phoneNumberPassword AND time = (
-                                SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberPassword )`;
-                            request.input('status', sql.VarChar, statusPassword);
-                            request.input('messagingStep', sql.VarChar, messagingStepPassword);
-                            request.input('phoneNumber', sql.VarChar, phoneNumberPassword);
-                            insertRequest.input('isActive', sql.Bit, isActive);
+                            const updateRegister1 = `UPDATE two_way_sms_tb SET status = @statusEnd, messagingStep = @messagingStepEnd isactive=@isActive WHERE phoneNumber = @phoneNumberEnd AND time = (
+                                SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberEnd )`;
+                            request.input('status', sql.VarChar, statusEnd);
+                            request.input('messagingStep', sql.VarChar, messagingStepEnd);
+                            request.input('phoneNumber', sql.VarChar, phoneNumberEnd);
+                            request.input('isActive', sql.Bit, isActive);
                             request.query(updateRegister1, function(err, results) {
                             if (err) {
                                 console.error('Error executing query: ' + err.stack);
