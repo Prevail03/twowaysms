@@ -92,7 +92,7 @@ app.post("/webhook", (req, res) => {
                 registrationStep = 2;
                 const status = "isRegistering";
                 const phoneNumber = sender;
-                const messagingStep= 2;
+                const messagingStep= "2";
                 sql.connect(config, function(err) {
                     const request = new sql.Request();
                     const queryString = `UPDATE two_way_sms_tb SET status = @status, messagingStep = @messagingStep WHERE phoneNumber = @phoneNumber AND time = (
