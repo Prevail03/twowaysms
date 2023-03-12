@@ -3,9 +3,6 @@ const sql = require('mssql');
 const session = require('express-session');
 const MemoryStore = require('memorystore')(session);
 var Client = require('node-rest-client').Client;
-//funtions import
-const handleIncomingMessage = require('./src/functions/incomingmessage.js');
-const handleRegister = require('./src/functions/handleRegister');
 const options = require('./env.js');
 const config = require('./dbconnect.js');
 const register = require('./src/register.js');
@@ -31,6 +28,9 @@ let accountStep=0;
 let ResetingPassword=false;
 let resetStep=0
 
+//funtions import
+const handleIncomingMessage = require('./src/functions/incomingmessage.js');
+const handleRegister = require('./src/functions/handleRegister');
 
 app.post("/webhook", (req, res) => {
     const payload = req.body;

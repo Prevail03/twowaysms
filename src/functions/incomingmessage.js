@@ -1,4 +1,5 @@
 const sql = require('mssql');
+var Client = require('node-rest-client').Client;
 const validateId = require('../validateId');
 const handleRegister = require('./handleRegister');
 let user={};
