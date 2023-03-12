@@ -59,7 +59,8 @@ app.post("/webhook", (req, res) => {
           return;
         }
         console.log('Connected to database');
-       const checkIfExistsQuery = "SELECT TOP 1 * FROM two_way_sms_tb WHERE phoneNumber = @phoneNumber AND isActive = 1";
+      //chack if user exists
+        const checkIfExistsQuery = "SELECT TOP 1 * FROM two_way_sms_tb WHERE phoneNumber = @phoneNumber AND isActive = 1";
         const checkIfExistsRequest = new sql.Request(connection);
         checkIfExistsRequest.input('phoneNumber', sql.VarChar, phoneNumber);
         checkIfExistsRequest.query(checkIfExistsQuery, function(checkErr, checkResults) {
@@ -73,6 +74,7 @@ app.post("/webhook", (req, res) => {
             sql.close();
             return;
           }
+      
           const insertQuery = "INSERT INTO two_way_sms_tb (text, text_id_AT, phoneNumber, isActive, time) VALUES (@text, @textId, @phoneNumber, @isActive, @time)";
           const insertRequest = new sql.Request(connection);
           insertRequest.input('text', sql.VarChar, text);
@@ -83,21 +85,15 @@ app.post("/webhook", (req, res) => {
           insertRequest.query(insertQuery, function(insertErr, insertResults) {
             if (insertErr) {
               console.error('Error executing insertQuery: ' + insertErr.stack);
-              sql.rollback(function() {
-                sql.close();
-              });
+              sql.close();
               return;
             }
             console.log('INSERT successful');
-            sql.commit(function(commitErr) {
-              if (commitErr) {
-                console.error('Error committing transaction: ' + commitErr.stack);
-              }
-              sql.close();
-            });
+            sql.close();
           });
         });
       });
+      
       
     if(!isRegistering && !isDeleting && !isCheckingAccount && !ResetingPassword){
         switch (text.toLowerCase()) {
