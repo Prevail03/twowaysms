@@ -1,5 +1,5 @@
 const sql = require('mssql');
-function handleRegister(text, sender, messagingStep ,sms, register, config, phoneNumber, time) {
+function handleRegister(text, sender, messagingStep ,sms, register, config, phoneNumber, time, validateId) {
     switch (messagingStep) {
       case 1:
         

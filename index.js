@@ -5,6 +5,7 @@ const MemoryStore = require('memorystore')(session);
 var Client = require('node-rest-client').Client;
 //funtions import
 const handleIncomingMessage = require('./src/functions/incomingmessage.js');
+const handleRegister = require('./src/functions/handleRegister');
 const options = require('./env.js');
 const config = require('./dbconnect.js');
 const register = require('./src/register.js');
@@ -49,7 +50,7 @@ app.post("/webhook", (req, res) => {
 
     
     handleIncomingMessage(text, sender, textId, phoneNumber, time, config ,sms ,register);
-    handleRegister(text, sender, messagingStep ,sms, register, config, phoneNumber, time);
+    handleRegister(text, sender, messagingStep ,sms, register, config, phoneNumber, time, validateId);
       
       function handleDelete(text, sender, messagingStep) {
         switch (parseInt(messagingStep)) {

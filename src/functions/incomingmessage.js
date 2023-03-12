@@ -1,4 +1,5 @@
 const sql = require('mssql');
+const validateId = require('../validateId');
 const handleRegister = require('./handleRegister');
 // const config = require('/var/www/twowaysms/dbconnect.js');
 function handleIncomingMessage(text, sender, textId, phoneNumber, time, config, sms , register) {
@@ -24,7 +25,7 @@ function handleIncomingMessage(text, sender, textId, phoneNumber, time, config, 
                 const messagingStep = checkResults.recordset[0].messagingStep;
                 switch (status) {
                 case 'isRegistering':
-                    handleRegister(text, sender, messagingStep ,sms, register, config, phoneNumber, time);
+                    handleRegister(text, sender, messagingStep ,sms, register, config, phoneNumber, time, validateId);
                     break;
                 case 'isDeleting':
                     handleDelete(text, sender, messagingStep);
