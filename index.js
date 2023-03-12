@@ -110,6 +110,98 @@ app.post("/webhook", (req, res) => {
                     return;
                 }
                 console.log('INSERT successful');
+                    switch (text.toLowerCase()) {
+                        // case '':
+                        case 'register':
+                            //reset isRegistering flag and registrationStep
+                            isRegistering = false;
+                            registrationStep = 0;
+                            sms.send(register.newCustomer(sender));
+                            sms.send(register.enterId(sender));
+                            //set a flag to indicate that the user is in the process of registering
+                            isRegistering = true;         
+                            //request for ID number
+                            registrationStep = 2;
+                            const status = "isRegistering";
+                            const phoneNumber = sender;
+                            const messagingStep= "2";
+                            sql.connect(config, function(err) {
+                                const request = new sql.Request();
+                                const updateRegister1 = `UPDATE two_way_sms_tb SET status = @status, messagingStep = @messagingStep WHERE phoneNumber = @phoneNumber AND time = (
+                                    SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumber )`;
+                                request.input('status', sql.VarChar, status);
+                                request.input('messagingStep', sql.VarChar, messagingStep);
+                                request.input('phoneNumber', sql.VarChar, phoneNumber);
+                                request.query(updateRegister1, function(err, results) {
+                                if (err) {
+                                    console.error('Error executing query: ' + err.stack);
+                                    return;
+                                }
+                                console.log('UPDATE successful');
+                                sql.close();
+                                });
+                            });
+                            break;
+                            ///other Cases
+                            case 'balance':
+                            messageToCustomer = 'Hello Our Dear Esteemed Customer, Welcome to Octagon Services. Enter your 4 digit pin - balance ';
+                            sms.send({
+                                to: sender,
+                                from:'20880',
+                                message: messageToCustomer
+                            });
+                            break;
+                            case 'accounts':
+                                isCheckingAccount=false;
+                                accountStep=0;
+                                sms.send(account.welcomeMessageAccount(sender));
+                                sms.send(account.provideUserName(sender));
+                                isCheckingAccount=true;
+                                accountStep=2;
+                                break;
+                            case 'rate':
+                                messageToCustomer = 'Hello Our Dear Esteemed Customer, Welcome to Octagon Services. Enter your 4 digit pin - rate';
+                                sms.send({
+                                    to: sender,
+                                    from:'20880',
+                                    message: messageToCustomer
+                                });
+                                
+                                break;
+                            case 'delete':
+                                isDeleting=false;
+                                deletingStep=0;
+                                messageToCustomer = 'Hello Our Dear Esteemed Customer, Welcome to Octagon Services.';
+                                
+                                sms.send({
+                                    to: sender,
+                                    from:'20880',
+                                    message: messageToCustomer
+                                });
+                            
+                                sms.send(register.enterId(sender));
+                                isDeleting =true;
+                                deletingStep=2;
+                                break;
+                            case 'reset':
+                                ResetingPassword=false;
+                                resetStep=0;
+                                sms.send(reset.welcomeMessage(sender));
+                                sms.send(reset.enterEmail(sender));
+                                ResetingPassword=true;
+                                resetStep=2;
+                                
+                                break;
+                            
+                        default:
+                            messageToCustomer = 'Welcome To Octagon Africa you can access our services by sending the word register,save, balance,statement,products';
+                            sms.send({
+                                to: sender,
+                                from:'20880',
+                                message: messageToCustomer
+                            });
+                        break;
+                    }
                 });
             }
             });
