@@ -50,8 +50,7 @@ app.post("/webhook", (req, res) => {
 
     
     handleIncomingMessage(text, sender, textId, phoneNumber, time, config ,sms ,register);
-    // handleRegister(text, sender, messagingStep ,sms, register, config, phoneNumber, time, validateId);
-      
+    // handleRegister(text, sender, messagingStep ,sms, register, config, phoneNumber, time, validateId);   
       function handleDelete(text, sender, messagingStep) {
         switch (parseInt(messagingStep)) {
           case 1:

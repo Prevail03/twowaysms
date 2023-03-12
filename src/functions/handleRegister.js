@@ -35,16 +35,16 @@ function handleRegister(text, sender, messagingStep ,sms, register, config, phon
                         
             sms.send(register.enterEmail(sender));
             registrationStep = 3;
-            const status = "isRegistering";
-            const phoneNumber = sender;
-            const messagingStep= "3";
+            const statusEmail = "isRegistering";
+            const phoneNumberEmail = sender;
+            const messagingStepEmail = "3";
             sql.connect(config, function(err) {
                 const request = new sql.Request();
-                const updateRegister1 = `UPDATE two_way_sms_tb SET status = @status, messagingStep = @messagingStep WHERE phoneNumber = @phoneNumber AND time = (
-                    SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumber )`;
-                request.input('status', sql.VarChar, status);
-                request.input('messagingStep', sql.VarChar, messagingStep);
-                request.input('phoneNumber', sql.VarChar, phoneNumber);
+                const updateRegister1 = `UPDATE two_way_sms_tb SET status = @statusEmail, messagingStep = @messagingStepEmail WHERE phoneNumber = @phoneNumberEmail AND time = (
+                    SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberEmail )`;
+                request.input('status', sql.VarChar, statusEmail);
+                request.input('messagingStep', sql.VarChar, messagingStepEmail);
+                request.input('phoneNumber', sql.VarChar, phoneNumberEmail);
                 request.query(updateRegister1, function(err, results) {
                 if (err) {
                     console.error('Error executing query: ' + err.stack);
@@ -59,16 +59,16 @@ function handleRegister(text, sender, messagingStep ,sms, register, config, phon
             
             messageToCustomer = "Invalid ID number. Please enter a valid 6-digit ID number";
             registrationStep = 1;
-            const status = "isRegistering";
-            const phoneNumber = sender;
-            const messagingStep= "1";
+            const statusFail = "isRegistering";
+            const phoneNumberFail = sender;
+            const messagingStepFail= "1";
             sql.connect(config, function(err) {
                 const request = new sql.Request();
-                const updateRegister1 = `UPDATE two_way_sms_tb SET status = @status, messagingStep = @messagingStep WHERE phoneNumber = @phoneNumber AND time = (
-                    SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumber )`;
-                request.input('status', sql.VarChar, status);
-                request.input('messagingStep', sql.VarChar, messagingStep);
-                request.input('phoneNumber', sql.VarChar, phoneNumber);
+                const updateRegister1 = `UPDATE two_way_sms_tb SET status = @statusFail, messagingStep = @messagingStepFail WHERE phoneNumber = @phoneNumberFail AND time = (
+                    SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberFail )`;
+                request.input('status', sql.VarChar, statusFail);
+                request.input('messagingStep', sql.VarChar, messagingStepFail);
+                request.input('phoneNumber', sql.VarChar, phoneNumberFail);
                 request.query(updateRegister1, function(err, results) {
                 if (err) {
                     console.error('Error executing query: ' + err.stack);
@@ -82,8 +82,7 @@ function handleRegister(text, sender, messagingStep ,sms, register, config, phon
       break;
       case 3:
             //request 6 character password
-            user.email=text
-                        
+            user.email=text          
             sms.send(register.enterPassword(sender));
             registrationStep = 4;
             const statusPassword = "isRegistering";
@@ -160,22 +159,12 @@ function handleRegister(text, sender, messagingStep ,sms, register, config, phon
         case 6:
             // process full name and send confirmation message
             user.lastname=text;
-                // Sending the request to octagon registration API
                 var client = new Client();
-                // set content-type header and data as json in args parameter
                 var args = {
                     data: { firstname: user.firstname, lastname: user.lastname, ID: user.id, email: user.email, password: user.password, phonenumber: sender },
                     headers: { "Content-Type": "application/json" }
                 };
-                    // username= data[0]+"."+data[1];
-                // Actual Octagon user registration API
                 client.post("https://api.octagonafrica.com/v1/register", args, function (data, response) {
-                    // parsed response body as js object
-                    console.log(data);
-                    // raw response
-                
-                    
-
                     if ([200].includes(response.statusCode)) {
                         // success code
                         sms.send({
@@ -220,9 +209,7 @@ function handleRegister(text, sender, messagingStep ,sms, register, config, phon
                         sms.send({
                             to: sender,
                             from:'20880',
-                            message: "Registration unsuccesfull. Invalid Details or Username Exists . Please try again Later "
-
-                            
+                            message: "Registration unsuccesfull. Invalid Details or Username Exists . Please try again Later "    
                         });
                         isRegistering = false;
                         registrationStep = 0;
@@ -232,9 +219,7 @@ function handleRegister(text, sender, messagingStep ,sms, register, config, phon
                         sms.send({
                             to: sender,
                             from:'20880',
-                            message: "Registration unsuccesfull. Internal Server Error. Please try again Later "
-
-                            
+                            message: "Registration unsuccesfull. Internal Server Error. Please try again Later "    
                         });
                         isRegistering = false;
                         registrationStep = 0;
@@ -244,12 +229,8 @@ function handleRegister(text, sender, messagingStep ,sms, register, config, phon
                         // error code
                         console.log(response.statusCode);
                     }
-                    
-
-
                 });
         break;
-      // ...
       default:
         console.log('Unknown registration step:');
         break;
