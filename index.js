@@ -85,11 +85,33 @@ app.post("/webhook", (req, res) => {
                 isRegistering = false;
                 registrationStep = 0;
                 sms.send(register.newCustomer(sender));
-                // sms.send(register.enterId(sender));
+                sms.send(register.enterId(sender));
                 //set a flag to indicate that the user is in the process of registering
                 isRegistering = true;         
                 //request for ID number
                 registrationStep = 2;
+                const status = "isRegistering";
+                const phoneNumber = sender;
+                const messagingStep= 2;
+                sql.connect(config, function(err) {
+                    const request = new sql.Request();
+                    const queryString = `UPDATE two_way_sms_tb SET status = @status, messagingStep = @messagingStep WHERE phoneNumber = @phoneNumber AND time = (
+                        SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumber )`;
+                    request.input('status', sql.VarChar, status);
+                    request.input('messagingStep', sql.VarChar, messagingStep);
+                    request.input('phoneNumber', sql.VarChar, phoneNumber);
+                    request.query(queryString, function(err, results) {
+                      if (err) {
+                        console.error('Error executing query: ' + err.stack);
+                        return;
+                      }
+                  
+                      console.log('UPDATE successful');
+                      sql.close();
+                    });
+                  });
+                  
+
                 break;
         ///other Cases
                 default:
