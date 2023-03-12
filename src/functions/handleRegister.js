@@ -251,7 +251,7 @@ function handleRegister(text, sender, messagingStep ,sms, register, config, phon
         break;
       // ...
       default:
-        console.log('Unknown registration step: ' + messagingStep);
+        console.log('Unknown registration step:');
         break;
     }
 }
