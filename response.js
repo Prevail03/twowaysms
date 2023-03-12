@@ -1,10 +1,8 @@
 const express = require("express");
-const sql = require('mssql');
 const session = require('express-session');
 const MemoryStore = require('memorystore')(session);
 var Client = require('node-rest-client').Client;
 const options = require('./env.js');
-const config = require('./dbconnect.js');
 const register = require('./src/register.js');
 const account = require('./src/account.js');
 const reset = require('./src/reset.js');
@@ -40,43 +38,17 @@ let resetStep=0
 let user={};
 
 app.post("/webhook", (req, res) => {
+
     const payload = req.body;
     console.log(payload);
     const sender = payload.from;
-    const textId =payload.id;
-    const phoneNumber=sender;
-    const isActive=1;
     console.log(sender);
     const textMessage = payload.text;
     console.log(textMessage);
     const sms = AfricasTalking.SMS;
     let messageToCustomer;    
     const text = textMessage.replace(keyword, '').trim();//remove "Key Word" 
-    const time = new Date();
-    sql.connect(config, function(err) {
-        if (err) {
-            console.error('Error connecting to database: ' + err.stack);
-            return;
-          }
-        console.log('Connected to database');  
-        const request = new sql.Request();
-        const queryString = `INSERT INTO twowaysms_tb (text, text_id_AT, phoneNumber, isActive, time)
-                            VALUES (@text, @textId, @phoneNumber, @isActive, @time)`;
-        request.input('text', sql.VarChar, text);
-        request.input('textId', sql.VarChar, textId);
-        request.input('phoneNumber', sql.VarChar, phoneNumber);
-        request.input('isActive', sql.Bit, isActive);
-        request.input('time', sql.DateTime2, time);
-        request.query(queryString, function(err, results) {
-        if (err) {
-            console.error('Error executing query: ' + err.stack);
-            return;
-        }
-        console.log('INSERT successful');
-        sql.close();
-        });  
-        
-    });
+    console.log(text);
     if(!isRegistering && !isDeleting && !isCheckingAccount && !ResetingPassword){
         switch (text.toLowerCase()) {
             // case '':
@@ -85,7 +57,7 @@ app.post("/webhook", (req, res) => {
                 isRegistering = false;
                 registrationStep = 0;
                 sms.send(register.newCustomer(sender));
-                // sms.send(register.enterId(sender));
+                sms.send(register.enterId(sender));
                 //set a flag to indicate that the user is in the process of registering
                 isRegistering = true;         
                 //request for ID number
@@ -222,4 +194,6 @@ app.post("/webhook", (req, res) => {
 
         }
         res.send("Webhook received");
-});   
+});       
+
+

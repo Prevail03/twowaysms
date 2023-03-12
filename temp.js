@@ -2,9 +2,7 @@ const express = require("express");
 const session = require('express-session');
 const _ = require('lodash');
 const sql = require('mssql');
-
 var Client = require('node-rest-client').Client;
-
 const kenyanCounties = require('./src/assets/counties.js');
 const options = require('./env.js');
 const config = require('./dbconnect.js');
@@ -13,12 +11,9 @@ const account = require('./src/account.js');
 const reset = require('./src/reset.js');
 const validateId = require('./src/validateId.js');
 const AfricasTalking = require('africastalking')(options);
-
 const generateRandom4DigitNumber = require('./src/generateRandom4DigitNumber.js');
 const app = express();
-
 const keyword = "Test4 ";
-
 app.use(session({
     secret: 'mysecret',
     resave: false,
@@ -30,12 +25,8 @@ app.use(bodyParser.json());
 app.listen(3000, function() {
     console.log("Started at localhost 3000");
 });
-
-
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-
-
 let isRegistering = false;
 let registrationStep = 0;
 let isDeleting=false;
@@ -45,13 +36,9 @@ let accountStep=0;
 let ResetingPassword=false;
 let resetStep=0
 let user={};
-// let phoneNumberVerified = false
 let rate;
 const registrationInputs = [];//Array for user inputs
 let generatedPin; ///generated pin
-
-
-
 app.post("/webhook", (req, res) => {
     const payload = req.body;
     console.log(payload);
@@ -60,35 +47,25 @@ app.post("/webhook", (req, res) => {
     const textMessage = payload.text;
     console.log(textMessage);
     const sms = AfricasTalking.SMS;
-    let messageToCustomer;
-    
-    const text = textMessage.replace(keyword, '').trim();//remove "Key Word"
-   
+    let messageToCustomer;    
+    const text = textMessage.replace(keyword, '').trim();//remove "Key Word" 
     console.log(text);
     if(!isRegistering && !isDeleting && !isCheckingAccount && !ResetingPassword){
         switch (text.toLowerCase()) {
             // case '':
             case 'register':
-                africasTalking.SMS.createSession(sender, from, keyword);
                 //reset isRegistering flag and registrationStep
                 isRegistering = false;
                 registrationStep = 0;
                 //generate  pin
-                
-                 generatedPin = generateRandom4DigitNumber();
-                   
+                 generatedPin = generateRandom4DigitNumber();      
                 sms.send(register.newCustomer(sender));
                 sms.send(register.enterId(sender));
                 //set a flag to indicate that the user is in the process of registering
-                isRegistering = true;
-                
+                isRegistering = true;         
                 //request for ID number
                 registrationStep = 2;
-                africasTalking.SMS.createSession(sender, from, keyword);
-                const sessionId = res.data.sessionId;
-                console.log(`Session ID: ${sessionId}`);
                 break;
-    
             case 'balance':
                 messageToCustomer = 'Hello Our Dear Esteemed Customer, Welcome to Octagon Services. Enter your 4 digit pin - balance ';
                 sms.send({
@@ -331,12 +308,7 @@ app.post("/webhook", (req, res) => {
                      };
                          // username= data[0]+"."+data[1];
                      // Actual Octagon Delete User Account API
-                     deleteClient.post("https://api.octagonafrica.com/v1/user/delete", args, function (data, response) {
-                        // parsed response body as js object
-                        console.log(data);
-                        // raw response
-                    
-                     
+                     deleteClient.post("https://api.octagonafrica.com/v1/user/delete", args, function (data, response) {                   
                         if ([200].includes(response.statusCode)) {
                                     // success code
                                     sms.send({
@@ -411,8 +383,7 @@ app.post("/webhook", (req, res) => {
                         if ([200].includes(response.statusCode)) {
                             // success code
                             sms.send(account.confirmLogin(sender));  
-                            accountStep=4;
-                            
+                                                        
                             var accountIDClient = new Client();
                             var args = {
                             data: { identifier: user.username },
@@ -422,6 +393,7 @@ app.post("/webhook", (req, res) => {
                             if (response.statusCode === 200) {
                                 const ID = data.data;
                                 console.log(ID);
+                                user.IDNumber=ID;
                                         var fetchClient = new Client();
                                     // set content-type header and data as json in args parameter
                                     var args = {
@@ -455,14 +427,15 @@ app.post("/webhook", (req, res) => {
                                                 console.log("Account Description:", pensionData[i].Code, "Name: ", pensionData[i].scheme_name, ".Active Since: ", pensionData[i].dateFrom);
                                             }
                                             let postAccounts = "Please provide us with the account description so that we can provide you with a member statement "
-                                            const finalMessage =  preAccounts + insuranceMessage + pensionMessage + postAccountsf;
+                                            const finalMessage =  preAccounts + insuranceMessage + pensionMessage + postAccounts;
                                                 //Send your 
                                             sms.send({
                                                 to: sender,
                                                 from: '20880',
                                                 message: finalMessage
                                             });
-                                    
+                                            accountStep=4;
+                                            
                                 } else if ([400].includes(response.statusCode)) {
                                     console.log(response.statusCode);
                                 } else {
@@ -510,8 +483,113 @@ app.post("/webhook", (req, res) => {
                
             break;
             case 4:
-                
+                user.description=text;
+                     var fetchPeriodsClient = new Client();
+                    // set content-type header and data as json in args parameter
+                    
+                    var args = {
+                        data: { description: user.description },
+                        headers: { "Content-Type": "application/json" }
+                    };
+                        
+                    fetchPeriodsClient.get("https://api.octagonafrica.com/v1/accounts/pension/periods/twoway", args, function (data, response) {
+                        if ([200].includes(response.statusCode)) {
+                            const periods = data.data;
+                            let finalMessage = "Available periods are: \n";
+                            for (let i = 0; i < periods.length; i++) {
+                                const period_name = periods[i].period_name;
+                                finalMessage += `${i + 1}. ${period_name}\n`;
+                            }
+                        
+                            sms.send({
+                                to: sender,
+                                from: '20880',
+                                message: finalMessage
+                            });
+                            sms.send(account.providePeriodName(sender));
+                            accountStep = 5;
+                        
+                        } else if ([201].includes(response.statusCode)) {
+                            console.log(response.statusCode);
+                        } else if ([400].includes(response.statusCode)) {
+                            console.log(response.statusCode);
+                        } else if ([401].includes(response.statusCode)) {
+                            console.log(response.statusCode);
+                        } else if ([500].includes(response.statusCode)) {
+                            console.log(response.statusCode);
+                        } else {
+                            console.log(response.statusCode);
+                        }
+                    });
+            break;
 
+            case 5:
+                user.periodname=text;
+                var fetchPeriodsIDClient = new Client();
+                // set content-type header and data as json in args parameter
+                
+                var args = {
+                    data: { periodname: user.periodname },
+                    headers: { "Content-Type": "application/json" }
+                };
+                    
+                fetchPeriodsIDClient.get("https://api.octagonafrica.com/v1/accounts/pension/twoway/periodsid", args, function (data, response) {
+                    if ([200].includes(response.statusCode)) {
+                        const periodID = data.data;
+                        console.log(periodID);
+                       
+                        //send member sta
+                            var fetchMemberStatements = new Client();
+                            // set content-type header and data as json in args parameter
+                            var args = {
+                                data: { user_id:user.IDNumber,period_id: periodID },
+                                headers: { "Content-Type": "application/json" }
+                            };   
+                            fetchMemberStatements.get("https://api.octagonafrica.com/v1/accounts/member_statement", args, function (data, response) {
+                                if ([200].includes(response.statusCode)) {
+                                    const statementsData = data.data;
+                                    console.log("statements Data .");
+                                    console.log(statementsData);
+                                    const name=statementsData.name;
+                                    const email=statementsData.user_email;
+                                    console.log(name);
+                                    console.log(email);
+                                    const periodsName = statementsData.period_name;
+                                    sms.send({
+                                        to: sender,
+                                        from:'20880',
+                                        message:"Dear "+name+".\n Your member statement for "+periodsName+" period has been sent to  "+email
+                                    });
+                                   accountStep=0;
+                                   isCheckingAccount=false;
+                                   user = {};
+                                } else if ([201].includes(response.statusCode)) {
+                                    console.log(response.statusCode);
+                                } else if ([400].includes(response.statusCode)) {
+                                    console.log(response.statusCode);
+                                } else if ([401].includes(response.statusCode)) {
+                                    console.log(response.statusCode);
+                                } else if ([500].includes(response.statusCode)) {
+                                    console.log(response.statusCode);
+                                } else {
+                                    console.log(response.statusCode);
+                                }
+                            });
+
+
+                    } else if ([201].includes(response.statusCode)) {
+                        console.log(response.statusCode);
+                    } else if ([400].includes(response.statusCode)) {
+                        console.log(response.statusCode);
+                    } else if ([401].includes(response.statusCode)) {
+                        console.log(response.statusCode);
+                    } else if ([500].includes(response.statusCode)) {
+                        console.log(response.statusCode);
+                    } else {
+                        console.log(response.statusCode);
+                    }
+                });
+            
             break;
             default:
                 // do sthg
@@ -694,10 +772,7 @@ app.post("/webhook", (req, res) => {
 
             }
         }
-    
-    
-        console.log(registrationInputs);
-            res.send("Webhook received");
+        res.send("Webhook received");
 });       
 
 

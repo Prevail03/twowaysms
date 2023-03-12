@@ -62,6 +62,12 @@ const account = {
             message: "Invalid Details!!. Check your details and please try again Later"
         };
     },
-    
+    providePeriodName: (sender) => {
+        return {
+            to: sender,
+            from:'20880',
+            message: "Please enter the period name as provided in the above message"
+        };
+    },
 }
 module.exports = account;
