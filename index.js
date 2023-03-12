@@ -48,10 +48,10 @@ app.post("/webhook", (req, res) => {
     let status = '';
     let messagingStep = '';
 
-    handleIncomingMessage(text, sender, textId, phoneNumber, time);
+    handleIncomingMessage(text, sender, textId, phoneNumber, time, config ,sms);
 
       
-      function handleRegister(text, sender, messagingStep) {
+      function handleRegister(text, sender, messagingStep ,sms) {
         switch (messagingStep) {
           case 1:
             
