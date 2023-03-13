@@ -225,7 +225,7 @@ function handleRegister(text, sender, messagingStep ,sms, register, config, phon
                         const isActive = 0;
                         sql.connect(config, function(err) {
                             const request = new sql.Request();
-                            const updateRegister1 = `UPDATE two_way_sms_tb SET status = @statusFailure400, messagingStep = @messagingStepFailure400 isactive=@isActive WHERE phoneNumber = @phoneNumberFailure400 AND time = (
+                            const updateRegister1 = `UPDATE two_way_sms_tb SET status = @statusFailure400, messagingStep = @messagingStepFailure400 isActive=@isActive WHERE phoneNumber = @phoneNumberFailure400 AND time = (
                                 SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberFailure400 )`;
                             request.input('statusFailure400', sql.VarChar, statusFailure400);
                             request.input('messagingStepFailure400', sql.VarChar, messagingStepFailure400);
