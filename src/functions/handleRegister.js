@@ -1,23 +1,23 @@
 const sql = require('mssql');
 var Client = require('node-rest-client').Client;
 let user={};
-function handleRegister(text, sender, messagingStep ,sms, register, config, phoneNumber, time, validateId) {
+function handleRegister(text, sender, messagingStep ,sms, register, config, phoneNumber, validateId) {
     switch (parseInt(messagingStep)) {
       case 1:
         
         // Handle step 1 of registration process
         sms.send(register.enterId(sender));
         registrationStep = 2;
-        const status = "isRegistering";
-        const phoneNumber = sender;
-        const messagingStep= "2";
+        const statusID = "isRegistering";
+        const phoneNumberID = phoneNumber;
+        const messagingStepID= "2";
         sql.connect(config, function(err) {
             const request = new sql.Request();
-            const updateRegister1 = `UPDATE two_way_sms_tb SET status = @status, messagingStep = @messagingStep WHERE phoneNumber = @phoneNumber AND time = (
-                SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumber )`;
-            request.input('status', sql.VarChar, status);
-            request.input('messagingStep', sql.VarChar, messagingStep);
-            request.input('phoneNumber', sql.VarChar, phoneNumber);
+            const updateRegister1 = `UPDATE two_way_sms_tb SET status = @statusID, messagingStep = @messagingStepID WHERE phoneNumber = @phoneNumberID AND time = (
+                SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberID )`;
+            request.input('status', sql.VarChar, statusID);
+            request.input('messagingStep', sql.VarChar, messagingStepID);
+            request.input('phoneNumber', sql.VarChar, phoneNumberID);
             request.query(updateRegister1, function(err, results) {
             if (err) {
                 console.error('Error executing query: ' + err.stack);
@@ -36,7 +36,7 @@ function handleRegister(text, sender, messagingStep ,sms, register, config, phon
             sms.send(register.enterEmail(sender));
             registrationStep = 3;
             const statusEmail = "isRegistering";
-            const phoneNumberEmail = sender;
+            const phoneNumberEmail = phoneNumber;
             const messagingStepEmail = "3";
             sql.connect(config, function(err) {
                 const request = new sql.Request();
@@ -86,7 +86,7 @@ function handleRegister(text, sender, messagingStep ,sms, register, config, phon
             sms.send(register.enterPassword(sender));
             registrationStep = 4;
             const statusPassword = "isRegistering";
-            const phoneNumberPassword = sender;
+            const phoneNumberPassword = phoneNumber;
             const messagingStepPassword= "4";
             sql.connect(config, function(err) {
                 const request = new sql.Request();
@@ -112,7 +112,7 @@ function handleRegister(text, sender, messagingStep ,sms, register, config, phon
             sms.send(register.enterFirstName(sender));
             registrationStep = 5;
             const statusFname = "isRegistering";
-            const phoneNumberFname = sender;
+            const phoneNumberFname = phoneNumber;
             const messagingStepFname = "5";
             sql.connect(config, function(err) {
                 const request = new sql.Request();
@@ -137,7 +137,7 @@ function handleRegister(text, sender, messagingStep ,sms, register, config, phon
             sms.send(register.enterLastName(sender));
             registrationStep = 6;
             const statusLname = "isRegistering";
-            const phoneNumberLname = sender;
+            const phoneNumberLname = phoneNumber;
             const messagingStepLname= "6";
             sql.connect(config, function(err) {
                 const request = new sql.Request();
@@ -176,7 +176,7 @@ function handleRegister(text, sender, messagingStep ,sms, register, config, phon
                         registrationStep = 0;
                         user = {};
                         const statusEnd = "isRegistering";
-                        const phoneNumberEnd = sender;
+                        const phoneNumberEnd = phoneNumber;
                         const messagingStepEnd= "0";
                         const isActive = 0;
                         sql.connect(config, function(err) {

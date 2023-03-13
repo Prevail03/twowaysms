@@ -27,7 +27,7 @@ function handleIncomingMessage(text, sender, textId, phoneNumber, time, config, 
                 const messagingStep = checkResults.recordset[0].messagingStep;
                 switch (status) {
                 case 'isRegistering':
-                    handleRegister(text, sender, messagingStep ,sms, register, config, phoneNumber, time, validateId ,user);
+                    handleRegister(text, sender, messagingStep ,sms, register, config, phoneNumber, validateId ,user);
                     break;
                 case 'isDeleting':
                     handleDelete(text, sender, messagingStep);
