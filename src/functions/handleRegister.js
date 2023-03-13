@@ -1,5 +1,8 @@
 const sql = require('mssql');
 var Client = require('node-rest-client').Client;
+const httpProxy = require('http-proxy');
+const proxy = httpProxy.createProxyServer({});
+
 let user={};
 let registrationStep = 0;
 function handleRegister(text, sender, messagingStep ,sms, register, config, phoneNumber, validateId) {
@@ -162,6 +165,8 @@ function handleRegister(text, sender, messagingStep ,sms, register, config, phon
                 var client = new Client({
                     proxy: false
                 });
+                
+
                 var args = {
                     data: { firstname: user.firstname, lastname: user.lastname, ID: user.id, email: user.email, password: user.password, phonenumber: sender },
                     headers: { "Content-Type": "application/json" }
