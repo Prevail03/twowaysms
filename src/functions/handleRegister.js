@@ -1,6 +1,7 @@
 const sql = require('mssql');
 var Client = require('node-rest-client').Client;
 let user={};
+let registrationStep = 0;
 function handleRegister(text, sender, messagingStep ,sms, register, config, phoneNumber, validateId) {
     switch (parseInt(messagingStep)) {
       case 1:
@@ -158,7 +159,9 @@ function handleRegister(text, sender, messagingStep ,sms, register, config, phon
         case 6:
             // process full name and send confirmation message
             user.lastname=text;
-                var client = new Client();
+                var client = new Client({
+                    proxy: false
+                });
                 var args = {
                     data: { firstname: user.firstname, lastname: user.lastname, ID: user.id, email: user.email, password: user.password, phonenumber: sender },
                     headers: { "Content-Type": "application/json" }
@@ -169,7 +172,7 @@ function handleRegister(text, sender, messagingStep ,sms, register, config, phon
                         sms.send({
                             to: sender,
                             from:'20880',
-                            message: "Congratulations!! "+user.firstname.toUpperCase() + " "+ user.lastname.toUpperCase() +". You have successfully registered with Octagon Africa. It has been sent to our team and it is awaiting Approval.Incase of any queries contact support@octagonafrica.com' "
+                            message: "Congratulations!! "+user.firstname.toUpperCase() + " "+ user.lastname.toUpperCase() +". You have successfully registered with Octagon Africa.Incase of any queries contact support@octagonafrica.com' "
                         });
                         isRegistering = false;
                         registrationStep = 0;

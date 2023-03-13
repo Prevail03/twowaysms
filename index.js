@@ -20,7 +20,7 @@ app.listen(3000, function() {
 });
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-let registrationStep = 0;
+
 let isDeleting=false;
 let deletingStep=0;
 let isCheckingAccount=false;
@@ -34,7 +34,6 @@ const handleRegister = require('./src/functions/handleRegister');
 
 app.post("/webhook", (req, res) => {
     const payload = req.body;
-    console.log(payload);
     const sender = payload.from;
     const textId =payload.id;
     const phoneNumber=sender;
