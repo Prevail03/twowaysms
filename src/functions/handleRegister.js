@@ -44,7 +44,7 @@ function handleRegister(text, sender, messagingStep ,sms, register, config, phon
                     SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberEmail )`;
                 request.input('status', sql.VarChar, statusEmail);
                 request.input('messagingStep', sql.VarChar, messagingStepEmail);
-                request.input('phoneNumber', sql.VarChar, phoneNumberEmail);
+                request.input('phoneNumberEmail', sql.VarChar, phoneNumberEmail);
                 request.query(updateRegister1, function(err, results) {
                 if (err) {
                     console.error('Error executing query: ' + err.stack);
