@@ -183,15 +183,15 @@ function handleRegister(text, sender, messagingStep ,sms, register, config, phon
                         const statusEnd = "isRegistering";
                         const phoneNumberEnd = phoneNumber;
                         const messagingStepEnd= "0";
-                        const isActive = 0;
+                        const isActiveEnd = 0;
                         sql.connect(config, function(err) {
                             const request = new sql.Request();
-                            const updateRegister1 = `UPDATE two_way_sms_tb SET status = @statusEnd, messagingStep = @messagingStepEnd isactive=@isActive WHERE phoneNumber = @phoneNumberEnd AND time = (
+                            const updateRegister1 = `UPDATE two_way_sms_tb SET status = @statusEnd, messagingStep = @messagingStepEnd isActive=@isActive WHERE phoneNumber = @phoneNumberEnd AND time = (
                                 SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberEnd )`;
                             request.input('statusEnd', sql.VarChar, statusEnd);
                             request.input('messagingStepEnd', sql.VarChar, messagingStepEnd);
                             request.input('phoneNumberEnd', sql.VarChar, phoneNumberEnd);
-                            request.input('isActive', sql.Bit, isActive);
+                            request.input('isActiveEnd', sql.Bit, isActiveEnd);
                             request.query(updateRegister1, function(err, results) {
                             if (err) {
                                 console.error('Error executing query: ' + err.stack);
@@ -222,7 +222,7 @@ function handleRegister(text, sender, messagingStep ,sms, register, config, phon
                         const statusFailure400 = "FailedisRegistering";
                         const phoneNumberFailure400 = phoneNumber;
                         const messagingStepFailure400= "0";
-                        const isActive = 0;
+                        const isActiveFailure400 = 0;
                         sql.connect(config, function(err) {
                             const request = new sql.Request();
                             const updateRegister1 = `UPDATE two_way_sms_tb SET status = @statusFailure400, messagingStep = @messagingStepFailure400 isActive=@isActive WHERE phoneNumber = @phoneNumberFailure400 AND time = (
@@ -230,7 +230,7 @@ function handleRegister(text, sender, messagingStep ,sms, register, config, phon
                             request.input('statusFailure400', sql.VarChar, statusFailure400);
                             request.input('messagingStepFailure400', sql.VarChar, messagingStepFailure400);
                             request.input('phoneNumberFailure400', sql.VarChar, phoneNumberFailure400);
-                            request.input('isActive', sql.Bit, isActive);
+                            request.input('isActiveFailure400', sql.Bit, isActiveFailure400);
                             request.query(updateRegister1, function(err, results) {
                             if (err) {
                                 console.error('Error executing query: ' + err.stack);
