@@ -15,9 +15,9 @@ function handleRegister(text, sender, messagingStep ,sms, register, config, phon
             const request = new sql.Request();
             const updateRegister1 = `UPDATE two_way_sms_tb SET status = @statusID, messagingStep = @messagingStepID WHERE phoneNumber = @phoneNumberID AND time = (
                 SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberID )`;
-            request.input('status', sql.VarChar, statusID);
-            request.input('messagingStep', sql.VarChar, messagingStepID);
-            request.input('phoneNumber', sql.VarChar, phoneNumberID);
+            request.input('statusID', sql.VarChar, statusID);
+            request.input('messagingStepID', sql.VarChar, messagingStepID);
+            request.input('phoneNumberID', sql.VarChar, phoneNumberID);
             request.query(updateRegister1, function(err, results) {
             if (err) {
                 console.error('Error executing query: ' + err.stack);
@@ -42,16 +42,15 @@ function handleRegister(text, sender, messagingStep ,sms, register, config, phon
                 const request = new sql.Request();
                 const updateRegister1 = `UPDATE two_way_sms_tb SET status = @statusEmail, messagingStep = @messagingStepEmail WHERE phoneNumber = @phoneNumberEmail AND time = (
                     SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberEmail )`;
-                request.input('status', sql.VarChar, statusEmail);
-                request.input('messagingStep', sql.VarChar, messagingStepEmail);
+                request.input('statusEmail', sql.VarChar, statusEmail);
+                request.input('messagingStepEmail', sql.VarChar, messagingStepEmail);
                 request.input('phoneNumberEmail', sql.VarChar, phoneNumberEmail);
                 request.query(updateRegister1, function(err, results) {
-                if (err) {
-                    console.error('Error executing query: ' + err.stack);
-                    return;
-                }
-                console.log('UPDATE successful');
-                sql.close();
+                    if (err) {
+                        console.error('Error executing query: ' + err.stack);
+                        return;
+                    }
+                    console.log('Query executed successfully');
                 });
             });
 
@@ -66,9 +65,9 @@ function handleRegister(text, sender, messagingStep ,sms, register, config, phon
                 const request = new sql.Request();
                 const updateRegister1 = `UPDATE two_way_sms_tb SET status = @statusFail, messagingStep = @messagingStepFail WHERE phoneNumber = @phoneNumberFail AND time = (
                     SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberFail )`;
-                request.input('status', sql.VarChar, statusFail);
-                request.input('messagingStep', sql.VarChar, messagingStepFail);
-                request.input('phoneNumber', sql.VarChar, phoneNumberFail);
+                request.input('statusFail', sql.VarChar, statusFail);
+                request.input('messagingStepFail', sql.VarChar, messagingStepFail);
+                request.input('phoneNumberFail', sql.VarChar, phoneNumberFail);
                 request.query(updateRegister1, function(err, results) {
                 if (err) {
                     console.error('Error executing query: ' + err.stack);
@@ -92,9 +91,9 @@ function handleRegister(text, sender, messagingStep ,sms, register, config, phon
                 const request = new sql.Request();
                 const updateRegister1 = `UPDATE two_way_sms_tb SET status = @statusPassword, messagingStep = @messagingStepPassword WHERE phoneNumber = @phoneNumberPassword AND time = (
                     SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberPassword )`;
-                request.input('status', sql.VarChar, statusPassword);
-                request.input('messagingStep', sql.VarChar, messagingStepPassword);
-                request.input('phoneNumber', sql.VarChar, phoneNumberPassword);
+                request.input('statusPassword', sql.VarChar, statusPassword);
+                request.input('messagingStepPassword', sql.VarChar, messagingStepPassword);
+                request.input('phoneNumberPassword', sql.VarChar, phoneNumberPassword);
                 request.query(updateRegister1, function(err, results) {
                 if (err) {
                     console.error('Error executing query: ' + err.stack);
@@ -118,9 +117,9 @@ function handleRegister(text, sender, messagingStep ,sms, register, config, phon
                 const request = new sql.Request();
                 const updateRegister1 = `UPDATE two_way_sms_tb SET status = @statusFname, messagingStep = @messagingStepFname WHERE phoneNumber = @phoneNumberFname AND time = (
                     SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberFname )`;
-                request.input('status', sql.VarChar, statusFname);
-                request.input('messagingStep', sql.VarChar, messagingStepFname);
-                request.input('phoneNumber', sql.VarChar, phoneNumberFname);
+                request.input('statusFname', sql.VarChar, statusFname);
+                request.input('messagingStepFname', sql.VarChar, messagingStepFname);
+                request.input('phoneNumberFname', sql.VarChar, phoneNumberFname);
                 request.query(updateRegister1, function(err, results) {
                 if (err) {
                     console.error('Error executing query: ' + err.stack);
@@ -143,9 +142,9 @@ function handleRegister(text, sender, messagingStep ,sms, register, config, phon
                 const request = new sql.Request();
                 const updateRegister1 = `UPDATE two_way_sms_tb SET status = @statusLname, messagingStep = @messagingStepLname WHERE phoneNumber = @phoneNumberLname AND time = (
                     SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberLname )`;
-                request.input('status', sql.VarChar, statusLname);
-                request.input('messagingStep', sql.VarChar, messagingStepLname);
-                request.input('phoneNumber', sql.VarChar, phoneNumberLname);
+                request.input('statusLname', sql.VarChar, statusLname);
+                request.input('messagingStepLname', sql.VarChar, messagingStepLname);
+                request.input('phoneNumberLname', sql.VarChar, phoneNumberLname);
                 request.query(updateRegister1, function(err, results) {
                 if (err) {
                     console.error('Error executing query: ' + err.stack);
@@ -183,9 +182,9 @@ function handleRegister(text, sender, messagingStep ,sms, register, config, phon
                             const request = new sql.Request();
                             const updateRegister1 = `UPDATE two_way_sms_tb SET status = @statusEnd, messagingStep = @messagingStepEnd isactive=@isActive WHERE phoneNumber = @phoneNumberEnd AND time = (
                                 SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberEnd )`;
-                            request.input('status', sql.VarChar, statusEnd);
-                            request.input('messagingStep', sql.VarChar, messagingStepEnd);
-                            request.input('phoneNumber', sql.VarChar, phoneNumberEnd);
+                            request.input('statusEnd', sql.VarChar, statusEnd);
+                            request.input('messagingStepEnd', sql.VarChar, messagingStepEnd);
+                            request.input('phoneNumberEnd', sql.VarChar, phoneNumberEnd);
                             request.input('isActive', sql.Bit, isActive);
                             request.query(updateRegister1, function(err, results) {
                             if (err) {
