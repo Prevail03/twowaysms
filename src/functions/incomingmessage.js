@@ -3,7 +3,6 @@ var Client = require('node-rest-client').Client;
 const validateId = require('../validateId');
 const handleRegister = require('./handleRegister');
 let user={};
-// const config = require('/var/www/twowaysms/dbconnect.js');
 function handleIncomingMessage(text, sender, textId, phoneNumber, time, config, sms , register) {
     // Check if user exists in database
         sql.connect(config, function(err, connection) {
@@ -22,7 +21,7 @@ function handleIncomingMessage(text, sender, textId, phoneNumber, time, config, 
                 return;
             }
             if (checkResults.recordset.length > 0) {
-                console.log('User already exists');
+                console.log('User Exists');
                 const status = checkResults.recordset[0].status;
                 const messagingStep = checkResults.recordset[0].messagingStep;
                 switch (status) {

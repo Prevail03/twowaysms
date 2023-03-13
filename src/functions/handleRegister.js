@@ -165,8 +165,6 @@ function handleRegister(text, sender, messagingStep ,sms, register, config, phon
                 var client = new Client({
                     proxy: false
                 });
-                
-
                 var args = {
                     data: { firstname: user.firstname, lastname: user.lastname, ID: user.id, email: user.email, password: user.password, phonenumber: sender },
                     headers: { "Content-Type": "application/json" }
@@ -221,6 +219,27 @@ function handleRegister(text, sender, messagingStep ,sms, register, config, phon
                         isRegistering = false;
                         registrationStep = 0;
                         user = {};
+                        const statusFailure400 = "FailedisRegistering";
+                        const phoneNumberFailure400 = phoneNumber;
+                        const messagingStepFailure400= "0";
+                        const isActive = 0;
+                        sql.connect(config, function(err) {
+                            const request = new sql.Request();
+                            const updateRegister1 = `UPDATE two_way_sms_tb SET status = @statusFailure400, messagingStep = @messagingStepFailure400 isactive=@isActive WHERE phoneNumber = @phoneNumberFailure400 AND time = (
+                                SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberFailure400 )`;
+                            request.input('statusFailure400', sql.VarChar, statusFailure400);
+                            request.input('messagingStepFailure400', sql.VarChar, messagingStepFailure400);
+                            request.input('phoneNumberFailure400', sql.VarChar, phoneNumberFailure400);
+                            request.input('isActive', sql.Bit, isActive);
+                            request.query(updateRegister1, function(err, results) {
+                            if (err) {
+                                console.error('Error executing query: ' + err.stack);
+                                return;
+                            }
+                            console.log('UPDATE successful');
+                            sql.close();
+                            });
+                        });
                     }else if ([500].includes(response.statusCode)) {
                         console.log(response.statusCode);
                         sms.send({
