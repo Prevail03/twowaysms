@@ -91,6 +91,7 @@ function handleDelete(text, sender, messagingStep, phoneNumber, config, sms, reg
                         const statusDelEnd = "FinishedisDeleting";
                         const phoneNumberDelEnd = sender;
                         const messagingStepDelEnd= "0";
+                        const isActiveDelEnd = "0";
                         sql.connect(config, function(err) {
                             const request = new sql.Request();
                             const updateRegister1 = `UPDATE two_way_sms_tb SET status = @statusDelEnd, messagingStep = @messagingStepDelEnd WHERE phoneNumber = @phoneNumberDelEnd AND time = (
@@ -98,6 +99,7 @@ function handleDelete(text, sender, messagingStep, phoneNumber, config, sms, reg
                             request.input('statusDelEnd', sql.VarChar, statusDelEnd);
                             request.input('messagingStepDelEnd', sql.VarChar, messagingStepDelEnd);
                             request.input('phoneNumberDelEnd', sql.NVarChar, phoneNumberDelEnd);
+                            request.input('isActiveDelEnd', sql.Bit, isActiveDelEnd);
                             request.query(updateRegister1, function(err, results) {
                             if (err) {
                                 console.error('Error executing query: ' + err.stack);
