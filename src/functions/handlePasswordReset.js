@@ -6,12 +6,31 @@ const proxy = httpProxy.createProxyServer({});
 let user={};
 
 
-function handlePasswordReset(text, sender, messagingStep, reset, config, phoneNumber) {
+function handlePasswordReset(text, sender, messagingStep, reset, config) {
     switch (parseInt(messagingStep)) {
       case 1:
         //request username
         sms.send(reset.enterEmail(sender));
         resetStep = 2;
+        const statusResetEmail = "ResetingPassword";
+        const phoneNumberResetEmail = sender;
+        const messagingStepResetEmail = "2";
+        sql.connect(config, function(err) {
+            const request = new sql.Request();
+            const updateDelete = `UPDATE two_way_sms_tb SET status = @statusResetEmail, messagingStep = @messagingStepResetEmail WHERE phoneNumber = @phoneNumberResetEmail AND time = (
+                SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberResetEmail )`;
+            request.input('statusResetEmail', sql.VarChar, statusResetEmail);
+            request.input('messagingStepResetEmail', sql.VarChar, messagingStepResetEmail);
+            request.input('phoneNumberResetEmail', sql.NVarChar, phoneNumberResetEmail);
+            request.query(updateDelete, function(err, results) {
+            if (err) {
+                console.error('Error executing query: ' + err.stack);
+                return;
+            }
+            console.log('UPDATE successful');
+            sql.close();
+            });
+        });
     break;
 
     case 2:
@@ -19,51 +38,70 @@ function handlePasswordReset(text, sender, messagingStep, reset, config, phoneNu
         user.email=text;
         sms.send(reset.enterCurrentPassword(sender));  
         resetStep =3;
+        const statusResetCPassword = "ResetingPassword";
+        const phoneNumberResetCPassword = sender;
+        const messagingStepResetCPassword = "3";
+        sql.connect(config, function(err) {
+            const request = new sql.Request();
+            const updateDelete = `UPDATE two_way_sms_tb SET status = @statusResetCPassword, messagingStep = @messagingStepResetCPassword WHERE phoneNumber = @phoneNumberResetCPassword AND time = (
+                SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberResetCPassword )`;
+            request.input('statusResetCPassword', sql.VarChar, statusResetCPassword);
+            request.input('messagingStepResetCPassword', sql.VarChar, messagingStepResetCPassword);
+            request.input('phoneNumberResetCPassword', sql.NVarChar, phoneNumberResetCPassword);
+            request.query(updateDelete, function(err, results) {
+            if (err) {
+                console.error('Error executing query: ' + err.stack);
+                return;
+            }
+            console.log('UPDATE successful');
+            sql.close();
+            });
+        });
+        
     break;
     //send to login and reset Password
     case 3:
         //request OTP
         user.currentPassword=text;
-        //send to octagon Login API
-        //confirm login
+        //confirm login /send to octagon Login API
         var deleteClient = new Client();
-        // set content-type header and data as json in args parameter
         var args = {
             data: { username: user.email, password: user.currentPassword },
             headers: { "Content-Type": "application/json" }
         };
-            // username= data[0]+"."+data[1];
-        // Actual Octagon Login To Account API
         deleteClient.post("https://api.octagonafrica.com/v1/login", args, function (data, response) {
-        // parsed response body as js object
-        console.log(data);
-        // raw response
-        
-        
+        console.log(data);  
         if ([200].includes(response.statusCode)) {
-            // success code
             sms.send(reset.verifyPassword(sender)); 
-            //send email to reset Password API
             var deleteClient = new Client();
-                    // set content-type header and data as json in args parameter
                     var args = {
                         data: { identifier: user.email },
                         headers: { "Content-Type": "application/json" }
                     };
-                        // username= data[0]+"."+data[1];
-                    // Actual Octagon Delete User Account API
                     deleteClient.post("https://api.octagonafrica.com/v1/password_reset", args, function (data, response) {
-                    // parsed response body as js object
                     console.log(data);
-                    // raw response
-                
-                    
-                    if ([200].includes(response.statusCode)) {
-                        // success code 
-                        
+                    if ([200].includes(response.statusCode)) { 
                         sms.send(reset.enterOTP(sender));  
                             resetStep = 4; 
-                        
+                            const statusResetVPassword = "ResetingPassword";
+                            const phoneNumberResetVPassword = sender;
+                            const messagingStepResetVPassword = "4";
+                            sql.connect(config, function(err) {
+                                const request = new sql.Request();
+                                const updateDelete = `UPDATE two_way_sms_tb SET status = @statusResetVPassword, messagingStep = @messagingStepResetVPassword WHERE phoneNumber = @phoneNumberResetVPassword AND time = (
+                                    SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberResetVPassword )`;
+                                request.input('statusResetVPassword', sql.VarChar, statusResetVPassword);
+                                request.input('messagingStepResetVPassword', sql.VarChar, messagingStepResetVPassword);
+                                request.input('phoneNumberResetVPassword', sql.NVarChar, phoneNumberResetVPassword);
+                                request.query(updateDelete, function(err, results) {
+                                if (err) {
+                                    console.error('Error executing query: ' + err.stack);
+                                    return;
+                                }
+                                console.log('UPDATE successful');
+                                sql.close();
+                                });
+                            });
                         console.log(response.statusCode);
                     
                     } else if ([201].includes(response.statusCode)) {
@@ -119,6 +157,25 @@ function handlePasswordReset(text, sender, messagingStep, reset, config, phoneNu
         user.otp=text;
         sms.send(reset.enterNewPassword(sender));  
         resetStep = 5;
+        const statusResetNPassword = "ResetingPassword";
+        const phoneNumberResetNPassword = sender;
+        const messagingStepResetNPassword = "5";
+        sql.connect(config, function(err) {
+            const request = new sql.Request();
+            const updateDelete = `UPDATE two_way_sms_tb SET status = @statusResetNPassword, messagingStep = @messagingStepResetNPassword WHERE phoneNumber = @phoneNumberResetNPassword AND time = (
+                SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberResetNPassword )`;
+            request.input('statusResetNPassword', sql.VarChar, statusResetNPassword);
+            request.input('messagingStepResetNPassword', sql.VarChar, messagingStepResetNPassword);
+            request.input('phoneNumberResetNPassword', sql.NVarChar, phoneNumberResetNPassword);
+            request.query(updateDelete, function(err, results) {
+            if (err) {
+                console.error('Error executing query: ' + err.stack);
+                return;
+            }
+            console.log('UPDATE successful');
+            sql.close();
+            });
+        });
     break; 
     case 5:
         //confirmation of password reset
@@ -145,6 +202,25 @@ function handlePasswordReset(text, sender, messagingStep, reset, config, phoneNu
                 ResetingPassword=false;
                 user = {};
                 console.log(response.statusCode)
+                const statusResetConfirmation = "ResetingPassword";
+                const phoneNumberResetConfirmation = sender;
+                const messagingStepResetConfirmation = "2";
+                sql.connect(config, function(err) {
+                    const request = new sql.Request();
+                    const updateDelete = `UPDATE two_way_sms_tb SET status = @statusResetConfirmation, messagingStep = @messagingStepResetConfirmation WHERE phoneNumber = @phoneNumberResetConfirmation AND time = (
+                        SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberResetConfirmation )`;
+                    request.input('statusResetConfirmation', sql.VarChar, statusResetConfirmation);
+                    request.input('messagingStepResetConfirmation', sql.VarChar, messagingStepResetConfirmation);
+                    request.input('phoneNumberResetConfirmation', sql.NVarChar, phoneNumberResetConfirmation);
+                    request.query(updateDelete, function(err, results) {
+                    if (err) {
+                        console.error('Error executing query: ' + err.stack);
+                        return;
+                    }
+                    console.log('UPDATE successful');
+                    sql.close();
+                    });
+                });
             }else if ([400].includes(response.statusCode)) {
                 console.log(response.statusCode);
                 sms.send({

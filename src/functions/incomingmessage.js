@@ -39,7 +39,7 @@ function handleIncomingMessage(text, sender, textId, phoneNumber, time, config, 
                     handleAccountCheck(text, sender, messagingStep, sms, account, config, phoneNumber);
                     break;
                 case 'ResetingPassword':
-                    handlePasswordReset(text, sender, messagingStep);
+                    handlePasswordReset(text, sender, messagingStep, reset, config);
                     break;
                 default:
                     console.log('Unknown status: ' + status);
@@ -180,7 +180,7 @@ function handleIncomingMessage(text, sender, textId, phoneNumber, time, config, 
                                 sms.send(reset.enterEmail(sender));
                                 ResetingPassword=true;
                                 resetStep=2;
-                                const statusReset = "isCheckingAccounts";
+                                const statusReset = "ResetingPassword";
                                 const phoneNumberReset = sender;
                                 const messagingStepReset= "2";
                                 sql.connect(config, function(err) {
