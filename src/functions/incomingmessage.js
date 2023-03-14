@@ -2,8 +2,12 @@ const sql = require('mssql');
 var Client = require('node-rest-client').Client;
 const validateId = require('../validateId');
 const handleRegister = require('./handleRegister');
+const handleDelete = require('./handleDelete');
+const handleAccountCheck = require('./handleAccountCheck');
+const handlePasswordReset = require('./handlePasswordReset');
+
 let user={};
-function handleIncomingMessage(text, sender, textId, phoneNumber, time, config, sms , register) {
+function handleIncomingMessage(text, sender, textId, phoneNumber, time, config, sms , register, account, reset) {
     // Check if user exists in database
         sql.connect(config, function(err, connection) {
                 if (err) {
@@ -29,10 +33,10 @@ function handleIncomingMessage(text, sender, textId, phoneNumber, time, config, 
                     handleRegister(text, sender, messagingStep ,sms, register, config, phoneNumber, validateId ,user);
                     break;
                 case 'isDeleting':
-                    handleDelete(text, sender, messagingStep);
-                    break;
+                    handleDelete(text, sender, messagingStep, config, phoneNumber, time, sms, register);
+                    break; 
                 case 'isCheckingAccount':
-                    handleAccountCheck(text, sender, messagingStep);
+                    handleAccountCheck(text, sender, messagingStep, sms, account, config, phoneNumber);
                     break;
                 case 'ResetingPassword':
                     handlePasswordReset(text, sender, messagingStep);

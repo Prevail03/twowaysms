@@ -48,52 +48,13 @@ app.post("/webhook", (req, res) => {
     let messagingStep = '';
 
     
-    handleIncomingMessage(text, sender, textId, phoneNumber, time, config ,sms ,register);
+    handleIncomingMessage(text, sender, textId, phoneNumber, time, config ,sms ,register, reset, account);
     // handleRegister(text, sender, messagingStep ,sms, register, config, phoneNumber, time, validateId);   
-      function handleDelete(text, sender, messagingStep) {
-        switch (parseInt(messagingStep)) {
-          case 1:
-            // Handle step 1 of delete process
-            break;
-          case 2:
-            // Handle step 2 of delete process
-            break;
-          // ...
-          default:
-            console.log('Unknown delete step: ' + messagingStep);
-            break;
-        }
-      }
+    // handleDelete(text, sender, messagingStep, phoneNumber, config, time, sms, register)
+    //  handleAccountCheck(text, sender, messagingStep, sms, account, config, phoneNumber)
+     
       
-      function handleAccountCheck(text, sender, messagingStep) {
-        switch (parseInt(messagingStep)) {
-          case 1:
-            // Handle step 1 of account check process
-            break;
-          case 2:
-            // Handle step 2 of account check process
-            break;
-          // ...
-          default:
-            console.log('Unknown account check step: ' + messagingStep);
-            break;
-        }
-      }
       
-      function handlePasswordReset(text, sender, messagingStep) {
-        switch (parseInt(messagingStep)) {
-          case 1:
-            // Handle step 1 of password reset process
-            break;
-          case 2:
-            // Handle step 2 of password reset process
-            break;
-          // ...
-          default:
-            console.log('Unknown password reset step: ' + messagingStep);
-            break;
-        }
-      }
       
     
         res.send("Webhook received");

@@ -162,9 +162,7 @@ function handleRegister(text, sender, messagingStep ,sms, register, config, phon
         case 6:
             // process full name and send confirmation message
             user.lastname=text;
-                var client = new Client({
-                    proxy: false
-                });
+                var client = new Client({proxy: false});
                 var args = {
                     data: { firstname: user.firstname, lastname: user.lastname, ID: user.id, email: user.email, password: user.password, phonenumber: sender },
                     headers: { "Content-Type": "application/json" }
@@ -180,7 +178,7 @@ function handleRegister(text, sender, messagingStep ,sms, register, config, phon
                         isRegistering = false;
                         registrationStep = 0;
                         user = {};
-                        const statusEnd = "isRegistering";
+                        const statusEnd = "FinishedisRegistering";
                         const phoneNumberEnd = phoneNumber;
                         const messagingStepEnd= "0";
                         const isActiveEnd = 0;
