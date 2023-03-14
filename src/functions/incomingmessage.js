@@ -142,7 +142,7 @@ function handleIncomingMessage(text, sender, textId, phoneNumber, time, config, 
                             case 'delete':
                                 isDeleting=false;
                                 deletingStep=0;
-                                messageToCustomer = 'Hello Our Dear Esteemed Customer, Welcome to Octagon Services.';
+                                messageToCustomer = 'Hello Our Dear Esteemed Customer, Welcome to Octagon Africa.To delete your account please share the following data.';
                                 
                                 sms.send({
                                     to: sender,
