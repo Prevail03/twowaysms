@@ -7,7 +7,7 @@ let user={};
 let deletingStep=0;
 
 
-function handleDelete(text, sender, messagingStep, phoneNumber, config, time, sms, register) {
+function handleDelete(text, sender, messagingStep, phoneNumber, config, sms, register) {
     switch (parseInt(messagingStep)) {
         case 1:
             // request for ID number  
