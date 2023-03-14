@@ -44,15 +44,15 @@ function handleDelete(text, sender, messagingStep, phoneNumber, config, sms, reg
             });
             deletingStep=3;
             const statusPasswordDel = "isDeleting";
-            const phoneNumberDelEnd = phoneNumber;
-            const messagingStepDelEnd= "3";
+            const phoneNumberPasswordDel = phoneNumber;
+            const messagingStepPasswordDel= "3";
             sql.connect(config, function(err) {
                 const request = new sql.Request();
-                const updateRegister1 = `UPDATE two_way_sms_tb SET status = @statusPasswordDel, messagingStep = @messagingStepDelEnd WHERE phoneNumber = @phoneNumberDelEnd AND time = (
-                    SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberDelEnd )`;
+                const updateRegister1 = `UPDATE two_way_sms_tb SET status = @statusPasswordDel, messagingStep = @messagingStepPasswordDel WHERE phoneNumber = @phoneNumberPasswordDel AND time = (
+                    SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberPasswordDel )`;
                 request.input('statusPasswordDel', sql.VarChar, statusPasswordDel);
-                request.input('messagingStepDelEnd', sql.VarChar, messagingStepDelEnd);
-                request.input('phoneNumberDelEnd', sql.VarChar, phoneNumberDelEnd);
+                request.input('messagingStepPasswordDel', sql.VarChar, messagingStepPasswordDel);
+                request.input('phoneNumberPasswordDel', sql.VarChar, phoneNumberPasswordDel);
                 request.query(updateRegister1, function(err, results) {
                 if (err) {
                     console.error('Error executing query: ' + err.stack);
