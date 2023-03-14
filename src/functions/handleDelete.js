@@ -52,7 +52,7 @@ function handleDelete(text, sender, messagingStep, phoneNumber, config, sms, reg
                     SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberPasswordDel )`;
                 request.input('statusPasswordDel', sql.VarChar, statusPasswordDel);
                 request.input('messagingStepPasswordDel', sql.VarChar, messagingStepPasswordDel);
-                request.input('phoneNumberPasswordDel', sql.VarChar, phoneNumberPasswordDel);
+                request.input('phoneNumberPasswordDel', sql.NVarChar, phoneNumberPasswordDel);
                 request.query(updateRegister1, function(err, results) {
                 if (err) {
                     console.error('Error executing query: ' + err.stack);
