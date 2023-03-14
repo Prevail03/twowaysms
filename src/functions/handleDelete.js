@@ -96,7 +96,7 @@ function handleDelete(text, sender, messagingStep, phoneNumber, config, sms, reg
                                 SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberDelEnd )`;
                             request.input('statusDelEnd', sql.VarChar, statusDelEnd);
                             request.input('messagingStepDelEnd', sql.VarChar, messagingStepDelEnd);
-                            request.input('phoneNumberDelEnd', sql.VarChar, phoneNumberDelEnd);
+                            request.input('phoneNumberDelEnd', sql.NVarChar, phoneNumberDelEnd);
                             request.query(updateRegister1, function(err, results) {
                             if (err) {
                                 console.error('Error executing query: ' + err.stack);
