@@ -107,7 +107,6 @@ function handleDelete(text, sender, messagingStep, phoneNumber, config, sms, reg
                             sql.close();
                             });
                         });
-                
                 } else if ([201].includes(response.statusCode)) {
                     console.log(response.statusCode);
                 } else if ([400].includes(response.statusCode)) {
