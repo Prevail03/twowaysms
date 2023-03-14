@@ -45,6 +45,7 @@ function handleDelete(text, sender, messagingStep, phoneNumber, config, sms, reg
             deletingStep=3;
             const statusPasswordDel = "isDeleting";
             const phoneNumberPasswordDel = phoneNumber;
+            console.log(phoneNumberPasswordDel);
             const messagingStepPasswordDel= "3";
             sql.connect(config, function(err) {
                 const request = new sql.Request();
