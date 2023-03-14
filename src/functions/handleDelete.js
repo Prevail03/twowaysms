@@ -14,7 +14,7 @@ function handleDelete(text, sender, messagingStep, phoneNumber, config, sms, reg
             sms.send(register.enterId(sender));
             deletingStep = 2;
             const statusID = "isDeleting";
-            const phoneNumberID = phoneNumber;
+            const phoneNumberID = sender;
             const messagingStepID= "2"
             sql.connect(config, function(err) {
                 const request = new sql.Request();
@@ -89,7 +89,7 @@ function handleDelete(text, sender, messagingStep, phoneNumber, config, sms, reg
                         console.log(response.statusCode)
 
                         const statusDelEnd = "FinishedisDeleting";
-                        const phoneNumberDelEnd = phoneNumber;
+                        const phoneNumberDelEnd = sender;
                         const messagingStepDelEnd= "0";
                         sql.connect(config, function(err) {
                             const request = new sql.Request();
