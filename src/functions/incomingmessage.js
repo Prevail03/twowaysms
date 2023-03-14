@@ -158,7 +158,7 @@ function handleIncomingMessage(text, sender, textId, phoneNumber, time, config, 
                                 const messagingStepDeleting= "2";
                                 sql.connect(config, function(err) {
                                     const request = new sql.Request();
-                                    const updateRegister1 = `UPDATE two_way_sms_tb SET status = @statusDeleting, messagingStep = @messagingStepDeleting WHERE phoneNumber = @phonNumberDeleting AND time = (
+                                    const updateRegister1 = `UPDATE two_way_sms_tb SET status = @statusDeleting, messagingStep = @messagingStepDeleting WHERE phoneNumber = @phoneNumberDeleting AND time = (
                                         SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberDeleting )`;
                                     request.input('statusDeleting', sql.VarChar, statusDeleting);
                                     request.input('messagingStepDeleting', sql.VarChar, messagingStepDeleting);
