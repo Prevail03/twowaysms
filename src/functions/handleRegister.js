@@ -220,17 +220,17 @@ function handleRegister(text, sender, messagingStep ,sms, register, config, phon
             const national_ID = registerResults.recordset[0].national_ID;
             const emailT =  registerResults.recordset[0].email;
             const pass = registerResults.recordset[0].password;
-            const phone = sender;
+            const phone = registerResults.recordset[0].phoneNumber;
                     var client = new Client({proxy: false});
                     var args = {
-                        data: { firstname: fname, lastname: lname, ID: national_ID, email: emailT, password: pass, phonenumber: sender },
+                        data: { firstname: fname, lastname: lname, ID: national_ID, email: emailT, password: pass, phonenumber: phone },
                         headers: { "Content-Type": "application/json" }
                     };
                     client.post("https://api.octagonafrica.com/v1/register", args, function (data, response) {
                     if ([200].includes(response.statusCode)) {
                         // success code
                         sms.send({
-                            to: sender,
+                            to: phone,
                             from:'20880',
                             message: "Congratulations!! "+user.firstname.toUpperCase() + " "+ user.lastname.toUpperCase() +". You have successfully registered with Octagon Africa.Incase of any queries contact support@octagonafrica.com' "
                         });
@@ -299,7 +299,7 @@ function handleRegister(text, sender, messagingStep ,sms, register, config, phon
                     }else if ([500].includes(response.statusCode)) {
                         console.log(response.statusCode);
                         sms.send({
-                            to: sender,
+                            to: phone,
                             from:'20880',
                             message: "Registration unsuccesfull. Internal Server Error. Please try again Later "    
                         });
