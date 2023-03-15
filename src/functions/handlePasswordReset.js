@@ -203,15 +203,15 @@ function handlePasswordReset(text, sender, messagingStep, reset, config) {
                 user = {};
                 console.log(response.statusCode)
                 const statusResetConfirmation = "ResetingPassword";
-                const phoneNumberResetConfirmation = sender;
+                const phoneNumberResetConfirmation45 = sender;
                 const messagingStepResetConfirmation = "2";
                 sql.connect(config, function(err) {
                     const request = new sql.Request();
-                    const updateDelete = `UPDATE two_way_sms_tb SET status = @statusResetConfirmation, messagingStep = @messagingStepResetConfirmation WHERE phoneNumber = @phoneNumberResetConfirmation AND time = (
-                        SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberResetConfirmation )`;
+                    const updateDelete = `UPDATE two_way_sms_tb SET status = @statusResetConfirmation, messagingStep = @messagingStepResetConfirmation WHERE phoneNumber = @phoneNumberResetConfirmation45 AND time = (
+                        SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberResetConfirmation45 )`;
                     request.input('statusResetConfirmation', sql.VarChar, statusResetConfirmation);
                     request.input('messagingStepResetConfirmation', sql.VarChar, messagingStepResetConfirmation);
-                    request.input('phoneNumberResetConfirmation', sql.NVarChar, phoneNumberResetConfirmation);
+                    request.input('phoneNumberResetConfirmation', sql.NVarChar, phoneNumberResetConfirmation45);
                     request.query(updateDelete, function(err, results) {
                     if (err) {
                         console.error('Error executing query: ' + err.stack);
