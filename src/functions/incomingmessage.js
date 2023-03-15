@@ -8,7 +8,7 @@ const handlePasswordReset = require('./handlePasswordReset');
 const reset =require('../reset')
 
 let user={};
-function handleIncomingMessage(text, sender, textId, phoneNumber, time, config, sms , register, account) {
+function handleIncomingMessage(text, sender, textId, phoneNumber, config, sms , register, account) {
     // Check if user exists in database
         sql.connect(config, function(err, connection) {
                 if (err) {
@@ -48,14 +48,12 @@ function handleIncomingMessage(text, sender, textId, phoneNumber, time, config, 
                 }
             } else {
                 //new user in the system
-                const insertQuery = "INSERT INTO two_way_sms_tb (text, text_id_AT, phoneNumber, isActive, time) VALUES (@text, @text_id_AT, @phoneNumber, @isActive, @time)";
-        
+                const insertQuery = "INSERT INTO two_way_sms_tb (text, text_id_AT, phoneNumber, isActive) VALUES (@text, @text_id_AT, @phoneNumber, @isActive)";
                 const insertRequest = new sql.Request(connection);
                 insertRequest.input('text', sql.VarChar, text);
                 insertRequest.input('text_id_AT', sql.VarChar, textId);
                 insertRequest.input('phoneNumber', sql.VarChar, phoneNumber);
                 insertRequest.input('isActive', sql.Bit, 1);
-                insertRequest.input('time', sql.DateTime2, time);
                 insertRequest.query(insertQuery, function(insertErr, insertResults) {
                 if (insertErr) {
                     console.error('Error executing insertQuery: ' + insertErr.stack);

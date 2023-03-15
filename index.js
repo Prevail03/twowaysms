@@ -43,12 +43,11 @@ app.post("/webhook", (req, res) => {
     const sms = AfricasTalking.SMS;
     let messageToCustomer;    
     const text = textMessage.replace(keyword, '').trim();//remove "Key Word" 
-    const time = new Date();
     let status = '';
     let messagingStep = '';
 
     
-    handleIncomingMessage(text, sender, textId, phoneNumber, time, config ,sms ,register, account);
+    handleIncomingMessage(text, sender, textId, phoneNumber, config ,sms ,register, account);
     // handleRegister(text, sender, messagingStep ,sms, register, config, phoneNumber, time, validateId);   
     // handleDelete(text, sender, messagingStep, phoneNumber, config, time, sms, register)
     //  handleAccountCheck(text, sender, messagingStep, sms, account, config, phoneNumber)

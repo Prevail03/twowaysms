@@ -192,8 +192,9 @@ function handleRegister(text, sender, messagingStep ,sms, register, config, phon
                 }
                 console.log('UPDATE successful');
                 const statusReg ="isRegistering";
+                const phoneNumberEnd = phoneNumber;
                 const request = new sql.Request(connection);
-                const checkIfExistsQuery = "SELECT TOP 1 * FROM two_way_sms_tb WHERE phoneNumber = @phoneNumber AND status = @statusReg AND isActive = 1 order by time DESC ";
+                const checkIfExistsQuery = "SELECT TOP 1 * FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberEnd AND status = @statusReg AND isActive = 1 order by time DESC ";
                 request.input('phoneNumberEnd', sql.VarChar, phoneNumberEnd);
                 request.input('statusReg', sql.VarChar, statusReg);
                 request.query(checkIfExistsQuery, function(checkErr, checkResults) {
