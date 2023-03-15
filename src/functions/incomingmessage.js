@@ -40,7 +40,7 @@ function handleIncomingMessage(text, sender, textId, phoneNumber, time, config, 
                     handleAccountCheck(text, sender, messagingStep, sms, account, config, phoneNumber);
                     break;
                 case 'ResetingPassword':
-                    handlePasswordReset(text, sender, messagingStep, reset, config);
+                    handlePasswordReset(text, sender, messagingStep, sms, reset, config);
                     break;
                 default:
                     console.log('Unknown status: ' + status);

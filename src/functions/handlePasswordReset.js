@@ -6,7 +6,7 @@ const proxy = httpProxy.createProxyServer({});
 let user={};
 
 
-function handlePasswordReset(text, sender, messagingStep, reset, config) {
+function handlePasswordReset(text, sender, messagingStep,sms, reset, config) {
     switch (parseInt(messagingStep)) {
       case 1:
         //request username
