@@ -15,6 +15,7 @@ function handlePasswordReset(text, sender, messagingStep, reset, config) {
         const statusResetEmail = "ResetingPassword";
         const phoneNumberResetEmail = sender;
         const messagingStepResetEmail = "2";
+        const textEmailReset = text;
         sql.connect(config, function(err) {
             const request = new sql.Request();
             const updateDelete = `UPDATE two_way_sms_tb SET status = @statusResetEmail, messagingStep = @messagingStepResetEmail WHERE phoneNumber = @phoneNumberResetEmail AND time = (
