@@ -5,9 +5,10 @@ const handleRegister = require('./handleRegister');
 const handleDelete = require('./handleDelete');
 const handleAccountCheck = require('./handleAccountCheck');
 const handlePasswordReset = require('./handlePasswordReset');
+const reset =require('../reset')
 
 let user={};
-function handleIncomingMessage(text, sender, textId, phoneNumber, time, config, sms , register, account, reset) {
+function handleIncomingMessage(text, sender, textId, phoneNumber, time, config, sms , register, account) {
     // Check if user exists in database
         sql.connect(config, function(err, connection) {
                 if (err) {

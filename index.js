@@ -48,7 +48,7 @@ app.post("/webhook", (req, res) => {
     let messagingStep = '';
 
     
-    handleIncomingMessage(text, sender, textId, phoneNumber, time, config ,sms ,register, reset, account);
+    handleIncomingMessage(text, sender, textId, phoneNumber, time, config ,sms ,register, account);
     // handleRegister(text, sender, messagingStep ,sms, register, config, phoneNumber, time, validateId);   
     // handleDelete(text, sender, messagingStep, phoneNumber, config, time, sms, register)
     //  handleAccountCheck(text, sender, messagingStep, sms, account, config, phoneNumber)
