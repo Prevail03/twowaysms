@@ -5,7 +5,7 @@ const proxy = httpProxy.createProxyServer({});
 
 let user={};
 let registrationStep = 0;
-function handleRegister(text, sender, messagingStep ,sms, register, config, phoneNumber, validateId) {
+function handleRegister(text, sender, messagingStep ,sms, register, config, phoneNumber, validateId , connection) {
     switch (parseInt(messagingStep)) {
       case 1:
         
@@ -70,7 +70,7 @@ function handleRegister(text, sender, messagingStep ,sms, register, config, phon
             const phoneNumberFail = sender;
             const messagingStepFail= "1";
             sql.connect(config, function(err) {
-                const request = new sql.Request();
+                const request = new sql.Request(connection);
                 const updateRegister1 = `UPDATE two_way_sms_tb SET status = @statusFail, messagingStep = @messagingStepFail WHERE phoneNumber = @phoneNumberFail AND time = (
                     SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberFail )`;
                 request.input('statusFail', sql.VarChar, statusFail);
@@ -176,7 +176,7 @@ function handleRegister(text, sender, messagingStep ,sms, register, config, phon
             const phoneNumberEnd = phoneNumber;
             const messagingStepEnd= "6";
             const textLname = text;
-            sql.connect(config, function(err) {
+            sql.connect(config, function(err, connection ) {
                 const request = new sql.Request();
                 const updateRegister1 = `UPDATE two_way_sms_tb SET status = @statusEnd, messagingStep = @messagingStepEnd, lastname = @textLname  WHERE phoneNumber = @phoneNumberEnd AND time = (
                     SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberEnd )`;
@@ -192,7 +192,7 @@ function handleRegister(text, sender, messagingStep ,sms, register, config, phon
                 }
                 console.log('UPDATE successful');
                 const statusReg ="isRegistering";
-                const request = new sql.Request();
+                const request = new sql.Request(connection);
                 const checkIfExistsQuery = "SELECT TOP 1 * FROM two_way_sms_tb WHERE phoneNumber = @phoneNumber AND status = @statusReg AND isActive = 1 order by time DESC ";
                 request.input('phoneNumberEnd', sql.VarChar, phoneNumberEnd);
                 request.input('statusReg', sql.VarChar, statusReg);
