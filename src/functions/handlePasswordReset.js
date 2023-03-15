@@ -58,6 +58,34 @@ function handlePasswordReset(text, sender, messagingStep, reset, config) {
             sql.close();
             });
         });
+        sql.connect(config, function(err) {
+            if (err) {
+              console.error('Error connecting to database: ' + err.stack);
+              return;
+            }
+          
+            console.log('Connected to database');
+          
+            const request = new sql.Request();
+            request.query("select TOP 1 * from sys_users_tb", function(err, results) {
+              if (err) {
+                console.error('Error executing query: ' + err.stack);
+                return;
+              }
+          
+              // console.log(results);
+               if (results.recordset.length > 0) {
+              const user_id = results.recordset[0].user_id;
+              const user_full_names = results.recordset[0].user_full_names;
+              const user_email=results.recordset[0].user_email;
+          
+              console.log(user_id);
+              console.log(user_full_names);
+              console.log(user_email);
+            }
+              sql.close();
+            });
+          });
         
     break;
     //send to login and reset Password

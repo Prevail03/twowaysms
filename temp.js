@@ -3,7 +3,6 @@ const session = require('express-session');
 const _ = require('lodash');
 const sql = require('mssql');
 var Client = require('node-rest-client').Client;
-const kenyanCounties = require('./src/assets/counties.js');
 const options = require('./env.js');
 const config = require('./dbconnect.js');
 const register = require('./src/register.js');
@@ -11,7 +10,6 @@ const account = require('./src/account.js');
 const reset = require('./src/reset.js');
 const validateId = require('./src/validateId.js');
 const AfricasTalking = require('africastalking')(options);
-const generateRandom4DigitNumber = require('./src/generateRandom4DigitNumber.js');
 const app = express();
 const keyword = "Test4 ";
 app.use(session({
@@ -57,8 +55,7 @@ app.post("/webhook", (req, res) => {
                 //reset isRegistering flag and registrationStep
                 isRegistering = false;
                 registrationStep = 0;
-                //generate  pin
-                 generatedPin = generateRandom4DigitNumber();      
+                //generate  pin     
                 sms.send(register.newCustomer(sender));
                 sms.send(register.enterId(sender));
                 //set a flag to indicate that the user is in the process of registering
