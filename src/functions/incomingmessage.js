@@ -29,9 +29,10 @@ function handleIncomingMessage(text, sender, textId, phoneNumber, config, sms , 
                 console.log('User Exists');
                 const status = checkResults.recordset[0].status;
                 const messagingStep = checkResults.recordset[0].messagingStep;
+                const textIDAT = checkResults.recordset[0].text_id_AT;
                 switch (status) {
                 case 'isRegistering':
-                    handleRegister(text, sender, messagingStep ,sms, register, config, phoneNumber, validateId ,user, connection);
+                    handleRegister(text, sender, messagingStep ,sms, register, config, phoneNumber, validateId ,textIDAT, user, connection);
                     break;
                 case 'isDeleting':
                     handleDelete(text, sender, messagingStep, config, phoneNumber, sms, register);

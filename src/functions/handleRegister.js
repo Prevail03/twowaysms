@@ -5,7 +5,7 @@ const proxy = httpProxy.createProxyServer({});
 
 let user={};
 let registrationStep = 0;
-function handleRegister(text, sender, messagingStep ,sms, register, config, phoneNumber, validateId , connection) {
+function handleRegister(text, sender, messagingStep ,sms, register, config, phoneNumber, textIDAT, validateId , connection) {
     switch (parseInt(messagingStep)) {
       case 1:
         
@@ -204,10 +204,12 @@ function handleRegister(text, sender, messagingStep ,sms, register, config, phon
             const request = new sql.Request();
             const statusReg = "isRegistering";
             const phoneNumberEnd = phoneNumber; 
+            const textIDEnD = textIDAT; 
             // Bind the values to the parameters
             request.input('statusReg', sql.NVarChar(50), statusReg);
             request.input('phoneNumberEnd', sql.NVarChar(50), phoneNumberEnd);
-            request.query("SELECT TOP 1 * FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberEnd AND status = @statusReg AND isActive = 1 order by time DESC", function(err, registerResults) {
+            request.input('textIDEnD', sql.NVarChar(50), textIDEnD);
+            request.query("SELECT TOP 1 * FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberEnd AND status = @statusReg AND isActive = 1 AND text_id_AT = @textIDEnD order by time DESC", function(err, registerResults) {
             if (err) {
             console.error('Error executing query: ' + err.stack);
             return;
