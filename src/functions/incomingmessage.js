@@ -30,7 +30,8 @@ function handleIncomingMessage(text, sender, textId, phoneNumber, config, sms , 
                 const status = checkResults.recordset[0].status;
                 const messagingStep = checkResults.recordset[0].messagingStep;
                 const textIDAT = checkResults.recordset[0].text_id_AT;
-                console.log|(textIDAT);
+                console.log(textIDAT);
+                console.log(status+" "+messagingStep);
                 switch (status) {
                 case 'isRegistering':
                     handleRegister(text, sender, messagingStep ,sms, register, config, phoneNumber, validateId ,textIDAT, user, connection);
