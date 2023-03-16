@@ -6,6 +6,7 @@ const proxy = httpProxy.createProxyServer({});
 let user={};
 let registrationStep = 0;
 function handleRegister(text, sender, messagingStep ,sms, register, config, phoneNumber, textIDAT) {
+    console.log(textIDAT);
     switch (parseInt(messagingStep)) {
       case 1:
         
