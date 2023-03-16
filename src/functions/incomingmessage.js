@@ -34,7 +34,7 @@ function handleIncomingMessage(text, sender, textId, phoneNumber, config, sms , 
                 console.log(status+" "+messagingStep);
                 switch (status) {
                 case 'isRegistering':
-                    handleRegister(text, sender, messagingStep ,sms, register, config, phoneNumber, validateId ,textIDAT, user, connection);
+                    handleRegister(text, sender, messagingStep ,sms, register, config, phoneNumber, textIDAT);
                     break;
                 case 'isDeleting':
                     handleDelete(text, sender, messagingStep, config, phoneNumber, sms, register);
