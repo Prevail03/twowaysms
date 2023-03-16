@@ -58,8 +58,6 @@ function handlePasswordReset(text, sender, messagingStep,sms, reset, config) {
             sql.close();
             });
         });
-        
-        
     break;
     //send to login and reset Password
     case 3:
