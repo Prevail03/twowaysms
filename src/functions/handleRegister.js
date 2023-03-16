@@ -2,7 +2,7 @@ const sql = require('mssql');
 var Client = require('node-rest-client').Client;
 const httpProxy = require('http-proxy');
 const proxy = httpProxy.createProxyServer({});
-
+const validateId = require('../validateId');
 let user={};
 let registrationStep = 0;
 function handleRegister(text, sender, messagingStep ,sms, register, config, phoneNumber, textIDAT, validateId , connection) {
