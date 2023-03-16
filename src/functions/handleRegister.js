@@ -210,6 +210,7 @@ function handleRegister(text, sender, messagingStep ,sms, register, config, phon
             request.input('statusReg', sql.NVarChar(50), statusReg);
             request.input('phoneNumberEnd', sql.NVarChar(50), phoneNumberEnd);
             request.input('textIDEnD', sql.VarChar(100), textIDEnD);
+            
             request.query("SELECT TOP 1 * FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberEnd AND status = @statusReg AND isActive = 1 AND text_id_AT = @textIDEnD order by time DESC", function(err, registerResults) {
             if (err) {
             console.error('Error executing query: ' + err.stack);
