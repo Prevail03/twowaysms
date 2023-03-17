@@ -11,6 +11,7 @@ const keyword = "Test4 ";
 const bodyParser = require("body-parser");
 const { urlencoded } = require("express");
 app.use(bodyParser.json());
+app.use(session({secret: 'octagonafrica'}));
 app.listen(3000, function() {
     console.log("Started at localhost 3000");
 });
@@ -37,10 +38,6 @@ app.post("/webhook", (req, res) => {
     // handleRegister(text, sender, messagingStep ,sms, register, config, phoneNumber, time, validateId);   
     // handleDelete(text, sender, messagingStep, phoneNumber, config, time, sms, register)
     //  handleAccountCheck(text, sender, messagingStep, sms, account, config, phoneNumber)
-     
-      
-      
-      
     
-        res.send("Webhook received");
+   res.send("Webhook received");
 });   

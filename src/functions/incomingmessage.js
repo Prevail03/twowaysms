@@ -29,7 +29,7 @@ function handleIncomingMessage(text, sender, textId, phoneNumber, config, sms , 
                 console.log('User Exists');
                 const status = checkResults.recordset[0].status;
                 const messagingStep = checkResults.recordset[0].messagingStep;
-                const textIDAT = checkResults.recordset[0].text_id_AT;
+                const textIDAT = checkResults.recordset[0].text_id_AT; ///text Id from Africas Talking
                 console.log(textIDAT);
                 console.log(status+" "+messagingStep);
                 switch (status) {
