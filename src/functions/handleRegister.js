@@ -191,7 +191,7 @@ function handleRegister(text, sender, messagingStep ,sms, register, config, phon
             const textIDEnD = textIDAT; 
             sql.connect(config, function(err, connection ) {
                     const request = new sql.Request();
-                    const updateRegister1 = `UPDATE two_way_sms_tb SET status = @statusEnd, messagingStep = @messagingStepEnd, lastname = @textLname  WHERE phoneNumber = @phoneNumberEnd AND text_id_AT = textIDATEnD AND time = (
+                    const updateRegister1 = `UPDATE two_way_sms_tb SET status = @statusEnd, messagingStep = @messagingStepEnd, lastname = @textLname  WHERE phoneNumber = @phoneNumberEnd AND text_id_AT = @textIDATEnD AND time = (
                         SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberEnd )`;
                     request.input('statusEnd', sql.VarChar, statusEnd);
                     request.input('messagingStepEnd', sql.VarChar, messagingStepEnd);
