@@ -306,7 +306,7 @@ function handleRegister(text, sender, messagingStep ,sms, register, config, phon
                                 console.error('Error executing query: ' + err.stack);
                                 return;
                             }
-                            console.log('UPDATE successful');
+                            console.log('Registration Attempt Unsuccessfull');
                             sql.close();
                             });
                         });
