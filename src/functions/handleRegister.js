@@ -32,7 +32,7 @@ function handleRegister(text, sender, messagingStep ,sms, register, config, phon
                 console.error('Error executing query: ' + err.stack);
                 return;
             }
-            console.log('UPDATE successful');
+            console.log('ID UPDATE successful');
             sql.close();
             });
         });
@@ -64,7 +64,7 @@ function handleRegister(text, sender, messagingStep ,sms, register, config, phon
                         console.error('Error executing query: ' + err.stack);
                         return;
                     }
-                    console.log('Query executed successfully');
+                    console.log('ID # UPDATED successfully');
                 });
             });
 
@@ -87,7 +87,7 @@ function handleRegister(text, sender, messagingStep ,sms, register, config, phon
                     console.error('Error executing query: ' + err.stack);
                     return;
                 }
-                console.log('UPDATE successful');
+                console.log('Invalid ID number.');
                 sql.close();
                 });
             });
@@ -117,7 +117,7 @@ function handleRegister(text, sender, messagingStep ,sms, register, config, phon
                     console.error('Error executing query: ' + err.stack);
                     return;
                 }
-                console.log('UPDATE successful');
+                console.log('Email UPDATE successful');
                 sql.close();
                 });
             });
@@ -147,7 +147,7 @@ function handleRegister(text, sender, messagingStep ,sms, register, config, phon
                     console.error('Error executing query: ' + err.stack);
                     return;
                 }
-                console.log('UPDATE successful');
+                console.log('Password UPDATE successful');
                 sql.close();
                 });
             });
@@ -176,7 +176,7 @@ function handleRegister(text, sender, messagingStep ,sms, register, config, phon
                     console.error('Error executing query: ' + err.stack);
                     return;
                 }
-                console.log('UPDATE successful');
+                console.log('Firstname UPDATE successful');
                 sql.close();
                 });
             });
@@ -204,7 +204,7 @@ function handleRegister(text, sender, messagingStep ,sms, register, config, phon
                         console.error('Error executing query: ' + err.stack);
                         return;
                     }
-                    console.log('UPDATE successful');
+                    console.log(' Lastname UPDATE successful');
                     sql.close();
             });
         });
@@ -246,7 +246,7 @@ function handleRegister(text, sender, messagingStep ,sms, register, config, phon
                         sms.send({
                             to: phone,
                             from:'20880',
-                            message: "Congratulations!! "+user.firstname.toUpperCase() + " "+ user.lastname.toUpperCase() +". You have successfully registered with Octagon Africa.Incase of any queries contact support@octagonafrica.com' "
+                            message: "Congratulations!! "+fname.toUpperCase() + " "+ lname.toUpperCase() +". You have successfully registered with Octagon Africa.Incase of any queries contact support@octagonafrica.com' "
                         });
                         isRegistering = false;
                         registrationStep = 0;
@@ -268,7 +268,7 @@ function handleRegister(text, sender, messagingStep ,sms, register, config, phon
                                 console.error('Error executing query: ' + err.stack);
                                 return;
                             }
-                            console.log('UPDATE successful');
+                            console.log('Register Attempt successful');
                             sql.close();
                             });
                         });
