@@ -236,10 +236,12 @@ function handleRegister(text, sender, messagingStep ,sms, register, config, phon
             const pass = registerResults.recordset[0].password;
             const phone = registerResults.recordset[0].phoneNumber;
                     var client = new Client({proxy: false});
+                    
                     var args = {
                         data: { firstname: fname, lastname: lname, ID: national_ID, email: emailT, password: pass, phonenumber: phone },
                         headers: { "Content-Type": "application/json" }
                     };
+                    console.log(args);
                     client.post("https://api.octagonafrica.com/v1/register", args, function (data, response) {
                     if ([200].includes(response.statusCode)) {
                         // success code
@@ -257,7 +259,7 @@ function handleRegister(text, sender, messagingStep ,sms, register, config, phon
                         const isActiveSuccess = 0;
                         sql.connect(config, function(err) {
                             const request = new sql.Request();
-                            const updateRegister1 = `UPDATE two_way_sms_tb SET status = @statusSuccess, messagingStep = @messagingStepSuccess WHERE phoneNumber = @phoneNumberSuccess AND time = (
+                            const updateRegister1 = `UPDATE two_way_sms_tb SET status = @statusSuccess, messagingStep = @messagingStepSuccess ,isActive = @isActiveSuccess WHERE phoneNumber = @phoneNumberSuccess AND time = (
                                 SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberSuccess )`;
                             request.input('statusSuccess', sql.VarChar, statusSuccess);
                             request.input('messagingStepSuccess', sql.VarChar, messagingStepSuccess);
