@@ -269,7 +269,6 @@ function handleRegister(text, sender, messagingStep ,sms, register, config, phon
                                 return;
                             }
                             console.log('Register Attempt successful');
-                            sql.close();
                             });
                         });
                         console.log(response.statusCode)
@@ -307,7 +306,6 @@ function handleRegister(text, sender, messagingStep ,sms, register, config, phon
                                 return;
                             }
                             console.log('Registration Attempt Unsuccessfull');
-                            sql.close();
                             });
                         });
                     }else if ([500].includes(response.statusCode)) {
