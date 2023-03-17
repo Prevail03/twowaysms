@@ -188,16 +188,16 @@ function handleRegister(text, sender, messagingStep ,sms, register, config, phon
             const phoneNumberEnd = phoneNumber;
             const messagingStepEnd= "6";
             const textLname = text;
-            const textIDEnD = textIDAT; 
+            const textIDEnding = textIDAT; 
             sql.connect(config, function(err, connection ) {
                     const request = new sql.Request();
-                    const updateRegister1 = `UPDATE two_way_sms_tb SET status = @statusEnd, messagingStep = @messagingStepEnd, lastname = @textLname  WHERE phoneNumber = @phoneNumberEnd AND text_id_AT = @textIDATEnD AND time = (
+                    const updateRegister1 = `UPDATE two_way_sms_tb SET status = @statusEnd, messagingStep = @messagingStepEnd, lastname = @textLname  WHERE phoneNumber = @phoneNumberEnd AND text_id_AT = @textIDEnding AND time = (
                         SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberEnd )`;
                     request.input('statusEnd', sql.VarChar, statusEnd);
                     request.input('messagingStepEnd', sql.VarChar, messagingStepEnd);
                     request.input('phoneNumberEnd', sql.VarChar, phoneNumberEnd);
                     request.input('textLname', sql.VarChar, textLname);
-                    request.input('textIDEnD', sql.VarChar, textIDEnD);
+                    request.input('textIDEnding', sql.VarChar, textIDEnding);
                     // request.input('isActiveEnd', sql.Bit, isActiveEnd);
                     request.query(updateRegister1, function(err, results) {
                     if (err) {
