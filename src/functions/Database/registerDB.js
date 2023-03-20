@@ -39,6 +39,7 @@ function InvalidNationalID(statusFail, phoneNumberFail, messagingStepFail, confi
     });
   });
 }
+
 function updateEmail(statusPassword, phoneNumberPassword, messagingStepPassword, textEmail, textIDATPass, config) {
   sql.connect(config, function (err) {
     const request = new sql.Request();
@@ -59,6 +60,7 @@ function updateEmail(statusPassword, phoneNumberPassword, messagingStepPassword,
     });
   });
 }
+
 function failedIDNumber(statusID, phoneNumberID, messagingStepID, textID, textIDATID, config) {
   sql.connect(config, function (err) {
     const request = new sql.Request();
@@ -79,6 +81,7 @@ function failedIDNumber(statusID, phoneNumberID, messagingStepID, textID, textID
     });
   });
 }
+
 function updatePassword(statusFname, phoneNumberFname, messagingStepFname, textPassword, textIDATFname, config) {
   sql.connect(config, function (err) {
     const request = new sql.Request();
@@ -99,6 +102,7 @@ function updatePassword(statusFname, phoneNumberFname, messagingStepFname, textP
     });
   });
 }
+
 function updateFirstName(statusLname, phoneNumberLname, messagingStepLname, textFname, textIDATLname, config) {
   sql.connect(config, function (err) {
     const request = new sql.Request();
@@ -119,6 +123,7 @@ function updateFirstName(statusLname, phoneNumberLname, messagingStepLname, text
     });
   });
 }
+
 function updateLastname(statusEnd, messagingStepEnd, phoneNumberEnd, textLname, textIDEnding, config, phoneNumber,textIDAT, sms) {
   sql.connect(config, function (err, connection) {
     const request = new sql.Request();
@@ -197,7 +202,7 @@ function updateLastname(statusEnd, messagingStepEnd, phoneNumberEnd, textLname, 
             } else if ([400].includes(response.statusCode)) {
               console.log(response.statusCode);
               sms.send({
-                to: sender,
+                to: phone,
                 from: '20880',
                 message: "Registration unsuccesfull. Invalid Details or Username Exists . Please try again Later "
               });
