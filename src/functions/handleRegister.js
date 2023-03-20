@@ -51,13 +51,13 @@ function handleRegister(text, sender, messagingStep, sms, register, config, phon
                 const messagingStepEmail = "3";
                 const textIDNumber = text;
                 const textIDATEmail = textIDAT;
-                utils.updateNationalID(statusEmail,phoneNumberEmail,messagingStepEmail,textIDNumber,textIDATEmail,config);
+                updateNationalID(statusEmail,phoneNumberEmail,messagingStepEmail,textIDNumber,textIDATEmail,config);
             } else {
                 sms.send(register.failedId(sender));
                 const statusFail = "isRegistering";
                 const phoneNumberFail = sender;
                 const messagingStepFail = "1";
-                utils.InvalidNationalID(statusFail,phoneNumberFail,messagingStepFail,config);
+                InvalidNationalID(statusFail,phoneNumberFail,messagingStepFail,config);
             }
             break;
         case 3:
