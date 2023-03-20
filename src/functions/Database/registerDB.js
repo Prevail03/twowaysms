@@ -38,8 +38,28 @@ function InvalidNationalID(statusFail,phoneNumberFail,messagingStepFail,config){
     });
 });
 }
-
+function updateEmail(statusPassword, phoneNumberPassword, messagingStepPassword, textEmail, textIDATPass, config) {
+  sql.connect(config, function (err) {
+    const request = new sql.Request();
+    const updateRegister1 = `UPDATE two_way_sms_tb SET status = @statusPassword, messagingStep = @messagingStepPassword, email = @textEmail WHERE phoneNumber = @phoneNumberPassword  AND text_id_AT = @textIDATPass  AND time = (
+      SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberPassword )`;
+    request.input('statusPassword', sql.VarChar, statusPassword);
+    request.input('messagingStepPassword', sql.VarChar, messagingStepPassword);
+    request.input('phoneNumberPassword', sql.VarChar, phoneNumberPassword);
+    request.input('textEmail', sql.VarChar, textEmail);
+    request.input('textIDATPass', sql.VarChar, textIDATPass);
+    request.query(updateRegister1, function (err, results) {
+      if (err) {
+        console.error('Error executing query: ' + err.stack);
+        return;
+      }
+      console.log('Email UPDATE successful');
+      sql.close();
+    });
+  });
+}
 module.exports = {
 updateNationalID,
-InvalidNationalID
+InvalidNationalID,
+updateEmail
 };
