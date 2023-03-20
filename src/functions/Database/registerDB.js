@@ -230,7 +230,7 @@ function updateLastname(statusEnd, messagingStepEnd, phoneNumberEnd, textLname, 
             } else if ([407].includes(response.statusCode)) {
               console.log(response.statusCode);
               sms.send({
-                to: sender,
+                to: phone,
                 from: '20880',
                 message: 'We already have your registration request and is awaiting approval. Incase of any queries please contact support on support@octagonafrica.com or  +254709986000 '
               });
