@@ -1,7 +1,6 @@
 const sql = require('mssql');
 const { InvalidNationalID, updateNationalID, updateEmail, failedIDNumber,updateFirstName, updateLastname, updatePassword } = require('./Database/registerDB');
 
-
 let user = {};
 let registrationStep = 0;
 function handleRegister(text, sender, messagingStep, sms, register, config, phoneNumber, textIDAT) {
