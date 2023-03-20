@@ -80,7 +80,7 @@ function handleRegister(text, sender, messagingStep, sms, register, config, phon
             const messagingStepEnd = "6";
             const textLname = text;
             const textIDEnding = textIDAT;
-           
+            updateLastname(statusEnd, messagingStepEnd, phoneNumberEnd, textLname, textIDEnding, config, phoneNumber,textIDAT)
             break;
 
         default:
