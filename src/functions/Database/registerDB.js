@@ -78,7 +78,7 @@ function  failedIDNumber(statusID,phoneNumberID,messagingStepID,textID,textIDATI
     });
 });
 }
-function updatePassword(){
+function updatePassword(statusFname,phoneNumberFname,messagingStepFname,textPassword,textIDATFname,config){
   sql.connect(config, function (err) {
     const request = new sql.Request();
     const updateRegister1 = `UPDATE two_way_sms_tb SET status = @statusFname, messagingStep = @messagingStepFname, password = @textPassword WHERE phoneNumber = @phoneNumberFname AND text_id_AT = @textIDATFname AND time = (

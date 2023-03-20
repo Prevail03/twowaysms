@@ -60,7 +60,7 @@ function handleRegister(text, sender, messagingStep, sms, register, config, phon
             const messagingStepFname = "5";
             const textPassword = text;
             const textIDATFname = textIDAT;
-            updatePassword(statusFname,phoneNumberFname,messagingStepFname,textPassword,textIDATFname);
+            updatePassword(statusFname,phoneNumberFname,messagingStepFname,textPassword,textIDATFname,config);
             break;
         case 5:
             //request for lname           
