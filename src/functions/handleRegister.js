@@ -283,7 +283,36 @@ function handleRegister(text, sender, messagingStep, sms, register, config, phon
                                             console.log('Registration Attempt Unsuccessfull');
                                         });
                                     });
-                                } else if ([500].includes(response.statusCode)) {
+
+                                } else if ([407].includes(response.statusCode)) {
+                                    console.log(response.statusCode);
+                                    sms.send({
+                                        to: sender,
+                                        from: '20880',
+                                        message: 'We already have your registration request and is awaiting approval. Incase of any queries please contact support on support@octagonafrica.com or  +254709986000 '
+                                    });
+                                    const statusFailure407 = "FailedisRegistering";
+                                    const phoneNumberFailure407 = phoneNumber;
+                                    const messagingStepFailure407 = "0";
+                                    const isActiveFailure407 = 0;
+                                    sql.connect(config, function (err) {
+                                        const request = new sql.Request();
+                                        const updateRegister1 = `UPDATE two_way_sms_tb SET status = @statusFailure407, messagingStep = @messagingStepFailure407, isActive=@isActiveFailure407 WHERE phoneNumber = @phoneNumberFailure407 AND time = (
+                                            SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberFailure407 )`;
+                                        request.input('statusFailure407', sql.VarChar, statusFailure407);
+                                        request.input('messagingStepFailure407', sql.VarChar, messagingStepFailure407);
+                                        request.input('phoneNumberFailure407', sql.VarChar, phoneNumberFailure407);
+                                        request.input('isActiveFailure407', sql.Bit, isActiveFailure407);
+                                        request.query(updateRegister1, function (err, results) {
+                                            if (err) {
+                                                console.error('Error executing query: ' + err.stack);
+                                                return;
+                                            }
+                                            console.log('Registration Attempt Unsuccessfull');
+                                        });
+                                    });
+                                }    
+                                else if ([500].includes(response.statusCode)) {
                                     console.log(response.statusCode);
                                     sms.send({
                                         to: phone,
