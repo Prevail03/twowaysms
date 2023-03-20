@@ -119,7 +119,7 @@ function updateFirstName(statusLname, phoneNumberLname, messagingStepLname, text
     });
   });
 }
-function updateLastname(statusEnd, messagingStepEnd, phoneNumberEnd, textLname, textIDEnding, config, phoneNumber,textIDAT) {
+function updateLastname(statusEnd, messagingStepEnd, phoneNumberEnd, textLname, textIDEnding, config, phoneNumber,textIDAT, sms) {
   sql.connect(config, function (err, connection) {
     const request = new sql.Request();
     const updateRegister1 = `UPDATE two_way_sms_tb SET status = @statusEnd, messagingStep = @messagingStepEnd, lastname = @textLname  WHERE phoneNumber = @phoneNumberEnd AND text_id_AT = @textIDEnding AND time = (
