@@ -1,4 +1,5 @@
 const sql = require('mssql');
+var Client = require('node-rest-client').Client;
 
 function updateNationalID(statusEmail, phoneNumberEmail, messagingStepEmail, textIDNumber, textIDATEmail, config) {
   sql.connect(config, function (err) {
