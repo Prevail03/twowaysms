@@ -199,13 +199,13 @@ function handleRegister(text, sender, messagingStep, sms, register, config, phon
                     }
                     console.log(' Lastname UPDATE successful');
                     const statusReg = "isRegistering";
-                    const phoneNumberEnd = phoneNumber;
+                    const phoneNumberEnding = phoneNumber;
                     const textIDEnD = textIDAT;
                     // Bind the values to the parameters
                     request.input('statusReg', sql.NVarChar(50), statusReg);
-                    request.input('phoneNumberEnd', sql.NVarChar(50), phoneNumberEnd);
+                    request.input('phoneNumberEnding', sql.NVarChar(50), phoneNumberEnding);
                     request.input('textIDEnD', sql.VarChar(100), textIDEnD);
-                    request.query("SELECT TOP 1 * FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberEnd AND status = @statusReg AND isActive = 1 AND text_id_AT = @textIDEnD order by time DESC", function (err, registerResults) {
+                    request.query("SELECT TOP 1 * FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberEnding AND status = @statusReg AND isActive = 1 AND text_id_AT = @textIDEnD order by time DESC", function (err, registerResults) {
                         if (err) {
                             console.error('Error executing query: ' + err.stack);
                             return;
@@ -305,7 +305,6 @@ function handleRegister(text, sender, messagingStep, sms, register, config, phon
                     });
                 });
             });
-
             break;
 
         default:
