@@ -58,8 +58,50 @@ function updateEmail(statusPassword, phoneNumberPassword, messagingStepPassword,
     });
   });
 }
+function  failedIDNumber(statusID,phoneNumberID,messagingStepID,textID,textIDATID,config){
+  sql.connect(config, function (err) {
+    const request = new sql.Request();
+    const updateRegister1 = `UPDATE two_way_sms_tb SET status = @statusID, messagingStep = @messagingStepID , national_ID = @textID WHERE phoneNumber = @phoneNumberID AND text_id_AT = @textIDATID  AND time = (
+    SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberID )`;
+    request.input('statusID', sql.VarChar, statusID);
+    request.input('messagingStepID', sql.VarChar, messagingStepID);
+    request.input('phoneNumberID', sql.VarChar, phoneNumberID);
+    request.input('textID', sql.VarChar, textID);
+    request.input('textIDATID', sql.VarChar, textIDATID);
+    request.query(updateRegister1, function (err, results) {
+        if (err) {
+            console.error('Error executing query: ' + err.stack);
+            return;
+        }
+        console.log('ID UPDATE successful');
+        sql.close();
+    });
+});
+}
+function updatePassword(){
+  sql.connect(config, function (err) {
+    const request = new sql.Request();
+    const updateRegister1 = `UPDATE two_way_sms_tb SET status = @statusFname, messagingStep = @messagingStepFname, password = @textPassword WHERE phoneNumber = @phoneNumberFname AND text_id_AT = @textIDATFname AND time = (
+        SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberFname )`;
+    request.input('statusFname', sql.VarChar, statusFname);
+    request.input('messagingStepFname', sql.VarChar, messagingStepFname);
+    request.input('textPassword', sql.VarChar, textPassword);
+    request.input('phoneNumberFname', sql.VarChar, phoneNumberFname);
+    request.input('textIDATFname', sql.VarChar, textIDATFname);
+    request.query(updateRegister1, function (err, results) {
+        if (err) {
+            console.error('Error executing query: ' + err.stack);
+            return;
+        }
+        console.log('Password UPDATE successful');
+        sql.close();
+    });
+});
+}
 module.exports = {
 updateNationalID,
 InvalidNationalID,
-updateEmail
+updateEmail,
+failedIDNumber,
+updatePassword
 };
