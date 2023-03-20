@@ -1,7 +1,7 @@
 const sql = require('mssql');
 var Client = require('node-rest-client').Client;
 const httpProxy = require('http-proxy');
-const { InvalidNationalID,updateNationalID } = require('./Database/registerDB');
+const { InvalidNationalID,updateNationalID,updateEmail } = require('./Database/registerDB');
 
 
 let user = {};
