@@ -71,7 +71,6 @@ function handleRegister(text, sender, messagingStep, sms, register, config, phon
             } else {
 
                 messageToCustomer = "Invalid ID number. Please enter a valid 6-digit ID number";
-                registrationStep = 1;
                 const statusFail = "isRegistering";
                 const phoneNumberFail = sender;
                 const messagingStepFail = "1";
@@ -96,7 +95,6 @@ function handleRegister(text, sender, messagingStep, sms, register, config, phon
         case 3:
             //request 6 character password         
             sms.send(register.enterPassword(sender));
-            registrationStep = 4;
             const statusPassword = "isRegistering";
             const phoneNumberPassword = phoneNumber;
             const messagingStepPassword = "4";
@@ -125,7 +123,6 @@ function handleRegister(text, sender, messagingStep, sms, register, config, phon
         case 4:
             //request for fname           
             sms.send(register.enterFirstName(sender));
-            registrationStep = 5;
             const statusFname = "isRegistering";
             const phoneNumberFname = phoneNumber;
             const messagingStepFname = "5";
@@ -235,9 +232,6 @@ function handleRegister(text, sender, messagingStep, sms, register, config, phon
                                         from: '20880',
                                         message: "Congratulations!! " + fname.toUpperCase() + " " + lname.toUpperCase() + ". You have successfully registered with Octagon Africa.Incase of any queries contact support@octagonafrica.com' "
                                     });
-                                    isRegistering = false;
-                                    registrationStep = 0;
-                                    user = {};
                                     const statusSuccess = "FinishedisRegistering";
                                     const phoneNumberSuccess = phoneNumber;
                                     const messagingStepSuccess = "0";
