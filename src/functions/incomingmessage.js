@@ -37,13 +37,13 @@ function handleIncomingMessage(text, sender, textId, phoneNumber, config, sms , 
                     handleRegister(text, sender, messagingStep ,sms, register, config, phoneNumber, textIDAT);
                     break;
                 case 'isDeleting':
-                    handleDelete(text, sender, messagingStep, config, phoneNumber, sms, register);
+                    handleDelete(text, sender, messagingStep, config, phoneNumber, sms, register , textIDAT);
                     break; 
                 case 'isCheckingAccount':
-                    handleAccountCheck(text, sender, messagingStep, sms, account, config, phoneNumber);
+                    handleAccountCheck(text, sender, messagingStep, sms, account, config, phoneNumber,textIDAT);
                     break;
                 case 'ResetingPassword':
-                    handlePasswordReset(text, sender, messagingStep, sms, reset, config);
+                    handlePasswordReset(text, sender, messagingStep, sms, reset, config , textIDAT);
                     break;
                 default:
                     console.log('Unknown status: ' + status);

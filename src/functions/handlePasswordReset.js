@@ -2,9 +2,10 @@ const sql = require('mssql');
 var Client = require('node-rest-client').Client;
 const httpProxy = require('http-proxy');
 const proxy = httpProxy.createProxyServer({});
+const {updateEmail1,updateEmail2} = require('./Database/resetDB');
 
 let user = {};
-function handlePasswordReset(text, sender, messagingStep, sms, reset, config) {
+function handlePasswordReset(text, sender, messagingStep, sms, reset, config, textIDAT) {
     switch (parseInt(messagingStep)) {
         case 1:
             //request username
@@ -14,22 +15,8 @@ function handlePasswordReset(text, sender, messagingStep, sms, reset, config) {
             const phoneNumberResetEmail = sender;
             const messagingStepResetEmail = "2";
             const textEmailReset = text;
-            sql.connect(config, function (err) {
-                const request = new sql.Request();
-                const updateDelete = `UPDATE two_way_sms_tb SET status = @statusResetEmail, messagingStep = @messagingStepResetEmail WHERE phoneNumber = @phoneNumberResetEmail AND time = (
-                SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberResetEmail )`;
-                request.input('statusResetEmail', sql.VarChar, statusResetEmail);
-                request.input('messagingStepResetEmail', sql.VarChar, messagingStepResetEmail);
-                request.input('phoneNumberResetEmail', sql.NVarChar, phoneNumberResetEmail);
-                request.query(updateDelete, function (err, results) {
-                    if (err) {
-                        console.error('Error executing query: ' + err.stack);
-                        return;
-                    }
-                    console.log('UPDATE successful');
-                    sql.close();
-                });
-            });
+            const textIDATEmail = textIDAT;
+            updateEmail1(statusResetEmail,phoneNumberResetEmail,messagingStepResetEmail,textEmailReset,config,textIDATEmail);
             break;
 
         case 2:
@@ -40,22 +27,9 @@ function handlePasswordReset(text, sender, messagingStep, sms, reset, config) {
             const statusResetCPassword = "ResetingPassword";
             const phoneNumberResetCPassword = sender;
             const messagingStepResetCPassword = "3";
-            sql.connect(config, function (err) {
-                const request = new sql.Request();
-                const updateDelete = `UPDATE two_way_sms_tb SET status = @statusResetCPassword, messagingStep = @messagingStepResetCPassword WHERE phoneNumber = @phoneNumberResetCPassword AND time = (
-                SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberResetCPassword )`;
-                request.input('statusResetCPassword', sql.VarChar, statusResetCPassword);
-                request.input('messagingStepResetCPassword', sql.VarChar, messagingStepResetCPassword);
-                request.input('phoneNumberResetCPassword', sql.NVarChar, phoneNumberResetCPassword);
-                request.query(updateDelete, function (err, results) {
-                    if (err) {
-                        console.error('Error executing query: ' + err.stack);
-                        return;
-                    }
-                    console.log('UPDATE successful');
-                    sql.close();
-                });
-            });
+            const textEmail = text;
+            const textIDATCPassword = textIDAT;
+            updateEmail2(statusResetCPassword, phoneNumberResetCPassword, messagingStepResetCPassword, textEmail, textIDATCPassword,config);
             break;
         //send to login and reset Password
         case 3:

@@ -197,9 +197,7 @@ function updateLastname(statusEnd, messagingStepEnd, phoneNumberEnd, textLname, 
               });
               console.log(response.statusCode)
 
-            } else if ([201].includes(response.statusCode)) {
-              console.log(response.statusCode);
-            } else if ([400].includes(response.statusCode)) {
+            }else if ([400].includes(response.statusCode)) {
               console.log(response.statusCode);
               sms.send({
                 to: phone,
