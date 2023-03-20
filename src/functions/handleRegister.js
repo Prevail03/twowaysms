@@ -262,9 +262,6 @@ function handleRegister(text, sender, messagingStep, sms, register, config, phon
 
                                 } else if ([201].includes(response.statusCode)) {
                                     console.log(response.statusCode);
-                                    isRegistering = false;
-                                    registrationStep = 0;
-                                    user = {};
                                 } else if ([400].includes(response.statusCode)) {
                                     console.log(response.statusCode);
                                     sms.send({
@@ -272,9 +269,6 @@ function handleRegister(text, sender, messagingStep, sms, register, config, phon
                                         from: '20880',
                                         message: "Registration unsuccesfull. Invalid Details or Username Exists . Please try again Later "
                                     });
-                                    isRegistering = false;
-                                    registrationStep = 0;
-                                    user = {};
                                     const statusFailure400 = "FailedisRegistering";
                                     const phoneNumberFailure400 = phoneNumber;
                                     const messagingStepFailure400 = "0";
