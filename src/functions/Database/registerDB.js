@@ -1,4 +1,4 @@
-function updateNationalID(statusEmail,phoneNumberEmail,messagingStepEmail,textIDNumber,textIDATEmail){
+function updateNationalID(statusEmail,phoneNumberEmail,messagingStepEmail,textIDNumber,textIDATEmail,config){
   sql.connect(config, function (err) {
     const request = new sql.Request();
     const updateRegister1 = `UPDATE two_way_sms_tb SET status = @statusEmail, messagingStep = @messagingStepEmail, national_ID=@textIDNUmber WHERE phoneNumber = @phoneNumberEmail AND text_id_AT = @textIDATEmail AND time = (
@@ -18,7 +18,7 @@ function updateNationalID(statusEmail,phoneNumberEmail,messagingStepEmail,textID
 });
 }
 
-function InvalidNationalID(statusFail,phoneNumberFail,messagingStepFail){
+function InvalidNationalID(statusFail,phoneNumberFail,messagingStepFail,config){
   sql.connect(config, function (err) {
     const request = new sql.Request(connection);
     const updateRegister1 = `UPDATE two_way_sms_tb SET status = @statusFail, messagingStep = @messagingStepFail WHERE phoneNumber = @phoneNumberFail AND time = (
