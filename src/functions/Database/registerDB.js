@@ -1,3 +1,5 @@
+const sql = require('mssql');
+
 function updateNationalID(statusEmail,phoneNumberEmail,messagingStepEmail,textIDNumber,textIDATEmail,config){
   sql.connect(config, function (err) {
     const request = new sql.Request();
