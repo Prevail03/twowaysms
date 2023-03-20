@@ -38,6 +38,6 @@ function InvalidNationalID(statusFail,phoneNumberFail,messagingStepFail,config){
 }
 
 module.exports = {
-updateNationalID: updateNationalID,
-InvalidNationalID:InvalidNationalID
+updateNationalID,
+InvalidNationalID
 };
