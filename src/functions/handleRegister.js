@@ -2,6 +2,8 @@ const sql = require('mssql');
 var Client = require('node-rest-client').Client;
 const httpProxy = require('http-proxy');
 const proxy = httpProxy.createProxyServer({});
+const utils = require('util');
+
 
 let user = {};
 let registrationStep = 0;
@@ -44,52 +46,18 @@ function handleRegister(text, sender, messagingStep, sms, register, config, phon
                 user = user ? { ...user, id: text } : { id: text };
 
                 sms.send(register.enterEmail(sender));
-                registrationStep = 3;
                 const statusEmail = "isRegistering";
                 const phoneNumberEmail = phoneNumber;
                 const messagingStepEmail = "3";
                 const textIDNumber = text;
                 const textIDATEmail = textIDAT;
-                sql.connect(config, function (err) {
-                    const request = new sql.Request();
-                    const updateRegister1 = `UPDATE two_way_sms_tb SET status = @statusEmail, messagingStep = @messagingStepEmail, national_ID=@textIDNUmber WHERE phoneNumber = @phoneNumberEmail AND text_id_AT = @textIDATEmail AND time = (
-                    SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberEmail )`;
-                    request.input('statusEmail', sql.VarChar, statusEmail);
-                    request.input('messagingStepEmail', sql.VarChar, messagingStepEmail);
-                    request.input('phoneNumberEmail', sql.VarChar, phoneNumberEmail);
-                    request.input('textIDNumber', sql.VarChar, textIDNumber);
-                    request.input('textIDATEmail', sql.VarChar, textIDATEmail);
-                    request.query(updateRegister1, function (err, results) {
-                        if (err) {
-                            console.error('Error executing query: ' + err.stack);
-                            return;
-                        }
-                        console.log('ID # UPDATED successfully');
-                    });
-                });
-
+                utils.updateNationalID(statusEmail,phoneNumberEmail,messagingStepEmail,textIDNumber,textIDATEmail);
             } else {
-
-                messageToCustomer = "Invalid ID number. Please enter a valid 6-digit ID number";
+                sms.send(register.failedId(sender));
                 const statusFail = "isRegistering";
                 const phoneNumberFail = sender;
                 const messagingStepFail = "1";
-                sql.connect(config, function (err) {
-                    const request = new sql.Request(connection);
-                    const updateRegister1 = `UPDATE two_way_sms_tb SET status = @statusFail, messagingStep = @messagingStepFail WHERE phoneNumber = @phoneNumberFail AND time = (
-                    SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberFail )`;
-                    request.input('statusFail', sql.VarChar, statusFail);
-                    request.input('messagingStepFail', sql.VarChar, messagingStepFail);
-                    request.input('phoneNumberFail', sql.VarChar, phoneNumberFail);
-                    request.query(updateRegister1, function (err, results) {
-                        if (err) {
-                            console.error('Error executing query: ' + err.stack);
-                            return;
-                        }
-                        console.log('Invalid ID number.');
-                        sql.close();
-                    });
-                });
+                utils.InvalidNationalID(statusFail,phoneNumberFail,messagingStepFail);
             }
             break;
         case 3:

@@ -15,6 +15,12 @@ const register = {
         message: "Please enter your ID number:"
     }),
 
+    failedId: (sender) => ({
+        to: sender,
+        from:'20880',
+        message: "Invalid ID number. Please enter a valid 6-digit ID number"
+    }),
+
     enterEmail: (sender) => ({
         
             to: sender,
