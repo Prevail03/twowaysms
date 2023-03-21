@@ -113,7 +113,7 @@ function updatePassword(statusPasswordDeleting, phoneNumberPasswordDeleting, mes
                   sql.close();
                 });
               });
-            } else if ([400].includes(response.statusCode)) {
+            } else if ([400].includes(response.statusCode)||[401].includes(response.statusCode)){
               console.log(response.statusCode);
               sms.send({
                 to: sender,
