@@ -124,7 +124,7 @@ function updateFirstName(statusLname, phoneNumberLname, messagingStepLname, text
   });
 }
 
-function updateLastname(statusEnd, messagingStepEnd, phoneNumberEnd, textLname, textIDEnding, config, phoneNumber,textIDAT, sms) {
+function updateLastname(statusEnd, messagingStepEnd, phoneNumberEnd, textLname, textIDEnding, config, phoneNumber, textIDAT, sms) {
   sql.connect(config, function (err, connection) {
     const request = new sql.Request();
     const updateRegister1 = `UPDATE two_way_sms_tb SET status = @statusEnd, messagingStep = @messagingStepEnd, lastname = @textLname  WHERE phoneNumber = @phoneNumberEnd AND text_id_AT = @textIDEnding AND time = (
@@ -197,7 +197,7 @@ function updateLastname(statusEnd, messagingStepEnd, phoneNumberEnd, textLname, 
               });
               console.log(response.statusCode)
 
-            }else if ([400].includes(response.statusCode)) {
+            } else if ([400].includes(response.statusCode)) {
               console.log(response.statusCode);
               sms.send({
                 to: phone,
@@ -260,9 +260,6 @@ function updateLastname(statusEnd, messagingStepEnd, phoneNumberEnd, textLname, 
                 from: '20880',
                 message: "Registration unsuccesfull. Internal Server Error. Please try again Later "
               });
-              isRegistering = false;
-              registrationStep = 0;
-              user = {};
             }
             else {
               // error code
