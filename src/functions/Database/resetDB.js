@@ -60,7 +60,7 @@ function updateCurrentPassword(text, statusResetPassword, phoneNumberResetPasswo
       console.log('Current Password UPDATE successful');
       //confirm login /send to octagon Login API
       const statusCurrentPass = "ResetPassword";
-      const phoneNumberCPass = phoneNumber;
+      const phoneNumberCPass = sender;
       const textIDCPass = textIDAT;
       console.log(statusCurrentPass + " "+ phoneNumberCPass+" "+textIDCPass);
       console.log(phoneNumber + " " + sender + " " + textIDAT + " " );
