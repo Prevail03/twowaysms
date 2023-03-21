@@ -59,7 +59,7 @@ function handlePasswordReset(text, sender, messagingStep, sms, reset, config, te
                     }
                     console.log('Current Password UPDATE successful');
                     // The first query has completed, so we can execute the second query now
-                   fetchData(statusResetPassword,phoneNumberResetPassword,messagingStepResetPassword,textIDATPassword);
+                   fetchData(statusResetPassword,phoneNumberResetPassword,textIDATPassword);
                 });
                 sql.close();
             });

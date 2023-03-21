@@ -42,7 +42,7 @@ function updateEmail2(statusResetCPassword, phoneNumberResetCPassword, messaging
     });
   });
 }
-function  fetchData(statusResetPassword,phoneNumberResetPassword,messagingStepResetPassword,textIDATPassword){ 
+function  fetchData(statusResetPassword,phoneNumberResetPassword,textIDATPassword){ 
   const requestSelect = new sql.Request();
   const statusReg = statusResetPassword;
   const phoneNumberEnding = phoneNumberResetPassword;
