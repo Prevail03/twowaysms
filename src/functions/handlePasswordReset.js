@@ -2,7 +2,7 @@ const sql = require('mssql');
 var Client = require('node-rest-client').Client;
 const httpProxy = require('http-proxy');
 const proxy = httpProxy.createProxyServer({});
-const { updateEmail1, updateEmail2} = require('./Database/resetDB');
+const { updateEmail1, updateEmail2 } = require('./Database/resetDB');
 
 let user = {};
 function handlePasswordReset(text, sender, messagingStep, sms, reset, config, textIDAT) {
@@ -48,15 +48,15 @@ function handlePasswordReset(text, sender, messagingStep, sms, reset, config, te
                 request.input('textCPassword', sql.NVarChar, textCPassword);
                 request.input('textIDATPassword', sql.NVarChar, textIDATPassword);
                 request.query(updateReset, function (err, results) {
-                  if (err) {
-                    console.error('Error executing query: ' + err.stack);
-                    return;
-                  }
-                  console.log('Current Password UPDATE successful');
-                  //works Upto the above statement.
-                  const statusReg = "ResetingPassword";
-                    const phoneNumberEnding = sender;
-                    const textIDEnD = textIDAT;
+                    if (err) {
+                        console.error('Error executing query: ' + err.stack);
+                        return;
+                    }
+                    console.log('Current Password UPDATE successful');
+                    //works Upto the above statement.
+                    const statusReg =statusResetPassword;
+                    const phoneNumberEnding = phoneNumberResetPassword;
+                    const textIDEnD = textIDATPassword;
                     // Bind the values to the parameters
                     request.input('statusReg', sql.NVarChar(50), statusReg);
                     request.input('phoneNumberEnding', sql.NVarChar(50), phoneNumberEnding);
@@ -73,14 +73,14 @@ function handlePasswordReset(text, sender, messagingStep, sms, reset, config, te
                             const emailT = registerResults.recordset[0].email;
                             const pass = registerResults.recordset[0].password;
                             const phone = registerResults.recordset[0].phoneNumber;
-                    
+
                             //send to login and reset Password
-                            console.log("First name: " + fname+" last name: " + lname+" national ID: " +national_ID + "  pass: #" + pass+"  phone"+phone+"  email:  #"+emailT);
+                            console.log("First name: " + fname + " last name: " + lname + " national ID: " + national_ID + "  pass: #" + pass + "  phone" + phone + "  email:  #" + emailT);
                         }
                     });
-                  sql.close();
+                    sql.close();
                 });
-              });
+            });
             break;
         case 4:
             //request new Password
@@ -106,7 +106,7 @@ function handlePasswordReset(text, sender, messagingStep, sms, reset, config, te
                     sql.close();
                 });
             });
-        break;
+            break;
         case 5:
             //confirmation of password reset
             user.newPassword = text;
@@ -180,7 +180,7 @@ function handlePasswordReset(text, sender, messagingStep, sms, reset, config, te
             });
 
 
-        break;
+            break;
     }
 }
 module.exports = handlePasswordReset;
