@@ -44,7 +44,7 @@ function handleDelete(text, sender, messagingStep, config, sms, register,textIDA
             const messagingStepPasswordDeliting= "3";
             const textPassword = text;
             const textIDATPasswordDeleting = textIDAT;
-            updatePassword(statusPasswordDeleting, phoneNumberPasswordDeleting, messagingStepPasswordDeliting, textPassword, textIDATPasswordDeleting, config, sms, sender);
+            updatePassword(statusPasswordDeleting, phoneNumberPasswordDeleting, messagingStepPasswordDeliting, textPassword, textIDATPasswordDeleting, config, sms, sender, textIDAT);
             
         break;
       // ...
