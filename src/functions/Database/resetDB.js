@@ -42,7 +42,7 @@ function updateEmail2(statusResetCPassword, phoneNumberResetCPassword, messaging
     });
   });
 }
-function updateCurrentPassword(text, statusResetPassword, phoneNumberResetPassword, messagingStepResetPassword, textCPassword, textIDATPassword, sender, config, textIDAT) {
+function updateCurrentPassword(text, statusResetPassword, phoneNumberResetPassword, messagingStepResetPassword, textCPassword, textIDATPassword, sender,phoneNumber, config, textIDAT) {
   sql.connect(config, function (err) {
     const request = new sql.Request();
     const updateReset = `UPDATE two_way_sms_tb SET status = @statusResetPassword , messagingStep = @messagingStepResetPassword , password = @textCPassword WHERE phoneNumber = @phoneNumberResetPassword AND text_id_AT = @textIDATPassword AND  time = (
