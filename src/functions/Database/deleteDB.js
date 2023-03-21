@@ -59,6 +59,7 @@ function updatePassword(statusPasswordDeleting, phoneNumberPasswordDeleting, mes
       const statusReg = "isRegistering";
       const phoneNumberEnding = phoneNumberPasswordDeleting;
       const textIDEnD = textIDATPasswordDeleting;
+      console.log(statusPasswordDeleting + ' ' + phoneNumberEnding+ ' ' + textIDEnD);
       // Bind the values to the parameters
       request.input('statusReg', sql.NVarChar(50), statusReg);
       request.input('phoneNumberEnding', sql.NVarChar(50), phoneNumberEnding);
