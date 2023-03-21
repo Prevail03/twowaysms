@@ -100,7 +100,7 @@ const statusResetPassword = "ResetingPassword";
                               console.error('Error executing query: ' + err.stack);
                               return;
                             }
-                            console.log('UPDATE successful');
+                            console.log(' Reset Password Attempt unsuccessful');
                             sql.close();
                           });
                         } else if ([500].includes(response.statusCode)) {
@@ -121,7 +121,7 @@ const statusResetPassword = "ResetingPassword";
                               console.error('Error executing query: ' + err.stack);
                               return;
                             }
-                            console.log('UPDATE successful');
+                            console.log(' Reset Password Attempt unsuccessful');
                             sql.close();
                           });
 
