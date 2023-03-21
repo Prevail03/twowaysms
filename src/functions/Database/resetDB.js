@@ -42,7 +42,7 @@ function updateEmail2(statusResetCPassword, phoneNumberResetCPassword, messaging
     });
   });
 }
-function updateCurrentPassword(text, statusResetPassword, phoneNumberResetPassword, messagingStepResetPassword, textCPassword, textIDATPassword, sender,phoneNumber, config, textIDAT) {
+function updateCurrentPassword(text, statusResetPassword, phoneNumberResetPassword, messagingStepResetPassword, textCPassword, textIDATPassword, sender, reset, phoneNumber, config, textIDAT) {
   sql.connect(config, function (err) {
     const request = new sql.Request();
     const updateReset = `UPDATE two_way_sms_tb SET status = @statusResetPassword , messagingStep = @messagingStepResetPassword , password = @textCPassword WHERE phoneNumber = @phoneNumberResetPassword AND text_id_AT = @textIDATPassword AND  time = (
@@ -62,6 +62,8 @@ function updateCurrentPassword(text, statusResetPassword, phoneNumberResetPasswo
       const statusCurrentPass = "ResetPassword";
       const phoneNumberCPass = phoneNumber;
       const textIDCPass = textIDAT;
+      console.log(statusCurrentPass + " "+ phoneNumberCPass+" "+textIDCPass);
+      console.log(phoneNumber + " " + sender + " " + textIDAT + " " );
       // Bind the values to the parameters
       request.input('statusCurrentPass', sql.NVarChar(50), statusCurrentPass);
       request.input('phoneNumberCPass', sql.NVarChar(50), phoneNumberCPass);
