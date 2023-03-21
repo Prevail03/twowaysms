@@ -56,7 +56,8 @@ function handlePasswordReset(text, sender, messagingStep, sms, reset, config, te
                   const statusCurrentPass = "ResetingPassword";
                   const phoneNumberCPass = sender;
                   const textIDCPass = textIDAT;
-                  console.log("statusCurrentPass" +statusCurrentPass+ "PhoneNumber" +phoneNumberCPass+ "TextIDAT" +textIDATIDCPass);
+                  console.log(sender+" "+textIDAT);
+                  console.log("statusCurrentPass" +statusCurrentPass+ "PhoneNumber" +phoneNumberCPass+ "TextIDAT" +textIDCPass);
                   // Bind the values to the parameters
                   request.input('statusCurrentPass', sql.NVarChar(50), statusCurrentPass);
                   request.input('phoneNumberCPass', sql.NVarChar(50), phoneNumberCPass);
