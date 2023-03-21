@@ -45,7 +45,7 @@ function updateEmail2(statusResetCPassword, phoneNumberResetCPassword, messaging
 function updateCurrentPassword(text, statusResetPassword, phoneNumberResetPassword, messagingStepResetPassword, textCPassword, textIDATPassword, sender, config, textIDAT) {
   sql.connect(config, function (err) {
     const request = new sql.Request();
-    const updateReset = `UPDATE two_way_sms_tb SET status = @statusResetPassword , messagingStep = @messagingStepResetPassword , password = @WHERE phoneNumber = @phoneNumberResetPassword AND text_id_AT = @textIDATPassword AND  time = (
+    const updateReset = `UPDATE two_way_sms_tb SET status = @statusResetPassword , messagingStep = @messagingStepResetPassword , password = @textCPassword WHERE phoneNumber = @phoneNumberResetPassword AND text_id_AT = @textIDATPassword AND  time = (
         SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberResetPassword )`;
     request.input('statusResetPassword', sql.VarChar, statusResetPassword);
     request.input('messagingStepResetPassword', sql.VarChar, messagingStepResetPassword);
