@@ -2,7 +2,7 @@ const sql = require('mssql');
 var Client = require('node-rest-client').Client;
 const httpProxy = require('http-proxy');
 const proxy = httpProxy.createProxyServer({});
-const { updateEmail1, updateEmail2 } = require('./Database/resetDB');
+const { updateEmail1, updateEmail2, fetchData } = require('./Database/resetDB');
 
 let user = {};
 function handlePasswordReset(text, sender, messagingStep, sms, reset, config, textIDAT) {
@@ -59,37 +59,7 @@ function handlePasswordReset(text, sender, messagingStep, sms, reset, config, te
                     }
                     console.log('Current Password UPDATE successful');
                     // The first query has completed, so we can execute the second query now
-                    const requestSelect = new sql.Request();
-                    const statusReg = statusResetPassword;
-                    const phoneNumberEnding = phoneNumberResetPassword;
-                    const textIDEnD = textIDATPassword;
-                    console.log(statusReg +" "+phoneNumberEnding +" "+textIDEnD);
-                    // Bind the variables to parameters for a SQL query
-                    requestSelect.input('statusReg', sql.NVarChar, statusReg);
-                    requestSelect.input('textIDEnD', sql.NVarChar, textIDEnD);
-                    requestSelect.input('phoneNumberEnding', sql.NVarChar, phoneNumberEnding);
-                    // Execute a SQL query
-                    requestSelect.query("SELECT TOP 1 * FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberEnding AND status = @statusReg AND isActive = 1 AND text_id_AT = @textIDEnD order by time DESC", function (err, registerResults) {
-                        if (err) {
-                            console.error('Error executing query: ' + err.stack);
-                            return;
-                        }
-                        // If the query returned results, retrieve user information and log it
-                        if (registerResults.recordset.length > 0) {
-                            try {
-                                const fname = registerResults.recordset[0].firstname;
-                                const lname = registerResults.recordset[0].lastname;
-                                const national_ID = registerResults.recordset[0].national_ID;
-                                const emailT = registerResults.recordset[0].email;
-                                const pass = registerResults.recordset[0].password;
-                                const phone = registerResults.recordset[0].phoneNumber;
-                            
-                                console.log("First name: " + fname + " last name: " + lname + " national ID: " + national_ID + "  pass: #" + pass + "  phone" + phone + "  email:  #" + emailT);
-                            } catch (err) {
-                                console.error('Error retrieving user information: ' + err.stack);
-                            } 
-                        }
-                    }); 
+                   fetchData(statusResetPassword,phoneNumberResetPassword,messagingStepResetPassword,textIDATPassword);
                 });
                 sql.close();
             });
