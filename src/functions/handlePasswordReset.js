@@ -55,7 +55,7 @@ function handlePasswordReset(text, sender, messagingStep, sms, reset, config, te
                   console.log('Current Password UPDATE successful');
                   //works Upto the above statement.
                   const statusReg = "ResetingPassword";
-                    const phoneNumberEnding = phoneNumber;
+                    const phoneNumberEnding = sender;
                     const textIDEnD = textIDAT;
                     // Bind the values to the parameters
                     request.input('statusReg', sql.NVarChar(50), statusReg);
