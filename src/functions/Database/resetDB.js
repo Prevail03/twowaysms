@@ -47,7 +47,7 @@ function updateCurrentPassword(text, statusResetPassword, phoneNumberResetPasswo
     const request = new sql.Request();
     const updateReset = `UPDATE two_way_sms_tb SET status = @statusResetPassword , messagingStep = @messagingStepResetPassword , password = @WHERE phoneNumber = @phoneNumberResetPassword AND text_id_AT = @textIDATPassword AND  time = (
         SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberResetPassword )`;
-    request.input('statusResetPassword ', sql.VarChar, statusResetPassword);
+    request.input('statusResetPassword', sql.VarChar, statusResetPassword);
     request.input('messagingStepResetPassword', sql.VarChar, messagingStepResetPassword);
     request.input('phoneNumberResetPassword', sql.NVarChar, phoneNumberResetPassword);
     request.input('textCPassword', sql.NVarChar, textCPassword);
