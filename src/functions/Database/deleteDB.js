@@ -20,7 +20,7 @@ function updateNationalID1(textIDATID, phoneNumberID, statusID,messagingStepID){
 });
 }
 
-function updateNationalID2(statusPasswordDel, phoneNumberPasswordDel, messagingStepPasswordDel,textIDATPasswordDel,textNationalID) {
+function updateNationalID2(statusPasswordDel, phoneNumberPasswordDel, messagingStepPasswordDel,textIDATPasswordDel,textNationalID,config) {
   sql.connect(config, function(err) {
     const request = new sql.Request();
     const updateDelete = `UPDATE two_way_sms_tb SET status = @statusPasswordDel, messagingStep = @messagingStepPasswordDel, national_ID=@textNationalID WHERE phoneNumber = @phoneNumberPasswordDel AND text_id_AT = @textIDATPasswordDel AND time = (

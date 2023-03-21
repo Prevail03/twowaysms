@@ -34,9 +34,7 @@ function handleDelete(text, sender, messagingStep, config, sms, register,textIDA
             const messagingStepPasswordDel= "3";
             const textNationalID = text;
             const textIDATPasswordDel = textIDAT;
-            updateNationalID2(statusPasswordDel, phoneNumberPasswordDel, messagingStepPasswordDel,textIDATPasswordDel,textNationalID);
-            
-            
+            updateNationalID2(statusPasswordDel, phoneNumberPasswordDel, messagingStepPasswordDel,textIDATPasswordDel,textNationalID,config);
         break;
 
         case 3:
