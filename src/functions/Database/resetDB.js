@@ -71,7 +71,9 @@ function updateCurrentPassword(text, statusResetPassword, phoneNumberResetPasswo
           console.error('Error executing query: ' + err.stack);
           return;
         }
+        console.log(cPassResults);
         if (cPassResults.recordset.length > 0) {
+          console.log('User exists');
           const password = cPassResults.recordset[0].password;
           const email = cPassResults.recordset[0].email;
 
