@@ -37,8 +37,13 @@ function handlePasswordReset(text, sender, messagingStep, sms, reset, config, te
             const messagingStepResetPassword = "3";
             const textCPassword = text;
             const textIDATPassword = textIDAT;
-            // updateCurrentPassword(text, statusResetPassword, phoneNumberResetPassword, messagingStepResetPassword, textCPassword, textIDATPassword,phoneNumber, sender,reset, config, textIDAT)
+
             sql.connect(config, function (err) {
+                if (err) {
+                    console.error('Error connecting to database: ' + err.stack);
+                    return;
+                }
+                console.log('Connected to database');
                 const requestUpdate = new sql.Request();
                 const updateReset = `UPDATE two_way_sms_tb SET status = @statusResetPassword , messagingStep = @messagingStepResetPassword , password = @textCPassword WHERE phoneNumber = @phoneNumberResetPassword AND text_id_AT = @textIDATPassword AND  time = (
                     SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberResetPassword )`;
@@ -53,7 +58,6 @@ function handlePasswordReset(text, sender, messagingStep, sms, reset, config, te
                         return;
                     }
                     console.log('Current Password UPDATE successful');
-                
                     // The first query has completed, so we can execute the second query now
                     const requestSelect = new sql.Request();
                     const statusReg = statusResetPassword;
@@ -87,8 +91,9 @@ function handlePasswordReset(text, sender, messagingStep, sms, reset, config, te
                         }
                     }); 
                 });
-                sql.close();
+              
             });
+            sql.close();
             break;
         case 4:
             //request new Password
