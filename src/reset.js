@@ -53,6 +53,15 @@ const reset={
         };
      
     },
+    error400: (sender) => {
+        messageToCustomer = 'Invalid Details!!. Check your details and please try again Later ';
+        return {
+            to: sender,
+            from:'20880',
+            message: messageToCustomer
+        };
+     
+    },
     confirmation: (sender) => {
         messageToCustomer = "Your password has been successfully changed .If this wasn't you, your account may have been compromised and you should contact ";
         return {
