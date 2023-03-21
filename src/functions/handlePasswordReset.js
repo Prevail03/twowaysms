@@ -53,119 +53,31 @@ function handlePasswordReset(text, sender, messagingStep, sms, reset, config, te
                     return;
                   }
                   console.log('Current Password UPDATE successful');
-                  const statusCurrentPass = "ResetingPassword";
-                  const phoneNumberCPass = sender;
-                  const textIDCPass = textIDAT;
-                  console.log(sender+" "+textIDAT);
-                  console.log("statusCurrentPass" +statusCurrentPass+ "PhoneNumber" +phoneNumberCPass+ "TextIDAT" +textIDCPass);
-                  // Bind the values to the parameters
-                  request.input('statusCurrentPass', sql.NVarChar(50), statusCurrentPass);
-                  request.input('phoneNumberCPass', sql.NVarChar(50), phoneNumberCPass);
-                  request.input('textIDCPass', sql.VarChar(100), textIDCPass);
-                  request.query("SELECT TOP 1 * FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberCPass AND status = @statusCurrentPass AND isActive = 1 AND text_id_AT = @textIDCPass order by time DESC", function (err, cPassResults) {
-                    if (err) {
-                      console.error('Error executing query: ' + err.stack);
-                      return;
-                    }
-                    if (cPassResults.recordset.length > 0) {
-                      console.log('User exists');
-                      const password = cPassResults.recordset[0].password;
-                      const email = cPassResults.recordset[0].email;
-                      console.log(email + " " + password);
-                      var deleteClient = new Client();
-                      var args = {
-                        data: { username: email, password: password },
-                        headers: { "Content-Type": "application/json" }
-                      };
-                      deleteClient.post("https://api.octagonafrica.com/v1/login", args, function (data, response) {
-                        if ([200].includes(response.statusCode)) {
-                          sms.send(reset.verifyPassword(sender));
-                          const statusCurrentPass = "ResetingPassword";
-                          const phoneNumberCPass = sender;
-                          const textIDCPass = textIDAT;
-                          console.log(statusCurrentPass+" " + phoneNumberCPass+" " + textIDAT);
-                          // Bind the values to the parameters
-                          request.input('statusCurrentPass', sql.NVarChar(50), statusCurrentPass);
-                          request.input('phoneNumberCPass', sql.NVarChar(50), phoneNumberCPass);
-                          request.input('textIDCPass', sql.VarChar(100), textIDCPass);
-                          request.query("SELECT TOP 1 * FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberCPass AND status = @statusCurrentPass AND isActive = 1 AND text_id_AT = @textIDCPass order by time DESC", function (err, cPasswordResults) {
-                            if (err) {
-                              console.error('Error executing query: ' + err.stack);
-                              return;
-                            }
-                            if (cPasswordResults.recordset.length > 0) {
-                              const email = cPasswordResults.recordset[0].email;
-                              var deleteClient = new Client();
-                              var args = {
-                                data: { identifier: email },
-                                headers: { "Content-Type": "application/json" }
-                              };
-                              deleteClient.post("https://api.octagonafrica.com/v1/password_reset", args, function (data, response) {
-                                console.log(data);
-                                if ([200].includes(response.statusCode)) {
-                                  sms.send(reset.enterOTP(sender));
-                                  console.log("OTP sent to " + email);
-                                  console.log(response.statusCode);
-                                } else if ([400].includes(response.statusCode)) {
-                                  console.log(response.statusCode);
-                                  sms.send(reset.error400(sender));
-                                } else {
-                                  console.log(response.statusCode);
-                                }
-                              });
-                            }
-                          });
-                        } else if ([400].includes(response.statusCode)) {
-                          console.log(response.statusCode);
-                          sms.send(reset.error400(sender));
-                          const statuserror404 = "ResetPasswordFailed";
-                          const messagingSteperror404 = "2";
-                          const phoneNumbererror404 = sender;
-                          const textIDATerror404 = textIDAT;
-                          const updateDelete = `UPDATE two_way_sms_tb SET status = @statuserror404, messagingStep = @messagingSteperror404  WHERE phoneNumber = @phoneNumbererror404 AND text_id_AT =@textIDATerror404 AND time = (
-                                        SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumbererror404 )`;
-                          request.input('statuserror404', sql.VarChar, statuserror404);
-                          request.input('messagingSteperror404', sql.VarChar, messagingSteperror404);
-                          request.input('phoneNumbererror404', sql.NVarChar, phoneNumbererror404);
-                          request.input('textIDATerror404', sql.NVarChar, textIDATerror404);
-                          request.query(updateDelete, function (err, results) {
-                            if (err) {
-                              console.error('Error executing query: ' + err.stack);
-                              return;
-                            }
-                            console.log('UPDATE successful');
-                            sql.close();
-                          });
-                        } else if ([500].includes(response.statusCode)) {
-                          console.log(response.statusCode);
-                          sms.send(reset.error500(sender));
-                          const statuserror500 = "ResetPasswordFailed";
-                          const messagingSteperror500 = "2";
-                          const phoneNumbererror500 = sender;
-                          const textIDATerror500 = textIDAT;
-                          const updateDelete = `UPDATE two_way_sms_tb SET status = @statuserror500, messagingStep = @messagingSteperror500  WHERE phoneNumber = @phoneNumbererror500 AND text_id_AT =@textIDATerror500 AND time = (
-                                        SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumbererror500 )`;
-                          request.input('statuserror500', sql.VarChar, statuserror500);
-                          request.input('messagingSteperror500', sql.VarChar, messagingSteperror500);
-                          request.input('phoneNumbererror500', sql.NVarChar, phoneNumbererror500);
-                          request.input('textIDATerror500', sql.NVarChar, textIDATerror500);
-                          request.query(updateDelete, function (err, results) {
-                            if (err) {
-                              console.error('Error executing query: ' + err.stack);
-                              return;
-                            }
-                            console.log('UPDATE successful');
-                            sql.close();
-                          });
-
-                        } else {
-                          // error code
-                          console.log(response.statusCode);
+                  //works Upto the above statement.
+                  const statusReg = "ResetingPassword";
+                    const phoneNumberEnding = phoneNumber;
+                    const textIDEnD = textIDAT;
+                    // Bind the values to the parameters
+                    request.input('statusReg', sql.NVarChar(50), statusReg);
+                    request.input('phoneNumberEnding', sql.NVarChar(50), phoneNumberEnding);
+                    request.input('textIDEnD', sql.VarChar(100), textIDEnD);
+                    request.query("SELECT TOP 1 * FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberEnding AND status = @statusReg AND isActive = 1 AND text_id_AT = @textIDEnD order by time DESC", function (err, registerResults) {
+                        if (err) {
+                            console.error('Error executing query: ' + err.stack);
+                            return;
                         }
-                      });
-                    }
-                });
-            
+                        if (registerResults.recordset.length > 0) {
+                            const fname = registerResults.recordset[0].firstname;
+                            const lname = registerResults.recordset[0].lastname;
+                            const national_ID = registerResults.recordset[0].national_ID;
+                            const emailT = registerResults.recordset[0].email;
+                            const pass = registerResults.recordset[0].password;
+                            const phone = registerResults.recordset[0].phoneNumber;
+                    
+                            //send to login and reset Password
+                            console.log("First name: " + fname+" last name: " + lname+"national ID: " +national_ID + " pass: " + pass+" phone"+phone+" email"+emailT);
+                        }
+                    });
                   sql.close();
                 });
               });
