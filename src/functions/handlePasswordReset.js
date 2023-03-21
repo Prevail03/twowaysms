@@ -32,7 +32,6 @@ function handlePasswordReset(text, sender, messagingStep, sms, reset, config, te
         //send to login and reset Password
         case 3:
             //request OTP
-            user.currentPassword = text;
             const statusResetPassword = "ResetingPassword";
             const phoneNumberResetPassword = sender;
             const messagingStepResetPassword = "3";
