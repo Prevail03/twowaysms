@@ -56,7 +56,7 @@ function updatePassword(statusPasswordDeleting, phoneNumberPasswordDeleting, mes
         return;
       }
       console.log(' Password UPDATE successful');
-      const statusReg = "isRegistering";
+      const statusReg = "isDeleting";
       const phoneNumberEnding = phoneNumberPasswordDeleting;
       const textIDEnD = textIDATPasswordDeleting;
       console.log(statusPasswordDeleting + ' ' + phoneNumberEnding+ ' ' + textIDEnD);
