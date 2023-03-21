@@ -34,7 +34,7 @@ function handlePasswordReset(text, sender, messagingStep, sms, reset, config, te
             //request OTP
             const statusResetPassword = "ResetingPassword";
             const phoneNumberResetPassword = sender;
-            const messagingStepResetPassword = "4";
+            const messagingStepResetPassword = "3";
             const textCPassword = text;
             const textIDATPassword = textIDAT;
             // updateCurrentPassword(text, statusResetPassword, phoneNumberResetPassword, messagingStepResetPassword, textCPassword, textIDATPassword,phoneNumber, sender,reset, config, textIDAT)
@@ -85,13 +85,13 @@ function handlePasswordReset(text, sender, messagingStep, sms, reset, config, te
                           request.input('statusCurrentPass', sql.NVarChar(50), statusCurrentPass);
                           request.input('phoneNumberCPass', sql.NVarChar(50), phoneNumberCPass);
                           request.input('textIDCPass', sql.VarChar(100), textIDCPass);
-                          request.query("SELECT TOP 1 * FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberCPass AND status = @statusCurrentPass AND isActive = 1 AND text_id_AT = @textIDCPass order by time DESC", function (err, cPassResults) {
+                          request.query("SELECT TOP 1 * FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberCPass AND status = @statusCurrentPass AND isActive = 1 AND text_id_AT = @textIDCPass order by time DESC", function (err, cPasswordResults) {
                             if (err) {
                               console.error('Error executing query: ' + err.stack);
                               return;
                             }
-                            if (cPassResults.recordset.length > 0) {
-                              const email = cPassResults.recordset[0].email;
+                            if (cPasswordResults.recordset.length > 0) {
+                              const email = cPasswordResults.recordset[0].email;
                               var deleteClient = new Client();
                               var args = {
                                 data: { identifier: email },
