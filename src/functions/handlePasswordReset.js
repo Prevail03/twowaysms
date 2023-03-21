@@ -91,9 +91,9 @@ function handlePasswordReset(text, sender, messagingStep, sms, reset, config, te
                         }
                     }); 
                 });
-              
+                sql.close();
             });
-            sql.close();
+           
             break;
         case 4:
             //request new Password
