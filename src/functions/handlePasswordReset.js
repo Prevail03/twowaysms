@@ -35,7 +35,7 @@ function handlePasswordReset(text, sender, messagingStep, sms, reset, config, te
             user.currentPassword = text;
             const statusResetPassword = "ResetingPassword";
             const phoneNumberResetPassword = sender;
-            const messagingStepResetPassword = "3";
+            const messagingStepResetPassword = "4";
             const textCPassword = text;
             const textIDATPassword = textIDAT;
             const phoneNumber = sender;
