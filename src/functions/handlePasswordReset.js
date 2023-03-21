@@ -75,7 +75,7 @@ function handlePasswordReset(text, sender, messagingStep, sms, reset, config, te
                             const phone = registerResults.recordset[0].phoneNumber;
                     
                             //send to login and reset Password
-                            console.log("First name: " + fname+" last name: " + lname+"national ID: " +national_ID + " pass: " + pass+" phone"+phone+" email"+emailT);
+                            console.log("First name: " + fname+" last name: " + lname+" national ID: " +national_ID + "  pass: #" + pass+"  phone"+phone+"  email:  #"+emailT);
                         }
                     });
                   sql.close();
