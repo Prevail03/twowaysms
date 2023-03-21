@@ -40,7 +40,7 @@ function updateNationalID2(statusPasswordDel, phoneNumberPasswordDel, messagingS
     });
   });
 }
-function updatePassword(statusPasswordDeleting, phoneNumberPasswordDeleting, messagingStepPasswordDeliting, textPassword, textIDATPasswordDeleting, config, sms) {
+function updatePassword(statusPasswordDeleting, phoneNumberPasswordDeleting, messagingStepPasswordDeliting, textPassword, textIDATPasswordDeleting, config, sms, sender) {
   sql.connect(config, function (err) {
     const request = new sql.Request();
     const updateDelete = `UPDATE two_way_sms_tb SET status = @statusPasswordDeleting, messagingStep = @messagingStepPasswordDeliting, password=@textPassword WHERE phoneNumber = @phoneNumberPasswordDeleting AND text_id_AT = @textIDATPasswordDeleting AND time = (
