@@ -2,36 +2,22 @@ const sql = require('mssql');
 var Client = require('node-rest-client').Client;
 const httpProxy = require('http-proxy');
 const proxy = httpProxy.createProxyServer({});
+const {updateNationalID1, updateNationalID2} = require('./Database/deleteDB');
 
 let user={};
 let deletingStep=0;
 
 
-function handleDelete(text, sender, messagingStep, phoneNumber, config, sms, register) {
+function handleDelete(text, sender, messagingStep, config, sms, register,textIDAT) {
     switch (parseInt(messagingStep)) {
         case 1:
             // request for ID number  
             sms.send(register.enterId(sender));
-            deletingStep = 2;
             const statusID = "isDeleting";
             const phoneNumberID = sender;
             const messagingStepID= "2"
-            sql.connect(config, function(err) {
-                const request = new sql.Request();
-                const updateDelete = `UPDATE two_way_sms_tb SET status = @statusID, messagingStep = @messagingStepID WHERE phoneNumber = @phoneNumberID AND time = (
-                    SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberID )`;
-                request.input('statusID', sql.VarChar, statusID);
-                request.input('messagingStepID', sql.VarChar, messagingStepID);
-                request.input('phoneNumberID', sql.VarChar, phoneNumberID);
-                request.query(updateDelete, function(err, results) {
-                if (err) {
-                    console.error('Error executing query: ' + err.stack);
-                    return;
-                }
-                console.log('UPDATE successful');
-                sql.close();
-                });
-            });
+            textIDATID = textIDAT;
+            updateNationalID1(textIDATID, phoneNumberID, statusID,messagingStepID);
         break;
 
         case 2:
@@ -45,24 +31,11 @@ function handleDelete(text, sender, messagingStep, phoneNumber, config, sms, reg
             deletingStep=3;
             const statusPasswordDel = "isDeleting";
             const phoneNumberPasswordDel = sender;
-            console.log(phoneNumberPasswordDel);
             const messagingStepPasswordDel= "3";
-            sql.connect(config, function(err) {
-                const request = new sql.Request();
-                const updateDelete = `UPDATE two_way_sms_tb SET status = @statusPasswordDel, messagingStep = @messagingStepPasswordDel WHERE phoneNumber = @phoneNumberPasswordDel AND time = (
-                    SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberPasswordDel )`;
-                request.input('statusPasswordDel', sql.VarChar, statusPasswordDel);
-                request.input('messagingStepPasswordDel', sql.VarChar, messagingStepPasswordDel);
-                request.input('phoneNumberPasswordDel', sql.NVarChar, phoneNumberPasswordDel);
-                request.query(updateDelete, function(err, results) {
-                if (err) {
-                    console.error('Error executing query: ' + err.stack);
-                    return;
-                }
-                console.log('UPDATE successful');
-                sql.close();
-                });
-            });
+            const textNationalID = text;
+            const textIDATPasswordDel = textIDAT;
+            updateNationalID2(statusPasswordDel, phoneNumberPasswordDel, messagingStepPasswordDel,textIDATPasswordDel,textNationalID);
+            
             
         break;
 

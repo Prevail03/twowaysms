@@ -37,7 +37,7 @@ function handleIncomingMessage(text, sender, textId, phoneNumber, config, sms , 
                     handleRegister(text, sender, messagingStep ,sms, register, config, phoneNumber, textIDAT);
                     break;
                 case 'isDeleting':
-                    handleDelete(text, sender, messagingStep, config, phoneNumber, sms, register , textIDAT);
+                    handleDelete(text, sender, messagingStep, config, sms, register , textIDAT);
                     break; 
                 case 'isCheckingAccount':
                     handleAccountCheck(text, sender, messagingStep, sms, account, config, phoneNumber,textIDAT);
