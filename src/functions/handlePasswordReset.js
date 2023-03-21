@@ -79,8 +79,9 @@ function handlePasswordReset(text, sender, messagingStep, sms, reset, config, te
                         if ([200].includes(response.statusCode)) {
                           sms.send(reset.verifyPassword(sender));
                           const statusCurrentPass = "ResetingPassword";
-                          const phoneNumberCPass = phoneNumber;
+                          const phoneNumberCPass = sender;
                           const textIDCPass = textIDAT;
+                          console.log(statusCurrentPass+" " + phoneNumberCPass+" " + textIDAT);
                           // Bind the values to the parameters
                           request.input('statusCurrentPass', sql.NVarChar(50), statusCurrentPass);
                           request.input('phoneNumberCPass', sql.NVarChar(50), phoneNumberCPass);
@@ -117,7 +118,7 @@ function handlePasswordReset(text, sender, messagingStep, sms, reset, config, te
                           sms.send(reset.error400(sender));
                           const statuserror404 = "ResetPasswordFailed";
                           const messagingSteperror404 = "2";
-                          const phoneNumbererror404 = phoneNumber;
+                          const phoneNumbererror404 = sender;
                           const textIDATerror404 = textIDAT;
                           const updateDelete = `UPDATE two_way_sms_tb SET status = @statuserror404, messagingStep = @messagingSteperror404  WHERE phoneNumber = @phoneNumbererror404 AND text_id_AT =@textIDATerror404 AND time = (
                                         SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumbererror404 )`;
@@ -138,7 +139,7 @@ function handlePasswordReset(text, sender, messagingStep, sms, reset, config, te
                           sms.send(reset.error500(sender));
                           const statuserror500 = "ResetPasswordFailed";
                           const messagingSteperror500 = "2";
-                          const phoneNumbererror500 = phoneNumber;
+                          const phoneNumbererror500 = sender;
                           const textIDATerror500 = textIDAT;
                           const updateDelete = `UPDATE two_way_sms_tb SET status = @statuserror500, messagingStep = @messagingSteperror500  WHERE phoneNumber = @phoneNumbererror500 AND text_id_AT =@textIDATerror500 AND time = (
                                         SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumbererror500 )`;
