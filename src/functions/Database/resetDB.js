@@ -42,7 +42,5 @@ function updateEmail2(statusResetCPassword, phoneNumberResetCPassword, messaging
     });
   });
 }
-function updateCurrentPassword(text, statusResetPassword, phoneNumberResetPassword, messagingStepResetPassword, textCPassword, textIDATPassword, sender, reset, phoneNumber, config, textIDAT) {
-  
-}
-module.exports = { updateEmail1, updateEmail2,updateCurrentPassword };
+
+module.exports = { updateEmail1, updateEmail2 };

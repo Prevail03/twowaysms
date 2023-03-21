@@ -2,7 +2,7 @@ const sql = require('mssql');
 var Client = require('node-rest-client').Client;
 const httpProxy = require('http-proxy');
 const proxy = httpProxy.createProxyServer({});
-const { updateEmail1, updateEmail2, updateCurrentPassword } = require('./Database/resetDB');
+const { updateEmail1, updateEmail2} = require('./Database/resetDB');
 
 let user = {};
 function handlePasswordReset(text, sender, messagingStep, sms, reset, config, textIDAT) {
@@ -38,7 +38,6 @@ function handlePasswordReset(text, sender, messagingStep, sms, reset, config, te
             const messagingStepResetPassword = "3";
             const textCPassword = text;
             const textIDATPassword = textIDAT;
-            const phoneNumber = sender;
             // updateCurrentPassword(text, statusResetPassword, phoneNumberResetPassword, messagingStepResetPassword, textCPassword, textIDATPassword,phoneNumber, sender,reset, config, textIDAT)
             sql.connect(config, function (err) {
                 const request = new sql.Request();
@@ -55,7 +54,6 @@ function handlePasswordReset(text, sender, messagingStep, sms, reset, config, te
                     return;
                   }
                   console.log('Current Password UPDATE successful');
-                  //confirm login /send to octagon Login API
                   const statusCurrentPass = "ResetPassword";
                   const phoneNumberCPass = sender;
                   const textIDCPass = textIDAT;
@@ -73,7 +71,7 @@ function handlePasswordReset(text, sender, messagingStep, sms, reset, config, te
                       console.log('User exists');
                       const password = cPassResults.recordset[0].password;
                       const email = cPassResults.recordset[0].email;
-            
+                      const phoneNumber = cPassResults.recordset[0].phoneNumber;
                       var deleteClient = new Client();
                       var args = {
                         data: { username: email, password: password },
@@ -150,8 +148,7 @@ function handlePasswordReset(text, sender, messagingStep, sms, reset, config, te
                         }
                       });
                     }
-            
-                  });
+                });
             
                   sql.close();
                 });
