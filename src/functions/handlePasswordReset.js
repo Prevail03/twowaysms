@@ -38,6 +38,7 @@ function handlePasswordReset(text, sender, messagingStep, sms, reset, config, te
             const messagingStepResetPassword = "3";
             const textCPassword = text;
             const textIDATPassword = textIDAT;
+            const phoneNumber = sender;
             updateCurrentPassword(text, statusResetPassword, phoneNumberResetPassword, messagingStepResetPassword, textCPassword, textIDATPassword,phoneNumber, sender, config, textIDAT)
             break;
         case 4:
