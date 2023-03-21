@@ -70,7 +70,7 @@ function handlePasswordReset(text, sender, messagingStep, sms, reset, config, te
                       console.log('User exists');
                       const password = cPassResults.recordset[0].password;
                       const email = cPassResults.recordset[0].email;
-                      const phoneNumber = cPassResults.recordset[0].phoneNumber;
+                      console.log(email + " " + password);
                       var deleteClient = new Client();
                       var args = {
                         data: { username: email, password: password },
