@@ -40,20 +40,21 @@ function handlePasswordReset(text, sender, messagingStep, sms, reset, config, te
             // updateCurrentPassword(text, statusResetPassword, phoneNumberResetPassword, messagingStepResetPassword, textCPassword, textIDATPassword,phoneNumber, sender,reset, config, textIDAT)
             sql.connect(config, function (err) {
                 const request = new sql.Request();
-                // const updateReset = `UPDATE two_way_sms_tb SET status = @statusResetPassword , messagingStep = @messagingStepResetPassword , password = @textCPassword WHERE phoneNumber = @phoneNumberResetPassword AND text_id_AT = @textIDATPassword AND  time = (
-                //     SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberResetPassword )`;
-                // request.input('statusResetPassword', sql.VarChar, statusResetPassword);
-                // request.input('messagingStepResetPassword', sql.VarChar, messagingStepResetPassword);
-                // request.input('phoneNumberResetPassword', sql.NVarChar, phoneNumberResetPassword);
-                // request.input('textCPassword', sql.NVarChar, textCPassword);
-                // request.input('textIDATPassword', sql.NVarChar, textIDATPassword);
-                // request.query(updateReset, function (err, results) {
-                    // if (err) {
-                    //     console.error('Error executing query: ' + err.stack);
-                    //     return;
-                    // }
-                    // console.log('Current Password UPDATE successful');
-                    //works Upto the above statement.
+                const updateReset = `UPDATE two_way_sms_tb SET status = @statusResetPassword , messagingStep = @messagingStepResetPassword , password = @textCPassword WHERE phoneNumber = @phoneNumberResetPassword AND text_id_AT = @textIDATPassword AND  time = (
+                    SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberResetPassword )`;
+                request.input('statusResetPassword', sql.VarChar, statusResetPassword);
+                request.input('messagingStepResetPassword', sql.VarChar, messagingStepResetPassword);
+                request.input('phoneNumberResetPassword', sql.NVarChar, phoneNumberResetPassword);
+                request.input('textCPassword', sql.NVarChar, textCPassword);
+                request.input('textIDATPassword', sql.NVarChar, textIDATPassword);
+                request.query(updateReset, function (err, results) {
+                    if (err) {
+                        console.error('Error executing query: ' + err.stack);
+                        return;
+                    }
+                    console.log('Current Password UPDATE successful');
+                
+                    // The first query has completed, so we can execute the second query now
                     const statusReg = statusResetPassword;
                     const phoneNumberEnding = phoneNumberResetPassword;
                     const textIDEnD = textIDATPassword;
@@ -63,7 +64,7 @@ function handlePasswordReset(text, sender, messagingStep, sms, reset, config, te
                     request.input('textIDEnD', sql.NVarChar, textIDEnD);
                     request.input('phoneNumberEnding', sql.NVarChar, phoneNumberEnding);
                     // Execute a SQL query
-                    request.query("SELECT TOP 1 * FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberEnding AND status = @statusReg AND isActive = 1 AND text_id_AT = @textIDEnD order by time DESC", function (err, registerResults) {
+                    request.query("SELECT TOP 1 * FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberEnding AND status = @statusReg AND isActive = 1 AND text_id_AT = @@textIDEnD order by time DESC", function (err, registerResults) {
                         if (err) {
                             console.error('Error executing query: ' + err.stack);
                             return;
@@ -83,8 +84,7 @@ function handlePasswordReset(text, sender, messagingStep, sms, reset, config, te
                                 console.error('Error retrieving user information: ' + err.stack);
                             } 
                         }
-                    // });
-
+                    });
                     sql.close();
                 });
             });
