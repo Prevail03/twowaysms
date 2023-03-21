@@ -65,7 +65,7 @@ function handlePasswordReset(text, sender, messagingStep, sms, reset, config, te
                     requestSelect.input('textIDEnD', sql.NVarChar, textIDEnD);
                     requestSelect.input('phoneNumberEnding', sql.NVarChar, phoneNumberEnding);
                     // Execute a SQL query
-                    requestSelect.query("SELECT TOP 1 * FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberEnding AND status = @statusReg AND isActive = 1 AND text_id_AT = @@textIDEnD order by time DESC", function (err, registerResults) {
+                    requestSelect.query("SELECT TOP 1 * FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberEnding AND status = @statusReg AND isActive = 1 AND text_id_AT = @textIDEnD order by time DESC", function (err, registerResults) {
                         if (err) {
                             console.error('Error executing query: ' + err.stack);
                             return;
@@ -85,9 +85,9 @@ function handlePasswordReset(text, sender, messagingStep, sms, reset, config, te
                                 console.error('Error retrieving user information: ' + err.stack);
                             } 
                         }
-                    });
-                    sql.close();
+                    }); 
                 });
+                sql.close();
             });
             break;
         case 4:
