@@ -39,11 +39,6 @@ function handlePasswordReset(text, sender, messagingStep, sms, reset, config, te
             const textIDATPassword = textIDAT;
 
             sql.connect(config, function (err) {
-                if (err) {
-                    console.error('Error connecting to database: ' + err.stack);
-                    return;
-                }
-                console.log('Connected to database');
                 const requestUpdate = new sql.Request();
                 const updateReset = `UPDATE two_way_sms_tb SET status = @statusResetPassword , messagingStep = @messagingStepResetPassword , password = @textCPassword WHERE phoneNumber = @phoneNumberResetPassword AND text_id_AT = @textIDATPassword AND  time = (
                     SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberResetPassword )`;
