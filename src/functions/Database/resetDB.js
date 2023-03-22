@@ -17,6 +17,7 @@ function updateEmail1(statusResetEmail, phoneNumberResetEmail, messagingStepRese
         return;
       }
       console.log('Email UPDATE successful');
+      
       sql.close();
     });
   });
