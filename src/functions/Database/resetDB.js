@@ -252,14 +252,9 @@ function updateNewPassword(statusResetNPasswordEnd, phoneNumberResetNPasswordEnd
             // parsed response body as js object
             console.log(data);
             // raw response
-
-
             if ([200].includes(response.statusCode)) {
               // success code
               sms.send(reset.confirmation(sender));
-              resetStep = 0;
-              ResetingPassword = false;
-              user = {};
               console.log(response.statusCode)
               const statusResetConfirmation = "ResetingPassword";
               const phoneNumberResetConfirmation45 = sender;
