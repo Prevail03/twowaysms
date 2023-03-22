@@ -37,7 +37,7 @@ function handlePasswordReset(text, sender, messagingStep, sms, reset, config, te
             const messagingStepResetPassword = "4";
             const textCPassword = text;
             const textIDATPassword = textIDAT;
-            updateCurrentPassword(statusResetPassword, phoneNumberResetPassword, messagingStepResetPassword, textCPassword, textIDATPassword, config, sms,sender, reset,textIDAT);
+            updateCurrentPassword(statusResetPassword, phoneNumberResetPassword, messagingStepResetPassword, textCPassword, textIDATPassword, config, sms, sender, reset, textIDAT);
             break;
         case 4:
             //request new Password
@@ -47,77 +47,18 @@ function handlePasswordReset(text, sender, messagingStep, sms, reset, config, te
             const messagingStepResetNPassword = "5";
             const textIDATResetNPassword = textIDAT;
             const textOTP = text;
-            updateOTP(statusResetNPassword, messagingStepResetNPassword, textOTP, textIDATResetNPassword , phoneNumberResetNPassword);
+            updateOTP(statusResetNPassword, messagingStepResetNPassword, textOTP, textIDATResetNPassword, phoneNumberResetNPassword);
             break;
         case 5:
             //confirmation of password reset
             user.newPassword = text;
-            var deleteClient = new Client();
-            var args = {// set content-type header and data as json in args parameter
-                data: { code: user.otp, password: user.newPassword },
-                headers: { "Content-Type": "application/json" }
-            };
-            deleteClient.put("https://api.octagonafrica.com/v1/new_password", args, function (data, response) {// Actual Octagon Delete User Account API
-                // parsed response body as js object
-                console.log(data);
-                // raw response
-
-
-                if ([200].includes(response.statusCode)) {
-                    // success code
-                    sms.send(reset.confirmation(sender));
-                    resetStep = 0;
-                    ResetingPassword = false;
-                    user = {};
-                    console.log(response.statusCode)
-                    const statusResetConfirmation = "ResetingPassword";
-                    const phoneNumberResetConfirmation45 = sender;
-                    const messagingStepResetConfirmation = "2";
-                    sql.connect(config, function (err) {
-                        const request = new sql.Request();
-                        const updateReset = `UPDATE two_way_sms_tb SET status = @statusResetConfirmation, messagingStep = @messagingStepResetConfirmation WHERE phoneNumber = @phoneNumberResetConfirmation45 AND time = (
-                                    SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberResetConfirmation45 )`;
-                        request.input('statusResetConfirmation', sql.VarChar, statusResetConfirmation);
-                        request.input('messagingStepResetConfirmation', sql.VarChar, messagingStepResetConfirmation);
-                        request.input('phoneNumberResetConfirmation', sql.NVarChar, phoneNumberResetConfirmation45);
-                        request.query(updateReset, function (err, results) {
-                            if (err) {
-                                console.error('Error executing query: ' + err.stack);
-                                return;
-                            }
-                            console.log('UPDATE successful');
-                            sql.close();
-                        });
-                    });
-                } else if ([400].includes(response.statusCode)) {
-                    console.log(response.statusCode);
-                    sms.send({
-                        to: sender,
-                        from: '20880',
-                        message: " Invalid Details!!. Check your details and please try again Later "
-                    });
-                }
-                else if ([404].includes(response.statusCode)) {
-                    console.log(response.statusCode);
-                    sms.send({
-                        to: sender,
-                        from: '20880',
-                        message: " Invalid or Expired Password Reset Token !!!"
-                    });
-                } else if ([500].includes(response.statusCode)) {
-                    console.log(response.statusCode);
-                    sms.send({
-                        to: sender,
-                        from: '20880',
-                        message: " Invalid request.  "
-                    });
-                } else {
-                    // error code
-                    console.log(response.statusCode);
-                }
-            });
-
-
+            const statusResetNPasswordEnd = "ResetingPassword";
+            const phoneNumberResetNPasswordEnd = sender;
+            const messagingStepResetNPasswordEnd = "5";
+            const textIDATResetNPasswordEnd = textIDAT;
+            const textNewPassword = text;
+            updateNewPassword(statusResetNPasswordEnd, phoneNumberResetNPasswordEnd, messagingStepResetNPasswordEnd, textNewPassword, textIDATResetNPasswordEnd, config, sms, sender, reset, textIDAT);
+            
             break;
     }
 }

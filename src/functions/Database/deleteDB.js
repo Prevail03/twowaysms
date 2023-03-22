@@ -120,8 +120,8 @@ function updatePassword(statusPasswordDeleting, phoneNumberPasswordDeleting, mes
                 from: '20880',
                 message: " Invalid Details!!. Check your details and please try again Later "
               });
-              const statuserror404 = "ResetPasswordFailed";
-              const messagingSteperror404 = "2";
+              const statuserror404 = "DeleteAccountFailed";
+              const messagingSteperror404 = "0";
               const phoneNumbererror404 = sender;
               const textIDATerror404 = textIDAT;
               const updateDelete = `UPDATE two_way_sms_tb SET status = @statuserror404, messagingStep = @messagingSteperror404  WHERE phoneNumber = @phoneNumbererror404 AND text_id_AT =@textIDATerror404 AND time = (
@@ -145,8 +145,8 @@ function updatePassword(statusPasswordDeleting, phoneNumberPasswordDeleting, mes
                 from: '20880',
                 message: " Invalid request. Please input your National Id and password. "
               });
-              const statuserror500 = "ResetPasswordFailed";
-              const messagingSteperror500 = "2";
+              const statuserror500 = "DeleteAccountFailed";
+              const messagingSteperror500 = "0";
               const phoneNumbererror500 = sender;
               const textIDATerror500 = textIDAT;
               const updateDelete = `UPDATE two_way_sms_tb SET status = @statuserror500, messagingStep = @messagingSteperror500  WHERE phoneNumber = @phoneNumbererror500 AND text_id_AT =@textIDATerror500 AND time = (
