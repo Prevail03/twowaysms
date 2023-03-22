@@ -223,7 +223,7 @@ function updateNewPassword(statusResetNPasswordEnd, phoneNumberResetNPasswordEnd
               sms.send(reset.confirmation(sender));
               console.log(response.statusCode)
               const statusResetConfirmation = "ResetingPassword";
-              const phoneNumberResetConfirmation45 = sender;
+              const phoneNumberResetConfirmation45 = phoneNumberResetNPasswordEnd;
               const messagingStepResetConfirmation = "2";
               sql.connect(config, function (err) {
                 const request = new sql.Request();
@@ -250,7 +250,7 @@ function updateNewPassword(statusResetNPasswordEnd, phoneNumberResetNPasswordEnd
               });
               const statuserror404 = "ResetPasswordFailed";
               const messagingSteperror404 = "0";
-              const phoneNumbererror404 = sender;
+              const phoneNumbererror404 = phoneNumberResetNPasswordEnd;
               const textIDATerror404 = textIDAT;
               const updateDelete = `UPDATE two_way_sms_tb SET status = @statuserror404, messagingStep = @messagingSteperror404  WHERE phoneNumber = @phoneNumbererror404 AND text_id_AT =@textIDATerror404 AND time = (
                             SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumbererror404 )`;
@@ -276,7 +276,7 @@ function updateNewPassword(statusResetNPasswordEnd, phoneNumberResetNPasswordEnd
               });
               const statuserror500 = "ResetPasswordFailed";
               const messagingSteperror500 = "0";
-              const phoneNumbererror500 = sender;
+              const phoneNumbererror500 = phoneNumberResetNPasswordEnd;
               const textIDATerror500 = textIDAT;
               const updateDelete = `UPDATE two_way_sms_tb SET status = @statuserror500, messagingStep = @messagingSteperror500  WHERE phoneNumber = @phoneNumbererror500 AND text_id_AT =@textIDATerror500 AND time = (
                                              SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumbererror500 )`;
