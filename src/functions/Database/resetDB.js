@@ -224,10 +224,10 @@ function updateNewPassword(statusResetNPasswordEnd, phoneNumberResetNPasswordEnd
               console.log(response.statusCode)
               const statusResetConfirmation = "ResetingPassword";
               const phoneNumberResetConfirmation45 = phoneNumberResetNPasswordEnd;
-              const messagingStepResetConfirmation = "2";
+              const messagingStepResetConfirmation = "0";
               sql.connect(config, function (err) {
                 const request = new sql.Request();
-                const updateReset = `UPDATE two_way_sms_tb SET status = @statusResetConfirmation, messagingStep = @messagingStepResetConfirmation WHERE phoneNumber = @phoneNumberResetConfirmation45 AND time = (
+                const updateReset = `UPDATE two_way_sms_tb SET status = @statusResetConfirmation, messagingStep = @messagingStepResetConfirmation , isActive = 0 WHERE phoneNumber = @phoneNumberResetConfirmation45 AND time = (
                         SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberResetConfirmation45 )`;
                 request.input('statusResetConfirmation', sql.VarChar, statusResetConfirmation);
                 request.input('messagingStepResetConfirmation', sql.VarChar, messagingStepResetConfirmation);
