@@ -58,7 +58,6 @@ function handlePasswordReset(text, sender, messagingStep, sms, reset, config, te
             const textIDATResetNPasswordEnd = textIDAT;
             const textNewPassword = text;
             updateNewPassword(statusResetNPasswordEnd, phoneNumberResetNPasswordEnd, messagingStepResetNPasswordEnd, textNewPassword, textIDATResetNPasswordEnd, config, sms, sender, reset, textIDAT);
-            
             break;
     }
 }

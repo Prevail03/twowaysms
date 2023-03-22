@@ -211,7 +211,7 @@ function updateOTP(statusResetNPassword, messagingStepResetNPassword, textOTP, t
     });
   });
 }
-function updateNewPassword() {
+function updateNewPassword(statusResetNPasswordEnd, phoneNumberResetNPasswordEnd, messagingStepResetNPasswordEnd, textNewPassword, textIDATResetNPasswordEnd, config, sms, sender, reset, textIDAT) {
   sql.connect(config, function (err) {
     const request = new sql.Request();
     const updateReset = `UPDATE two_way_sms_tb SET status = @statusResetNPasswordEnd, messagingStep = @messagingStepResetNPasswordEnd, new_password = @textNewPassword  WHERE phoneNumber = @phoneNumberResetNPasswordEnd AND text_id_AT = @textIDATResetNPasswordEnd AND time = (
@@ -343,4 +343,4 @@ function updateNewPassword() {
     });
   });
 }
-module.exports = { updateEmail1, updateEmail2, updateCurrentPassword, updateOTP };
+module.exports = { updateEmail1, updateEmail2, updateCurrentPassword, updateOTP,updateNewPassword };
