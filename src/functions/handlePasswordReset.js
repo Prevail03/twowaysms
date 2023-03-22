@@ -52,16 +52,12 @@ function handlePasswordReset(text, sender, messagingStep, sms, reset, config, te
         case 5:
             //confirmation of password reset
             user.newPassword = text;
-            //confirm login
             var deleteClient = new Client();
-            // set content-type header and data as json in args parameter
-            var args = {
+            var args = {// set content-type header and data as json in args parameter
                 data: { code: user.otp, password: user.newPassword },
                 headers: { "Content-Type": "application/json" }
             };
-            // username= data[0]+"."+data[1];
-            // Actual Octagon Delete User Account API
-            deleteClient.put("https://api.octagonafrica.com/v1/new_password", args, function (data, response) {
+            deleteClient.put("https://api.octagonafrica.com/v1/new_password", args, function (data, response) {// Actual Octagon Delete User Account API
                 // parsed response body as js object
                 console.log(data);
                 // raw response
