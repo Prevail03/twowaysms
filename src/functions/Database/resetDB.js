@@ -231,7 +231,7 @@ function updateNewPassword(statusResetNPasswordEnd, phoneNumberResetNPasswordEnd
                         SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberResetConfirmation45 )`;
                 request.input('statusResetConfirmation', sql.VarChar, statusResetConfirmation);
                 request.input('messagingStepResetConfirmation', sql.VarChar, messagingStepResetConfirmation);
-                request.input('phoneNumberResetConfirmation', sql.NVarChar, phoneNumberResetConfirmation45);
+                request.input('phoneNumberResetConfirmation45', sql.NVarChar, phoneNumberResetConfirmation45);
                 request.query(updateReset, function (err, results) {
                   if (err) {
                     console.error('Error executing query: ' + err.stack);
