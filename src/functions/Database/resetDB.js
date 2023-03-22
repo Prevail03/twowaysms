@@ -237,7 +237,7 @@ function updateNewPassword(statusResetNPasswordEnd, phoneNumberResetNPasswordEnd
                     console.error('Error executing query: ' + err.stack);
                     return;
                   }
-                  console.log('UPDATE successful');
+                  console.log('Password Reset Attempt successful');
                   sql.close();
                 });
               });
