@@ -58,6 +58,7 @@ function handlePasswordReset(text, sender, messagingStep, sms, reset, config, te
                     const phoneNumberEnding = phoneNumberResetPassword;
                     const textIDEnD = textIDAT;
                     // Bind the values to the parameters
+                    const request = new sql.Request();
                     request.input('statusReg', sql.NVarChar(50), statusReg);
                     request.input('phoneNumberEnding', sql.NVarChar(50), phoneNumberEnding);
                     request.input('textIDEnD', sql.VarChar(100), textIDEnD);
