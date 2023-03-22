@@ -54,8 +54,8 @@ function handlePasswordReset(text, sender, messagingStep, sms, reset, config, te
                     }
                     console.log('Current Password UPDATE successful');
                     // The first query has completed, so we can execute the second query now
-                    const statusReg = "isRegistering";
-                    const phoneNumberEnding = phoneNumber;
+                    const statusReg = "ResetingPassword";
+                    const phoneNumberEnding = phoneNumberResetPassword;
                     const textIDEnD = textIDAT;
                     // Bind the values to the parameters
                     request.input('statusReg', sql.NVarChar(50), statusReg);

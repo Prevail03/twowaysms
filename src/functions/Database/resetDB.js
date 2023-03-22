@@ -16,7 +16,7 @@ function updateEmail1(statusResetEmail, phoneNumberResetEmail, messagingStepRese
         console.error('Error executing query: ' + err.stack);
         return;
       }
-      console.log('UPDATE successful');
+      console.log('Email UPDATE successful');
       sql.close();
     });
   });
@@ -37,7 +37,7 @@ function updateEmail2(statusResetCPassword, phoneNumberResetCPassword, messaging
         console.error('Error executing query: ' + err.stack);
         return;
       }
-      console.log('UPDATE successful');
+      console.log('Email UPDATE successful');
       sql.close();
     });
   });
