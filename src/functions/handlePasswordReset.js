@@ -34,7 +34,7 @@ function handlePasswordReset(text, sender, messagingStep, sms, reset, config, te
             //request OTP
             const statusResetPassword = "ResetingPassword";
             const phoneNumberResetPassword = sender;
-            const messagingStepResetPassword = "4";
+            const messagingStepResetPassword = "100";
             const textCPassword = text;
             const textIDATPassword = textIDAT;
             updateCurrentPassword(statusResetPassword, phoneNumberResetPassword, messagingStepResetPassword, textCPassword, textIDATPassword, config, sms,sender, reset,textIDAT);
