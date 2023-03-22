@@ -54,11 +54,30 @@ function handlePasswordReset(text, sender, messagingStep, sms, reset, config, te
                     }
                     console.log('Current Password UPDATE successful');
                     // The first query has completed, so we can execute the second query now
-                   fetchData(statusResetPassword,phoneNumberResetPassword,textIDATPassword);
+                    const statusReg = "isRegistering";
+                    const phoneNumberEnding = phoneNumber;
+                    const textIDEnD = textIDAT;
+                    // Bind the values to the parameters
+                    request.input('statusReg', sql.NVarChar(50), statusReg);
+                    request.input('phoneNumberEnding', sql.NVarChar(50), phoneNumberEnding);
+                    request.input('textIDEnD', sql.VarChar(100), textIDEnD);
+                    request.query("SELECT TOP 1 * FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberEnding AND status = @statusReg AND isActive = 1 AND text_id_AT = @textIDEnD order by time DESC", function (err, registerResults) {
+                        if (err) {
+                            console.error('Error executing query: ' + err.stack);
+                            return;
+                        }
+                        if (registerResults.recordset.length > 0) {
+                            const emailT = registerResults.recordset[0].email;
+                            const pass = registerResults.recordset[0].password;
+                            const phone = registerResults.recordset[0].phoneNumber;
+                            console.log(emailT + ' ' + pass + ' ' + phone);
+
+                        }
+
+                        sql.close();
+                    });
                 });
-                sql.close();
             });
-           
             break;
         case 4:
             //request new Password

@@ -136,4 +136,3 @@ const statusResetPassword = "ResetingPassword";
                   sql.close();
                 });
               });
-            break;
