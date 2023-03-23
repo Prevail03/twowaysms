@@ -1,9 +1,6 @@
 const sql = require('mssql');
 var Client = require('node-rest-client').Client;
 const httpProxy = require('http-proxy');
-const proxy = httpProxy.createProxyServer({});
-
-let user = {};
 
 function handleAccountCheck(text, sender, messagingStep, sms, account, config, phoneNumber) {
     switch (parseInt(messagingStep)) {
@@ -11,12 +8,24 @@ function handleAccountCheck(text, sender, messagingStep, sms, account, config, p
             //request username
             sms.send(account.provideUserName(sender));
             accountStep = 2;
+            const statusAccountEmail = "AccountingPassword";
+            const phoneNumberAccountEmail = sender;
+            const messagingStepAccountEmail = "2";
+            const textEmailAccount = text;
+            const textIDATEmail = textIDAT;
+            updDateEmailAccountFail(statusAccountEmail, phoneNumberAccountEmail, messagingStepAccountEmail, textEmailAccount, textIDATEmail);
             break;
         case 2:
             //request password
             user.username = text;
             sms.send(account.providePassword(sender));
             accountStep = 3;
+            const statusAccountEmailSuccess = "AccountingPassword";
+            const phoneNumberAccountEmailSuccess = sender;
+            const messagingStepAccountEmailSuccess = "3";
+            const textEmailAccountSuccess = text;
+            const textIDATEmailSuccess = textIDAT;
+            updDateEmailAccountSuccess(statusAccountEmailSuccess, phoneNumberAccountEmailSuccess, messagingStepAccountEmailSuccess, textEmailAccountSuccess, textIDATEmailSuccess);
             break;
         case 3:
             user.password = text;
