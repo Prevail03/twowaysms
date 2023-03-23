@@ -16,7 +16,7 @@ function updateUserNameFail(statusUserName, phoneNumberUserName, messagingStepUs
         console.error('Error executing query: ' + err.stack);
         return;
       }
-      console.log('UserName UPDATE successful');
+      console.log('Username UPDATE successful');
 
       sql.close();
     });
@@ -28,17 +28,17 @@ function updateUserNameSuccess(statusUserNameSuccess, phoneNumberUserNameSuccess
     const request = new sql.Request();
     const updateDelete = `UPDATE two_way_sms_tb SET status = @statusUserNameSuccess, messagingStep = @messagingStepUserNameSuccess UserName = @textUserNameSuccess WHERE phoneNumber = @phoneNumberUserNameSuccess AND text_id_AT =@textIDATUserNameSuccess text AND time = (
   SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberUserNameSuccess )`;
-    request.input('statusUserName', sql.VarChar, statusUserNameSuccess);
-    request.input('messagingStepUserName', sql.VarChar, messagingStepUserNameSuccess);
-    request.input('phoneNumberUserName', sql.NVarChar, phoneNumberUserNameSuccess);
-    request.input('textUserName', sql.NVarChar, textUserNameSuccess);
-    request.input('textIDATUserName', sql.NVarChar, textIDATUserNameSuccess);
+    request.input('statusUserNameSuccess', sql.VarChar, statusUserNameSuccess);
+    request.input('messagingStepUserNameSuccess', sql.VarChar, messagingStepUserNameSuccess);
+    request.input('phoneNumberUserNameSuccess', sql.NVarChar, phoneNumberUserNameSuccess);
+    request.input('textUserNameSuccess', sql.NVarChar, textUserNameSuccess);
+    request.input('textIDATUserNameSuccess', sql.NVarChar, textIDATUserNameSuccess);
     request.query(updateDelete, function (err, results) {
       if (err) {
         console.error('Error executing query: ' + err.stack);
         return;
       }
-      console.log('UserName UPDATE successful');
+      console.log('Username UPDATE successful');
 
       sql.close();
     });

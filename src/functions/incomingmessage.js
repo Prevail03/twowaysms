@@ -112,7 +112,7 @@ function handleIncomingMessage(text, sender, textId, phoneNumber, config, sms , 
                                 sms.send(account.provideUserName(sender));
                                 isCheckingAccount=true;
                                 accountStep=2;
-                                const statusAccounts = "isCheckingAccounts";
+                                const statusAccounts = "isCheckingAccount";
                                 const phoneNumberAccounts = sender;
                                 const messagingStepAccounts= "2";
                                 sql.connect(config, function(err) {
