@@ -23,7 +23,7 @@ function updateEmailAccountFail(statusAccountEmail, phoneNumberAccountEmail, mes
   });
 }
 
-function updateEmailAccountFail(statusAccountEmailSuccess, phoneNumberAccountEmailSuccess, messagingStepAccountEmailSuccess, textEmailAccountSuccess, textIDATEmailSuccess){
+function updateEmailAccountSuccess(statusAccountEmailSuccess, phoneNumberAccountEmailSuccess, messagingStepAccountEmailSuccess, textEmailAccountSuccess, textIDATEmailSuccess){
   sql.connect(config, function (err) {
     const request = new sql.Request();
     const updateDelete = `UPDATE two_way_sms_tb SET status = @statusAccountEmailSuccess, messagingStep = @messagingStepAccountEmailSuccess email = @textEmailAccountSuccess WHERE phoneNumber = @phoneNumberAccountEmailSuccess AND text_id_AT =@textIDATEmailSuccess text AND time = (
@@ -45,4 +45,4 @@ function updateEmailAccountFail(statusAccountEmailSuccess, phoneNumberAccountEma
   });
 }
 
-module.exports = {updateEmailAccountFail};
+module.exports = {updateEmailAccountFail, updateEmailAccountSuccess};
