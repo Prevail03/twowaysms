@@ -4,7 +4,7 @@ var Client = require('node-rest-client').Client;
 function updateUserNameFail(statusUserName, phoneNumberUserName, messagingStepUserName, textUserName, textIDATUserName,config){
   sql.connect(config, function (err) {
     const request = new sql.Request();
-    const updateDelete = `UPDATE two_way_sms_tb SET status = @statusUserName, messagingStep = @messagingStepUserName, user_username = @textUserName WHERE phoneNumber = @phoneNumberUserName AND text_id_AT =@textIDATUserName AND time = (
+    const updateDelete = `UPDATE two_way_sms_tb SET status = @statusUserName, messagingStep = @messagingStepUserName, user_username = @textUserName WHERE phoneNumber = @phoneNumberUserName AND text_id_AT = @textIDATUserName AND time = (
   SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberUserName )`;
     request.input('statusUserName', sql.VarChar, statusUserName);
     request.input('messagingStepUserName', sql.VarChar, messagingStepUserName);
@@ -26,7 +26,7 @@ function updateUserNameFail(statusUserName, phoneNumberUserName, messagingStepUs
 function updateUserNameSuccess(statusUserNameSuccess, phoneNumberUserNameSuccess, messagingStepUserNameSuccess, textUserNameSuccess, textIDATUserNameSuccess,config){
   sql.connect(config, function (err) {
     const request = new sql.Request();
-    const updateDelete = `UPDATE two_way_sms_tb SET status = @statusUserNameSuccess, messagingStep = @messagingStepUserNameSuccess, user_username = @textUserNameSuccess WHERE phoneNumber = @phoneNumberUserNameSuccess AND text_id_AT =@textIDATUserNameSuccess AND time = (
+    const updateDelete = `UPDATE two_way_sms_tb SET status = @statusUserNameSuccess, messagingStep = @messagingStepUserNameSuccess, user_username = @textUserNameSuccess WHERE phoneNumber = @phoneNumberUserNameSuccess AND text_id_AT = @textIDATUserNameSuccess AND time = (
   SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberUserNameSuccess )`;
     request.input('statusUserNameSuccess', sql.VarChar, statusUserNameSuccess);
     request.input('messagingStepUserNameSuccess', sql.VarChar, messagingStepUserNameSuccess);
@@ -38,7 +38,7 @@ function updateUserNameSuccess(statusUserNameSuccess, phoneNumberUserNameSuccess
         console.error('Error executing query: ' + err.stack);
         return;
       }
-      console.log('Username UPDATE successful');
+      console.log('Username UPDATED successful');
 
       sql.close();
     });
