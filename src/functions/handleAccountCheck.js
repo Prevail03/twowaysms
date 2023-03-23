@@ -7,7 +7,7 @@ function handleAccountCheck(text, sender, messagingStep, sms, account, config, p
     switch (parseInt(messagingStep)) {
         case 1:
             sms.send(account.provideUserName(sender));
-            const statusUserName = "AccountingPassword";
+            const statusUserName = "isCheckingAccount";
             const phoneNumberUserName = sender;
             const messagingStepUserName = "2";
             const textUserName = text;
@@ -16,7 +16,7 @@ function handleAccountCheck(text, sender, messagingStep, sms, account, config, p
             break;
         case 2:
             sms.send(account.providePassword(sender));
-            const statusUserNameSuccess = "AccountingPassword";
+            const statusUserNameSuccess = "isCheckingAccount";
             const phoneNumberUserNameSuccess = sender;
             const messagingStepUserNameSuccess = "3";
             const textUserNameSuccess = text;
