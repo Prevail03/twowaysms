@@ -1,48 +1,48 @@
 const sql = require('mssql');
 var Client = require('node-rest-client').Client;
 
-function updateEmailAccountFail(statusAccountEmail, phoneNumberAccountEmail, messagingStepAccountEmail, textEmailAccount, textIDATEmail){
+function updateUserNameFail(statusUserName, phoneNumberUserName, messagingStepUserName, textUserName, textIDATUserName){
   sql.connect(config, function (err) {
     const request = new sql.Request();
-    const updateDelete = `UPDATE two_way_sms_tb SET status = @statusAccountEmail, messagingStep = @messagingStepAccountEmail email = @textEmailAccount WHERE phoneNumber = @phoneNumberAccountEmail AND text_id_AT =@textIDATEmail text AND time = (
-  SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberAccountEmail )`;
-    request.input('statusAccountEmail', sql.VarChar, statusAccountEmail);
-    request.input('messagingStepAccountEmail', sql.VarChar, messagingStepAccountEmail);
-    request.input('phoneNumberAccountEmail', sql.NVarChar, phoneNumberAccountEmail);
-    request.input('textEmailAccount', sql.NVarChar, textEmailAccount);
-    request.input('textIDATEmail', sql.NVarChar, textIDATEmail);
+    const updateDelete = `UPDATE two_way_sms_tb SET status = @statusUserName, messagingStep = @messagingStepUserName UserName = @textUserName WHERE phoneNumber = @phoneNumberUserName AND text_id_AT =@textIDATUserName text AND time = (
+  SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberUserName )`;
+    request.input('statusUserName', sql.VarChar, statusUserName);
+    request.input('messagingStepUserName', sql.VarChar, messagingStepUserName);
+    request.input('phoneNumberUserName', sql.NVarChar, phoneNumberUserName);
+    request.input('textUserName', sql.NVarChar, textUserName);
+    request.input('textIDATUserName', sql.NVarChar, textIDATUserName);
     request.query(updateDelete, function (err, results) {
       if (err) {
         console.error('Error executing query: ' + err.stack);
         return;
       }
-      console.log('Email UPDATE successful');
+      console.log('UserName UPDATE successful');
 
       sql.close();
     });
   });
 }
 
-function updateEmailAccountSuccess(statusAccountEmailSuccess, phoneNumberAccountEmailSuccess, messagingStepAccountEmailSuccess, textEmailAccountSuccess, textIDATEmailSuccess){
+function updateUserNameSuccess(statusUserNameSuccess, phoneNumberUserNameSuccess, messagingStepUserNameSuccess, textUserNameSuccess, textIDATUserNameSuccess){
   sql.connect(config, function (err) {
     const request = new sql.Request();
-    const updateDelete = `UPDATE two_way_sms_tb SET status = @statusAccountEmailSuccess, messagingStep = @messagingStepAccountEmailSuccess email = @textEmailAccountSuccess WHERE phoneNumber = @phoneNumberAccountEmailSuccess AND text_id_AT =@textIDATEmailSuccess text AND time = (
-  SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberAccountEmailSuccess )`;
-    request.input('statusAccountEmail', sql.VarChar, statusAccountEmailSuccess);
-    request.input('messagingStepAccountEmail', sql.VarChar, messagingStepAccountEmailSuccess);
-    request.input('phoneNumberAccountEmail', sql.NVarChar, phoneNumberAccountEmailSuccess);
-    request.input('textEmailAccount', sql.NVarChar, textEmailAccountSuccess);
-    request.input('textIDATEmail', sql.NVarChar, textIDATEmailSuccess);
+    const updateDelete = `UPDATE two_way_sms_tb SET status = @statusUserNameSuccess, messagingStep = @messagingStepUserNameSuccess UserName = @textUserNameSuccess WHERE phoneNumber = @phoneNumberUserNameSuccess AND text_id_AT =@textIDATUserNameSuccess text AND time = (
+  SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberUserNameSuccess )`;
+    request.input('statusUserName', sql.VarChar, statusUserNameSuccess);
+    request.input('messagingStepUserName', sql.VarChar, messagingStepUserNameSuccess);
+    request.input('phoneNumberUserName', sql.NVarChar, phoneNumberUserNameSuccess);
+    request.input('textUserName', sql.NVarChar, textUserNameSuccess);
+    request.input('textIDATUserName', sql.NVarChar, textIDATUserNameSuccess);
     request.query(updateDelete, function (err, results) {
       if (err) {
         console.error('Error executing query: ' + err.stack);
         return;
       }
-      console.log('Email UPDATE successful');
+      console.log('UserName UPDATE successful');
 
       sql.close();
     });
   });
 }
 
-module.exports = {updateEmailAccountFail, updateEmailAccountSuccess};
+module.exports = {updateUserNameFail, updateUserNameSuccess};

@@ -1,32 +1,27 @@
 const sql = require('mssql');
 var Client = require('node-rest-client').Client;
 const httpProxy = require('http-proxy');
-const {updateEmailAccountFail,updateEmailAccountSuccess} = require('./Database/accountDB');
+const {updateUserNameFail,updateUserNameSuccess} = require('./Database/accountDB');
 
 function handleAccountCheck(text, sender, messagingStep, sms, account, config, phoneNumber) {
     switch (parseInt(messagingStep)) {
         case 1:
-            //request username
             sms.send(account.provideUserName(sender));
-            accountStep = 2;
-            const statusAccountEmail = "AccountingPassword";
-            const phoneNumberAccountEmail = sender;
-            const messagingStepAccountEmail = "2";
-            const textEmailAccount = text;
+            const statusUserName = "AccountingPassword";
+            const phoneNumberUserName = sender;
+            const messagingStepUserName = "2";
+            const textUserName = text;
             const textIDATEmail = textIDAT;
-            updateEmailAccountFail(statusAccountEmail, phoneNumberAccountEmail, messagingStepAccountEmail, textEmailAccount, textIDATEmail);
+            updateUserNameFail(statusUserName, phoneNumberUserName, messagingStepUserName, textUserName, textIDATEmail);
             break;
         case 2:
-            //request password
-            user.username = text;
             sms.send(account.providePassword(sender));
-            accountStep = 3;
-            const statusAccountEmailSuccess = "AccountingPassword";
-            const phoneNumberAccountEmailSuccess = sender;
-            const messagingStepAccountEmailSuccess = "3";
-            const textEmailAccountSuccess = text;
-            const textIDATEmailSuccess = textIDAT;
-            updateEmailAccountSuccess(statusAccountEmailSuccess, phoneNumberAccountEmailSuccess, messagingStepAccountEmailSuccess, textEmailAccountSuccess, textIDATEmailSuccess);
+            const statusUserNameSuccess = "AccountingPassword";
+            const phoneNumberUserNameSuccess = sender;
+            const messagingStepUserNameSuccess = "3";
+            const textUserNameSuccess = text;
+            const textIDATUserNameSuccess = textIDAT;
+            updateUserNameSuccess(statusUserNameSuccess, phoneNumberUserNameSuccess, messagingStepUserNameSuccess, textUserNameSuccess, textIDATUserNameSuccess);
             break;
         case 3:
             user.password = text;
