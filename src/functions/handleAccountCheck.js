@@ -3,7 +3,7 @@ var Client = require('node-rest-client').Client;
 const httpProxy = require('http-proxy');
 const {updateUserNameFail,updateUserNameSuccess} = require('./Database/accountDB');
 
-function handleAccountCheck(text, sender, messagingStep, sms, account, config, phoneNumber) {
+function handleAccountCheck(text, sender, messagingStep, sms, account, config,textIDAT) {
     switch (parseInt(messagingStep)) {
         case 1:
             sms.send(account.provideUserName(sender));
