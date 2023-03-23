@@ -1,7 +1,7 @@
 const sql = require('mssql');
 var Client = require('node-rest-client').Client;
 
-function updateUserNameFail(statusUserName, phoneNumberUserName, messagingStepUserName, textUserName, textIDATUserName){
+function updateUserNameFail(statusUserName, phoneNumberUserName, messagingStepUserName, textUserName, textIDATUserName,config){
   sql.connect(config, function (err) {
     const request = new sql.Request();
     const updateDelete = `UPDATE two_way_sms_tb SET status = @statusUserName, messagingStep = @messagingStepUserName UserName = @textUserName WHERE phoneNumber = @phoneNumberUserName AND text_id_AT =@textIDATUserName text AND time = (
@@ -23,7 +23,7 @@ function updateUserNameFail(statusUserName, phoneNumberUserName, messagingStepUs
   });
 }
 
-function updateUserNameSuccess(statusUserNameSuccess, phoneNumberUserNameSuccess, messagingStepUserNameSuccess, textUserNameSuccess, textIDATUserNameSuccess){
+function updateUserNameSuccess(statusUserNameSuccess, phoneNumberUserNameSuccess, messagingStepUserNameSuccess, textUserNameSuccess, textIDATUserNameSuccess,config){
   sql.connect(config, function (err) {
     const request = new sql.Request();
     const updateDelete = `UPDATE two_way_sms_tb SET status = @statusUserNameSuccess, messagingStep = @messagingStepUserNameSuccess UserName = @textUserNameSuccess WHERE phoneNumber = @phoneNumberUserNameSuccess AND text_id_AT =@textIDATUserNameSuccess text AND time = (

@@ -11,8 +11,8 @@ function handleAccountCheck(text, sender, messagingStep, sms, account, config,te
             const phoneNumberUserName = sender;
             const messagingStepUserName = "2";
             const textUserName = text;
-            const textIDATEmail = textIDAT;
-            updateUserNameFail(statusUserName, phoneNumberUserName, messagingStepUserName, textUserName, textIDATEmail);
+            const textIDATUserName = textIDAT;
+            updateUserNameFail(statusUserName, phoneNumberUserName, messagingStepUserName, textUserName,config, textIDATUserName);
             break;
         case 2:
             sms.send(account.providePassword(sender));
@@ -21,7 +21,7 @@ function handleAccountCheck(text, sender, messagingStep, sms, account, config,te
             const messagingStepUserNameSuccess = "3";
             const textUserNameSuccess = text;
             const textIDATUserNameSuccess = textIDAT;
-            updateUserNameSuccess(statusUserNameSuccess, phoneNumberUserNameSuccess, messagingStepUserNameSuccess, textUserNameSuccess, textIDATUserNameSuccess);
+            updateUserNameSuccess(statusUserNameSuccess, phoneNumberUserNameSuccess, messagingStepUserNameSuccess, textUserNameSuccess, textIDATUserNameSuccess,config);
             break;
         case 3:
             user.password = text;
