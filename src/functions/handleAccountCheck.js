@@ -70,13 +70,12 @@ function handleAccountCheck(text, sender, messagingStep, sms, account, config, t
                                 if ([200].includes(response.statusCode)) {
                                     // success 
                                     console.log(response.statusCode);
-                                    //sms.send(account.confirmLogin(sender));
+                                    sms.send(account.confirmLogin(sender));
                                     var accountIDClient = new Client();
                                     var args = {
                                         data: { identifier: username },
                                         headers: { "Content-Type": "application/json" }
                                     };
-                                    console.log(args);
                                     accountIDClient.get("https://api.octagonafrica.com/v1/accountsid", args, function (data, response) {
                                         if (response.statusCode === 200) {
                                             console.log(response.statusCode);
@@ -92,7 +91,7 @@ function handleAccountCheck(text, sender, messagingStep, sms, account, config, t
                                                 }
                                                 console.log('Connected to the database');
                                                 const request = new sql.Request();
-                                                const updateAccounts = `UPDATE two_way_sms_tb SET status = 'isCheckingAccount', messagingStep= '3', user_id = @textUserID WHERE phoneNumber = @phoneNumberUserID AND text_id_AT = @textIDATuserID AND time = (SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberUserID)`;
+                                                const updateAccounts = `UPDATE two_way_sms_tb SET status = 'isCheckingAccount', messagingStep= '4', user_id = @textUserID WHERE phoneNumber = @phoneNumberUserID AND text_id_AT = @textIDATuserID AND time = (SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberUserID)`;
                                                 request.input('phoneNumberUserID', sql.NVarChar, phoneNumberUserID);
                                                 request.input('textIDATUserID', sql.NVarChar, textIDATUserID);
                                                 request.input('textUserID', sql.NVarChar, textUserID);
@@ -119,7 +118,105 @@ function handleAccountCheck(text, sender, messagingStep, sms, account, config, t
                                                         }
                                                         if (userIDResults.recordset.length > 0) {
                                                             const userID = userIDResults.recordset[0].user_id;
-                                                            console.log(userID);
+                                                            var fetchClient = new Client();
+                                                            // set content-type header and data as json in args parameter
+                                                            var args = {
+                                                                data: { user_id: userID },
+                                                                headers: { "Content-Type": "application/json" }
+                                                            };
+                                                            fetchClient.get("https://api.octagonafrica.com/v1/accounts", args, function (data, response) {
+
+                                                                if ([200].includes(response.statusCode)) {
+                                                                    // success code
+                                                                    console.log(response.statusCode)
+                                                                    const insurance = data.insurance;
+                                                                    const pension = data.pension;
+                                                                    const trust = data.trust;
+                                                                    // const totalAccounts = insurance.total_accounts;
+                                                                    const totalAccountsInsurance = insurance.total_accounts;
+                                                                    const insuranceData = insurance.data;
+                                                                    const totalAccountsPension = pension.total_accounts;
+                                                                    const pensionData = pension.data;
+                                                                    //Dear custoomer here are yoour accoiunt  
+                                                                    let preAccounts = "Dear " + user.username + ", Here are your accounts \n "
+                                                                    let insuranceMessage = "";
+                                                                    for (let i = 0; i < totalAccountsInsurance; i++) {
+                                                                        insuranceMessage += " Insurance Account Description: " + insuranceData[i].Code + " Name: " + insuranceData[i].Description + " .Active Since: " + insuranceData[i].dateFrom + ".\n";
+                                                                        console.log("Account Description:", insuranceData[i].Code, "Name: ", insuranceData[i].Description, ". Active Since: ", insuranceData[i].dateFrom);
+                                                                    }
+                                                                    let pensionMessage = "";
+                                                                    for (let i = 0; i < totalAccountsPension; i++) {
+                                                                        pensionMessage += " Pension Account Description: " + pensionData[i].Code + " Name: " + pensionData[i].scheme_name + " .Active Since: " + pensionData[i].dateFrom + ".\n";
+                                                                        console.log("Account Description:", pensionData[i].Code, "Name: ", pensionData[i].scheme_name, ".Active Since: ", pensionData[i].dateFrom);
+                                                                    }
+                                                                    let postAccounts = "Please provide us with the account description so that we can provide you with a member statement "
+                                                                    const finalMessage = preAccounts + insuranceMessage + pensionMessage + postAccounts;
+                                                                    //Send your 
+                                                                    sms.send({
+                                                                        to: sender,
+                                                                        from: '20880',
+                                                                        message: finalMessage
+                                                                    });
+                                                                    accountStep = 4;
+
+                                                                } else if ([400].includes(response.statusCode)) {
+                                                                    console.log(response.statusCode);
+                                                                    console.log(response.statusCode);
+                                                                    sms.send({
+                                                                        to: sender,
+                                                                        from: '20880',
+                                                                        message: " Invalid Details!!. Check your details and please try again Later "
+                                                                    });
+                                                                    const statuserror404 = "isCheckingAccountFailed";
+                                                                    const messagingSteperror404 = "0";
+                                                                    const phoneNumbererror404 = phoneNumberPassword;
+                                                                    const textIDATerror404 = textIDAT;
+                                                                    const updateFail = `UPDATE two_way_sms_tb SET status = @statuserror404, messagingStep = @messagingSteperror404  WHERE phoneNumber = @phoneNumbererror404 AND text_id_AT =@textIDATerror404 AND time = (
+                                                     SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumbererror404 )`;
+                                                                    request.input('statuserror404', sql.VarChar, statuserror404);
+                                                                    request.input('messagingSteperror404', sql.VarChar, messagingSteperror404);
+                                                                    request.input('phoneNumbererror404', sql.NVarChar, phoneNumbererror404);
+                                                                    request.input('textIDATerror404', sql.NVarChar, textIDATerror404);
+                                                                    request.query(updateFail, function (err, results) {
+                                                                        if (err) {
+                                                                            console.error('Error executing query: ' + err.stack);
+                                                                            return;
+                                                                        }
+                                                                        console.log(' Reset Password Attempt unsuccessful');
+                                                                        sql.close();
+                                                                    });
+                                                                }
+                                                                else if ([500].includes(response.statusCode)) {
+                                                                    console.log(response.statusCode);
+                                                                    sms.send({
+                                                                        to: sender,
+                                                                        from: '20880',
+                                                                        message: " Invalid request. Please input your National Id and password. "
+                                                                    });
+
+                                                                    const statuserror500 = "isCheckingAccountFailed";
+                                                                    const messagingSteperror500 = "0";
+                                                                    const phoneNumbererror500 = phoneNumberPassword;
+                                                                    const textIDATerror500 = textIDAT;
+                                                                    const updateFail = `UPDATE two_way_sms_tb SET status = @statuserror500, messagingStep = @messagingSteperror500  WHERE phoneNumber = @phoneNumbererror500 AND text_id_AT =@textIDATerror500 AND time = (
+                                             SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumbererror500 )`;
+                                                                    request.input('statuserror500', sql.VarChar, statuserror500);
+                                                                    request.input('messagingSteperror500', sql.VarChar, messagingSteperror500);
+                                                                    request.input('phoneNumbererror500', sql.NVarChar, phoneNumbererror500);
+                                                                    request.input('textIDATerror500', sql.NVarChar, textIDATerror500);
+                                                                    request.query(updateFail, function (err, results) {
+                                                                        if (err) {
+                                                                            console.error('Error executing query: ' + err.stack);
+                                                                            return;
+                                                                        }
+                                                                        console.log(' Reset Password Attempt unsuccessful');
+                                                                        sql.close();
+                                                                    });
+                                                                } else {
+                                                                    // error code
+                                                                    console.log(response.statusCode);
+                                                                }
+                                                            });
                                                         }
                                                         sql.close();
                                                     });
@@ -140,7 +237,7 @@ function handleAccountCheck(text, sender, messagingStep, sms, account, config, t
                                         from: '20880',
                                         message: " Invalid Details!!. Check your details and please try again Later "
                                     });
-                                    const statuserror404 = "ResetPasswordFailed";
+                                    const statuserror404 = "isCheckingAccountFailed";
                                     const messagingSteperror404 = "0";
                                     const phoneNumbererror404 = phoneNumberPassword;
                                     const textIDATerror404 = textIDAT;
@@ -167,7 +264,7 @@ function handleAccountCheck(text, sender, messagingStep, sms, account, config, t
                                         message: " Invalid request. Please input your National Id and password. "
                                     });
 
-                                    const statuserror500 = "ResetPasswordFailed";
+                                    const statuserror500 = "isCheckingAccountFailed";
                                     const messagingSteperror500 = "0";
                                     const phoneNumbererror500 = phoneNumberPassword;
                                     const textIDATerror500 = textIDAT;
