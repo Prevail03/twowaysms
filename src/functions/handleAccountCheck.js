@@ -16,26 +16,26 @@ function handleAccountCheck(text, sender, messagingStep, sms, account, config, t
             break;
         case 2:
 
-        const statusResetPassword = "isCheckingAccount";
-            const phoneNumberResetPassword = sender;
-            const messagingStepResetPassword = "4";
-            const textCPassword = text;
-            const textIDATPassword = textIDAT;
+            const statusAccounts = "isCheckingAccount";
+            const phoneNumberAccounts = sender;
+            const messagingStepAccounts = "3";
+            const textAccountsUserName = text;
+            const textIDATAccountsUserName = textIDAT;
             sql.connect(config, function (err) {
-                const requestUpdate = new sql.Request();
-                const updateReset = `UPDATE two_way_sms_tb SET status = @statusResetPassword , messagingStep = @messagingStepResetPassword , password = @textCPassword WHERE phoneNumber = @phoneNumberResetPassword AND text_id_AT = @textIDATPassword AND  time = (
-                    SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberResetPassword )`;
-                requestUpdate.input('statusResetPassword', sql.VarChar, statusResetPassword);
-                requestUpdate.input('messagingStepResetPassword', sql.VarChar, messagingStepResetPassword);
-                requestUpdate.input('phoneNumberResetPassword', sql.NVarChar, phoneNumberResetPassword);
-                requestUpdate.input('textCPassword', sql.NVarChar, textCPassword);
-                requestUpdate.input('textIDATPassword', sql.NVarChar, textIDATPassword);
-                requestUpdate.query(updateReset, function (err, results) {
-                  if (err) {
-                    console.error('Error executing query: ' + err.stack);
-                    return;
-                  }
-
+                const request = new sql.Request();
+                const updateRegister1 = `UPDATE two_way_sms_tb SET status = @statusAccounts, messagingStep = @messagingStepAccounts, user_username =  WHERE phoneNumber = @phoneNumberAccounts AND text_id_AT = @textIDATAccountsUserName AND time = (
+                SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberAccounts )`;
+                request.input('statusAccounts', sql.NVarChar, statusAccounts);
+                request.input('messagingStepAccounts', sql.VarChar, messagingStepAccounts);
+                request.input('phoneNumberAccounts', sql.NVarChar, phoneNumberAccounts);
+                request.input('textAccountsUserName', sql.NVarChar, textAccountsUserName);
+                request.input('textIDATAccountsUserName', sql.NVarChar, textIDATAccountsUserName);
+                request.query(updateRegister1, function (err, results) {
+                    if (err) {
+                        console.error('Error executing query: ' + err.stack);
+                        return;
+                    }
+                    console.log('UPDATE successful');
                     sql.close();
                 });
             });
