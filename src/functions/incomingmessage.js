@@ -106,7 +106,6 @@ function handleIncomingMessage(text, sender, textId, phoneNumber, config, sms , 
                             });
                             break;
                             case 'accounts':
-                                isCheckingAccount=false;
                                 sms.send(account.welcomeMessageAccount(sender));
                                 sms.send(account.provideUserName(sender));
                                 const statusAccounts = "isCheckingAccount";

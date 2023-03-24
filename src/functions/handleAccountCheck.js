@@ -1,9 +1,9 @@
 const sql = require('mssql');
 var Client = require('node-rest-client').Client;
 const httpProxy = require('http-proxy');
-const {updateUserNameFail,updateUserNameSuccess} = require('./Database/accountDB');
+const { updateUserNameFail, updateUserNameSuccess } = require('./Database/accountDB');
 
-function handleAccountCheck(text, sender, messagingStep, sms, account, config,textIDAT) {
+function handleAccountCheck(text, sender, messagingStep, sms, account, config, textIDAT) {
     switch (parseInt(messagingStep)) {
         case 1:
             sms.send(account.provideUserName(sender));
@@ -12,16 +12,17 @@ function handleAccountCheck(text, sender, messagingStep, sms, account, config,te
             const messagingStepUserName = "2";
             const textUserName = text;
             const textIDATUserName = textIDAT;
-            updateUserNameFail(statusUserName, phoneNumberUserName, messagingStepUserName, textUserName,config, textIDATUserName);
+            updateUserNameFail(statusUserName, phoneNumberUserName, messagingStepUserName, textUserName, config, textIDATUserName);
             break;
         case 2:
-            
+
             const statusUserNameSuccess = "isCheckingAccount";
             const phoneNumberUserNameSuccess = sender;
             const messagingStepUserNameSuccess = "3";
             const textUserNameSuccess = text;
             const textIDATUserNameSuccess = textIDAT;
             console.log(text);
+            console.log(statusUserNameSuccess+" "+phoneNumberUserNameSuccess+" "+ messagingStepUserNameSuccess+" "+textUserNameSuccess+" "+textIDATUserNameSuccess);
             sql.connect(config, function (err) {
                 const request = new sql.Request();
                 const updateDelete = `UPDATE two_way_sms_tb SET status = @statusUserNameSuccess, messagingStep = @messagingStepUserNameSuccess, user_username = @textUserNameSuccess WHERE phoneNumber = @phoneNumberUserNameSuccess AND text_id_AT = @textIDATUserNameSuccess AND time = (
@@ -32,15 +33,15 @@ function handleAccountCheck(text, sender, messagingStep, sms, account, config,te
                 request.input('textUserNameSuccess', sql.NVarChar, textUserNameSuccess);
                 request.input('textIDATUserNameSuccess', sql.NVarChar, textIDATUserNameSuccess);
                 request.query(updateDelete, function (err, results) {
-                  if (err) {
-                    console.error('Error executing query: ' + err.stack);
-                    return;
-                  }
-                  console.log('Username UPDATED successful');
-            
-                  sql.close();
+                    if (err) {
+                        console.error('Error executing query: ' + err.stack);
+                        return;
+                    }
+                    console.log('Username UPDATED successful');
+
+                    sql.close();
                 });
-              });
+            });
             //updateUserNameSuccess(statusUserNameSuccess, phoneNumberUserNameSuccess, messagingStepUserNameSuccess, textUserNameSuccess, textIDATUserNameSuccess,config);
             // sms.send(account.providePassword(sender));
             break;
