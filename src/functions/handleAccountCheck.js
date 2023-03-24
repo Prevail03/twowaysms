@@ -18,7 +18,7 @@ function handleAccountCheck(text, sender, messagingStep, sms, account, config, t
         const phoneNumberResetCPassword = sender;
         const textUsername = text;
         const textIDATUserNameS = textIDAT;
-        console.log(phoneNumberResetCPassword+" "+" "+textIDATUserNameS+" "+textIDAT+" "+sender+" "+text+" "+textIDATUserNameS);
+        console.log(phoneNumberResetCPassword+" "+textIDATUserNameS+" "+textIDAT+" "+sender+" "+text+" "+textIDATUserNameS);
         
         sql.connect(config, function (err) {
             if (err) {
