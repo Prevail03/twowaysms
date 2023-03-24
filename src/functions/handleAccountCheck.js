@@ -30,7 +30,7 @@ function handleAccountCheck(text, sender, messagingStep, sms, account, config, t
             const request = new sql.Request();
             const updateDelete = `UPDATE two_way_sms_tb SET status = 'isCheckingAccount', messagingStep= '3', user_username = @textUsername WHERE phoneNumber = @phoneNumberResetCPassword AND text_id_AT = @textIDATUserName AND time = (SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberResetCPassword)`;
             request.input('phoneNumberResetCPassword', sql.NVarChar, phoneNumberResetCPassword);
-            request.input('textIDATCPassword', sql.NVarChar, textIDATUserNameS);
+            request.input('textIDATUserNameS', sql.NVarChar, textIDATUserNameS);
             request.input('textUsername', sql.NVarChar, textUsername);
             request.query(updateDelete, function (err, results) {
                 if (err) {
