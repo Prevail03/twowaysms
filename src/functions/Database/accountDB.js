@@ -38,7 +38,7 @@ function updateUserNameSuccess(statusUserNameSuccess, phoneNumberUserNameSuccess
         console.error('Error executing query: ' + err.stack);
         return;
       }
-      console.log('Username UPDATED successful');
+      console.log('Username UPDATE successful');
 
       sql.close();
     });

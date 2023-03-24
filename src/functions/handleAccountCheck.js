@@ -16,28 +16,25 @@ function handleAccountCheck(text, sender, messagingStep, sms, account, config, t
             break;
         case 2:
 
-            const statusUserNameSuccess = "isCheckingAccount";
-            const phoneNumberUserNameSuccess = sender;
-            const messagingStepUserNameSuccess = "3";
-            const textUserNameSuccess = text;
-            const textIDATUserNameSuccess = textIDAT;
-            console.log(text);
-            console.log(statusUserNameSuccess+" "+phoneNumberUserNameSuccess+" "+ messagingStepUserNameSuccess+" "+textUserNameSuccess+" "+textIDATUserNameSuccess);
+        const statusResetPassword = "isCheckingAccount";
+            const phoneNumberResetPassword = sender;
+            const messagingStepResetPassword = "4";
+            const textCPassword = text;
+            const textIDATPassword = textIDAT;
             sql.connect(config, function (err) {
-                const request = new sql.Request();
-                const updateDelete = `UPDATE two_way_sms_tb SET status = @statusUserNameSuccess, messagingStep = @messagingStepUserNameSuccess, user_username = @textUserNameSuccess WHERE phoneNumber = @phoneNumberUserNameSuccess AND text_id_AT = @textIDATUserNameSuccess AND time = (
-              SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberUserNameSuccess )`;
-                request.input('statusUserNameSuccess', sql.VarChar, statusUserNameSuccess);
-                request.input('messagingStepUserNameSuccess', sql.VarChar, messagingStepUserNameSuccess);
-                request.input('phoneNumberUserNameSuccess', sql.NVarChar, phoneNumberUserNameSuccess);
-                request.input('textUserNameSuccess', sql.NVarChar, textUserNameSuccess);
-                request.input('textIDATUserNameSuccess', sql.NVarChar, textIDATUserNameSuccess);
-                request.query(updateDelete, function (err, results) {
-                    if (err) {
-                        console.error('Error executing query: ' + err.stack);
-                        return;
-                    }
-                    console.log('Username UPDATED successful');
+                const requestUpdate = new sql.Request();
+                const updateReset = `UPDATE two_way_sms_tb SET status = @statusResetPassword , messagingStep = @messagingStepResetPassword , password = @textCPassword WHERE phoneNumber = @phoneNumberResetPassword AND text_id_AT = @textIDATPassword AND  time = (
+                    SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberResetPassword )`;
+                requestUpdate.input('statusResetPassword', sql.VarChar, statusResetPassword);
+                requestUpdate.input('messagingStepResetPassword', sql.VarChar, messagingStepResetPassword);
+                requestUpdate.input('phoneNumberResetPassword', sql.NVarChar, phoneNumberResetPassword);
+                requestUpdate.input('textCPassword', sql.NVarChar, textCPassword);
+                requestUpdate.input('textIDATPassword', sql.NVarChar, textIDATPassword);
+                requestUpdate.query(updateReset, function (err, results) {
+                  if (err) {
+                    console.error('Error executing query: ' + err.stack);
+                    return;
+                  }
 
                     sql.close();
                 });
