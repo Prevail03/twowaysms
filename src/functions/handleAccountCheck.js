@@ -83,7 +83,51 @@ function handleAccountCheck(text, sender, messagingStep, sms, account, config, t
                                     accountIDClient.get("https://api.octagonafrica.com/v1/accountsid", args, function (data, response) {
                                         if (response.statusCode === 200) {
                                             const ID = data.data;
-                                            console.log(ID);
+                                            const phoneNumberUserID = sender;
+                                            const textUserID = ID;
+                                            const textIDATUserID = textIDAT;
+                                            sql.connect(config, function (err) {
+                                                if (err) {
+                                                    console.error('Error connecting to the database: ' + err.stack);
+                                                    return;
+                                                }
+                                                console.log('Connected to the database');
+                                
+                                                const request = new sql.Request();
+                                                const updateAccounts = `UPDATE two_way_sms_tb SET status = 'isCheckingAccount', messagingStep= '4', password = @textUserID WHERE phoneNumber = @phoneNumberUserID AND text_id_AT = @textIDATuserID AND time = (SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberUserID)`;
+                                                request.input('phoneNumberUserID', sql.NVarChar, phoneNumberUserID);
+                                                request.input('textIDATUserID', sql.NVarChar, textIDATUserID);
+                                                request.input('textUserID', sql.NVarChar, textUserID);
+                                                request.query(updateAccounts, function (err, results) {
+                                                    if (err) {
+                                                        console.error('Error executing query: ' + err.stack);
+                                                        sql.close();
+                                                        return;
+                                                    }
+                                                    console.log('User ID UPDATE successful');
+                                                    console.log('Query results:', results);
+                                                    const statusUserIDRequest = "isCheckingAccount";
+                                                    const phoneNumberUserIDRequest = sender;
+                                                    const textIDATUserIDRequest = textIDAT;
+                                                    // Bind the values to the parameters
+                                                    const request = new sql.Request();
+                                                    request.input('statusUserIDRequest', sql.NVarChar(50), statusUserIDRequest);
+                                                    request.input('phoneNumberUserIDRequest', sql.NVarChar(50), phoneNumberUserIDRequest);
+                                                    request.input('textIDATUserIDRequest', sql.VarChar(100), textIDATUserIDRequest);
+                                                    request.query("SELECT TOP 1 * FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberUserIDRequest AND status = @statusUserIDRequest AND isActive = 1 AND text_id_AT = @textIDATUserIDRequest order by time DESC", function (err, userIDResults) {
+                                                        if (err) {
+                                                            console.error('Error executing query: ' + err.stack);
+                                                            return;
+                                                        }
+                                                        if (userIDResults.recordset.length > 0) {
+                                                            const userID=userIDResults.recordset[0].user_id;
+                                                            console.log(userID);  
+                                                        }
+                                                        sql.close();
+                                                    });
+                                                });
+                                            });
+
                                         } else if (response.statusCode === 400) {
                                             console.log(response.statusCode);
                                         } else {
@@ -91,8 +135,6 @@ function handleAccountCheck(text, sender, messagingStep, sms, account, config, t
                                             console.log(response.statusCode);
                                         }
                                     });
-                                } else if ([201].includes(response.statusCode)) {
-                                    console.log(response.statusCode);
                                 } else if ([400].includes(response.statusCode)) {
                                     console.log(response.statusCode);
                                     sms.send({
@@ -100,15 +142,7 @@ function handleAccountCheck(text, sender, messagingStep, sms, account, config, t
                                         from: '20880',
                                         message: " Invalid Details!!. Check your details and please try again Later "
                                     });
-                                } else if ([401].includes(response.statusCode)) {
-                                    console.log(response.statusCode);
-                                    sms.send({
-                                        to: sender,
-                                        from: '20880',
-                                        message: " Authentication failed. Incorrect password or username. Access denied "
-                                    });
                                 }
-
                                 else if ([500].includes(response.statusCode)) {
                                     console.log(response.statusCode);
                                     sms.send({
