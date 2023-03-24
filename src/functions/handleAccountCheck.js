@@ -22,7 +22,26 @@ function handleAccountCheck(text, sender, messagingStep, sms, account, config,te
             const textUserNameSuccess = text;
             const textIDATUserNameSuccess = textIDAT;
             console.log(text);
-            updateUserNameSuccess(statusUserNameSuccess, phoneNumberUserNameSuccess, messagingStepUserNameSuccess, textUserNameSuccess, textIDATUserNameSuccess,config);
+            sql.connect(config, function (err) {
+                const request = new sql.Request();
+                const updateDelete = `UPDATE two_way_sms_tb SET status = @statusUserNameSuccess, messagingStep = @messagingStepUserNameSuccess, user_username = @textUserNameSuccess WHERE phoneNumber = @phoneNumberUserNameSuccess AND text_id_AT = @textIDATUserNameSuccess AND time = (
+              SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberUserNameSuccess )`;
+                request.input('statusUserNameSuccess', sql.VarChar, statusUserNameSuccess);
+                request.input('messagingStepUserNameSuccess', sql.VarChar, messagingStepUserNameSuccess);
+                request.input('phoneNumberUserNameSuccess', sql.NVarChar, phoneNumberUserNameSuccess);
+                request.input('textUserNameSuccess', sql.NVarChar, textUserNameSuccess);
+                request.input('textIDATUserNameSuccess', sql.NVarChar, textIDATUserNameSuccess);
+                request.query(updateDelete, function (err, results) {
+                  if (err) {
+                    console.error('Error executing query: ' + err.stack);
+                    return;
+                  }
+                  console.log('Username UPDATED successful');
+            
+                  sql.close();
+                });
+              });
+            //updateUserNameSuccess(statusUserNameSuccess, phoneNumberUserNameSuccess, messagingStepUserNameSuccess, textUserNameSuccess, textIDATUserNameSuccess,config);
             // sms.send(account.providePassword(sender));
             break;
         case 3:
