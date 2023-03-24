@@ -18,8 +18,13 @@ function handleAccountCheck(text, sender, messagingStep, sms, account, config, t
         const phoneNumberResetCPassword = sender;
         const textUsername = text;
         const textIDATUserNameS = textIDAT;
-        console.log(phoneNumberResetCPassword+" "+textIDATUserNameS+" "+textIDAT+" "+sender+" "+text+" "+textIDATUserNameS);
-        
+
+        console.log(phoneNumberResetCPassword) ;
+        console.log(textUsername);
+        console.log(textIDATUserNameS );
+        console.log( sender);
+        console.log( text);
+        console.log( textIIDAT );
         sql.connect(config, function (err) {
             if (err) {
                 console.error('Error connecting to the database: ' + err.stack);
@@ -28,7 +33,7 @@ function handleAccountCheck(text, sender, messagingStep, sms, account, config, t
             console.log('Connected to the database');
         
             const request = new sql.Request();
-            const updateDelete = `UPDATE two_way_sms_tb SET status = 'isCheckingAccount', messagingStep= '3', user_username = @textUsername WHERE phoneNumber = @phoneNumberResetCPassword AND text_id_AT = @textIDATUserName AND time = (SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberResetCPassword)`;
+            const updateDelete = `UPDATE two_way_sms_tb SET status = 'isCheckingAccount', messagingStep= '3', user_username = @textUsername WHERE phoneNumber = @phoneNumberResetCPassword AND text_id_AT = @textIDATUserNameS AND time = (SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberResetCPassword)`;
             request.input('phoneNumberResetCPassword', sql.NVarChar, phoneNumberResetCPassword);
             request.input('textIDATUserNameS', sql.NVarChar, textIDATUserNameS);
             request.input('textUsername', sql.NVarChar, textUsername);
