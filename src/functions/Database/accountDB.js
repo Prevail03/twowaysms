@@ -76,7 +76,7 @@ function updatePassword(phoneNumberPassword, textPassword, textIDATPassword, sen
         const request = new sql.Request();
         request.input('statusPassword', sql.NVarChar(50), statusPassword);
         request.input('phoneNumberPassword', sql.NVarChar(50), phoneNumberPassword);
-        request.input('textIDATPassword1', sql.NVarChar(100), textIDATPassword1);
+        request.input('textIDATPassword1', sql.NVarChar(50), textIDATPassword1);
         request.query("SELECT TOP 1 * FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberPassword AND status = @statusPassword AND isActive = 1 AND text_id_AT = @textIDATPassword1 order by time DESC", function (err, passwordResults) {
             if (err) {
                 console.error('Error executing query: ' + err.stack);
