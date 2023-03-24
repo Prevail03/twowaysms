@@ -91,7 +91,7 @@ function handleAccountCheck(text, sender, messagingStep, sms, account, config, t
                                                 }
                                                 console.log('Connected to the database');
                                                 const request = new sql.Request();
-                                                const updateAccounts = `UPDATE two_way_sms_tb SET status = 'isCheckingAccount', messagingStep= '4', user_id = @textUserID WHERE phoneNumber = @phoneNumberUserID AND text_id_AT = @textIDATuserID AND time = (SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberUserID)`;
+ //*                                               const updateAccounts = `UPDATE two_way_sms_tb SET status = 'isCheckingAccount', messagingStep= '3', user_id = @textUserID WHERE phoneNumber = @phoneNumberUserID AND text_id_AT = @textIDATuserID AND time = (SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberUserID)`;
                                                 request.input('phoneNumberUserID', sql.NVarChar, phoneNumberUserID);
                                                 request.input('textIDATUserID', sql.NVarChar, textIDATUserID);
                                                 request.input('textUserID', sql.NVarChar, textUserID);
@@ -138,7 +138,7 @@ function handleAccountCheck(text, sender, messagingStep, sms, account, config, t
                                                                     const totalAccountsPension = pension.total_accounts;
                                                                     const pensionData = pension.data;
                                                                     //Dear custoomer here are yoour accoiunt  
-                                                                    let preAccounts = "Dear " + user.username + ", Here are your accounts \n "
+                                                                    let preAccounts = "Dear " + username + ", Here are your accounts \n "
                                                                     let insuranceMessage = "";
                                                                     for (let i = 0; i < totalAccountsInsurance; i++) {
                                                                         insuranceMessage += " Insurance Account Description: " + insuranceData[i].Code + " Name: " + insuranceData[i].Description + " .Active Since: " + insuranceData[i].dateFrom + ".\n";
@@ -157,7 +157,7 @@ function handleAccountCheck(text, sender, messagingStep, sms, account, config, t
                                                                         from: '20880',
                                                                         message: finalMessage
                                                                     });
-                                                                    accountStep = 4;
+
 
                                                                 } else if ([400].includes(response.statusCode)) {
                                                                     console.log(response.statusCode);
