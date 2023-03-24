@@ -1,1 +1,0 @@
-updatePassword(phoneNumberPassword, textPassword, textIDATPassword, sender, text, textIDAT, sms, account)

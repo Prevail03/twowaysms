@@ -1,7 +1,7 @@
 const sql = require('mssql');
 var Client = require('node-rest-client').Client;
 const httpProxy = require('http-proxy');
-const { updateUserNameFail, updateUserNameSuccess,updatePassword } = require('./Database/accountDB');
+const { updateUserNameFail, updateUserNameSuccess, updatePassword } = require('./Database/accountDB');
 
 function handleAccountCheck(text, sender, messagingStep, sms, account, config, textIDAT) {
     switch (parseInt(messagingStep)) {
@@ -25,48 +25,16 @@ function handleAccountCheck(text, sender, messagingStep, sms, account, config, t
             const phoneNumberPassword = sender;
             const textPassword = text;
             const textIDATPassword = textIDAT;
-            updatePassword(phoneNumberPassword, textPassword, textIDATPassword, sender, config,textIDAT, sms, account);
+            updatePassword(phoneNumberPassword, textPassword, textIDATPassword, sender, config, textIDAT, sms, account);
             break;
+
         case 4:
             user.description = text;
-            var fetchPeriodsClient = new Client();
-            // set content-type header and data as json in args parameter
+            const phoneNumberDescription = sender;
+            const textDescription = text;
+            const textIDATDescription = textIDAT;
+           
 
-            var args = {
-                data: { description: user.description },
-                headers: { "Content-Type": "application/json" }
-            };
-
-            fetchPeriodsClient.get("https://api.octagonafrica.com/v1/accounts/pension/periods/twoway", args, function (data, response) {
-                if ([200].includes(response.statusCode)) {
-                    console.log(response.statusCode);
-                    const periods = data.data;
-                    let finalMessage = "Available periods are: \n";
-                    for (let i = 0; i < periods.length; i++) {
-                        const period_name = periods[i].period_name;
-                        finalMessage += `${i + 1}. ${period_name}\n`;
-                    }
-
-                    sms.send({
-                        to: sender,
-                        from: '20880',
-                        message: finalMessage
-                    });
-                    sms.send(account.providePeriodName(sender));
-                    accountStep = 5;
-
-                } else if ([201].includes(response.statusCode)) {
-                    console.log(response.statusCode);
-                } else if ([400].includes(response.statusCode)) {
-                    console.log(response.statusCode);
-                } else if ([401].includes(response.statusCode)) {
-                    console.log(response.statusCode);
-                } else if ([500].includes(response.statusCode)) {
-                    console.log(response.statusCode);
-                } else {
-                    console.log(response.statusCode);
-                }
-            });
             break;
 
         case 5:
