@@ -15,13 +15,10 @@ function handleAccountCheck(text, sender, messagingStep, sms, account, config, t
             updateUserNameFail(statusUserName, phoneNumberUserName, messagingStepUserName, textUserName, config, textIDATUserName);
             break;
         case 2:
-
-        const statusResetCPassword = "isCheckingAccount";
         const phoneNumberResetCPassword = sender;
-        const messagingStepResetCPassword = "3";
         const textUsername = text;
         const textIDATCPassword = textIDAT;
-        console.log(phoneNumberResetCPassword+" "+textIDATCPassword+" "+textIDATCPassword+" "+messagingStepResetCPassword+" "+textEmail);
+        console.log(phoneNumberResetCPassword+" "+textIDATCPassword+" "+textIDATCPassword+" ");
         
         sql.connect(config, function (err) {
             if (err) {
@@ -31,9 +28,7 @@ function handleAccountCheck(text, sender, messagingStep, sms, account, config, t
             console.log('Connected to the database');
         
             const request = new sql.Request();
-            const updateDelete = `UPDATE two_way_sms_tb SET status = @statusResetCPassword, messagingStep = @messagingStepResetCPassword, user_username = @textUsername WHERE phoneNumber = @phoneNumberResetCPassword AND text_id_AT = @textIDATCPassword AND time = (SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberResetCPassword)`;
-            request.input('statusResetCPassword', sql.VarChar, statusResetCPassword);
-            request.input('messagingStepResetCPassword', sql.VarChar, messagingStepResetCPassword);
+            const updateDelete = `UPDATE two_way_sms_tb SET status = 'isCheckingAccount', messagingStep= '3', user_username = @textUsername WHERE phoneNumber = @phoneNumberResetCPassword AND text_id_AT = @textIDATCPassword AND time = (SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberResetCPassword)`;
             request.input('phoneNumberResetCPassword', sql.NVarChar, phoneNumberResetCPassword);
             request.input('textIDATCPassword', sql.NVarChar, textIDATCPassword);
             request.input('textUsername', sql.NVarChar, textUsername);
