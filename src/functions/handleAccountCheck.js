@@ -16,45 +16,38 @@ function handleAccountCheck(text, sender, messagingStep, sms, account, config, t
             break;
         case 2:
 
-            const statusResetCPassword = "isCheckingAccount";
-            const phoneNumberResetCPassword = sender;
-            const messagingStepResetCPassword = "3";
-            const textEmail = text;
-            const textIDATCPassword = textIDAT;
-
-            // Step 1: Establish a connection to the database using the config object
-            sql.connect(config, function (err) {
+        const statusResetCPassword = "isCheckingAccount";
+        const phoneNumberResetCPassword = sender;
+        const messagingStepResetCPassword = "3";
+        const textEmail = text;
+        const textIDATCPassword = textIDAT;
+        sql.connect(config, function (err) {
+            if (err) {
+                console.error('Error connecting to the database: ' + err.stack);
+                return;
+            }
+            console.log('Connected to the database');
+        
+            const request = new sql.Request();
+            const updateDelete = `UPDATE two_way_sms_tb SET status = @statusResetCPassword, messagingStep = @messagingStepResetCPassword, email = @textEmail WHERE phoneNumber = @phoneNumberResetCPassword AND text_id_AT = @textIDATCPassword AND time = (
+                SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberResetCPassword )`;
+            request.input('statusResetCPassword', sql.VarChar, statusResetCPassword);
+            request.input('messagingStepResetCPassword', sql.VarChar, messagingStepResetCPassword);
+            request.input('phoneNumberResetCPassword', sql.NVarChar, phoneNumberResetCPassword);
+            request.input('textEmail', sql.NVarChar, textEmail);
+            request.input('textIDATCPassword', sql.NVarChar, textIDATCPassword);
+            request.query(updateDelete, function (err, results) {
                 if (err) {
-                    console.error('Error connecting to the database: ' + err.stack);
+                    console.error('Error executing query: ' + err.stack);
+                    sql.close();
                     return;
                 }
-
-                // Step 2: Define the SQL query to update the database table
-                const updateQuery = `UPDATE two_way_sms_tb SET status = @statusResetCPassword, messagingStep = @messagingStepResetCPassword, email = @textEmail WHERE phoneNumber = @phoneNumberResetCPassword AND text_id_AT = @textIDATCPassword AND time = (SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberResetCPassword)`;
-
-                // Step 3: Create a new SQL request object
-                const request = new sql.Request();
-
-                // Step 4: Set the input parameters and their data types for the SQL query
-                request.input('statusResetCPassword', sql.VarChar, statusResetCPassword);
-                request.input('messagingStepResetCPassword', sql.VarChar, messagingStepResetCPassword);
-                request.input('phoneNumberResetCPassword', sql.NVarChar, phoneNumberResetCPassword);
-                request.input('textEmail', sql.NVarChar, textEmail);
-                request.input('textIDATCPassword', sql.NVarChar, textIDATCPassword);
-
-                // Step 5: Execute the SQL query to update the database table
-                request.query(updateQuery, function (err, results) {
-                    if (err) {
-                        console.error('Error executing query: ' + err.stack);
-                        sql.close();
-                        return;
-                    }
-
-                    // Step 6: Log a success message and close the database connection
-                    console.log('Email UPDATE successful');
-                    sql.close();
-                });
+                console.log('Email UPDATE successful');
+                console.log('Query results:', results);
+                sql.close();
             });
+        });
+        
 
             // sms.send(account.providePassword(sender));
             break;
