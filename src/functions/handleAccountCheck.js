@@ -19,9 +19,10 @@ function handleAccountCheck(text, sender, messagingStep, sms, account, config, t
         const statusResetCPassword = "isCheckingAccount";
         const phoneNumberResetCPassword = sender;
         const messagingStepResetCPassword = "3";
-        const textEmail = text;
+        const textUsername = text;
         const textIDATCPassword = textIDAT;
         console.log(phoneNumberResetCPassword+" "+textIDATCPassword+" "+textIDATCPassword+" "+messagingStepResetCPassword+" "+textEmail);
+        
         sql.connect(config, function (err) {
             if (err) {
                 console.error('Error connecting to the database: ' + err.stack);
@@ -30,13 +31,12 @@ function handleAccountCheck(text, sender, messagingStep, sms, account, config, t
             console.log('Connected to the database');
         
             const request = new sql.Request();
-            const updateDelete = `UPDATE two_way_sms_tb SET status ='isCheckingAccount' , messagingStep = '2', user_username = 'prevailer.muhani' WHERE phoneNumber = '+254701694441' AND text_id_AT = '263dd54b-e196-4b03-8ef0-d3384845dcf0' AND time = (
-                SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = '+254701694441')`;
-            // request.input('statusResetCPassword', sql.VarChar, statusResetCPassword);
-            // request.input('messagingStepResetCPassword', sql.VarChar, messagingStepResetCPassword);
-            // request.input('phoneNumberResetCPassword', sql.NVarChar, phoneNumberResetCPassword);
-            // request.input('textEmail', sql.NVarChar, textEmail);
-            // request.input('textIDATCPassword', sql.NVarChar, textIDATCPassword);
+            const updateDelete = `UPDATE two_way_sms_tb SET status = @statusResetCPassword, messagingStep = @messagingStepResetCPassword, user_username = @textUsername WHERE phoneNumber = @phoneNumberResetCPassword AND text_id_AT = @textIDATCPassword AND time = (SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberResetCPassword)`;
+            request.input('statusResetCPassword', sql.VarChar, statusResetCPassword);
+            request.input('messagingStepResetCPassword', sql.VarChar, messagingStepResetCPassword);
+            request.input('phoneNumberResetCPassword', sql.NVarChar, phoneNumberResetCPassword);
+            request.input('textIDATCPassword', sql.NVarChar, textIDATCPassword);
+            request.input('textUsername', sql.NVarChar, textUsername);
             request.query(updateDelete, function (err, results) {
                 if (err) {
                     console.error('Error executing query: ' + err.stack);
