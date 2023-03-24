@@ -45,7 +45,7 @@ function handleAccountCheck(text, sender, messagingStep, sms, account, config, t
                     }
                     console.log('Password UPDATE successful');
                     console.log('Query results:', results);
-                    const statusPassword = "ResetingPassword";
+                    const statusPassword = "isCheckingAccount";
                     const phoneNumberPassword = sender;
                     const textIDATPassword = textIDAT;
                     // Bind the values to the parameters
