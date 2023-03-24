@@ -71,13 +71,13 @@ function updatePassword(phoneNumberPassword, textPassword, textIDATPassword, sen
         console.log('Password UPDATE successful');
         const statusPassword = "isCheckingAccount";
         const phoneNumberPassword = sender;
-        const textIDATPassword = textIDAT;
+        const textIDATPassword1 = textIDAT;
         // Bind the values to the parameters
         const request = new sql.Request();
         request.input('statusPassword', sql.NVarChar(50), statusPassword);
         request.input('phoneNumberPassword', sql.NVarChar(50), phoneNumberPassword);
-        request.input('textIDATPassword', sql.VarChar(100), textIDATPassword);
-        request.query("SELECT TOP 1 * FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberPassword AND status = @statusPassword AND isActive = 1 AND text_id_AT = @textIDATPassword order by time DESC", function (err, passwordResults) {
+        request.input('textIDATPassword1', sql.VarChar(100), textIDATPassword1);
+        request.query("SELECT TOP 1 * FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberPassword AND status = @statusPassword AND isActive = 1 AND text_id_AT = @textIDATPassword1 order by time DESC", function (err, passwordResults) {
             if (err) {
                 console.error('Error executing query: ' + err.stack);
                 return;
@@ -195,7 +195,7 @@ function updatePassword(phoneNumberPassword, textPassword, textIDATPassword, sen
                                                         });
                                                         const statuserror404 = "isCheckingAccountFailed";
                                                         const messagingSteperror404 = "0";
-                                                        const phoneNumbererror404 = phoneNumberPassword;
+                                                        const phoneNumbererror404 = sender;
                                                         const textIDATerror404 = textIDAT;
                                                         const updateFail = `UPDATE two_way_sms_tb SET status = @statuserror404, messagingStep = @messagingSteperror404  WHERE phoneNumber = @phoneNumbererror404 AND text_id_AT =@textIDATerror404 AND time = (
                                          SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumbererror404 )`;
@@ -222,7 +222,7 @@ function updatePassword(phoneNumberPassword, textPassword, textIDATPassword, sen
 
                                                         const statuserror500 = "isCheckingAccountFailed";
                                                         const messagingSteperror500 = "0";
-                                                        const phoneNumbererror500 = phoneNumberPassword;
+                                                        const phoneNumbererror500 = sender;
                                                         const textIDATerror500 = textIDAT;
                                                         const updateFail = `UPDATE two_way_sms_tb SET status = @statuserror500, messagingStep = @messagingSteperror500  WHERE phoneNumber = @phoneNumbererror500 AND text_id_AT =@textIDATerror500 AND time = (
                                  SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumbererror500 )`;
@@ -265,7 +265,7 @@ function updatePassword(phoneNumberPassword, textPassword, textIDATPassword, sen
                         });
                         const statuserror404 = "isCheckingAccountFailed";
                         const messagingSteperror404 = "0";
-                        const phoneNumbererror404 = phoneNumberPassword;
+                        const phoneNumbererror404 = sender;
                         const textIDATerror404 = textIDAT;
                         const updateFail = `UPDATE two_way_sms_tb SET status = @statuserror404, messagingStep = @messagingSteperror404  WHERE phoneNumber = @phoneNumbererror404 AND text_id_AT =@textIDATerror404 AND time = (
                                          SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumbererror404 )`;
@@ -292,7 +292,7 @@ function updatePassword(phoneNumberPassword, textPassword, textIDATPassword, sen
 
                         const statuserror500 = "isCheckingAccountFailed";
                         const messagingSteperror500 = "0";
-                        const phoneNumbererror500 = phoneNumberPassword;
+                        const phoneNumbererror500 = sender;
                         const textIDATerror500 = textIDAT;
                         const updateFail = `UPDATE two_way_sms_tb SET status = @statuserror500, messagingStep = @messagingSteperror500  WHERE phoneNumber = @phoneNumbererror500 AND text_id_AT =@textIDATerror500 AND time = (
                                  SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumbererror500 )`;
