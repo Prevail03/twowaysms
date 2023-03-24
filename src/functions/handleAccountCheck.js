@@ -15,13 +15,15 @@ function handleAccountCheck(text, sender, messagingStep, sms, account, config,te
             updateUserNameFail(statusUserName, phoneNumberUserName, messagingStepUserName, textUserName,config, textIDATUserName);
             break;
         case 2:
-            sms.send(account.providePassword(sender));
+            
             const statusUserNameSuccess = "isCheckingAccount";
             const phoneNumberUserNameSuccess = sender;
             const messagingStepUserNameSuccess = "3";
             const textUserNameSuccess = text;
             const textIDATUserNameSuccess = textIDAT;
+            console.log(text);
             updateUserNameSuccess(statusUserNameSuccess, phoneNumberUserNameSuccess, messagingStepUserNameSuccess, textUserNameSuccess, textIDATUserNameSuccess,config);
+            // sms.send(account.providePassword(sender));
             break;
         case 3:
             user.password = text;
