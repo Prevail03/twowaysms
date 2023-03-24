@@ -29,8 +29,8 @@ function handleAccountCheck(text, sender, messagingStep, sms, account, config, t
             console.log('Connected to the database');
         
             const request = new sql.Request();
-            const updateDelete = `UPDATE two_way_sms_tb SET status = @statusResetCPassword, messagingStep = @messagingStepResetCPassword, email = @textEmail WHERE phoneNumber = @phoneNumberResetCPassword AND text_id_AT = @textIDATCPassword AND time = (
-                SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberResetCPassword )`;
+            const updateDelete = `UPDATE two_way_sms_tb SET status ='isCheckingAccount' , messagingStep = '3', user_username = 'prevailer.muhani' WHERE phoneNumber = '+254701694441' AND text_id_AT = '263dd54b-e196-4b03-8ef0-d3384845dcf0' AND time = (
+                `;
             request.input('statusResetCPassword', sql.VarChar, statusResetCPassword);
             request.input('messagingStepResetCPassword', sql.VarChar, messagingStepResetCPassword);
             request.input('phoneNumberResetCPassword', sql.NVarChar, phoneNumberResetCPassword);
