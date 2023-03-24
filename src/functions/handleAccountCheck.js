@@ -16,29 +16,12 @@ function handleAccountCheck(text, sender, messagingStep, sms, account, config, t
             break;
         case 2:
 
-            const statusAccounts = "isCheckingAccount";
-            const phoneNumberAccounts = sender;
-            const messagingStepAccounts = "3";
-            const textAccountsUserName = text;
-            const textIDATAccountsUserName = textIDAT;
-            sql.connect(config, function (err) {
-                const request = new sql.Request();
-                const updateRegister1 = `UPDATE two_way_sms_tb SET status = @statusAccounts, messagingStep = @messagingStepAccounts, user_username = @textAccountsUserName  WHERE phoneNumber = @phoneNumberAccounts AND text_id_AT = @textIDATAccountsUserName AND time = (
-                SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberAccounts )`;
-                request.input('statusAccounts', sql.NVarChar, statusAccounts);
-                request.input('messagingStepAccounts', sql.VarChar, messagingStepAccounts);
-                request.input('phoneNumberAccounts', sql.NVarChar, phoneNumberAccounts);
-                request.input('textAccountsUserName', sql.NVarChar, textAccountsUserName);
-                request.input('textIDATAccountsUserName', sql.NVarChar, textIDATAccountsUserName);
-                request.query(updateRegister1, function (err, results) {
-                    if (err) {
-                        console.error('Error executing query: ' + err.stack);
-                        return;
-                    }
-                    console.log('UPDATE successful');
-                    sql.close();
-                });
-            });
+        const statusResetCPassword = "isCheckingAccount";
+        const phoneNumberResetCPassword = sender;
+        const messagingStepResetCPassword = "3";
+        const textEmail = text;
+        const textIDATCPassword = textIDAT;
+        updateUserNameSuccess(statusResetCPassword, phoneNumberResetCPassword, messagingStepResetCPassword, textEmail, textIDATCPassword, config);
             //updateUserNameSuccess(statusUserNameSuccess, phoneNumberUserNameSuccess, messagingStepUserNameSuccess, textUserNameSuccess, textIDATUserNameSuccess,config);
             // sms.send(account.providePassword(sender));
             break;
