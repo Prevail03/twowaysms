@@ -21,6 +21,7 @@ function handleAccountCheck(text, sender, messagingStep, sms, account, config, t
         const messagingStepResetCPassword = "3";
         const textEmail = text;
         const textIDATCPassword = textIDAT;
+        console.log(phoneNumberResetCPassword+" "+textIDATCPassword+" "+textIDATCPassword+" "+messagingStepResetCPassword+" "+textEmail);
         sql.connect(config, function (err) {
             if (err) {
                 console.error('Error connecting to the database: ' + err.stack);
