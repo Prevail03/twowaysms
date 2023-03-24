@@ -69,7 +69,7 @@ function handleAccountCheck(text, sender, messagingStep, sms, account, config, t
                                 data: { username: username, password: password },
                                 headers: { "Content-Type": "application/json" }
                             };
-                            console.logs(args);
+                            console.log(args);
                             accountsClient.post("https://api.octagonafrica.com/v1/login", args, function (data, response) {
                                 if ([200].includes(response.statusCode)) {
                                     // success code
@@ -79,7 +79,7 @@ function handleAccountCheck(text, sender, messagingStep, sms, account, config, t
                                         data: { identifier: username },
                                         headers: { "Content-Type": "application/json" }
                                     };
-                                    console.logs(args);
+                                    console.log(args);
                                     accountIDClient.get("https://api.octagonafrica.com/v1/accountsid", args, function (data, response) {
                                         if (response.statusCode === 200) {
                                             const ID = data.data;
