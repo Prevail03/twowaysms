@@ -23,7 +23,7 @@ function handleAccountCheck(text, sender, messagingStep, sms, account, config, t
             const textIDATAccountsUserName = textIDAT;
             sql.connect(config, function (err) {
                 const request = new sql.Request();
-                const updateRegister1 = `UPDATE two_way_sms_tb SET status = @statusAccounts, messagingStep = @messagingStepAccounts, user_username =  WHERE phoneNumber = @phoneNumberAccounts AND text_id_AT = @textIDATAccountsUserName AND time = (
+                const updateRegister1 = `UPDATE two_way_sms_tb SET status = @statusAccounts, messagingStep = @messagingStepAccounts, user_username = @textAccountsUserName  WHERE phoneNumber = @phoneNumberAccounts AND text_id_AT = @textIDATAccountsUserName AND time = (
                 SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberAccounts )`;
                 request.input('statusAccounts', sql.NVarChar, statusAccounts);
                 request.input('messagingStepAccounts', sql.VarChar, messagingStepAccounts);
