@@ -45,24 +45,7 @@ function updateUserNameFail(statusUserName, phoneNumberUserName, messagingStepUs
 //   });
 // }
 function updateUserNameSuccess(statusResetCPassword, phoneNumberResetCPassword, messagingStepResetCPassword, textEmail, textIDATCPassword, config) {
-  sql.connect(config, function (err) {
-    const request = new sql.Request();
-    const updateDelete = `UPDATE two_way_sms_tb SET status = @statusResetCPassword, messagingStep = @messagingStepResetCPassword, email = @textEmail WHERE phoneNumber = @phoneNumberResetCPassword AND text_id_AT = @textIDATCPassword AND time = (
-    SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberResetCPassword )`;
-    request.input('statusResetCPassword', sql.VarChar, statusResetCPassword);
-    request.input('messagingStepResetCPassword', sql.VarChar, messagingStepResetCPassword);
-    request.input('phoneNumberResetCPassword', sql.NVarChar, phoneNumberResetCPassword);
-    request.input('textEmail', sql.NVarChar, textEmail);
-    request.input('textIDATCPassword', sql.NVarChar, textIDATCPassword);
-    request.query(updateDelete, function (err, results) {
-      if (err) {
-        console.error('Error executing query: ' + err.stack);
-        return;
-      }
-      console.log('Email UPDATE successful');
-      sql.close();
-    });
-  });
+  
 }
 
 module.exports = {updateUserNameFail, updateUserNameSuccess};
