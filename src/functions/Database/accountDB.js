@@ -49,7 +49,7 @@ function updateUserNameSuccess(phoneNumberUserNameS, textUsername, textIDATUserN
   });
 }
 
-function updatePassword(phoneNumberPassword, textPassword, textIDATPassword, sender, config, textIDAT, sms, account) {
+function  updatePassword(phoneNumberPassword, textPassword, textIDATPassword, sender, config,textIDAT, sms, account) {
   sql.connect(config, function (err) {
     if (err) {
       console.error('Error connecting to the database: ' + err.stack);
