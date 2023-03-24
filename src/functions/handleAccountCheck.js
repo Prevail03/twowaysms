@@ -43,7 +43,7 @@ function handleAccountCheck(text, sender, messagingStep, sms, account, config, t
                         sql.close();
                         return;
                     }
-                    console.log('UserName UPDATE successful');
+                    console.log('Password UPDATE successful');
                     console.log('Query results:', results);
                     const statusPassword = "ResetingPassword";
                     const phoneNumberPassword = sender;
@@ -61,12 +61,15 @@ function handleAccountCheck(text, sender, messagingStep, sms, account, config, t
                         if (passwordResults.recordset.length > 0) {
                             const username = passwordResults.recordset[0].user_username;
                             const password = passwordResults.recordset[0].password;
+                            console.log(username);
+                            console.log(password);
                             var accountsClient = new Client();
                             // set content-type header and data as json in args parameter
                             var args = {
                                 data: { username: username, password: password },
                                 headers: { "Content-Type": "application/json" }
                             };
+                            console.logs(args);
                             accountsClient.post("https://api.octagonafrica.com/v1/login", args, function (data, response) {
                                 if ([200].includes(response.statusCode)) {
                                     // success code
@@ -76,6 +79,7 @@ function handleAccountCheck(text, sender, messagingStep, sms, account, config, t
                                         data: { identifier: username },
                                         headers: { "Content-Type": "application/json" }
                                     };
+                                    console.logs(args);
                                     accountIDClient.get("https://api.octagonafrica.com/v1/accountsid", args, function (data, response) {
                                         if (response.statusCode === 200) {
                                             const ID = data.data;
