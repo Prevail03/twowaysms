@@ -82,6 +82,7 @@ function handleAccountCheck(text, sender, messagingStep, sms, account, config, t
                                     console.log(args);
                                     accountIDClient.get("https://api.octagonafrica.com/v1/accountsid", args, function (data, response) {
                                         if (response.statusCode === 200) {
+                                            console.log(response.statusCode);
                                             const ID = data.data;
                                             const phoneNumberUserID = sender;
                                             const textUserID = ID;
@@ -175,6 +176,7 @@ function handleAccountCheck(text, sender, messagingStep, sms, account, config, t
 
             fetchPeriodsClient.get("https://api.octagonafrica.com/v1/accounts/pension/periods/twoway", args, function (data, response) {
                 if ([200].includes(response.statusCode)) {
+                    console.log(response.statusCode);
                     const periods = data.data;
                     let finalMessage = "Available periods are: \n";
                     for (let i = 0; i < periods.length; i++) {
