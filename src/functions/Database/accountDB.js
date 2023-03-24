@@ -23,29 +23,29 @@ function updateUserNameFail(statusUserName, phoneNumberUserName, messagingStepUs
   });
 }
 
-// function updateUserNameSuccess(statusUserNameSuccess, phoneNumberUserNameSuccess, messagingStepUserNameSuccess, textUserNameSuccess, textIDATUserNameSuccess,config){
-//   sql.connect(config, function (err) {
-//     const request = new sql.Request();
-//     const updateDelete = `UPDATE two_way_sms_tb SET status = @statusUserNameSuccess, messagingStep = @messagingStepUserNameSuccess, user_username = @textUserNameSuccess WHERE phoneNumber = @phoneNumberUserNameSuccess AND text_id_AT = @textIDATUserNameSuccess AND time = (
-//   SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberUserNameSuccess )`;
-//     request.input('statusUserNameSuccess', sql.VarChar, statusUserNameSuccess);
-//     request.input('messagingStepUserNameSuccess', sql.VarChar, messagingStepUserNameSuccess);
-//     request.input('phoneNumberUserNameSuccess', sql.NVarChar, phoneNumberUserNameSuccess);
-//     request.input('textUserNameSuccess', sql.NVarChar, textUserNameSuccess);
-//     request.input('textIDATUserNameSuccess', sql.NVarChar, textIDATUserNameSuccess);
-//     request.query(updateDelete, function (err, results) {
-//       if (err) {
-//         console.error('Error executing query: ' + err.stack);
-//         return;
-//       }
-//       console.log('Username UPDATE successful');
+function updateUserNameSuccess(phoneNumberUserNameS,textUsername,textIDATUserNameS,config ){
+sql.connect(config, function (err) {
+    if (err) {
+        console.error('Error connecting to the database: ' + err.stack);
+        return;
+    }
+    console.log('Connected to the database');
 
-//       sql.close();
-//     });
-//   });
-// }
-function updateUserNameSuccess(statusResetCPassword, phoneNumberResetCPassword, messagingStepResetCPassword, textEmail, textIDATCPassword, config) {
-  
+    const request = new sql.Request();
+    const updateDelete = `UPDATE two_way_sms_tb SET status = 'isCheckingAccount', messagingStep= '3', user_username = @textUsername WHERE phoneNumber = @phoneNumberUserNameS AND text_id_AT = @textIDATUserNameS AND time = (SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberUserNameS)`;
+    request.input('phoneNumberUserNameS', sql.NVarChar, phoneNumberUserNameS);
+    request.input('textIDATUserNameS', sql.NVarChar, textIDATUserNameS);
+    request.input('textUsername', sql.NVarChar, textUsername);
+    request.query(updateDelete, function (err, results) {
+        if (err) {
+            console.error('Error executing query: ' + err.stack);
+            sql.close();
+            return;
+        }
+        console.log('UserName UPDATE successful');
+        console.log('Query results:', results);
+        sql.close();
+    });
+});
 }
-
 module.exports = {updateUserNameFail, updateUserNameSuccess};
