@@ -83,7 +83,7 @@ function handleAccountCheck(text, sender, messagingStep, sms, account, config, t
                                             const ID = data.data;
                                             console.log(JSON.stringify(ID));
                                             const phoneNumberUserID = sender;
-                                            const textUserID = JSON.stringify(ID);
+                                            const textUserID = ID;
                                             const textIDATUserID = textIDAT;
                                             sql.connect(config, function (err) {
                                                 if (err) {
