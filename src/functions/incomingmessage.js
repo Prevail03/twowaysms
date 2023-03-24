@@ -40,7 +40,7 @@ function handleIncomingMessage(text, sender, textId, phoneNumber, config, sms , 
                     handleDelete(text, sender, messagingStep, config, sms, register , textIDAT);
                     break; 
                 case 'isCheckingAccount':
-                    handleAccountCheck(text, sender, messagingStep, sms, account, config, phoneNumber,textIDAT);
+                    handleAccountCheck(text, sender, messagingStep, sms, account, config,textIDAT);
                     break;
                 case 'ResetingPassword':
                     handlePasswordReset(text, sender, messagingStep, sms, reset, config , textIDAT);

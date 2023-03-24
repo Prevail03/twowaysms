@@ -24,7 +24,7 @@ function handleAccountCheck(text, sender, messagingStep, sms, account, config, t
         console.log(textIDATUserNameS );
         console.log( sender);
         console.log( text);
-        console.log( textIIDAT );
+        console.log( textIDAT );
         sql.connect(config, function (err) {
             if (err) {
                 console.error('Error connecting to the database: ' + err.stack);
