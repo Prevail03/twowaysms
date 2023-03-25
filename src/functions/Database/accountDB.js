@@ -357,6 +357,7 @@ function updateDescription(phoneNumberDescription, textDescription, textIDATDesc
 
         if (descriptionResults.recordset.length > 0) {
           const description = descriptionResults.recordset[0].description;
+          console.log(description);
           var fetchPeriodsClient = new Client();
           // set content-type header and data as json in args parameter
           var args = {
@@ -384,7 +385,7 @@ function updateDescription(phoneNumberDescription, textDescription, textIDATDesc
               console.log(response.statusCode);
               const statuserror404 = "ResetPasswordFailed";
               const messagingSteperror404 = "0";
-              const phoneNumbererror404 = phoneNumberResetNPasswordEnd;
+              const phoneNumbererror404 = sender;
               const textIDATerror404 = textIDAT;
               const updateDelete = `UPDATE two_way_sms_tb SET status = @statuserror404, messagingStep = @messagingSteperror404  WHERE phoneNumber = @phoneNumbererror404 AND text_id_AT =@textIDATerror404 AND time = (
                             SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumbererror404 )`;
@@ -404,7 +405,7 @@ function updateDescription(phoneNumberDescription, textDescription, textIDATDesc
               console.log(response.statusCode);
               const statuserror500 = "FetchPeriodsFailed";
               const messagingSteperror500 = "0";
-              const phoneNumbererror500 = phoneNumberResetNPasswordEnd;
+              const phoneNumbererror500 = sender;
               const textIDATerror500 = textIDAT;
               const updateDelete = `UPDATE two_way_sms_tb SET status = @statuserror500, messagingStep = @messagingSteperror500  WHERE phoneNumber = @phoneNumbererror500 AND text_id_AT =@textIDATerror500 AND time = (
                                              SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumbererror500 )`;
