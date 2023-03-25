@@ -557,7 +557,7 @@ function updatePeriodName(phoneNumberperiodName, textperiodName, textIDATperiodN
                                   const name = memberStatementResults.recordset[0].name;
                                   const email = memberStatementResults.recordset[0].email;
                                   const periodsName = memberStatementResults.recordset[0].periodname;
-                                  console.log("Dear " + name + ".\n Your member statement for " + periodsName + " period has been sent to  " + email);
+                                  console.log("Dear " + name + ".Your member statement for " + periodsName + " period has been sent to  " + email);
                                   sms.send({ to: sender, from: '20880', message: "Dear " + name + ".\n Your member statement for " + periodsName + " period has been sent to  " + email });
                                 }
                                 sql.close();
