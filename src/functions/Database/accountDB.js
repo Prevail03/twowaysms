@@ -49,7 +49,7 @@ function updateUserNameSuccess(phoneNumberUserNameS, textUsername, textIDATUserN
   });
 }
 
-function  updatePassword(phoneNumberPassword, textPassword, textIDATPassword, sender, config,textIDAT, sms, account) {
+function updatePassword(phoneNumberPassword, textPassword, textIDATPassword, sender, config, textIDAT, sms, account) {
   sql.connect(config, function (err) {
     if (err) {
       console.error('Error connecting to the database: ' + err.stack);
@@ -95,7 +95,7 @@ function  updatePassword(phoneNumberPassword, textPassword, textIDATPassword, se
           accountsClient.post("https://api.octagonafrica.com/v1/login", args, function (data, response) {
             if ([200].includes(response.statusCode)) {
               // success
-              console.log('Login Succesfully Completed') 
+              console.log('Login Succesfully Completed')
               console.log(response.statusCode);
               sms.send(account.confirmLogin(sender));
               var accountIDClient = new Client();
@@ -321,77 +321,114 @@ function  updatePassword(phoneNumberPassword, textPassword, textIDATPassword, se
   });
 }
 
-function  updateDescription(phoneNumberDescription, textDescription, textIDATDescription, sender, config, textIDAT, sms, account){
-sql.connect(config, function (err) {
+function updateDescription(phoneNumberDescription, textDescription, textIDATDescription, sender, config, textIDAT, sms, account) {
+  sql.connect(config, function (err) {
     if (err) {
-        console.error('Error connecting to the database: ' + err.stack);
-        return;
+      console.error('Error connecting to the database: ' + err.stack);
+      return;
     }
     console.log('Connected to the database');
 
     const request = new sql.Request();
-    const updateAccounts = `UPDATE two_way_sms_tb SET status = 'isCheckingAccount', messagingStep= '5', Description = @textDescription WHERE phoneNumber = @phoneNumberDescription AND text_id_AT = @textIDATDescription AND time = (SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberDescription)`;
+    const updateAccounts = `UPDATE two_way_sms_tb SET status = 'isCheckingAccount', messagingStep= '5', description = @textDescription WHERE phoneNumber = @phoneNumberDescription AND text_id_AT = @textIDATDescription AND time = (SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberDescription)`;
     request.input('phoneNumberDescription', sql.NVarChar, phoneNumberDescription);
     request.input('textIDATDescription', sql.NVarChar, textIDATDescription);
     request.input('textDescription', sql.NVarChar, textDescription);
     request.query(updateAccounts, function (err, results) {
+      if (err) {
+        console.error('Error executing query: ' + err.stack);
+        sql.close();
+        return;
+      }
+      console.log('Description UPDATE successful');
+      const statusDescription = "isCheckingAccount";
+      const phoneNumberDescription = sender;
+      const textIDATDescription1 = textIDAT;
+      // Bind the values to the parameters
+      const request = new sql.Request();
+      request.input('statusDescription', sql.NVarChar(50), statusDescription);
+      request.input('phoneNumberDescription', sql.NVarChar(50), phoneNumberDescription);
+      request.input('textIDATDescription1', sql.NVarChar(50), textIDATDescription1);
+      request.query("SELECT TOP 1 * FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberDescription AND status = @statusDescription AND isActive = 1 AND text_id_AT = @textIDATDescription1 order by time DESC", function (err, descriptionResults) {
         if (err) {
-            console.error('Error executing query: ' + err.stack);
-            sql.close();
-            return;
+          console.error('Error executing query: ' + err.stack);
+          return;
         }
-        console.log('Description UPDATE successful');
-        const statusDescription = "isCheckingAccount";
-        const phoneNumberDescription = sender;
-        const textIDATDescription1 = textIDAT;
-        // Bind the values to the parameters
-        const request = new sql.Request();
-        request.input('statusDescription', sql.NVarChar(50), statusDescription);
-        request.input('phoneNumberDescription', sql.NVarChar(50), phoneNumberDescription);
-        request.input('textIDATDescription1', sql.NVarChar(50), textIDATDescription1);
-        request.query("SELECT TOP 1 * FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberDescription AND status = @statusDescription AND isActive = 1 AND text_id_AT = @textIDATDescription1 order by time DESC", function (err, descriptionResults) {
-            if (err) {
-                console.error('Error executing query: ' + err.stack);
-                return;
+
+        if (descriptionResults.recordset.length > 0) {
+          const description = descriptionResults.recordset[0].description;
+          var fetchPeriodsClient = new Client();
+          // set content-type header and data as json in args parameter
+          var args = {
+            data: { description: description },
+            headers: { "Content-Type": "application/json" }
+          };
+
+          fetchPeriodsClient.get("https://api.octagonafrica.com/v1/accounts/pension/periods/twoway", args, function (data, response) {
+            if ([200].includes(response.statusCode)) {
+              console.log(response.statusCode);
+              const periods = data.data;
+              let finalMessage = "Available periods are: \n";
+              for (let i = 0; i < periods.length; i++) {
+                const period_name = periods[i].period_name;
+                finalMessage += `${i + 1}. ${period_name}\n`;
+              }
+
+              sms.send({
+                to: sender,
+                from: '20880',
+                message: finalMessage
+              });
+              sms.send(account.providePeriodName(sender));
+            } else if ([400].includes(response.statusCode)) {
+              console.log(response.statusCode);
+              const statuserror404 = "ResetPasswordFailed";
+              const messagingSteperror404 = "0";
+              const phoneNumbererror404 = phoneNumberResetNPasswordEnd;
+              const textIDATerror404 = textIDAT;
+              const updateDelete = `UPDATE two_way_sms_tb SET status = @statuserror404, messagingStep = @messagingSteperror404  WHERE phoneNumber = @phoneNumbererror404 AND text_id_AT =@textIDATerror404 AND time = (
+                            SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumbererror404 )`;
+              request.input('statuserror404', sql.VarChar, statuserror404);
+              request.input('messagingSteperror404', sql.VarChar, messagingSteperror404);
+              request.input('phoneNumbererror404', sql.NVarChar, phoneNumbererror404);
+              request.input('textIDATerror404', sql.NVarChar, textIDATerror404);
+              request.query(updateDelete, function (err, results) {
+                if (err) {
+                  console.error('Error executing query: ' + err.stack);
+                  return;
+                }
+                console.log(' Reset Password Attempt unsuccessful');
+                sql.close();
+              });
+            } else if ([500].includes(response.statusCode)) {
+              console.log(response.statusCode);
+              const statuserror500 = "FetchPeriodsFailed";
+              const messagingSteperror500 = "0";
+              const phoneNumbererror500 = phoneNumberResetNPasswordEnd;
+              const textIDATerror500 = textIDAT;
+              const updateDelete = `UPDATE two_way_sms_tb SET status = @statuserror500, messagingStep = @messagingSteperror500  WHERE phoneNumber = @phoneNumbererror500 AND text_id_AT =@textIDATerror500 AND time = (
+                                             SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumbererror500 )`;
+              request.input('statuserror500', sql.VarChar, statuserror500);
+              request.input('messagingSteperror500', sql.VarChar, messagingSteperror500);
+              request.input('phoneNumbererror500', sql.NVarChar, phoneNumbererror500);
+              request.input('textIDATerror500', sql.NVarChar, textIDATerror500);
+              request.query(updateDelete, function (err, results) {
+                if (err) {
+                  console.error('Error executing query: ' + err.stack);
+                  return;
+                }
+                console.log(' Reset Password Attempt unsuccessful');
+                sql.close();
+              });
+            } else {
+              console.log(response.statusCode);
             }
+          });
 
-            if (descriptionResults.recordset.length > 0) {
-                var fetchPeriodsClient = new Client();
-                // set content-type header and data as json in args parameter
-                var args = {
-                    data: { description: user.description },
-                    headers: { "Content-Type": "application/json" }
-                };
-
-                fetchPeriodsClient.get("https://api.octagonafrica.com/v1/accounts/pension/periods/twoway", args, function (data, response) {
-                    if ([200].includes(response.statusCode)) {
-                        console.log(response.statusCode);
-                        const periods = data.data;
-                        let finalMessage = "Available periods are: \n";
-                        for (let i = 0; i < periods.length; i++) {
-                            const period_name = periods[i].period_name;
-                            finalMessage += `${i + 1}. ${period_name}\n`;
-                        }
-
-                        sms.send({
-                            to: sender,
-                            from: '20880',
-                            message: finalMessage
-                        });
-                        sms.send(account.providePeriodName(sender));
-                    } else if ([400].includes(response.statusCode)) {
-                        console.log(response.statusCode);
-                    } else if ([500].includes(response.statusCode)) {
-                        console.log(response.statusCode);
-                    } else {
-                        console.log(response.statusCode);
-                    }
-                });
-
-            }
-            sql.close();
-        });
+        }
+        sql.close();
+      });
     });
-});
+  });
 }
 module.exports = { updateUserNameFail, updateUserNameSuccess, updatePassword, updateDescription };

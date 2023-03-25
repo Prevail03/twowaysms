@@ -1,7 +1,7 @@
 const sql = require('mssql');
 var Client = require('node-rest-client').Client;
 const httpProxy = require('http-proxy');
-const { updateUserNameFail, updateUserNameSuccess, updatePassword } = require('./Database/accountDB');
+const { updateUserNameFail, updateUserNameSuccess, updatePassword, updateDescription } = require('./Database/accountDB');
 
 function handleAccountCheck(text, sender, messagingStep, sms, account, config, textIDAT) {
     switch (parseInt(messagingStep)) {
@@ -33,7 +33,7 @@ function handleAccountCheck(text, sender, messagingStep, sms, account, config, t
             const phoneNumberDescription = sender;
             const textDescription = text;
             const textIDATDescription = textIDAT;
-           
+            updateDescription(phoneNumberDescription, textDescription, textIDATDescription, sender, config, textIDAT, sms, account)
 
             break;
 
