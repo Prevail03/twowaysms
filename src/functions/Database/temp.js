@@ -52,9 +52,4 @@ var fetchPeriodsIDClient = new Client();
                 }
             });
 
-            case 4:
-            const phoneNumberDescription = sender;
-            const textDescription = text;
-            const textIDATDescription = textIDAT;
-            updateDescription(phoneNumberDescription, textDescription, textIDATDescription, sender, config, textIDAT, sms, account)
-            break;
+            
