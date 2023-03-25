@@ -477,7 +477,6 @@ function updatePeriodName(phoneNumberperiodName, textperiodName, textIDATperiodN
                   return;
                 }
                 console.log('Connected to the database');
-
                 const request = new sql.Request();
                 const updateAccounts = `UPDATE two_way_sms_tb SET status = 'isCheckingAccount', messagingStep= '5', periodID = @textperiodID WHERE phoneNumber = @phoneNumberperiodID AND text_id_AT = @textIDATperiodID AND time = (SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberperiodID)`;
                 request.input('phoneNumberperiodID', sql.NVarChar, phoneNumberperiodID);
@@ -493,7 +492,6 @@ function updatePeriodName(phoneNumberperiodName, textperiodName, textIDATperiodN
                   const statusperiodID = "isCheckingAccount";
                   const phoneNumberperiodID = sender;
                   const textIDATperiodID1 = textIDAT;
-                  // Bind the values to the parameters
                   const request = new sql.Request();
                   request.input('statusperiodID', sql.NVarChar(50), statusperiodID);
                   request.input('phoneNumberperiodID', sql.NVarChar(50), phoneNumberperiodID);
@@ -503,7 +501,6 @@ function updatePeriodName(phoneNumberperiodName, textperiodName, textIDATperiodN
                       console.error('Error executing query: ' + err.stack);
                       return;
                     }
-
                     if (periodIDResults.recordset.length > 0) {
                       const periodID = periodIDResults.recordset[0].periodID;
                       const userID = periodNameResults.recordset[0].user_id;
@@ -528,7 +525,6 @@ function updatePeriodName(phoneNumberperiodName, textperiodName, textIDATperiodN
                               return;
                             }
                             console.log('Connected to the database');
-
                             const request = new sql.Request();
                             const updateAccounts = `UPDATE two_way_sms_tb SET status = 'isCheckingAccountSuccess', messagingStep= '100', isActive = 100, periodname = @periodsNameAPI, name = @nameFromAPI, email = @emailFromAPI  WHERE phoneNumber = @phoneNumberStatement AND text_id_AT = @textIDATStatement AND time = (SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberStatement)`;
                             request.input('phoneNumberStatement', sql.NVarChar, phoneNumberStatement);
@@ -561,19 +557,13 @@ function updatePeriodName(phoneNumberperiodName, textperiodName, textIDATperiodN
                                   const name = memberStatementResults.recordset[0].name;
                                   const email = memberStatementResults.recordset[0].email;
                                   const periodsName = memberStatementResults.recordset[0].periodname;
-                                  sms.send({
-                                    to: sender,
-                                    from: '20880',
-                                    message: "Dear " + name + ".\n Your member statement for " + periodsName + " period has been sent to  " + email
-                                  });
-
+                                  console.log("Dear " + name + ".\n Your member statement for " + periodsName + " period has been sent to  " + email);
+                                  sms.send({ to: sender, from: '20880', message: "Dear " + name + ".\n Your member statement for " + periodsName + " period has been sent to  " + email });
                                 }
-
                                 sql.close();
                               });
                             });
                           });
-
                         } else if ([400].includes(response.statusCode)) {
                           console.log(response.statusCode);
                           sms.send({ to: sender, from: '20880', message: 'Invalid Details. Try again later' });
