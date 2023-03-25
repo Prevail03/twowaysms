@@ -383,7 +383,7 @@ function updateDescription(phoneNumberDescription, textDescription, textIDATDesc
               sms.send(account.providePeriodName(sender));
             } else if ([400].includes(response.statusCode)) {
               console.log(response.statusCode);
-              const statuserror404 = "ResetPasswordFailed";
+              const statuserror404 = "FetchPeriodsFailed";
               const messagingSteperror404 = "0";
               const phoneNumbererror404 = sender;
               const textIDATerror404 = textIDAT;
