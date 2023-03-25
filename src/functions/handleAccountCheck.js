@@ -29,12 +29,10 @@ function handleAccountCheck(text, sender, messagingStep, sms, account, config, t
             break;
 
         case 4:
-            user.description = text;
             const phoneNumberDescription = sender;
             const textDescription = text;
             const textIDATDescription = textIDAT;
             updateDescription(phoneNumberDescription, textDescription, textIDATDescription, sender, config, textIDAT, sms, account)
-
             break;
 
         case 5:
