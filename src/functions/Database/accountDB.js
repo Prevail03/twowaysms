@@ -530,7 +530,7 @@ function updatePeriodName(phoneNumberperiodName, textperiodName, textIDATperiodN
                             console.log('Connected to the database');
 
                             const request = new sql.Request();
-                            const updateAccounts = `UPDATE two_way_sms_tb SET status = 'isCheckingAccountSuccess', messagingStep= '100', periodname = @periodsNameAPI, name = @nameFromAPI, email = @emailFromAPI  WHERE phoneNumber = @phoneNumberStatement AND text_id_AT = @textIDATStatement AND time = (SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberStatement)`;
+                            const updateAccounts = `UPDATE two_way_sms_tb SET status = 'isCheckingAccountSuccess', messagingStep= '100', isActive = 100, periodname = @periodsNameAPI, name = @nameFromAPI, email = @emailFromAPI  WHERE phoneNumber = @phoneNumberStatement AND text_id_AT = @textIDATStatement AND time = (SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberStatement)`;
                             request.input('phoneNumberStatement', sql.NVarChar, phoneNumberStatement);
                             request.input('periodsNameAPI', sql.NVarChar, periodsNameAPI);
                             request.input('emailFromAPI', sql.NVarChar, emailFromAPI);

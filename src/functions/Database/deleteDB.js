@@ -1,7 +1,7 @@
 const sql = require('mssql');
 var Client = require('node-rest-client').Client;
 
-function updateNationalID1(textIDATID, phoneNumberID, statusID, messagingStepID) {
+function updateNationalID1(textIDATID, phoneNumberID, statusID, messagingStepID, sms) {
   sql.connect(config, function (err) {
     const request = new sql.Request();
     const updateDelete = `UPDATE two_way_sms_tb SET status = @statusID, messagingStep = @messagingStepID WHERE phoneNumber = @phoneNumberID AND text_id_AT = @textIDATID AND time = (
@@ -115,11 +115,7 @@ function updatePassword(statusPasswordDeleting, phoneNumberPasswordDeleting, mes
               });
             } else if ([400].includes(response.statusCode)||[401].includes(response.statusCode)){
               console.log(response.statusCode);
-              sms.send({
-                to: sender,
-                from: '20880',
-                message: " Invalid Details!!. Check your details and please try again Later "
-              });
+              sms.send({  to: sender,   from: '20880', message: " Invalid Details!!. Check your details and please try again Later "    });
               const statuserror404 = "DeleteAccountFailed";
               const messagingSteperror404 = "0";
               const phoneNumbererror404 = sender;
@@ -140,11 +136,7 @@ function updatePassword(statusPasswordDeleting, phoneNumberPasswordDeleting, mes
               });
             } else if ([500].includes(response.statusCode)) {
               console.log(response.statusCode);
-              sms.send({
-                to: sender,
-                from: '20880',
-                message: " Invalid request. Please input your National Id and password. "
-              });
+              sms.send({ to: sender, from: '20880',  message: " Invalid request. Please input your National Id and password. "  });
               const statuserror500 = "DeleteAccountFailed";
               const messagingSteperror500 = "0";
               const phoneNumbererror500 = sender;

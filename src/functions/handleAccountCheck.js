@@ -40,7 +40,6 @@ function handleAccountCheck(text, sender, messagingStep, sms, account, config, t
             const textperiodName = text;
             const textIDATperiodName = textIDAT;
             updatePeriodName(phoneNumberperiodName, textperiodName, textIDATperiodName, sender, config, textIDAT, sms);
-
             break;
         default:
             // do sthg
