@@ -1,7 +1,7 @@
 //file that handles all Accounts request information
 const account = {
     welcomeMessageAccount: (sender) => {
-        messageToCustomer = 'Hello Our Dear Esteemed Customer, Welcome to Octagon Services. To check you account, please provide the following details ... ';
+        messageToCustomer = 'Hello Our Dear Esteemed Customer, Welcome to Octagon Services. To check you account, please provide the following details. ';
         return {
             to: sender,
             from:'20880',

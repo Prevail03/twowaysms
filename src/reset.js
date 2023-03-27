@@ -1,6 +1,6 @@
 const reset={
     welcomeMessage: (sender) => {
-        messageToCustomer = 'Hello Our Dear Esteemed Customer, Welcome to Octagon Services. To Reset Your Account Password, please provide the following details ... ';
+        messageToCustomer = 'Hello Our Dear Esteemed Customer, Welcome to Octagon Services. To Reset Your Account Password, please provide the following details. ';
         return {
             to: sender,
             from:'20880',
