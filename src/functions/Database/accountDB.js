@@ -159,36 +159,46 @@ function updatePassword(phoneNumberPassword, textPassword, textIDATPassword, sen
                               const insurance = data.insurance;
                               const pension = data.pension;
                               const trust = data.trust;
-                              // const totalAccounts = insurance.total_accounts;
-                              const totalAccountsInsurance = insurance.total_accounts;
-                              const insuranceData = insurance.data;
-                              const totalAccountsPension = pension.total_accounts;
-                              const pensionData = pension.data;
-                              //Dear custoomer here are yoour accoiunt  
-                              let preAccounts = "Dear " + username + ", Here are your accounts \n "
-                              let insuranceMessage = "";
-                              for (let i = 0; i < totalAccountsInsurance; i++) {
-                                insuranceMessage += " Insurance Account Description: " + insuranceData[i].Code + " Name: " + insuranceData[i].Description + " .Active Since: " + insuranceData[i].dateFrom + ".\n";
-                                console.log("Account Description:", insuranceData[i].Code, "Name: ", insuranceData[i].Description, ". Active Since: ", insuranceData[i].dateFrom);
-                              }
-                              let pensionMessage = "";
-                              for (let i = 0; i < totalAccountsPension; i++) {
-                                pensionMessage += " Pension Account Description: " + pensionData[i].Code + " Name: " + pensionData[i].scheme_name + " .Active Since: " + pensionData[i].dateFrom + ".\n";
-                                console.log("Account Description:", pensionData[i].Code, "Name: ", pensionData[i].scheme_name, ".Active Since: ", pensionData[i].dateFrom);
-                              }
-                              let postAccounts = "Please provide us with the account description so that we can provide you with a member statement "
-                              const finalMessage = preAccounts + insuranceMessage + pensionMessage + postAccounts;
-                              //Send your 
-                              sms.send({
-                                to: sender,
-                                from: '20880',
-                                message: finalMessage
-                              });
+                              const total_accounts = data.total_accounts;
+                              if (total_accounts === 0) {
+                                const finalMessage = "Hello Esteemed Member,\nSome of your details are missing. Please contact support at support@octagonafrica.com or call 0709 986 000 to update your details.\n1. National ID Number(Please send a copy of  front and back of your ID).";
+                                sms.send({
+                                  to: sender,
+                                  from: '20880',
+                                  message: finalMessage
+                                });
 
+                              } else {
+                                // const totalAccounts = insurance.total_accounts;
+                                const totalAccountsInsurance = insurance.total_accounts;
+                                const insuranceData = insurance.data;
+                                const totalAccountsPension = pension.total_accounts;
+                                const pensionData = pension.data;
+                                //Dear custoomer here are yoour accoiunt  
+                                let preAccounts = "Dear " + username + ", Here are your accounts \n "
+                                let insuranceMessage = "";
+                                for (let i = 0; i < totalAccountsInsurance; i++) {
+                                  insuranceMessage += " Insurance Account Description: " + insuranceData[i].Code + " Name: " + insuranceData[i].Description + " .Active Since: " + insuranceData[i].dateFrom + ".\n";
+                                  console.log("Account Description:", insuranceData[i].Code, "Name: ", insuranceData[i].Description, ". Active Since: ", insuranceData[i].dateFrom);
+                                }
+                                let pensionMessage = "";
+                                for (let i = 0; i < totalAccountsPension; i++) {
+                                  pensionMessage += " Pension Account Description: " + pensionData[i].Code + " Name: " + pensionData[i].scheme_name + " .Active Since: " + pensionData[i].dateFrom + ".\n";
+                                  console.log("Account Description:", pensionData[i].Code, "Name: ", pensionData[i].scheme_name, ".Active Since: ", pensionData[i].dateFrom);
+                                }
+                                let postAccounts = "Please provide us with the account description so that we can provide you with a member statement "
+                                const finalMessage = preAccounts + insuranceMessage + pensionMessage + postAccounts;
+                                //Send your 
+                                sms.send({
+                                  to: sender,
+                                  from: '20880',
+                                  message: finalMessage
+                                });
 
+                              }
                             } else if ([400].includes(response.statusCode)) {
                               console.log(response.statusCode);
-                              sms.send({ to: sender, from: '20880', message: " Invalid Details!!. Check your details and please try again Later " });
+                              sms.send({ to: sender, from: '20880', message: " Invalid Details Try again later.  " });
                               const statuserror404 = "isCheckingAccountFailed";
                               const messagingSteperror404 = "0";
                               const phoneNumbererror404 = sender;
@@ -204,7 +214,7 @@ function updatePassword(phoneNumberPassword, textPassword, textIDATPassword, sen
                                   console.error('Error executing query: ' + err.stack);
                                   return;
                                 }
-                                console.log(' Reset Password Attempt unsuccessful');
+                                console.log(' Checking account failed Attempt unsuccessful');
                                 sql.close();
                               });
                             }
@@ -231,7 +241,7 @@ function updatePassword(phoneNumberPassword, textPassword, textIDATPassword, sen
                                   console.error('Error executing query: ' + err.stack);
                                   return;
                                 }
-                                console.log(' Reset Password Attempt unsuccessful');
+                                console.log('Checking Account Failed Attempt unsuccessful');
                                 sql.close();
                               });
                             } else {
