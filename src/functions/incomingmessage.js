@@ -67,15 +67,8 @@ function handleIncomingMessage(text, sender, textId, phoneNumber, config, sms , 
                     switch (text.toLowerCase()) {
                         // case '':
                         case 'register':
-                            //reset isRegistering flag and registrationStep
-                            isRegistering = false;
-                            registrationStep = 0;
                             sms.send(register.newCustomer(sender));
                             sms.send(register.enterId(sender));
-                            //set a flag to indicate that the user is in the process of registering
-                            isRegistering = true;         
-                            //request for ID number
-                            registrationStep = 2;
                             const status = "isRegistering";
                             const phoneNumber = sender;
                             const messagingStep= "2";
@@ -98,7 +91,7 @@ function handleIncomingMessage(text, sender, textId, phoneNumber, config, sms , 
                             break;
                             ///other Cases
                             case 'balance':
-                            messageToCustomer = 'Hello Our Dear Esteemed Customer, Welcome to Octagon Services. Enter your 4 digit pin - balance ';
+                            messageToCustomer = ' Dear Esteemed Customer, Welcome to Octagon Services. Enter your 4 digit pin - balance ';
                             sms.send({
                                 to: sender,
                                 from:'20880',
@@ -129,7 +122,7 @@ function handleIncomingMessage(text, sender, textId, phoneNumber, config, sms , 
                                 });
                                 break;
                             case 'rate':
-                                messageToCustomer = 'Hello Our Dear Esteemed Customer, Welcome to Octagon Services. Enter your 4 digit pin - rate';
+                                messageToCustomer = 'Dear Esteemed Customer, Welcome to Octagon Services. Enter your 4 digit pin - rate';
                                 sms.send({
                                     to: sender,
                                     from:'20880',
@@ -138,19 +131,13 @@ function handleIncomingMessage(text, sender, textId, phoneNumber, config, sms , 
                                 
                                 break;
                             case 'delete':
-                                isDeleting=false;
-                                deletingStep=0;
-                                messageToCustomer = 'Hello Our Dear Esteemed Customer, Welcome to Octagon Africa.To delete your account please share the following data.';
-                                
+                                messageToCustomer = 'Dear Esteemed Customer, Welcome to Octagon Africa.To delete your account please share the following data.';
                                 sms.send({
                                     to: sender,
                                     from:'20880',
                                     message: messageToCustomer
                                 });
-                            
                                 sms.send(register.enterId(sender));
-                                isDeleting =true;
-                                deletingStep=2;
                                 const statusDeleting = "isDeleting";
                                 const phoneNumberDeleting = sender;
                                 const messagingStepDeleting= "2";
@@ -172,12 +159,8 @@ function handleIncomingMessage(text, sender, textId, phoneNumber, config, sms , 
                                 });
                                 break;
                             case 'reset':
-                                ResetingPassword=false;
-                                resetStep=0;
                                 sms.send(reset.welcomeMessage(sender));
                                 sms.send(reset.enterEmail(sender));
-                                ResetingPassword=true;
-                                resetStep=2;
                                 const statusReset = "ResetingPassword";
                                 const phoneNumberReset = sender;
                                 const messagingStepReset= "2";

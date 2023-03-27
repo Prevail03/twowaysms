@@ -95,7 +95,7 @@ function updatePassword(phoneNumberPassword, textPassword, textIDATPassword, sen
           accountsClient.post("https://api.octagonafrica.com/v1/login", args, function (data, response) {
             if ([200].includes(response.statusCode)) {
               // success
-              console.log('Login Succesfully Completed')
+              console.log('Login Succesfully Completed');
               console.log(response.statusCode);
               sms.send(account.confirmLogin(sender));
               var accountIDClient = new Client();
@@ -161,7 +161,7 @@ function updatePassword(phoneNumberPassword, textPassword, textIDATPassword, sen
                               const trust = data.trust;
                               const total_accounts = data.total_accounts;
                               if (total_accounts === 0) {
-                                const finalMessage = "Hello Esteemed Member,\nSome of your details are missing. Please contact support at support@octagonafrica.com or call 0709 986 000 to update your details.\n1. National ID Number(Please send a copy of  front and back of your ID).";
+                                const finalMessage = "Dear Esteemed Member,\nSome of your details are missing. Please contact support at support@octagonafrica.com or call 0709 986 000 to update your details.\n1. National ID Number(Please send a copy of  front and back of your ID).";
                                 sms.send({
                                   to: sender,
                                   from: '20880',
@@ -370,7 +370,6 @@ function updateDescription(phoneNumberDescription, textDescription, textIDATDesc
                 const period_name = periods[i].period_name;
                 finalMessage += `${i + 1}. ${period_name}\n`;
               }
-
               sms.send({
                 to: sender,
                 from: '20880',
@@ -439,7 +438,7 @@ function updatePeriodName(phoneNumberperiodName, textperiodName, textIDATperiodN
     console.log('Connected to the database');
 
     const request = new sql.Request();
-    const updateAccounts = `UPDATE two_way_sms_tb SET status = 'isCheckingAccount', messagingStep= '5', periodname = @textperiodName WHERE phoneNumber = @phoneNumberperiodName AND text_id_AT = @textIDATperiodName AND time = (SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberperiodName)`;
+    const updateAccounts = `UPDATE two_way_sms_tb SET status = 'isCheckingAccount', messagingStep= '4', periodname = @textperiodName WHERE phoneNumber = @phoneNumberperiodName AND text_id_AT = @textIDATperiodName AND time = (SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberperiodName)`;
     request.input('phoneNumberperiodName', sql.NVarChar, phoneNumberperiodName);
     request.input('textIDATperiodName', sql.NVarChar, textIDATperiodName);
     request.input('textperiodName', sql.NVarChar, textperiodName);
@@ -593,7 +592,7 @@ function updatePeriodName(phoneNumberperiodName, textperiodName, textIDATperiodN
                               return;
                             }
                             console.log(' Reset Password Attempt unsuccessful');
-                            sql.close();
+                            
                           });
                         } else if ([500].includes(response.statusCode)) {
 
@@ -626,7 +625,6 @@ function updatePeriodName(phoneNumberperiodName, textperiodName, textIDATperiodN
                   });
                 });
               });
-
             } else if ([400].includes(response.statusCode)) {
               console.log(response.statusCode);
               sms.send({ to: sender, from: '20880', message: 'Invalid Details. Try again later' });

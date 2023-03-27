@@ -1,7 +1,7 @@
 const register = {
     newCustomer: (sender) => {
         //send message with credentials
-        messageToCustomer = 'Hello Our Esteemed Customer, Welcome to Octagon Africa. To complete the registration process, please provide us with the following information.';         
+        messageToCustomer = 'Dear Esteemed Customer, Welcome to Octagon Africa. To complete the registration process, please provide us with the following information.';         
         return {
             to: sender,
             from:'20880',

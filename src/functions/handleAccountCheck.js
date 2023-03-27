@@ -31,7 +31,7 @@ function handleAccountCheck(text, sender, messagingStep, sms, account, config, t
             const phoneNumberDescription = sender;
             const textDescription = text;
             const textIDATDescription = textIDAT;
-            updateDescription(phoneNumberDescription, textDescription, textIDATDescription, sender, config, textIDAT, sms, account)
+            updateDescription(phoneNumberDescription, textDescription, textIDATDescription, sender, config, textIDAT, sms, account);
             break;
 
         case 5:
