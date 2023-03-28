@@ -243,54 +243,52 @@ function updateNewPassword(statusResetNPasswordEnd, phoneNumberResetNPasswordEnd
               });
             } else if ([400].includes(response.statusCode)) {
               console.log(response.statusCode);
-              sms.send({
-                to: sender,
-                from: '20880',
-                message: " Invalid Details!!. Check your details and please try again Later "
-              });
-              const statuserror404 = "ResetPasswordFailed";
-              const messagingSteperror404 = "0";
-              const phoneNumbererror404 = phoneNumberResetNPasswordEnd;
-              const textIDATerror404 = textIDAT;
-              const updateDelete = `UPDATE two_way_sms_tb SET status = @statuserror404, messagingStep = @messagingSteperror404  WHERE phoneNumber = @phoneNumbererror404 AND text_id_AT =@textIDATerror404 AND time = (
+              sms.send({ to: sender, from: '20880', message: " Invalid Details!!. Check your details and please try again Later " });
+              sql.connect(config, function (err) {
+                const request = new sql.Request();
+                const statuserror404 = "ResetPasswordFailed";
+                const messagingSteperror404 = "0";
+                const phoneNumbererror404 = phoneNumberResetNPasswordEnd;
+                const textIDATerror404 = textIDAT;
+                const updateDelete = `UPDATE two_way_sms_tb SET status = @statuserror404, messagingStep = @messagingSteperror404  WHERE phoneNumber = @phoneNumbererror404 AND text_id_AT =@textIDATerror404 AND time = (
                             SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumbererror404 )`;
-              request.input('statuserror404', sql.VarChar, statuserror404);
-              request.input('messagingSteperror404', sql.VarChar, messagingSteperror404);
-              request.input('phoneNumbererror404', sql.NVarChar, phoneNumbererror404);
-              request.input('textIDATerror404', sql.NVarChar, textIDATerror404);
-              request.query(updateDelete, function (err, results) {
-                if (err) {
-                  console.error('Error executing query: ' + err.stack);
-                  return;
-                }
-                console.log(' Reset Password Attempt unsuccessful');
-                sql.close();
+                request.input('statuserror404', sql.VarChar, statuserror404);
+                request.input('messagingSteperror404', sql.VarChar, messagingSteperror404);
+                request.input('phoneNumbererror404', sql.NVarChar, phoneNumbererror404);
+                request.input('textIDATerror404', sql.NVarChar, textIDATerror404);
+                request.query(updateDelete, function (err, results) {
+                  if (err) {
+                    console.error('Error executing query: ' + err.stack);
+                    return;
+                  }
+                  console.log(' Reset Password Attempt unsuccessful');
+                  sql.close();
+                });
               });
             }
             else if ([500].includes(response.statusCode)) {
               console.log(response.statusCode);
-              sms.send({
-                to: sender,
-                from: '20880',
-                message: " Invalid request.  "
-              });
-              const statuserror500 = "ResetPasswordFailed";
-              const messagingSteperror500 = "0";
-              const phoneNumbererror500 = phoneNumberResetNPasswordEnd;
-              const textIDATerror500 = textIDAT;
-              const updateDelete = `UPDATE two_way_sms_tb SET status = @statuserror500, messagingStep = @messagingSteperror500  WHERE phoneNumber = @phoneNumbererror500 AND text_id_AT =@textIDATerror500 AND time = (
+              sms.send({ to: sender, from: '20880', message: " Invalid request.  " });
+              sql.connect(config, function (err) {
+                const request = new sql.Request();
+                const statuserror500 = "ResetPasswordFailed";
+                const messagingSteperror500 = "0";
+                const phoneNumbererror500 = phoneNumberResetNPasswordEnd;
+                const textIDATerror500 = textIDAT;
+                const updateDelete = `UPDATE two_way_sms_tb SET status = @statuserror500, messagingStep = @messagingSteperror500  WHERE phoneNumber = @phoneNumbererror500 AND text_id_AT =@textIDATerror500 AND time = (
                                              SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumbererror500 )`;
-              request.input('statuserror500', sql.VarChar, statuserror500);
-              request.input('messagingSteperror500', sql.VarChar, messagingSteperror500);
-              request.input('phoneNumbererror500', sql.NVarChar, phoneNumbererror500);
-              request.input('textIDATerror500', sql.NVarChar, textIDATerror500);
-              request.query(updateDelete, function (err, results) {
-                if (err) {
-                  console.error('Error executing query: ' + err.stack);
-                  return;
-                }
-                console.log(' Reset Password Attempt unsuccessful');
-                sql.close();
+                request.input('statuserror500', sql.VarChar, statuserror500);
+                request.input('messagingSteperror500', sql.VarChar, messagingSteperror500);
+                request.input('phoneNumbererror500', sql.NVarChar, phoneNumbererror500);
+                request.input('textIDATerror500', sql.NVarChar, textIDATerror500);
+                request.query(updateDelete, function (err, results) {
+                  if (err) {
+                    console.error('Error executing query: ' + err.stack);
+                    return;
+                  }
+                  console.log(' Reset Password Attempt unsuccessful');
+                  sql.close();
+                });
               });
             } else {
               // error code
@@ -304,4 +302,4 @@ function updateNewPassword(statusResetNPasswordEnd, phoneNumberResetNPasswordEnd
     });
   });
 }
-module.exports = { updateEmail1, updateEmail2, updateCurrentPassword, updateOTP,updateNewPassword };
+module.exports = { updateEmail1, updateEmail2, updateCurrentPassword, updateOTP, updateNewPassword };

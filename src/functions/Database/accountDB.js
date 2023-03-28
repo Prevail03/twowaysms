@@ -199,50 +199,62 @@ function updatePassword(phoneNumberPassword, textPassword, textIDATPassword, sen
                             } else if ([400].includes(response.statusCode)) {
                               console.log(response.statusCode);
                               sms.send({ to: sender, from: '20880', message: " Invalid Details Try again later.  " });
-                              const statuserror404 = "isCheckingAccountFailed";
-                              const messagingSteperror404 = "0";
-                              const phoneNumbererror404 = sender;
-                              const textIDATerror404 = textIDAT;
-                              const updateFail = `UPDATE two_way_sms_tb SET status = @statuserror404, messagingStep = @messagingSteperror404  WHERE phoneNumber = @phoneNumbererror404 AND text_id_AT =@textIDATerror404 AND time = (
-                                         SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumbererror404 )`;
-                              request.input('statuserror404', sql.VarChar, statuserror404);
-                              request.input('messagingSteperror404', sql.VarChar, messagingSteperror404);
-                              request.input('phoneNumbererror404', sql.NVarChar, phoneNumbererror404);
-                              request.input('textIDATerror404', sql.NVarChar, textIDATerror404);
-                              request.query(updateFail, function (err, results) {
+                              sql.connect(config, function (err) {
                                 if (err) {
-                                  console.error('Error executing query: ' + err.stack);
+                                  console.error('Error connecting to the database: ' + err.stack);
                                   return;
                                 }
-                                console.log(' Checking account failed Attempt unsuccessful');
-                                sql.close();
+                                console.log('Connected to the database');
+                                const request = new sql.Request();
+                                const statuserror404 = "isCheckingAccountFailed";
+                                const messagingSteperror404 = "0";
+                                const phoneNumbererror404 = sender;
+                                const textIDATerror404 = textIDAT;
+                                const updateFail = `UPDATE two_way_sms_tb SET status = @statuserror404, messagingStep = @messagingSteperror404  WHERE phoneNumber = @phoneNumbererror404 AND text_id_AT =@textIDATerror404 AND time = (
+                                         SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumbererror404 )`;
+                                request.input('statuserror404', sql.VarChar, statuserror404);
+                                request.input('messagingSteperror404', sql.VarChar, messagingSteperror404);
+                                request.input('phoneNumbererror404', sql.NVarChar, phoneNumbererror404);
+                                request.input('textIDATerror404', sql.NVarChar, textIDATerror404);
+                                request.query(updateFail, function (err, results) {
+                                  if (err) {
+                                    console.error('Error executing query: ' + err.stack);
+                                    return;
+                                  }
+                                  console.log(' Checking account failed Attempt unsuccessful');
+                                  sql.close();
+                                });
                               });
                             }
                             else if ([500].includes(response.statusCode)) {
                               console.log(response.statusCode);
-                              sms.send({
-                                to: sender,
-                                from: '20880',
-                                message: " Invalid request. Please input your National Id and password. "
-                              });
-
-                              const statuserror500 = "isCheckingAccountFailed";
-                              const messagingSteperror500 = "0";
-                              const phoneNumbererror500 = sender;
-                              const textIDATerror500 = textIDAT;
-                              const updateFail = `UPDATE two_way_sms_tb SET status = @statuserror500, messagingStep = @messagingSteperror500  WHERE phoneNumber = @phoneNumbererror500 AND text_id_AT =@textIDATerror500 AND time = (
-                                 SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumbererror500 )`;
-                              request.input('statuserror500', sql.VarChar, statuserror500);
-                              request.input('messagingSteperror500', sql.VarChar, messagingSteperror500);
-                              request.input('phoneNumbererror500', sql.NVarChar, phoneNumbererror500);
-                              request.input('textIDATerror500', sql.NVarChar, textIDATerror500);
-                              request.query(updateFail, function (err, results) {
+                              sms.send({ to: sender, from: '20880', message: " Invalid request. Please input your National Id and password. " });
+                              sql.connect(config, function (err) {
                                 if (err) {
-                                  console.error('Error executing query: ' + err.stack);
+                                  console.error('Error connecting to the database: ' + err.stack);
                                   return;
                                 }
-                                console.log('Checking Account Failed Attempt unsuccessful');
-                                sql.close();
+                                console.log('Connected to the database');
+                                const request = new sql.Request();
+
+                                const statuserror500 = "isCheckingAccountFailed";
+                                const messagingSteperror500 = "0";
+                                const phoneNumbererror500 = sender;
+                                const textIDATerror500 = textIDAT;
+                                const updateFail = `UPDATE two_way_sms_tb SET status = @statuserror500, messagingStep = @messagingSteperror500  WHERE phoneNumber = @phoneNumbererror500 AND text_id_AT =@textIDATerror500 AND time = (
+                                 SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumbererror500 )`;
+                                request.input('statuserror500', sql.VarChar, statuserror500);
+                                request.input('messagingSteperror500', sql.VarChar, messagingSteperror500);
+                                request.input('phoneNumbererror500', sql.NVarChar, phoneNumbererror500);
+                                request.input('textIDATerror500', sql.NVarChar, textIDATerror500);
+                                request.query(updateFail, function (err, results) {
+                                  if (err) {
+                                    console.error('Error executing query: ' + err.stack);
+                                    return;
+                                  }
+                                  console.log('Checking Account Failed Attempt unsuccessful');
+                                  sql.close();
+                                });
                               });
                             } else {
                               // error code
@@ -265,46 +277,63 @@ function updatePassword(phoneNumberPassword, textPassword, textIDATPassword, sen
             } else if ([400].includes(response.statusCode)) {
               console.log(response.statusCode);
               sms.send({ to: sender, from: '20880', message: " Invalid Details!!. Check your details and please try again Later " });
-              const statuserror404 = "isCheckingAccountFailed";
-              const messagingSteperror404 = "0";
-              const phoneNumbererror404 = sender;
-              const textIDATerror404 = textIDAT;
-              const updateFail = `UPDATE two_way_sms_tb SET status = @statuserror404, messagingStep = @messagingSteperror404  WHERE phoneNumber = @phoneNumbererror404 AND text_id_AT =@textIDATerror404 AND time = (
-                                         SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumbererror404 )`;
-              request.input('statuserror404', sql.VarChar, statuserror404);
-              request.input('messagingSteperror404', sql.VarChar, messagingSteperror404);
-              request.input('phoneNumbererror404', sql.NVarChar, phoneNumbererror404);
-              request.input('textIDATerror404', sql.NVarChar, textIDATerror404);
-              request.query(updateFail, function (err, results) {
+              sql.connect(config, function (err) {
                 if (err) {
-                  console.error('Error executing query: ' + err.stack);
+                  console.error('Error connecting to the database: ' + err.stack);
                   return;
                 }
-                console.log(' Reset Password Attempt unsuccessful');
-                sql.close();
+                console.log('Connected to the database');
+                const request = new sql.Request();
+                const statuserror404 = "isCheckingAccountFailed";
+                const messagingSteperror404 = "0";
+                const phoneNumbererror404 = sender;
+                const textIDATerror404 = textIDAT;
+                const updateFail = `UPDATE two_way_sms_tb SET status = @statuserror404, messagingStep = @messagingSteperror404  WHERE phoneNumber = @phoneNumbererror404 AND text_id_AT =@textIDATerror404 AND time = (
+                                         SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumbererror404 )`;
+                request.input('statuserror404', sql.VarChar, statuserror404);
+                request.input('messagingSteperror404', sql.VarChar, messagingSteperror404);
+                request.input('phoneNumbererror404', sql.NVarChar, phoneNumbererror404);
+                request.input('textIDATerror404', sql.NVarChar, textIDATerror404);
+                request.query(updateFail, function (err, results) {
+                  if (err) {
+                    console.error('Error executing query: ' + err.stack);
+                    return;
+                  }
+                  console.log(' Reset Password Attempt unsuccessful');
+                  sql.close();
+                });
               });
             }
             else if ([500].includes(response.statusCode)) {
               console.log(response.statusCode);
               sms.send({ to: sender, from: '20880', message: " Invalid request. Please input your National Id and password. " });
-              const statuserror500 = "isCheckingAccountFailed";
-              const messagingSteperror500 = "0";
-              const phoneNumbererror500 = sender;
-              const textIDATerror500 = textIDAT;
-              const updateFail = `UPDATE two_way_sms_tb SET status = @statuserror500, messagingStep = @messagingSteperror500  WHERE phoneNumber = @phoneNumbererror500 AND text_id_AT =@textIDATerror500 AND time = (
-                                 SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumbererror500 )`;
-              request.input('statuserror500', sql.VarChar, statuserror500);
-              request.input('messagingSteperror500', sql.VarChar, messagingSteperror500);
-              request.input('phoneNumbererror500', sql.NVarChar, phoneNumbererror500);
-              request.input('textIDATerror500', sql.NVarChar, textIDATerror500);
-              request.query(updateFail, function (err, results) {
+              sql.connect(config, function (err) {
                 if (err) {
-                  console.error('Error executing query: ' + err.stack);
+                  console.error('Error connecting to the database: ' + err.stack);
                   return;
                 }
-                console.log(' Reset Password Attempt unsuccessful');
-                sql.close();
+                console.log('Connected to the database');
+                const request = new sql.Request();
+                const statuserror500 = "isCheckingAccountFailed";
+                const messagingSteperror500 = "0";
+                const phoneNumbererror500 = sender;
+                const textIDATerror500 = textIDAT;
+                const updateFail = `UPDATE two_way_sms_tb SET status = @statuserror500, messagingStep = @messagingSteperror500  WHERE phoneNumber = @phoneNumbererror500 AND text_id_AT =@textIDATerror500 AND time = (
+                                 SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumbererror500 )`;
+                request.input('statuserror500', sql.VarChar, statuserror500);
+                request.input('messagingSteperror500', sql.VarChar, messagingSteperror500);
+                request.input('phoneNumbererror500', sql.NVarChar, phoneNumbererror500);
+                request.input('textIDATerror500', sql.NVarChar, textIDATerror500);
+                request.query(updateFail, function (err, results) {
+                  if (err) {
+                    console.error('Error executing query: ' + err.stack);
+                    return;
+                  }
+                  console.log(' Reset Password Attempt unsuccessful');
+                  sql.close();
+                });
               });
+
             } else {
               // error code
               console.log(response.statusCode);
@@ -379,45 +408,64 @@ function updateDescription(phoneNumberDescription, textDescription, textIDATDesc
             } else if ([400].includes(response.statusCode)) {
               console.log(response.statusCode);
               sms.send({ to: sender, from: '20880', message: 'Invalid Details. Try again later!!!!' });
-              const statuserror404 = "FetchPeriodsFailed";
-              const messagingSteperror404 = "0";
-              const phoneNumbererror404 = sender;
-              const textIDATerror404 = textIDAT;
-              const updateDelete = `UPDATE two_way_sms_tb SET status = @statuserror404, messagingStep = @messagingSteperror404  WHERE phoneNumber = @phoneNumbererror404 AND text_id_AT =@textIDATerror404 AND time = (
-                            SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumbererror404 )`;
-              request.input('statuserror404', sql.VarChar, statuserror404);
-              request.input('messagingSteperror404', sql.VarChar, messagingSteperror404);
-              request.input('phoneNumbererror404', sql.NVarChar, phoneNumbererror404);
-              request.input('textIDATerror404', sql.NVarChar, textIDATerror404);
-              request.query(updateDelete, function (err, results) {
+              sql.connect(config, function (err) {
                 if (err) {
-                  console.error('Error executing query: ' + err.stack);
+                  console.error('Error connecting to the database: ' + err.stack);
                   return;
                 }
-                console.log(' Reset Password Attempt unsuccessful');
-                sql.close();
+                console.log('Connected to the database');
+                const request = new sql.Request();
+                const statuserror404 = "FetchPeriodsFailed";
+                const messagingSteperror404 = "0";
+                const phoneNumbererror404 = sender;
+                const textIDATerror404 = textIDAT;
+                const updateDelete = `UPDATE two_way_sms_tb SET status = @statuserror404, messagingStep = @messagingSteperror404  WHERE phoneNumber = @phoneNumbererror404 AND text_id_AT =@textIDATerror404 AND time = (
+                            SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumbererror404 )`;
+                request.input('statuserror404', sql.VarChar, statuserror404);
+                request.input('messagingSteperror404', sql.VarChar, messagingSteperror404);
+                request.input('phoneNumbererror404', sql.NVarChar, phoneNumbererror404);
+                request.input('textIDATerror404', sql.NVarChar, textIDATerror404);
+                request.query(updateDelete, function (err, results) {
+                  if (err) {
+                    console.error('Error executing query: ' + err.stack);
+                    return;
+                  }
+                  console.log(' Reset Password Attempt unsuccessful');
+                  sql.close();
+                });
               });
             } else if ([500].includes(response.statusCode)) {
               console.log(response.statusCode);
-              const statuserror500 = "FetchPeriodsFailed";
               sms.send({ to: sender, from: '20880', message: 'Internal Server Error' });
-              const messagingSteperror500 = "0";
-              const phoneNumbererror500 = sender;
-              const textIDATerror500 = textIDAT;
-              const updateDelete = `UPDATE two_way_sms_tb SET status = @statuserror500, messagingStep = @messagingSteperror500  WHERE phoneNumber = @phoneNumbererror500 AND text_id_AT =@textIDATerror500 AND time = (
-                                             SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumbererror500 )`;
-              request.input('statuserror500', sql.VarChar, statuserror500);
-              request.input('messagingSteperror500', sql.VarChar, messagingSteperror500);
-              request.input('phoneNumbererror500', sql.NVarChar, phoneNumbererror500);
-              request.input('textIDATerror500', sql.NVarChar, textIDATerror500);
-              request.query(updateDelete, function (err, results) {
+
+              sql.connect(config, function (err) {
                 if (err) {
-                  console.error('Error executing query: ' + err.stack);
+                  console.error('Error connecting to the database: ' + err.stack);
                   return;
                 }
-                console.log(' Reset Password Attempt unsuccessful');
-                sql.close();
+                console.log('Connected to the database');
+
+                const request = new sql.Request();
+                const statuserror500 = "FetchPeriodsFailed";
+                const messagingSteperror500 = "0";
+                const phoneNumbererror500 = sender;
+                const textIDATerror500 = textIDAT;
+                const updateDelete = `UPDATE two_way_sms_tb SET status = @statuserror500, messagingStep = @messagingSteperror500  WHERE phoneNumber = @phoneNumbererror500 AND text_id_AT =@textIDATerror500 AND time = (
+                                             SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumbererror500 )`;
+                request.input('statuserror500', sql.VarChar, statuserror500);
+                request.input('messagingSteperror500', sql.VarChar, messagingSteperror500);
+                request.input('phoneNumbererror500', sql.NVarChar, phoneNumbererror500);
+                request.input('textIDATerror500', sql.NVarChar, textIDATerror500);
+                request.query(updateDelete, function (err, results) {
+                  if (err) {
+                    console.error('Error executing query: ' + err.stack);
+                    return;
+                  }
+                  console.log(' Reset Password Attempt unsuccessful');
+                  sql.close();
+                });
               });
+
             } else {
               console.log(response.statusCode);
             }
@@ -575,45 +623,61 @@ function updatePeriodName(phoneNumberperiodName, textperiodName, textIDATperiodN
                         } else if ([400].includes(response.statusCode)) {
                           console.log(response.statusCode);
                           sms.send({ to: sender, from: '20880', message: 'Invalid Details. Try again later' });
-                          const statuserror404 = "FetchMemberStatementFailed";
-                          const messagingSteperror404 = "0";
-                          const phoneNumbererror404 = sender;
-                          const textIDATerror404 = textIDAT;
-                          const updateDelete = `UPDATE two_way_sms_tb SET status = @statuserror404, messagingStep = @messagingSteperror404  WHERE phoneNumber = @phoneNumbererror404 AND text_id_AT =@textIDATerror404 AND time = (
-                                            SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumbererror404 )`;
-                          request.input('statuserror404', sql.VarChar, statuserror404);
-                          request.input('messagingSteperror404', sql.VarChar, messagingSteperror404);
-                          request.input('phoneNumbererror404', sql.NVarChar, phoneNumbererror404);
-                          request.input('textIDATerror404', sql.NVarChar, textIDATerror404);
-                          request.query(updateDelete, function (err, results) {
+                          sql.connect(config, function (err) {
                             if (err) {
-                              console.error('Error executing query: ' + err.stack);
+                              console.error('Error connecting to the database: ' + err.stack);
                               return;
                             }
-                            console.log(' Reset Password Attempt unsuccessful');
-                            sql.close();
+                            console.log('Connected to the database');
+                            const request = new sql.Request();
+                            const statuserror404 = "FetchMemberStatementFailed";
+                            const messagingSteperror404 = "0";
+                            const phoneNumbererror404 = sender;
+                            const textIDATerror404 = textIDAT;
+                            const updateDelete = `UPDATE two_way_sms_tb SET status = @statuserror404, messagingStep = @messagingSteperror404  WHERE phoneNumber = @phoneNumbererror404 AND text_id_AT =@textIDATerror404 AND time = (
+                                            SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumbererror404 )`;
+                            request.input('statuserror404', sql.VarChar, statuserror404);
+                            request.input('messagingSteperror404', sql.VarChar, messagingSteperror404);
+                            request.input('phoneNumbererror404', sql.NVarChar, phoneNumbererror404);
+                            request.input('textIDATerror404', sql.NVarChar, textIDATerror404);
+                            request.query(updateDelete, function (err, results) {
+                              if (err) {
+                                console.error('Error executing query: ' + err.stack);
+                                return;
+                              }
+                              console.log(' Reset Password Attempt unsuccessful');
+                              sql.close();
+                            });
                           });
                         } else if ([500].includes(response.statusCode)) {
 
                           console.log(response.statusCode);
                           sms.send({ to: sender, from: '20880', message: 'Internal Server Error' });
-                          const statuserror500 = "FetchMemberFailed";
-                          const messagingSteperror500 = "0";
-                          const phoneNumbererror500 = sender;
-                          const textIDATerror500 = textIDAT;
-                          const updateDelete = `UPDATE two_way_sms_tb SET status = @statuserror500, messagingStep = @messagingSteperror500  WHERE phoneNumber = @phoneNumbererror500 AND text_id_AT =@textIDATerror500 AND time = (
-                                             SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumbererror500 )`;
-                          request.input('statuserror500', sql.VarChar, statuserror500);
-                          request.input('messagingSteperror500', sql.VarChar, messagingSteperror500);
-                          request.input('phoneNumbererror500', sql.NVarChar, phoneNumbererror500);
-                          request.input('textIDATerror500', sql.NVarChar, textIDATerror500);
-                          request.query(updateDelete, function (err, results) {
+                          sql.connect(config, function (err) {
                             if (err) {
-                              console.error('Error executing query: ' + err.stack);
+                              console.error('Error connecting to the database: ' + err.stack);
                               return;
                             }
-                            console.log('FetchMember Attempt unsuccessful');
-                            sql.close();
+                            console.log('Connected to the database');
+                            const request = new sql.Request();
+                            const statuserror500 = "FetchMemberFailed";
+                            const messagingSteperror500 = "0";
+                            const phoneNumbererror500 = sender;
+                            const textIDATerror500 = textIDAT;
+                            const updateDelete = `UPDATE two_way_sms_tb SET status = @statuserror500, messagingStep = @messagingSteperror500  WHERE phoneNumber = @phoneNumbererror500 AND text_id_AT =@textIDATerror500 AND time = (
+                                             SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumbererror500 )`;
+                            request.input('statuserror500', sql.VarChar, statuserror500);
+                            request.input('messagingSteperror500', sql.VarChar, messagingSteperror500);
+                            request.input('phoneNumbererror500', sql.NVarChar, phoneNumbererror500);
+                            request.input('textIDATerror500', sql.NVarChar, textIDATerror500);
+                            request.query(updateDelete, function (err, results) {
+                              if (err) {
+                                console.error('Error executing query: ' + err.stack);
+                                return;
+                              }
+                              console.log('FetchMember Attempt unsuccessful');
+                              sql.close();
+                            });
                           });
                         } else {
                           console.log(response.statusCode);
@@ -648,23 +712,27 @@ function updatePeriodName(phoneNumberperiodName, textperiodName, textIDATperiodN
             } else if ([500].includes(response.statusCode)) {
               console.log(response.statusCode);
               sms.send({ to: sender, from: '20880', message: 'Internal Server Error' });
-              const statuserror500 = "FetchPeriodsIDFailed";
-              const messagingSteperror500 = "0";
-              const phoneNumbererror500 = sender;
-              const textIDATerror500 = textIDAT;
-              const updateDelete = `UPDATE two_way_sms_tb SET status = @statuserror500, messagingStep = @messagingSteperror500  WHERE phoneNumber = @phoneNumbererror500 AND text_id_AT =@textIDATerror500 AND time = (
-                                 SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumbererror500 )`;
-              request.input('statuserror500', sql.VarChar, statuserror500);
-              request.input('messagingSteperror500', sql.VarChar, messagingSteperror500);
-              request.input('phoneNumbererror500', sql.NVarChar, phoneNumbererror500);
-              request.input('textIDATerror500', sql.NVarChar, textIDATerror500);
-              request.query(updateDelete, function (err, results) {
-                if (err) {
-                  console.error('Error executing query: ' + err.stack);
-                  return;
-                }
-                console.log(' FetchPeriodsID Attempt unsuccessful');
-                sql.close();
+              sql.connect(config, function (err) {
+                console.log('Connected to the database');
+                const request = new sql.Request();
+                const statuserror500 = "FetchPeriodsIDFailed";
+                const messagingSteperror500 = "0";
+                const phoneNumbererror500 = sender;
+                const textIDATerror500 = textIDAT;
+                const updateDelete = `UPDATE two_way_sms_tb SET status = @statuserror500, messagingStep = @messagingSteperror500  WHERE phoneNumber = @phoneNumbererror500 AND text_id_AT =@textIDATerror500 AND time = (
+                                   SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumbererror500 )`;
+                request.input('statuserror500', sql.VarChar, statuserror500);
+                request.input('messagingSteperror500', sql.VarChar, messagingSteperror500);
+                request.input('phoneNumbererror500', sql.NVarChar, phoneNumbererror500);
+                request.input('textIDATerror500', sql.NVarChar, textIDATerror500);
+                request.query(updateDelete, function (err, results) {
+                  if (err) {
+                    console.error('Error executing query: ' + err.stack);
+                    return;
+                  }
+                  console.log(' FetchPeriodsID Attempt unsuccessful');
+                  sql.close();
+                });
               });
             } else {
               console.log(response.statusCode);
