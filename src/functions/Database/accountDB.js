@@ -378,7 +378,7 @@ function updateDescription(phoneNumberDescription, textDescription, textIDATDesc
               sms.send(account.providePeriodName(sender));
             } else if ([400].includes(response.statusCode)) {
               console.log(response.statusCode);
-              sms.send({ to: sender, from: '20880', message: 'Invalid Details. Try again later' });
+              sms.send({ to: sender, from: '20880', message: 'Invalid Details. Try again later!!!!' });
               const statuserror404 = "FetchPeriodsFailed";
               const messagingSteperror404 = "0";
               const phoneNumbererror404 = sender;
@@ -471,7 +471,6 @@ function updatePeriodName(phoneNumberperiodName, textperiodName, textIDATperiodN
             data: { periodname: periodname },
             headers: { "Content-Type": "application/json" }
           };
-
           fetchPeriodsIDClient.get("https://api.octagonafrica.com/v1/accounts/pension/twoway/periodsid", args, function (data, response) {
             if ([200].includes(response.statusCode)) {
               const periodID = data.data;
@@ -592,7 +591,7 @@ function updatePeriodName(phoneNumberperiodName, textperiodName, textIDATperiodN
                               return;
                             }
                             console.log(' Reset Password Attempt unsuccessful');
-                            
+                            sql.close();
                           });
                         } else if ([500].includes(response.statusCode)) {
 
