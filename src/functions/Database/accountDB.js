@@ -690,11 +690,15 @@ function updatePeriodName(phoneNumberperiodName, textperiodName, textIDATperiodN
               });
             } else if ([400].includes(response.statusCode)) {
               console.log(response.statusCode);
+
               sms.send({ to: sender, from: '20880', message: 'Invalid Details. Try again later' });
               const statuserror404 = "FetchPeriodsIDFailed";
               const messagingSteperror404 = "0";
               const phoneNumbererror404 = sender;
               const textIDATerror404 = textIDAT;
+              sql.connect(config, function (err) {
+                console.log('Connected to the database');
+                const request = new sql.Request();
               const updateDelete = `UPDATE two_way_sms_tb SET status = @statuserror404, messagingStep = @messagingSteperror404  WHERE phoneNumber = @phoneNumbererror404 AND text_id_AT =@textIDATerror404 AND time = (
                                 SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumbererror404 )`;
               request.input('statuserror404', sql.VarChar, statuserror404);
@@ -709,6 +713,7 @@ function updatePeriodName(phoneNumberperiodName, textperiodName, textIDATperiodN
                 console.log(' FetchPeriodsID Attempt unsuccessful');
                 sql.close();
               });
+            });
             } else if ([500].includes(response.statusCode)) {
               console.log(response.statusCode);
               sms.send({ to: sender, from: '20880', message: 'Internal Server Error' });
