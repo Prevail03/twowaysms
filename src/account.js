@@ -4,7 +4,7 @@ const account = {
         messageToCustomer = ' Dear Esteemed Customer, Welcome to Octagon Services. To check you account, please provide the following details. ';
         return {
             to: sender,
-            from:'20880',
+            from:'24123',
             message: messageToCustomer
         };
      
@@ -13,7 +13,7 @@ const account = {
         messageToCustomer = 'Please enter your username.';
         return {
             to: sender,
-            from:'20880',
+            from:'24123',
             message: messageToCustomer
         };
     },
@@ -21,7 +21,7 @@ const account = {
         messageToCustomer = 'Please Enter your password.';
         return {
             to: sender,
-            from:'20880',
+            from:'24123',
             message: messageToCustomer
         };
     },
@@ -29,7 +29,7 @@ const account = {
         messageToCustomer = 'Login Successfull';
         return {
             to: sender,
-            from:'20880',
+            from:'24123',
             message: messageToCustomer
         };
     },
@@ -37,35 +37,35 @@ const account = {
         messageToCustomer = 'Enter User ID';
         return {
             to: sender,
-            from:'20880',
+            from:'24123',
             message: messageToCustomer
         };
     },
     wrongResponse: (sender) => {
         return {
             to: sender,
-            from:'20880',
+            from:'24123',
             message: "Invalid response:!!"
         };
     },
     Response400: (sender) => {
         return {
             to: sender,
-            from:'20880',
+            from:'24123',
             message: "Invalid Details!!. Check your details and please try again Later"
         };
     },
     Response: (sender) => {
         return {
             to: sender,
-            from:'20880',
+            from:'24123',
             message: "Invalid Details!!. Check your details and please try again Later"
         };
     },
     providePeriodName: (sender) => {
         return {
             to: sender,
-            from:'20880',
+            from:'24123',
             message: "Please enter the period name as provided in the above message"
         };
     },

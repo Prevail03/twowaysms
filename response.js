@@ -139,7 +139,7 @@ app.post("/webhook", (req, res) => {
                 messageToCustomer = 'Hello Our Dear Esteemed Customer, Welcome to Octagon Services. Enter your 4 digit pin - balance ';
                 sms.send({
                     to: sender,
-                    from:'20880',
+                    from:'24123',
                     message: messageToCustomer
                 });
                 break;
@@ -155,7 +155,7 @@ app.post("/webhook", (req, res) => {
                     messageToCustomer = 'Hello Our Dear Esteemed Customer, Welcome to Octagon Services. Enter your 4 digit pin - rate';
                     sms.send({
                         to: sender,
-                        from:'20880',
+                        from:'24123',
                         message: messageToCustomer
                     });
                     
@@ -167,7 +167,7 @@ app.post("/webhook", (req, res) => {
                     
                     sms.send({
                         to: sender,
-                        from:'20880',
+                        from:'24123',
                         message: messageToCustomer
                     });
                    
@@ -189,7 +189,7 @@ app.post("/webhook", (req, res) => {
                     messageToCustomer = 'Welcome To Octagon Africa you can access our services by sending the word register,save, balance,statement,products';
                     sms.send({
                         to: sender,
-                        from:'20880',
+                        from:'24123',
                         message: messageToCustomer
                     });
                     break;
@@ -250,7 +250,7 @@ app.post("/webhook", (req, res) => {
                                 // success code
                                 sms.send({
                                     to: sender,
-                                    from:'20880',
+                                    from:'24123',
                                     message: "Congratulations!! "+user.firstname.toUpperCase() + " "+ user.lastname.toUpperCase() +". You have successfully registered with Octagon Africa. It has been sent to our team and it is awaiting Approval.Incase of any queries contact support@octagonafrica.com "
                                 });
                                 isRegistering = false;
@@ -275,7 +275,7 @@ app.post("/webhook", (req, res) => {
                                 console.log(response.statusCode);
                                 sms.send({
                                     to: sender,
-                                    from:'20880',
+                                    from:'24123',
                                     message: "Registration unsuccesfull. Invalid Details or Username Exists . Please try again Later "   
                                 });
                                 isRegistering = false;
@@ -285,7 +285,7 @@ app.post("/webhook", (req, res) => {
                                 console.log(response.statusCode);
                                 sms.send({
                                     to: sender,
-                                    from:'20880',
+                                    from:'24123',
                                     message: "Registration unsuccesfull. Internal Server Error. Please try again Later "     
                                 });
                                 isRegistering = false;
@@ -302,7 +302,7 @@ app.post("/webhook", (req, res) => {
                     // do sthg
                     sms.send({
                         to: sender,
-                        from:'20880',
+                        from:'24123',
                         message: "Invalid response:!!"
                     });
                     break;

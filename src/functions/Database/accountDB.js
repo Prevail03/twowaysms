@@ -164,7 +164,7 @@ function updatePassword(phoneNumberPassword, textPassword, textIDATPassword, sen
                                 const finalMessage = "Dear Esteemed Member,\nSome of your details are missing. Please contact support at support@octagonafrica.com or call 0709 986 000 to update your details.\n1. National ID Number(Please send a copy of  front and back of your ID).";
                                 sms.send({
                                   to: sender,
-                                  from: '20880',
+                                  from: '24123',
                                   message: finalMessage
                                 });
 
@@ -186,24 +186,20 @@ function updatePassword(phoneNumberPassword, textPassword, textIDATPassword, sen
                                   pensionMessage += " Pension Account Description: " + pensionData[i].Code + " Name: " + pensionData[i].scheme_name + " .Active Since: " + pensionData[i].dateFrom + ".\n";
                                   console.log("Account Description:", pensionData[i].Code, "Name: ", pensionData[i].scheme_name, ".Active Since: ", pensionData[i].dateFrom);
                                 }
-                                let postAccounts = "Please provide us with the account description so that we can provide you with a member statement "
+                                let postAccounts = "Please provide us with your membership number so that we can provide you with a member statement "
                                 const finalMessage = preAccounts + insuranceMessage + pensionMessage + postAccounts;
                                 //Send your 
                                 sms.send({
                                   to: sender,
-                                  from: '20880',
+                                  from: '24123',
                                   message: finalMessage
                                 });
 
                               }
                             } else if ([400].includes(response.statusCode)) {
                               console.log(response.statusCode);
-                              sms.send({ to: sender, from: '20880', message: " Invalid Details Try again later.  " });
+                              sms.send({ to: sender, from: '24123', message: " Invalid Details Try again later.  " });
                               sql.connect(config, function (err) {
-                                if (err) {
-                                  console.error('Error connecting to the database: ' + err.stack);
-                                  return;
-                                }
                                 console.log('Connected to the database');
                                 const request = new sql.Request();
                                 const statuserror404 = "isCheckingAccountFailed";
@@ -228,15 +224,13 @@ function updatePassword(phoneNumberPassword, textPassword, textIDATPassword, sen
                             }
                             else if ([500].includes(response.statusCode)) {
                               console.log(response.statusCode);
-                              sms.send({ to: sender, from: '20880', message: " Invalid request. Please input your National Id and password. " });
+                              sms.send({ to: sender, from: '24123', message: " Invalid request. Please input your National Id and password. " });
                               sql.connect(config, function (err) {
                                 if (err) {
                                   console.error('Error connecting to the database: ' + err.stack);
                                   return;
                                 }
-                                console.log('Connected to the database');
                                 const request = new sql.Request();
-
                                 const statuserror500 = "isCheckingAccountFailed";
                                 const messagingSteperror500 = "0";
                                 const phoneNumbererror500 = sender;
@@ -266,7 +260,6 @@ function updatePassword(phoneNumberPassword, textPassword, textIDATPassword, sen
                       });
                     });
                   });
-
                 } else if (response.statusCode === 400) {
                   console.log(response.statusCode);
                 } else {
@@ -276,7 +269,7 @@ function updatePassword(phoneNumberPassword, textPassword, textIDATPassword, sen
               });
             } else if ([400].includes(response.statusCode)) {
               console.log(response.statusCode);
-              sms.send({ to: sender, from: '20880', message: " Invalid Details!!. Check your details and please try again Later " });
+              sms.send({ to: sender, from: '24123', message: " Invalid Details!!. Check your details and please try again Later " });
               sql.connect(config, function (err) {
                 if (err) {
                   console.error('Error connecting to the database: ' + err.stack);
@@ -306,7 +299,7 @@ function updatePassword(phoneNumberPassword, textPassword, textIDATPassword, sen
             }
             else if ([500].includes(response.statusCode)) {
               console.log(response.statusCode);
-              sms.send({ to: sender, from: '20880', message: " Invalid request. Please input your National Id and password. " });
+              sms.send({ to: sender, from: '24123', message: " Invalid request. Please input your National Id and password. " });
               sql.connect(config, function (err) {
                 if (err) {
                   console.error('Error connecting to the database: ' + err.stack);
@@ -384,12 +377,10 @@ function updateDescription(phoneNumberDescription, textDescription, textIDATDesc
           const description = descriptionResults.recordset[0].description;
           console.log(description);
           var fetchPeriodsClient = new Client();
-          // set content-type header and data as json in args parameter
           var args = {
             data: { description: description },
             headers: { "Content-Type": "application/json" }
           };
-
           fetchPeriodsClient.get("https://api.octagonafrica.com/v1/accounts/pension/periods/twoway", args, function (data, response) {
             if ([200].includes(response.statusCode)) {
               console.log(response.statusCode);
@@ -401,13 +392,13 @@ function updateDescription(phoneNumberDescription, textDescription, textIDATDesc
               }
               sms.send({
                 to: sender,
-                from: '20880',
+                from: '24123',
                 message: finalMessage
               });
               sms.send(account.providePeriodName(sender));
             } else if ([400].includes(response.statusCode)) {
               console.log(response.statusCode);
-              sms.send({ to: sender, from: '20880', message: 'Invalid Details. Try again later!!!!' });
+              sms.send({ to: sender, from: '24123', message: 'Invalid Details. Try again later!!!!' });
               sql.connect(config, function (err) {
                 if (err) {
                   console.error('Error connecting to the database: ' + err.stack);
@@ -436,7 +427,7 @@ function updateDescription(phoneNumberDescription, textDescription, textIDATDesc
               });
             } else if ([500].includes(response.statusCode)) {
               console.log(response.statusCode);
-              sms.send({ to: sender, from: '20880', message: 'Internal Server Error' });
+              sms.send({ to: sender, from: '24123', message: 'Internal Server Error' });
 
               sql.connect(config, function (err) {
                 if (err) {
@@ -465,12 +456,10 @@ function updateDescription(phoneNumberDescription, textDescription, textIDATDesc
                   sql.close();
                 });
               });
-
             } else {
               console.log(response.statusCode);
             }
           });
-
         }
         sql.close();
       });
@@ -576,10 +565,6 @@ function updatePeriodName(phoneNumberperiodName, textperiodName, textIDATperiodN
                           const phoneNumberStatement = sender;
                           const textIDATStatement = textIDAT;
                           sql.connect(config, function (err) {
-                            if (err) {
-                              console.error('Error connecting to the database: ' + err.stack);
-                              return;
-                            }
                             console.log('Connected to the database');
                             const request = new sql.Request();
                             const updateAccounts = `UPDATE two_way_sms_tb SET status = 'isCheckingAccountSuccess', messagingStep= '100', isActive = 100, periodname = @periodsNameAPI, name = @nameFromAPI, email = @emailFromAPI  WHERE phoneNumber = @phoneNumberStatement AND text_id_AT = @textIDATStatement AND time = (SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberStatement)`;
@@ -614,7 +599,7 @@ function updatePeriodName(phoneNumberperiodName, textperiodName, textIDATperiodN
                                   const email = memberStatementResults.recordset[0].email;
                                   const periodsName = memberStatementResults.recordset[0].periodname;
                                   console.log("Dear " + name + ".Your member statement for " + periodsName + " period has been sent to  " + email);
-                                  sms.send({ to: sender, from: '20880', message: "Dear " + name + ".\n Your member statement for " + periodsName + " period has been sent to  " + email });
+                                  sms.send({ to: sender, from: '24123', message: "Dear " + name + ".\n Your member statement for " + periodsName + " period has been sent to  " + email });
                                 }
                                 sql.close();
                               });
@@ -622,12 +607,8 @@ function updatePeriodName(phoneNumberperiodName, textperiodName, textIDATperiodN
                           });
                         } else if ([400].includes(response.statusCode)) {
                           console.log(response.statusCode);
-                          sms.send({ to: sender, from: '20880', message: 'Invalid Details. Try again later' });
+                          sms.send({ to: sender, from: '24123', message: 'Invalid Details. Try again later' });
                           sql.connect(config, function (err) {
-                            if (err) {
-                              console.error('Error connecting to the database: ' + err.stack);
-                              return;
-                            }
                             console.log('Connected to the database');
                             const request = new sql.Request();
                             const statuserror404 = "FetchMemberStatementFailed";
@@ -650,14 +631,9 @@ function updatePeriodName(phoneNumberperiodName, textperiodName, textIDATperiodN
                             });
                           });
                         } else if ([500].includes(response.statusCode)) {
-
                           console.log(response.statusCode);
-                          sms.send({ to: sender, from: '20880', message: 'Internal Server Error' });
+                          sms.send({ to: sender, from: '24123', message: 'Internal Server Error' });
                           sql.connect(config, function (err) {
-                            if (err) {
-                              console.error('Error connecting to the database: ' + err.stack);
-                              return;
-                            }
                             console.log('Connected to the database');
                             const request = new sql.Request();
                             const statuserror500 = "FetchMemberFailed";
@@ -691,7 +667,7 @@ function updatePeriodName(phoneNumberperiodName, textperiodName, textIDATperiodN
             } else if ([400].includes(response.statusCode)) {
               console.log(response.statusCode);
 
-              sms.send({ to: sender, from: '20880', message: 'Invalid Details. Try again later' });
+              sms.send({ to: sender, from: '24123', message: 'Invalid Details. Try again later' });
               const statuserror404 = "FetchPeriodsIDFailed";
               const messagingSteperror404 = "0";
               const phoneNumbererror404 = sender;
@@ -716,7 +692,7 @@ function updatePeriodName(phoneNumberperiodName, textperiodName, textIDATperiodN
             });
             } else if ([500].includes(response.statusCode)) {
               console.log(response.statusCode);
-              sms.send({ to: sender, from: '20880', message: 'Internal Server Error' });
+              sms.send({ to: sender, from: '24123', message: 'Internal Server Error' });
               sql.connect(config, function (err) {
                 console.log('Connected to the database');
                 const request = new sql.Request();

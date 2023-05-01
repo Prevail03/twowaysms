@@ -1,5 +1,5 @@
 const options = {
-    apiKey: 'c54df3b5a0bfde4199a490ff6ce639e0511a851a0d540b5c37bddfd2d7636c79',
-    username: 'prevailer',
+    apiKey: 'a3865cc352fd8d141003fea5fa605637e84b2e6cc53ec5ac50aa461ab766fc15',
+    username: 'octagon_sms',
 };
 module.exports = options;

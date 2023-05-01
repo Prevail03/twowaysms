@@ -160,8 +160,8 @@ function updateLastname(statusEnd, messagingStepEnd, phoneNumberEnd, textLname, 
           const emailT = registerResults.recordset[0].email;
           const pass = registerResults.recordset[0].password;
           const phone = registerResults.recordset[0].phoneNumber;
+          //send to API
           var client = new Client({ proxy: false });
-
           var args = {
             data: { firstname: fname, lastname: lname, ID: national_ID, email: emailT, password: pass, phonenumber: phone },
             headers: { "Content-Type": "application/json" }
@@ -169,10 +169,8 @@ function updateLastname(statusEnd, messagingStepEnd, phoneNumberEnd, textLname, 
           console.log(args);
           client.post("https://api.octagonafrica.com/v1/register", args, function (data, response) {
             if ([200].includes(response.statusCode)) {
-              // success code
-              sms.send({
-                to: phone,
-                from: '20880',
+              console.log(response.statusCode);
+              sms.send({to: phone, from: '24123',
                 message: "Congratulations!! " + fname.toUpperCase() + " " + lname.toUpperCase() + ". You have successfully registered with Octagon Africa.Incase of any queries contact support@octagonafrica.com' "
               });
               const statusSuccess = "FinishedisRegistering";
@@ -195,15 +193,9 @@ function updateLastname(statusEnd, messagingStepEnd, phoneNumberEnd, textLname, 
                   console.log('Register Attempt successful');
                 });
               });
-              console.log(response.statusCode)
-
             } else if ([400].includes(response.statusCode)) {
               console.log(response.statusCode);
-              sms.send({
-                to: phone,
-                from: '20880',
-                message: "Registration unsuccesfull. Invalid Details or Username Exists . Please try again Later "
-              });
+              sms.send({to: phone, from: '24123', message: "Registration unsuccesfull. Invalid Details or Username Exists . Please try again Later " });
               const statusFailure400 = "FailedisRegistering";
               const phoneNumberFailure400 = phoneNumber;
               const messagingStepFailure400 = "0";
@@ -224,12 +216,9 @@ function updateLastname(statusEnd, messagingStepEnd, phoneNumberEnd, textLname, 
                   console.log('Registration Attempt Unsuccessfull');
                 });
               });
-
             } else if ([407].includes(response.statusCode)) {
               console.log(response.statusCode);
-              sms.send({
-                to: phone,
-                from: '20880',
+              sms.send({to: phone, from: '24123',
                 message: 'We already have your registration request and is awaiting approval. Incase of any queries please contact support on support@octagonafrica.com or  +254709986000 '
               });
               const statusFailure407 = "FailedisRegistering";
@@ -255,11 +244,7 @@ function updateLastname(statusEnd, messagingStepEnd, phoneNumberEnd, textLname, 
             }
             else if ([500].includes(response.statusCode)) {
               console.log(response.statusCode);
-              sms.send({
-                to: phone,
-                from: '20880',
-                message: "Registration unsuccesfull. Internal Server Error. Please try again Later "
-              });
+              sms.send({to: phone, from: '24123', message: "Registration unsuccesfull. Internal Server Error. Please try again Later " });
               sql.connect(config, function (err) {
                 console.log('Connected to the database');
                 const request = new sql.Request();

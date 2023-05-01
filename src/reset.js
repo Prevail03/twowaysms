@@ -1,18 +1,18 @@
 const reset={
     welcomeMessage: (sender) => {
-        messageToCustomer = 'Hello Our Dear Esteemed Customer, Welcome to Octagon Services. To Reset Your Account Password, please provide the following details. ';
+        messageToCustomer = 'Dear Esteemed Customer, Welcome to Octagon Africa. To Reset Your Account Password, please provide the following details. ';
         return {
             to: sender,
-            from:'20880',
+            from:'24123',
             message: messageToCustomer
         };
      
     },
     enterEmail: (sender) => {
-        messageToCustomer = 'Please your enter email account.... ';
+        messageToCustomer = 'Please enter your email address. ';
         return {
             to: sender,
-            from:'20880',
+            from:'24123',
             message: messageToCustomer
         };
      
@@ -21,7 +21,7 @@ const reset={
         messageToCustomer = 'Please enter your Current password ';
         return {
             to: sender,
-            from:'20880',
+            from:'24123',
             message: messageToCustomer
         };
      
@@ -30,7 +30,7 @@ const reset={
         messageToCustomer = 'Account Verified ';
         return {
             to: sender,
-            from:'20880',
+            from:'24123',
             message: messageToCustomer
         };
      
@@ -39,7 +39,7 @@ const reset={
         messageToCustomer = 'Please enter the OTP Sent to your email account ';
         return {
             to: sender,
-            from:'20880',
+            from:'24123',
             message: messageToCustomer
         };
      
@@ -48,7 +48,7 @@ const reset={
         messageToCustomer = 'Please enter Your new Password ';
         return {
             to: sender,
-            from:'20880',
+            from:'24123',
             message: messageToCustomer
         };
      
@@ -57,7 +57,7 @@ const reset={
         messageToCustomer = 'Invalid Details!!. Check your details and please try again Later ';
         return {
             to: sender,
-            from:'20880',
+            from:'24123',
             message: messageToCustomer
         };
      
@@ -66,7 +66,7 @@ const reset={
         messageToCustomer = 'Invalid Details!!. Check your details and please try again Later ';
         return {
             to: sender,
-            from:'20880',
+            from:'24123',
             message: messageToCustomer
         };
      
@@ -75,12 +75,10 @@ const reset={
         messageToCustomer = "Your password has been successfully changed .If this wasn't you, your account may have been compromised and you should contact us at support@octagonafrica.com ";
         return {
             to: sender,
-            from:'20880',
+            from:'24123',
             message: messageToCustomer
         };
      
     },
-
-
 }
 module.exports=reset;

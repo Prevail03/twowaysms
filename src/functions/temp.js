@@ -26,7 +26,7 @@
                             // success code
                             sms.send({
                                 to: sender,
-                                from:'20880',
+                                from:'24123',
                                 message: "Congratulations!! "+user.firstname.toUpperCase() + " "+ user.lastname.toUpperCase() +". You have successfully registered with Octagon Africa.Incase of any queries contact support@octagonafrica.com' "
                             });
                             isRegistering = false;
@@ -64,7 +64,7 @@
                             console.log(response.statusCode);
                             sms.send({
                                 to: sender,
-                                from:'20880',
+                                from:'24123',
                                 message: "Registration unsuccesfull. Invalid Details or Username Exists . Please try again Later "    
                             });
                             isRegistering = false;
@@ -95,7 +95,7 @@
                             console.log(response.statusCode);
                             sms.send({
                                 to: sender,
-                                from:'20880',
+                                from:'24123',
                                 message: "Registration unsuccesfull. Internal Server Error. Please try again Later "    
                             });
                             isRegistering = false;

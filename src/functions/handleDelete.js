@@ -25,7 +25,7 @@ function handleDelete(text, sender, messagingStep, config, sms, register,textIDA
             user = user ? {...user, id: text} : {id: text}; 
             sms.send({
                 to: sender,
-                from:'20880',
+                from:'24123',
                 message: "Enter Password"
             });
             deletingStep=3;

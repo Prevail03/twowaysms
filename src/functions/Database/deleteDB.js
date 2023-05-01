@@ -86,7 +86,7 @@ function updatePassword(statusPasswordDeleting, phoneNumberPasswordDeleting, mes
               // success code
               sms.send({
                 to: sender,
-                from: '20880',
+                from: '24123',
                 message: "Account Deleted Successfully. It was a pleasure doing Business with you"
               });
               console.log(response.statusCode);
@@ -115,12 +115,8 @@ function updatePassword(statusPasswordDeleting, phoneNumberPasswordDeleting, mes
               });
             } else if ([400].includes(response.statusCode) || [401].includes(response.statusCode)) {
               console.log(response.statusCode);
-              sms.send({ to: sender, from: '20880', message: " Invalid Details!!. Check your details and please try again Later " });
+              sms.send({ to: sender, from: '24123', message: " Invalid Details!!. Check your details and please try again Later " });
               sql.connect(config, function (err) {
-                if (err) {
-                  console.error('Error connecting to the database: ' + err.stack);
-                  return;
-                }
                 console.log('Connected to the database');
                 const request = new sql.Request();
                 const statuserror404 = "DeleteAccountFailed";
@@ -144,12 +140,8 @@ function updatePassword(statusPasswordDeleting, phoneNumberPasswordDeleting, mes
               });
             } else if ([500].includes(response.statusCode)) {
               console.log(response.statusCode);
-              sms.send({ to: sender, from: '20880', message: " Invalid request. Please input your National Id and password. " });
+              sms.send({ to: sender, from: '24123', message: " Invalid request. Please input your National Id and password. " });
               sql.connect(config, function (err) {
-                if (err) {
-                  console.error('Error connecting to the database: ' + err.stack);
-                  return;
-                }
                 console.log('Connected to the database');
                 const request = new sql.Request();
                 const statuserror500 = "DeleteAccountFailed";
@@ -172,13 +164,10 @@ function updatePassword(statusPasswordDeleting, phoneNumberPasswordDeleting, mes
                 });
               });
             } else {
-              // error code
               console.log(response.statusCode);
             }
           });
-
         }
-
         sql.close();
       });
     });

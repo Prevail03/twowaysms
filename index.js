@@ -7,7 +7,7 @@ const register = require('./src/register.js');
 const account = require('./src/account.js');
 const AfricasTalking = require('africastalking')(options);
 const app = express();
-const keyword = "Test4 ";
+const keyword1 = "Test4 ";
 const bodyParser = require("body-parser");
 const { urlencoded } = require("express");
 app.use(bodyParser.json());
@@ -27,7 +27,8 @@ app.post("/webhook", (req, res) => {
     console.log(sender);
     const textMessage = payload.text;
     console.log(textMessage);
-    const sms = AfricasTalking.SMS;   
+    const sms = AfricasTalking.SMS; 
+    const keyword=tolowerCase(keyword1);
     const text = textMessage.replace(keyword, '').trim();//remove "Key Word" 
     
     handleIncomingMessage(text, sender, textId, phoneNumber, config ,sms ,register, account);

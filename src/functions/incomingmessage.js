@@ -94,7 +94,7 @@ function handleIncomingMessage(text, sender, textId, phoneNumber, config, sms , 
                             messageToCustomer = ' Dear Esteemed Customer, Welcome to Octagon Services. Enter your 4 digit pin - balance ';
                             sms.send({
                                 to: sender,
-                                from:'20880',
+                                from:'24123',
                                 message: messageToCustomer
                             });
                             break;
@@ -125,7 +125,7 @@ function handleIncomingMessage(text, sender, textId, phoneNumber, config, sms , 
                                 messageToCustomer = 'Dear Esteemed Customer, Welcome to Octagon Services. Enter your 4 digit pin - rate';
                                 sms.send({
                                     to: sender,
-                                    from:'20880',
+                                    from:'24123',
                                     message: messageToCustomer
                                 });
                                 
@@ -134,7 +134,7 @@ function handleIncomingMessage(text, sender, textId, phoneNumber, config, sms , 
                                 messageToCustomer = 'Dear Esteemed Customer, Welcome to Octagon Africa.To delete your account please share the following data.';
                                 sms.send({
                                     to: sender,
-                                    from:'20880',
+                                    from:'24123',
                                     message: messageToCustomer
                                 });
                                 sms.send(register.enterId(sender));
@@ -183,10 +183,10 @@ function handleIncomingMessage(text, sender, textId, phoneNumber, config, sms , 
                                 break;
                             
                         default:
-                            messageToCustomer = 'Welcome To Octagon Africa you can access our services by sending the word register,save, balance,statement,products';
+                            messageToCustomer = 'Welcome To Octagon Africa you can access our services by sending the word Register,Balance, Accounts, Reset,Delete ';
                             sms.send({
                                 to: sender,
-                                from:'20880',
+                                from:'24123',
                                 message: messageToCustomer
                             });
                         break;
