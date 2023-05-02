@@ -180,8 +180,7 @@ function handleIncomingMessage(text, sender, textId, phoneNumber, config, sms , 
                                     sql.close();
                                     });
                                 });
-                                break;
-                            
+                                break;   
                         default:
                             messageToCustomer = 'Welcome To Octagon Africa you can access our services by sending the word Register,Balance, Accounts, Reset,Delete ';
                             sms.send({
