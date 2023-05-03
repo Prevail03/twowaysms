@@ -8,10 +8,10 @@ const handlePasswordReset = require('./handlePasswordReset');
 const reset =require('../reset')
 
 let user={};
-function handleIncomingMessage(text, sender, textId, phoneNumber, config, sms , register, account) {
+function handleIncomingMessage(textMessage, sender, textId, phoneNumber, config, sms , register, account) {
     // Check if user exists in database
     console.log("Text Message");
-        console.log("Text Message " + text);
+        console.log("Text Message " + textMessage);
         sql.connect(config, function(err, connection) {
                 if (err) {
                     console.error('Error connecting to database: ' + err.stack);
@@ -36,7 +36,7 @@ function handleIncomingMessage(text, sender, textId, phoneNumber, config, sms , 
                 console.log(status+" "+messagingStep);
                 switch (status) {
                 case 'isRegistering':
-                    handleRegister(text, sender, messagingStep ,sms, register, config, phoneNumber, textIDAT);
+                    handleRegister(textMessage, sender, messagingStep ,sms, register, config, phoneNumber, textIDAT);
                     break;
                 case 'isDeleting':
                     handleDelete(text, sender, messagingStep, config, sms, register , textIDAT);
@@ -55,7 +55,7 @@ function handleIncomingMessage(text, sender, textId, phoneNumber, config, sms , 
                 //new user in the system
                 const insertQuery = "INSERT INTO two_way_sms_tb (text, text_id_AT, phoneNumber, isActive) VALUES (@text, @text_id_AT, @phoneNumber, @isActive)";
                 const insertRequest = new sql.Request(connection);
-                insertRequest.input('text', sql.VarChar, text);
+                insertRequest.input('text', sql.VarChar, textMessage);
                 insertRequest.input('text_id_AT', sql.VarChar, textId);
                 insertRequest.input('phoneNumber', sql.VarChar, phoneNumber);
                 insertRequest.input('isActive', sql.Bit, 1);
