@@ -28,8 +28,7 @@ app.post("/webhook", (req, res) => {
     const textMessage = payload.text;
     console.log(textMessage);
     const sms = AfricasTalking.SMS; 
-    const keyword=tolowerCase(keyword1);
-    const text = textMessage;//remove "Key Word" 
+    const text = textMessage;
     
     handleIncomingMessage(text, sender, textId, phoneNumber, config ,sms ,register, account);
     // handleRegister(text, sender, messagingStep ,sms, register, config, phoneNumber, time, validateId);   
