@@ -64,7 +64,7 @@ function handleIncomingMessage(text, sender, textId, phoneNumber, config, sms , 
                     return;
                 }
                 console.log('INSERT successful');
-                console.log(text);
+                console.log("Text Message ".text);
                     switch (text.toLowerCase()) {
                         // case '':
                         case 'pension':
