@@ -10,6 +10,8 @@ const reset =require('../reset')
 let user={};
 function handleIncomingMessage(text, sender, textId, phoneNumber, config, sms , register, account) {
     // Check if user exists in database
+    console.log("Text Message");
+        console.log("Text Message " + text);
         sql.connect(config, function(err, connection) {
                 if (err) {
                     console.error('Error connecting to database: ' + err.stack);
