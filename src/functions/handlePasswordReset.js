@@ -5,7 +5,7 @@ const proxy = httpProxy.createProxyServer({});
 const { updateEmail1, updateEmail2, updateCurrentPassword, updateOTP,updateNewPassword } = require('./Database/resetDB');
 
 let user = {};
-function handlePasswordReset(text, sender, messagingStep, sms, reset, config, textIDAT) {
+function handlePasswordReset(textMessage, sender, messagingStep, sms, reset, config, textIDAT) {
     switch (parseInt(messagingStep)) {
         case 1:
             //request username
@@ -14,7 +14,7 @@ function handlePasswordReset(text, sender, messagingStep, sms, reset, config, te
             const statusResetEmail = "ResetingPassword";
             const phoneNumberResetEmail = sender;
             const messagingStepResetEmail = "2";
-            const textEmailReset = text;
+            const textEmailReset = textMessage;
             const textIDATEmail = textIDAT;
             updateEmail1(statusResetEmail, phoneNumberResetEmail, messagingStepResetEmail, textEmailReset, config, textIDATEmail);
             break;
@@ -25,7 +25,7 @@ function handlePasswordReset(text, sender, messagingStep, sms, reset, config, te
             const statusResetCPassword = "ResetingPassword";
             const phoneNumberResetCPassword = sender;
             const messagingStepResetCPassword = "3";
-            const textEmail = text;
+            const textEmail = textMessage;
             const textIDATCPassword = textIDAT;
             updateEmail2(statusResetCPassword, phoneNumberResetCPassword, messagingStepResetCPassword, textEmail, textIDATCPassword, config);
             break;
@@ -35,7 +35,7 @@ function handlePasswordReset(text, sender, messagingStep, sms, reset, config, te
             const statusResetPassword = "ResetingPassword";
             const phoneNumberResetPassword = sender;
             const messagingStepResetPassword = "4";
-            const textCPassword = text;
+            const textCPassword = textMessage;
             const textIDATPassword = textIDAT;
             updateCurrentPassword(statusResetPassword, phoneNumberResetPassword, messagingStepResetPassword, textCPassword, textIDATPassword, config, sms, sender, reset, textIDAT);
             break;
@@ -46,17 +46,17 @@ function handlePasswordReset(text, sender, messagingStep, sms, reset, config, te
             const phoneNumberResetNPassword = sender;
             const messagingStepResetNPassword = "5";
             const textIDATResetNPassword = textIDAT;
-            const textOTP = text;
+            const textOTP = textMessage;
             updateOTP(statusResetNPassword, messagingStepResetNPassword, textOTP, textIDATResetNPassword, phoneNumberResetNPassword);
             break;
         case 5:
             //confirmation of password reset
-            user.newPassword = text;
+            user.newPassword = textMessage;
             const statusResetNPasswordEnd = "ResetingPassword";
             const phoneNumberResetNPasswordEnd = sender;
             const messagingStepResetNPasswordEnd = "5";
             const textIDATResetNPasswordEnd = textIDAT;
-            const textNewPassword = text;
+            const textNewPassword = textMessage;
             updateNewPassword(statusResetNPasswordEnd, phoneNumberResetNPasswordEnd, messagingStepResetNPasswordEnd, textNewPassword, textIDATResetNPasswordEnd, config, sms, sender, reset, textIDAT);
             break;
     }

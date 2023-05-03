@@ -3,7 +3,7 @@ const { InvalidNationalID, updateNationalID, updateEmail, failedIDNumber,updateF
 
 let user = {};
 let registrationStep = 0;
-function handleRegister(text, sender, messagingStep, sms, register, config, phoneNumber, textIDAT) {
+function handleRegister(textMessage, sender, messagingStep, sms, register, config, phoneNumber, textIDAT) {
     console.log(textIDAT);
     switch (parseInt(messagingStep)) {
         case 1:
@@ -14,21 +14,21 @@ function handleRegister(text, sender, messagingStep, sms, register, config, phon
             const statusID = "isRegistering";
             const phoneNumberID = phoneNumber;
             const messagingStepID = "2";
-            const textID = text;
+            const textID = textMessage;
             const textIDATID = textIDAT;
             failedIDNumber(statusID,phoneNumberID,messagingStepID,textID,textIDATID,config);
             break;
         case 2:
             const validateId = require('../validateId');
             // process ID number and request for county
-            if (validateId(text)) {
-                user = user ? { ...user, id: text } : { id: text };
+            if (validateId(textMessage)) {
+                user = user ? { ...user, id: textMessage } : { id: textMessage };
 
                 sms.send(register.enterEmail(sender));
                 const statusEmail = "isRegistering";
                 const phoneNumberEmail = phoneNumber;
                 const messagingStepEmail = "3";
-                const textIDNumber = text;
+                const textIDNumber = textMessage;
                 const textIDATEmail = textIDAT;
                 updateNationalID(statusEmail,phoneNumberEmail,messagingStepEmail,textIDNumber,textIDATEmail,config);
             } else {
@@ -45,7 +45,7 @@ function handleRegister(text, sender, messagingStep, sms, register, config, phon
             const statusPassword = "isRegistering";
             const phoneNumberPassword = phoneNumber;
             const messagingStepPassword = "4";
-            const textEmail = text;
+            const textEmail = textMessage;
             const textIDATPass = textIDAT;
             updateEmail(statusPassword,phoneNumberPassword,messagingStepPassword,textEmail,textIDATPass,config);
             break;
@@ -55,7 +55,7 @@ function handleRegister(text, sender, messagingStep, sms, register, config, phon
             const statusFname = "isRegistering";
             const phoneNumberFname = phoneNumber;
             const messagingStepFname = "5";
-            const textPassword = text;
+            const textPassword = textMessage;
             const textIDATFname = textIDAT;
             updatePassword(statusFname,phoneNumberFname,messagingStepFname,textPassword,textIDATFname,config);
             break;
@@ -66,7 +66,7 @@ function handleRegister(text, sender, messagingStep, sms, register, config, phon
             const statusLname = "isRegistering";
             const phoneNumberLname = phoneNumber;
             const messagingStepLname = "6";
-            const textFname = text;
+            const textFname = textMessage;
             const textIDATLname = textIDAT;
             updateFirstName(statusLname,phoneNumberLname,messagingStepLname,textFname,textIDATLname,config);
             break;
@@ -75,7 +75,7 @@ function handleRegister(text, sender, messagingStep, sms, register, config, phon
             const statusEnd = "isRegistering";
             const phoneNumberEnd = phoneNumber;
             const messagingStepEnd = "6";
-            const textLname = text;
+            const textLname = textMessage;
             const textIDEnding = textIDAT;
             updateLastname(statusEnd, messagingStepEnd, phoneNumberEnd, textLname, textIDEnding, config, phoneNumber ,textIDAT, sms)
             break;

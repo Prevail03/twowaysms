@@ -8,7 +8,7 @@ let user={};
 let deletingStep=0;
 
 
-function handleDelete(text, sender, messagingStep, config, sms, register,textIDAT) {
+function handleDelete(textMessage, sender, messagingStep, config, sms, register,textIDAT) {
     switch (parseInt(messagingStep)) {
         case 1:
             // request for ID number  
@@ -22,7 +22,7 @@ function handleDelete(text, sender, messagingStep, config, sms, register,textIDA
 
         case 2:
             //recieve id and request password
-            user = user ? {...user, id: text} : {id: text}; 
+            user = user ? {...user, id: textMessage} : {id: textMessage}; 
             sms.send({
                 to: sender,
                 from:'24123',
@@ -32,17 +32,17 @@ function handleDelete(text, sender, messagingStep, config, sms, register,textIDA
             const statusPasswordDel = "isDeleting";
             const phoneNumberPasswordDel = sender;
             const messagingStepPasswordDel= "3";
-            const textNationalID = text;
+            const textNationalID = textMessage;
             const textIDATPasswordDel = textIDAT;
             updateNationalID2(statusPasswordDel, phoneNumberPasswordDel, messagingStepPasswordDel,textIDATPasswordDel,textNationalID,config);
         break;
 
         case 3:
-            user.password=text;
+            user.password=textMessage;
             const statusPasswordDeleting = "isDeleting";
             const phoneNumberPasswordDeleting = sender;
             const messagingStepPasswordDeliting= "3";
-            const textPassword = text;
+            const textPassword = textMessage;
             const textIDATPasswordDeleting = textIDAT;
             updatePassword(statusPasswordDeleting, phoneNumberPasswordDeleting, messagingStepPasswordDeliting, textPassword, textIDATPasswordDeleting, config, sms, sender, textIDAT);
             

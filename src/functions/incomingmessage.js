@@ -10,8 +10,7 @@ const reset =require('../reset')
 let user={};
 function handleIncomingMessage(textMessage, sender, textId, phoneNumber, config, sms , register, account) {
     // Check if user exists in database
-    console.log("Text Message");
-        console.log("Text Message " + textMessage);
+   
         sql.connect(config, function(err, connection) {
                 if (err) {
                     console.error('Error connecting to database: ' + err.stack);
@@ -39,13 +38,13 @@ function handleIncomingMessage(textMessage, sender, textId, phoneNumber, config,
                     handleRegister(textMessage, sender, messagingStep ,sms, register, config, phoneNumber, textIDAT);
                     break;
                 case 'isDeleting':
-                    handleDelete(text, sender, messagingStep, config, sms, register , textIDAT);
+                    handleDelete(textMessage, sender, messagingStep, config, sms, register , textIDAT);
                     break; 
                 case 'isCheckingAccount':
-                    handleAccountCheck(text, sender, messagingStep, sms, account, config,textIDAT);
+                    handleAccountCheck(textMessage, sender, messagingStep, sms, account, config,textIDAT);
                     break;
                 case 'ResetingPassword':
-                    handlePasswordReset(text, sender, messagingStep, sms, reset, config , textIDAT);
+                    handlePasswordReset(textMessage, sender, messagingStep, sms, reset, config , textIDAT);
                     break;
                 default:
                     console.log('Unknown status: ' + status);
@@ -65,8 +64,7 @@ function handleIncomingMessage(textMessage, sender, textId, phoneNumber, config,
                     sql.close();
                     return;
                 }
-                console.log('INSERT successful');
-                console.log('INSERT successful');
+                
                 console.log("Text Message "+ textMessage);
                     switch (textMessage.toLowerCase()) {
                         
