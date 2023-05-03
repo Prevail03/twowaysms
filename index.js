@@ -29,7 +29,7 @@ app.post("/webhook", (req, res) => {
     console.log(textMessage);
     const sms = AfricasTalking.SMS; 
     const text = textMessage;
-    
+    console.log("Text Message "+ text);    
     handleIncomingMessage(text, sender, textId, phoneNumber, config ,sms ,register, account);
     // handleRegister(text, sender, messagingStep ,sms, register, config, phoneNumber, time, validateId);   
     // handleDelete(text, sender, messagingStep, phoneNumber, config, time, sms, register)
