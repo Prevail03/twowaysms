@@ -68,7 +68,7 @@ function handleIncomingMessage(textMessage, sender, textId, phoneNumber, config,
                 console.log("Text Message "+ textMessage);
                     switch (textMessage.toLowerCase()) {
                         
-                        case 'pension':{
+                        case 'register':{
                             sms.send(register.newCustomer(sender));
                             sms.send(register.enterId(sender));
                             const status = "isRegistering";
