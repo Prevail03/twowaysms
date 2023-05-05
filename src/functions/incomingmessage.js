@@ -16,7 +16,6 @@ function handleIncomingMessage(textMessage, sender, textId, phoneNumber, config,
                     console.error('Error connecting to database: ' + err.stack);
                     return;
                 }
-                console.log('Connected to database');
             const checkIfExistsQuery = "SELECT TOP 1 * FROM two_way_sms_tb WHERE phoneNumber = @phoneNumber AND isActive = 1";
             const checkIfExistsRequest = new sql.Request(connection);
             checkIfExistsRequest.input('phoneNumber', sql.VarChar, phoneNumber);
@@ -64,8 +63,7 @@ function handleIncomingMessage(textMessage, sender, textId, phoneNumber, config,
                     sql.close();
                     return;
                 }
-                
-                console.log("Text Message "+ textMessage);
+                s
                     switch (textMessage.toLowerCase()) {
                         
                         case 'register':{
