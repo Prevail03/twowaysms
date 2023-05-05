@@ -3,7 +3,7 @@ const { InvalidNationalID, updateNationalID, updateEmail, failedIDNumber,updateF
 
 let user = {};
 let registrationStep = 0;
-function handleRegister(textMessage, sender, messagingStep, sms, register, config, phoneNumber, textIDAT) {
+function handleRegister(textMessage, sender, messagingStep, sms, register, config, phoneNumber, textIDAT, validateId) {
     console.log(textIDAT);
     switch (parseInt(messagingStep)) {
         case 1:
