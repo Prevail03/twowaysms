@@ -65,7 +65,7 @@ function handleIncomingMessage(textMessage, sender, textId, phoneNumber, config,
                     return;
                 }
                 
-                console.log("Text Message "+ textMessage);
+                console.log("Text Message: "+ textMessage);
                     switch (textMessage.toLowerCase()) {
                         
                         case 'pension':{
