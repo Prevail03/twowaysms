@@ -191,6 +191,25 @@ function handleIncomingMessage(textMessage, sender, textId, phoneNumber, config,
                                 from:'24123',
                                 message: messageToCustomer
                             });
+                            const statusfail = "WrongMessage";
+                            const phoneNumberfail = sender;
+                            const messagingStepfail= "500";
+                            sql.connect(config, function(err) {
+                                const request = new sql.Request();
+                                const updateRegister1 = `UPDATE two_way_sms_tb SET status = @statusfail, messagingStep = @messagingStepfail WHERE phoneNumber = @phoneNumberfail AND time = (
+                                    SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberfail )`;
+                                request.input('statusfail', sql.VarChar, statusfail);
+                                request.input('messagingStepfail', sql.VarChar, messagingStepfail);
+                                request.input('phoneNumberfail', sql.VarChar, phoneNumberfail);
+                                request.query(updateRegister1, function(err, results) {
+                                if (err) {
+                                    console.error('Error executing query: ' + err.stack);
+                                    return;
+                                }
+                                console.log('Invalid Key Word');
+                                sql.close();
+                                });
+                            });
                         break;
                     }
                 });
