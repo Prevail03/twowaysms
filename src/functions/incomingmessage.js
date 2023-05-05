@@ -69,14 +69,8 @@ function handleIncomingMessage(textMessage, sender, textId, phoneNumber, config,
                     switch (textMessage.toLowerCase()) {
                         
                         case 'pension':{
-                            // sms.send(register.newCustomer(sender));
-                            // sms.send(register.enterId(sender));
-                            messageToCustomer = 'Dear Esteemed Customer, Welcome to Octagon Africa. To complete the registration process, please provide us with the following information.';
-                            sms.send({
-                                to: sender,
-                                from:'24123',
-                                message: messageToCustomer
-                            });
+                            sms.send(register.newCustomer(sender));
+                            sms.send(register.enterId(sender));
                             const status = "isRegistering";
                             const phoneNumber = sender;
                             const messagingStep= "2";
