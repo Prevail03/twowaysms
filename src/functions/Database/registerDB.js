@@ -1,6 +1,7 @@
 const sql = require('mssql');
 var Client = require('node-rest-client').Client;
 
+
 function updateNationalID(statusEmail, phoneNumberEmail, messagingStepEmail, textIDNumber, textIDATEmail, config) {
   sql.connect(config, function (err) {
     const request = new sql.Request();
@@ -23,7 +24,7 @@ function updateNationalID(statusEmail, phoneNumberEmail, messagingStepEmail, tex
 
 function InvalidNationalID(statusFail, phoneNumberFail, messagingStepFail, config) {
   sql.connect(config, function (err) {
-    const request = new sql.Request(connection);
+    const request = new sql.Request();
     const updateRegister1 = `UPDATE two_way_sms_tb SET status = @statusFail, messagingStep = @messagingStepFail WHERE phoneNumber = @phoneNumberFail AND time = (
     SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberFail )`;
     request.input('statusFail', sql.VarChar, statusFail);
