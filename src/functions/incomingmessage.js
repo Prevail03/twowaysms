@@ -16,6 +16,7 @@ function handleIncomingMessage(textMessage, sender, textId, phoneNumber, config,
                     console.error('Error connecting to database: ' + err.stack);
                     return;
                 }
+                console.log('Connected to database');
             const checkIfExistsQuery = "SELECT TOP 1 * FROM two_way_sms_tb WHERE phoneNumber = @phoneNumber AND isActive = 1";
             const checkIfExistsRequest = new sql.Request(connection);
             checkIfExistsRequest.input('phoneNumber', sql.VarChar, phoneNumber);
@@ -63,10 +64,11 @@ function handleIncomingMessage(textMessage, sender, textId, phoneNumber, config,
                     sql.close();
                     return;
                 }
-                s
+                
+                console.log("Text Message "+ textMessage);
                     switch (textMessage.toLowerCase()) {
                         
-                        case 'register':{
+                        case 'pension':{
                             sms.send(register.newCustomer(sender));
                             sms.send(register.enterId(sender));
                             const status = "isRegistering";
@@ -188,25 +190,6 @@ function handleIncomingMessage(textMessage, sender, textId, phoneNumber, config,
                                 to: sender,
                                 from:'24123',
                                 message: messageToCustomer
-                            });
-                            const statusfail = "WrongMessage";
-                            const phoneNumberfail = sender;
-                            const messagingStepfail= "500";
-                            sql.connect(config, function(err) {
-                                const request = new sql.Request();
-                                const updateRegister1 = `UPDATE two_way_sms_tb SET status = @statusfail, messagingStep = @messagingStepfail WHERE phoneNumber = @phoneNumberfail AND time = (
-                                    SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberfail )`;
-                                request.input('statusfail', sql.VarChar, statusfail);
-                                request.input('messagingStepfail', sql.VarChar, messagingStepfail);
-                                request.input('phoneNumberfail', sql.VarChar, phoneNumberfail);
-                                request.query(updateRegister1, function(err, results) {
-                                if (err) {
-                                    console.error('Error executing query: ' + err.stack);
-                                    return;
-                                }
-                                console.log('Invalid Key Word');
-                                sql.close();
-                                });
                             });
                         break;
                     }
