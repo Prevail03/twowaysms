@@ -13,7 +13,9 @@ const register = {
     enterId: (sender) => ({
         to: sender,
         from:'24123',
-        message: "Please enter your ID number:"
+        message: "Please enter your ID number:",
+        bulkSMS: 0,
+        keyword: 'pension'
     }),
 
     failedId: (sender) => ({
