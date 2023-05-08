@@ -5,10 +5,11 @@ const register = {
         return {
             to: sender,
             from:'24123',
-            message: messageToCustomer
+            message: messageToCustomer,
+            bulkSMS: 0,
+            keyword: 'pension'
         };
     },
-
     enterId: (sender) => ({
         to: sender,
         from:'24123',

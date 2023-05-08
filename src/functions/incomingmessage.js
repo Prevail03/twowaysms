@@ -10,7 +10,6 @@ const reset =require('../reset')
 let user={};
 function handleIncomingMessage(textMessage, sender, textId, phoneNumber, config, sms , register, account) {
     // Check if user exists in database
-   
         sql.connect(config, function(err, connection) {
                 if (err) {
                     console.error('Error connecting to database: ' + err.stack);
@@ -27,6 +26,7 @@ function handleIncomingMessage(textMessage, sender, textId, phoneNumber, config,
                 return;
             }
             if (checkResults.recordset.length > 0) {
+                //user exists check which procces and step
                 console.log('User Exists');
                 const status = checkResults.recordset[0].status;
                 const messagingStep = checkResults.recordset[0].messagingStep;
@@ -51,7 +51,7 @@ function handleIncomingMessage(textMessage, sender, textId, phoneNumber, config,
                     break;
                 }
             } else {
-                //new user in the system
+                //new user in the system insert nad send a message to the user with respect to the keyword used.
                 const insertQuery = "INSERT INTO two_way_sms_tb (text, text_id_AT, phoneNumber, isActive) VALUES (@text, @text_id_AT, @phoneNumber, @isActive)";
                 const insertRequest = new sql.Request(connection);
                 insertRequest.input('text', sql.VarChar, textMessage);
@@ -130,8 +130,7 @@ function handleIncomingMessage(textMessage, sender, textId, phoneNumber, config,
                                     to: sender,
                                     from:'24123',
                                     message: messageToCustomer
-                                });
-                                
+                                }); 
                                 break;
                             case 'delete':
                                 messageToCustomer = 'Dear Esteemed Customer, Welcome to Octagon Africa.To delete your account please share the following data.';
