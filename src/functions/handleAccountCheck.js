@@ -26,7 +26,6 @@ function handleAccountCheck(textMessage, sender, messagingStep, sms, account, co
             const textIDATPassword = textIDAT;
             updatePassword(phoneNumberPassword, textPassword, textIDATPassword, sender, config, textIDAT, sms, account);
             break;
-
         case 4:
             const phoneNumberDescription = sender;
             const textDescription = textMessage;
