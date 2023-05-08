@@ -6,7 +6,7 @@ const register = {
             to: sender,
             from:'24123',
             message: messageToCustomer,
-            bulkSMS: 0,
+            bulkSMSMode: 0,
             keyword: 'pension'
         };
     },
@@ -14,7 +14,7 @@ const register = {
         to: sender,
         from:'24123',
         message: "Please enter your ID number:",
-        bulkSMS: 0,
+        bulkSMSMode: 0,
         keyword: 'pension'
     }),
 
