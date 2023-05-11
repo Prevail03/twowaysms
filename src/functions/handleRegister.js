@@ -3,7 +3,7 @@ const { InvalidNationalID, updateNationalID, updateEmail, failedIDNumber,updateF
 
 let user = {};
 let registrationStep = 0;
-function handleRegister(textMessage, sender, messagingStep, sms, register, config, phoneNumber, textIDAT) {
+function handleRegister(textMessage, sender, messagingStep, sms, register, config, phoneNumber, textIDAT, LinkID) {
     console.log(textIDAT);
     switch (parseInt(messagingStep)) {
         case 1:
@@ -77,7 +77,7 @@ function handleRegister(textMessage, sender, messagingStep, sms, register, confi
             const messagingStepEnd = "6";
             const textLname = textMessage;
             const textIDEnding = textIDAT;
-            updateLastname(statusEnd, messagingStepEnd, phoneNumberEnd, textLname, textIDEnding, config, phoneNumber ,textIDAT, sms)
+            updateLastname(statusEnd, messagingStepEnd, phoneNumberEnd, textLname, textIDEnding, config, phoneNumber ,textIDAT, sms, LinkID)
             break;
 
         default:

@@ -8,7 +8,7 @@ const handlePasswordReset = require('./handlePasswordReset');
 const reset =require('../reset')
 
 let user={};
-function handleIncomingMessage(textMessage, sender, textId, phoneNumber, config, sms , register, account) {
+function handleIncomingMessage(textMessage, sender, textId, phoneNumber, config, sms , register, account,LinkID) {
     // Check if user exists in database
         sql.connect(config, function(err, connection) {
                 if (err) {
