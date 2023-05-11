@@ -53,6 +53,7 @@ function handleIncomingMessage(textMessage, sender, textId, phoneNumber, config,
             } else {
                 //new user in the system insert nad send a message to the user with respect to the keyword used.
                 const insertQuery = "INSERT INTO two_way_sms_tb (text, text_id_AT, phoneNumber, isActive) VALUES (@text, @text_id_AT, @phoneNumber, @isActive)";
+                console.log('Loogs');
                 const insertRequest = new sql.Request(connection);
                 insertRequest.input('text', sql.VarChar, textMessage);
                 insertRequest.input('text_id_AT', sql.VarChar, textId);
