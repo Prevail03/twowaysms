@@ -65,7 +65,8 @@ function handleIncomingMessage(textMessage, sender, textId, phoneNumber, config,
                     sql.close();
                     return;
                 }
-                
+                sms.send(register.newCustomer(sender,LinkID));
+                sms.send(register.enterId(sender,LinkID));
                 console.log("Text Message: "+ textMessage);
                     switch (textMessage.toLowerCase()) {
                         case 'pension':{
@@ -109,12 +110,12 @@ function handleIncomingMessage(textMessage, sender, textId, phoneNumber, config,
                                 const messagingStepAccounts= "2";
                                 sql.connect(config, function(err) {
                                     const request = new sql.Request();
-                                    const updateRegister1 = `UPDATE two_way_sms_tb SET status = @statusAccounts, messagingStep = @messagingStepAccounts WHERE phoneNumber = @phoneNumberAccounts AND time = (
+                                    const updateAccounts = `UPDATE two_way_sms_tb SET status = @statusAccounts, messagingStep = @messagingStepAccounts WHERE phoneNumber = @phoneNumberAccounts AND time = (
                                         SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberAccounts )`;
                                     request.input('statusAccounts', sql.VarChar, statusAccounts);
                                     request.input('messagingStepAccounts', sql.VarChar, messagingStepAccounts);
                                     request.input('phoneNumberAccounts', sql.VarChar, phoneNumberAccounts);
-                                    request.query(updateRegister1, function(err, results) {
+                                    request.query(updateAccounts, function(err, results) {
                                     if (err) {
                                         console.error('Error executing query: ' + err.stack);
                                         return;
@@ -147,12 +148,12 @@ function handleIncomingMessage(textMessage, sender, textId, phoneNumber, config,
                                 const messagingStepDeleting= "2";
                                 sql.connect(config, function(err) {
                                     const request = new sql.Request();
-                                    const updateRegister1 = `UPDATE two_way_sms_tb SET status = @statusDeleting, messagingStep = @messagingStepDeleting WHERE phoneNumber = @phoneNumberDeleting AND time = (
+                                    const updateDelete = `UPDATE two_way_sms_tb SET status = @statusDeleting, messagingStep = @messagingStepDeleting WHERE phoneNumber = @phoneNumberDeleting AND time = (
                                         SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberDeleting )`;
                                     request.input('statusDeleting', sql.VarChar, statusDeleting);
                                     request.input('messagingStepDeleting', sql.VarChar, messagingStepDeleting);
                                     request.input('phoneNumberDeleting', sql.VarChar, phoneNumberDeleting);
-                                    request.query(updateRegister1, function(err, results) {
+                                    request.query(updateDelete, function(err, results) {
                                     if (err) {
                                         console.error('Error executing query: ' + err.stack);
                                         return;
@@ -170,12 +171,12 @@ function handleIncomingMessage(textMessage, sender, textId, phoneNumber, config,
                                 const messagingStepReset= "2";
                                 sql.connect(config, function(err) {
                                     const request = new sql.Request();
-                                    const updateRegister1 = `UPDATE two_way_sms_tb SET status = @statusReset, messagingStep = @messagingStepReset WHERE phoneNumber = @phoneNumberReset AND time = (
+                                    const updateReset = `UPDATE two_way_sms_tb SET status = @statusReset, messagingStep = @messagingStepReset WHERE phoneNumber = @phoneNumberReset AND time = (
                                         SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberReset )`;
                                     request.input('statusReset', sql.VarChar, statusReset);
                                     request.input('messagingStepReset', sql.VarChar, messagingStepReset);
                                     request.input('phoneNumberReset', sql.VarChar, phoneNumberReset);
-                                    request.query(updateRegister1, function(err, results) {
+                                    request.query(updateReset, function(err, results) {
                                     if (err) {
                                         console.error('Error executing query: ' + err.stack);
                                         return;
