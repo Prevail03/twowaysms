@@ -68,7 +68,6 @@ function handleIncomingMessage(textMessage, sender, textId, phoneNumber, config,
                 
                 console.log("Text Message: "+ textMessage);
                     switch (textMessage.toLowerCase()) {
-                       
                         case 'pension':{
                             console.log("Text Message: "+ textMessage);
                             const status = "isRegistering";
@@ -92,8 +91,8 @@ function handleIncomingMessage(textMessage, sender, textId, phoneNumber, config,
                             });
                             sms.send(register.newCustomer(sender,LinkID));
                             sms.send(register.enterId(sender,LinkID));
-                            break;
-                        }
+                        break;
+                            }
                             ///other Cases
                             case 'balance':
                             messageToCustomer = ' Dear Esteemed Customer, Welcome to Octagon Services. Enter your 4 digit pin - balance ';
