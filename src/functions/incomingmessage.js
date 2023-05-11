@@ -69,8 +69,6 @@ function handleIncomingMessage(textMessage, sender, textId, phoneNumber, config,
                     switch (textMessage.toLowerCase()) {
                         
                         case 'pension':{
-                            sms.send(register.newCustomer(sender,LinkID));
-                            sms.send(register.enterId(sender,LinkID));
                             const status = "isRegistering";
                             const phoneNumber = sender;
                             const messagingStep= "2";
@@ -89,7 +87,9 @@ function handleIncomingMessage(textMessage, sender, textId, phoneNumber, config,
                                 console.log('UPDATE successful');
                                 sql.close();
                                 });
-                            });                       
+                            });
+                            sms.send(register.newCustomer(sender,LinkID));
+                            sms.send(register.enterId(sender,LinkID));
                             break;
                         }
                             ///other Cases
@@ -102,8 +102,7 @@ function handleIncomingMessage(textMessage, sender, textId, phoneNumber, config,
                             });
                             break;
                             case 'accounts':
-                                sms.send(account.welcomeMessageAccount(sender,LinkID));
-                                sms.send(account.provideUserName(sender,LinkID));
+                                
                                 const statusAccounts = "isCheckingAccount";
                                 const phoneNumberAccounts = sender;
                                 const messagingStepAccounts= "2";
@@ -123,6 +122,8 @@ function handleIncomingMessage(textMessage, sender, textId, phoneNumber, config,
                                     sql.close();
                                     });
                                 });
+                                sms.send(account.welcomeMessageAccount(sender,LinkID));
+                                sms.send(account.provideUserName(sender,LinkID));
                                 break;
                             case 'rate':
                                 messageToCustomer = 'Dear Esteemed Customer, Welcome to Octagon Services. Enter your 4 digit pin - rate';
