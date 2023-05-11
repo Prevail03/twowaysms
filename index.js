@@ -24,8 +24,9 @@ app.post("/webhook", (req, res) => {
     const sender = payload.from;
     const textId = payload.id;
     const phoneNumber=sender;
-    const  LinkID = payload.linkId
     console.log(sender);
+    const  LinkID = payload.linkId;
+    console.log(LinkID);
     const textMessage = payload.text;
     console.log(textMessage);
     const sms = AfricasTalking.SMS;
