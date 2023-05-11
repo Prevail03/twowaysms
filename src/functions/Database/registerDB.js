@@ -4,7 +4,7 @@ var Client = require('node-rest-client').Client;
 
 function updateNationalID(statusEmail, phoneNumberEmail, messagingStepEmail, textIDNumber, textIDATEmail, config) {
   sql.connect(config, function (err) {
-    const request = new sql.Request(connection);
+    const request = new sql.Request();
     const updateRegister1 = `UPDATE two_way_sms_tb SET status = @statusEmail, messagingStep = @messagingStepEmail, national_ID=@textIDNUmber WHERE phoneNumber = @phoneNumberEmail AND text_id_AT = @textIDATEmail AND time = (
     SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberEmail )`;
     request.input('statusEmail', sql.VarChar, statusEmail);
@@ -24,7 +24,7 @@ function updateNationalID(statusEmail, phoneNumberEmail, messagingStepEmail, tex
 
 function InvalidNationalID(statusFail, phoneNumberFail, messagingStepFail, config) {
   sql.connect(config, function (err) {
-    const request = new sql.Request(connection);
+    const request = new sql.Request();
     const updateRegister1 = `UPDATE two_way_sms_tb SET status = @statusFail, messagingStep = @messagingStepFail WHERE phoneNumber = @phoneNumberFail AND time = (
     SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberFail )`;
     request.input('statusFail', sql.VarChar, statusFail);
@@ -43,7 +43,7 @@ function InvalidNationalID(statusFail, phoneNumberFail, messagingStepFail, confi
 
 function updateEmail(statusPassword, phoneNumberPassword, messagingStepPassword, textEmail, textIDATPass, config) {
   sql.connect(config, function (err) {
-    const request = new sql.Request(connection);
+    const request = new sql.Request();
     const updateRegister1 = `UPDATE two_way_sms_tb SET status = @statusPassword, messagingStep = @messagingStepPassword, email = @textEmail WHERE phoneNumber = @phoneNumberPassword  AND text_id_AT = @textIDATPass  AND time = (
       SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberPassword )`;
     request.input('statusPassword', sql.VarChar, statusPassword);
@@ -64,7 +64,7 @@ function updateEmail(statusPassword, phoneNumberPassword, messagingStepPassword,
 
 function failedIDNumber(statusID, phoneNumberID, messagingStepID, textID, textIDATID, config) {
   sql.connect(config, function (err) {
-    const request = new sql.Request(connection);
+    const request = new sql.Request();
     const updateRegister1 = `UPDATE two_way_sms_tb SET status = @statusID, messagingStep = @messagingStepID , national_ID = @textID WHERE phoneNumber = @phoneNumberID AND text_id_AT = @textIDATID  AND time = (
     SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberID )`;
     request.input('statusID', sql.VarChar, statusID);
@@ -125,7 +125,7 @@ function updateFirstName(statusLname, phoneNumberLname, messagingStepLname, text
   });
 }
 
-function updateLastname(statusEnd, messagingStepEnd, phoneNumberEnd, textLname, textIDEnding, config, phoneNumber, textIDAT, sms, LinkID) {
+function updateLastname(statusEnd, messagingStepEnd, phoneNumberEnd, textLname, textIDEnding, config, phoneNumber, textIDAT, sms, L) {
   sql.connect(config, function (err, connection) {
     const request = new sql.Request();
     const updateRegister1 = `UPDATE two_way_sms_tb SET status = @statusEnd, messagingStep = @messagingStepEnd, lastname = @textLname  WHERE phoneNumber = @phoneNumberEnd AND text_id_AT = @textIDEnding AND time = (
