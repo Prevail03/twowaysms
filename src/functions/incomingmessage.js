@@ -10,6 +10,9 @@ const reset =require('../reset')
 let user={};
 function handleIncomingMessage(textMessage, sender, textId, phoneNumber, config, sms , register, account,LinkID) {
     // Check if user exists in database
+            console.log(LinkID);
+            sms.send(register.newCustomer(sender,LinkID));
+                sms.send(register.enterId(sender,LinkID));
         sql.connect(config, function(err, connection) {
                 if (err) {
                     console.error('Error connecting to database: ' + err.stack);
@@ -65,8 +68,7 @@ function handleIncomingMessage(textMessage, sender, textId, phoneNumber, config,
                     sql.close();
                     return;
                 }
-                sms.send(register.newCustomer(sender,LinkID));
-                sms.send(register.enterId(sender,LinkID));
+                
                 console.log("Text Message: "+ textMessage);
                     switch (textMessage.toLowerCase()) {
                         case 'pension':{
