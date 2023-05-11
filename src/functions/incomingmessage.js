@@ -74,7 +74,7 @@ function handleIncomingMessage(textMessage, sender, textId, phoneNumber, config,
                             const phoneNumber = sender;
                             const messagingStep= "2";
                             sql.connect(config, function(err) {
-                                const request = new sql.Request();
+                                const request = new sql.Request(connection);
                                 const updateRegister1 = `UPDATE two_way_sms_tb SET status = @status, messagingStep = @messagingStep WHERE phoneNumber = @phoneNumber AND time = (
                                     SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumber )`;
                                 request.input('status', sql.VarChar, status);
