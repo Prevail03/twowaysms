@@ -68,8 +68,9 @@ function handleIncomingMessage(textMessage, sender, textId, phoneNumber, config,
                 
                 console.log("Text Message: "+ textMessage);
                     switch (textMessage.toLowerCase()) {
-                        
+                       
                         case 'pension':{
+                            console.log("Text Message: "+ textMessage);
                             const status = "isRegistering";
                             const phoneNumber = sender;
                             const messagingStep= "2";
