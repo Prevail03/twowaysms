@@ -1,5 +1,5 @@
 const register = {
-    newCustomer: (sender) => {
+    newCustomer: (sender, LinkID) => {
         //send message with credentials
         messageToCustomer = 'Dear Esteemed Customer, Welcome to Octagon Africa. To complete the registration process, please provide us with the following information.';         
         return {
@@ -7,59 +7,65 @@ const register = {
             from:'24123',
             message: messageToCustomer,
             bulkSMSMode: 0,
-            keyword: 'pension'
+            keyword: 'pension',
+            linkId: LinkID
         };
     },
-    enterId: (sender) => ({
+    enterId: (sender, LinkID) => ({
         to: sender,
         from:'24123',
         message: "Please enter your ID number:",
         bulkSMSMode: 0,
-        keyword: 'pension'
+        keyword: 'pension',
+        linkId: LinkID
     }),
 
-    failedId: (sender) => ({
+    failedId: (sender,LinkID) => ({
         to: sender,
         from:'24123',
         message: "Invalid ID number. Please enter a valid 6-digit ID number",
         bulkSMSMode: 0,
-        keyword: 'pension'
+        keyword: 'pension',
+        linkId: LinkID
     }),
 
-    enterEmail: (sender) => ({
-        
-            to: sender,
-            from:'24123',
-            message: "ID number verified. Please enter your Email: ",
-            bulkSMSMode: 0,
-            keyword: 'pension'
-        
+    enterEmail: (sender,LinkID ) => ({
+        to: sender,
+        from:'24123',
+        message: "ID number verified. Please enter your Email: ",
+        bulkSMSMode: 0,
+        keyword: 'pension',
+        linkId: LinkID 
     }),
-    enterPassword: (sender) => ({
+    enterPassword: (sender,LinkID) => ({
         
         to: sender,
         from:'24123',
         message: "Please enter a 6 or more Characters password: ",
         bulkSMSMode: 0,
-        keyword: 'pension'
+        keyword: 'pension',
+        linkId: LinkID
     
 }),
-    enterFirstName: (sender) => ({
+    enterFirstName: (sender,LinkID) => ({
         
         to: sender,
         from:'24123',
         message: "Please enter your first name:",
         bulkSMSMode: 0,
-        keyword: 'pension'
+        keyword: 'pension',
+        linkId: LinkID
     
     }),
-    enterLastName: (sender) => ({
+    enterLastName: (sender, LinkID) => ({
         
         to: sender,
         from:'24123',
         message: "Please enter your Last name:",
         bulkSMSMode: 0,
-        keyword: 'pension'
+        keyword: 'pension',
+        linkId: LinkID
+
     
     })
 }

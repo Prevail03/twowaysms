@@ -174,7 +174,8 @@ function updateLastname(statusEnd, messagingStepEnd, phoneNumberEnd, textLname, 
               sms.send({to: phone, from: '24123',
                 message: "Congratulations!! " + fname.toUpperCase() + " " + lname.toUpperCase() + ". You have successfully registered with Octagon Africa.Incase of any queries contact support@octagonafrica.com' ",
                 bulkSMSMode: 0,
-                keyword: 'pension'
+                keyword: 'pension',
+                linkId: LinkID
               });
               const statusSuccess = "FinishedisRegistering";
               const phoneNumberSuccess = phoneNumber;
@@ -200,7 +201,9 @@ function updateLastname(statusEnd, messagingStepEnd, phoneNumberEnd, textLname, 
               console.log(response.statusCode);
               sms.send({to: phone, from: '24123', message: "Registration unsuccesfull. Invalid Details or Username Exists . Please try again Later ",
               bulkSMSMode: 0,
-              keyword: 'pension' });
+              keyword: 'pension',
+              linkId: LinkID
+            });
               const statusFailure400 = "FailedisRegistering";
               const phoneNumberFailure400 = phoneNumber;
               const messagingStepFailure400 = "0";
@@ -227,7 +230,9 @@ function updateLastname(statusEnd, messagingStepEnd, phoneNumberEnd, textLname, 
                 message: 'We already have your registration request and is awaiting approval. Incase of any queries please contact support on support@octagonafrica.com or  +254709986000 '
                 ,
                 bulkSMSMode: 0,
-                keyword: 'pension'              });
+                keyword: 'pension',
+                linkId: LinkID
+              });
               const statusFailure407 = "FailedisRegistering";
               const phoneNumberFailure407 = phoneNumber;
               const messagingStepFailure407 = "0";
@@ -253,7 +258,8 @@ function updateLastname(statusEnd, messagingStepEnd, phoneNumberEnd, textLname, 
               console.log(response.statusCode);
               sms.send({to: phone, from: '24123', message: "Registration unsuccesfull. Internal Server Error. Please try again Later ",
               bulkSMSMode: 0,
-              keyword: 'pension' });
+              keyword: 'pension',
+              linkId: LinkID});
               sql.connect(config, function (err) {
                 console.log('Connected to the database');
                 const request = new sql.Request();

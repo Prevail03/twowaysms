@@ -35,16 +35,16 @@ function handleIncomingMessage(textMessage, sender, textId, phoneNumber, config,
                 console.log(status+" "+messagingStep);
                 switch (status) {
                 case 'isRegistering':
-                    handleRegister(textMessage, sender, messagingStep ,sms, register, config, phoneNumber, textIDAT);
+                    handleRegister(textMessage, sender, messagingStep ,sms, register, config, phoneNumber, textIDAT,LinkID);
                     break;
                 case 'isDeleting':
-                    handleDelete(textMessage, sender, messagingStep, config, sms, register , textIDAT);
+                    handleDelete(textMessage, sender, messagingStep, config, sms, register , textIDAT, LinkID);
                     break; 
                 case 'isCheckingAccount':
-                    handleAccountCheck(textMessage, sender, messagingStep, sms, account, config,textIDAT);
+                    handleAccountCheck(textMessage, sender, messagingStep, sms, account, config,textIDAT, LinkID);
                     break;
                 case 'ResetingPassword':
-                    handlePasswordReset(textMessage, sender, messagingStep, sms, reset, config , textIDAT);
+                    handlePasswordReset(textMessage, sender, messagingStep, sms, reset, config , textIDAT, LinkID);
                     break;
                 default:
                     console.log('Unknown status: ' + status);
@@ -69,8 +69,8 @@ function handleIncomingMessage(textMessage, sender, textId, phoneNumber, config,
                     switch (textMessage.toLowerCase()) {
                         
                         case 'pension':{
-                            sms.send(register.newCustomer(sender));
-                            sms.send(register.enterId(sender));
+                            sms.send(register.newCustomer(sender,LinkID));
+                            sms.send(register.enterId(sender,LinkID));
                             const status = "isRegistering";
                             const phoneNumber = sender;
                             const messagingStep= "2";
@@ -102,8 +102,8 @@ function handleIncomingMessage(textMessage, sender, textId, phoneNumber, config,
                             });
                             break;
                             case 'accounts':
-                                sms.send(account.welcomeMessageAccount(sender));
-                                sms.send(account.provideUserName(sender));
+                                sms.send(account.welcomeMessageAccount(sender,LinkID));
+                                sms.send(account.provideUserName(sender,LinkID));
                                 const statusAccounts = "isCheckingAccount";
                                 const phoneNumberAccounts = sender;
                                 const messagingStepAccounts= "2";
@@ -139,7 +139,7 @@ function handleIncomingMessage(textMessage, sender, textId, phoneNumber, config,
                                     from:'24123',
                                     message: messageToCustomer
                                 });
-                                sms.send(register.enterId(sender));
+                                sms.send(register.enterId(sender,LinkID));
                                 const statusDeleting = "isDeleting";
                                 const phoneNumberDeleting = sender;
                                 const messagingStepDeleting= "2";

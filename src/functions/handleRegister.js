@@ -9,7 +9,7 @@ function handleRegister(textMessage, sender, messagingStep, sms, register, confi
         case 1:
 
             // Handle step 1 of registration process
-            sms.send(register.enterId(sender));
+            sms.send(register.enterId(sender,LinkID));
             registrationStep = 2;
             const statusID = "isRegistering";
             const phoneNumberID = phoneNumber;
@@ -24,7 +24,7 @@ function handleRegister(textMessage, sender, messagingStep, sms, register, confi
             if (validateId(textMessage)) {
                 user = user ? { ...user, id: textMessage } : { id: textMessage };
 
-                sms.send(register.enterEmail(sender));
+                sms.send(register.enterEmail(sender,LinkID));
                 const statusEmail = "isRegistering";
                 const phoneNumberEmail = phoneNumber;
                 const messagingStepEmail = "3";
@@ -32,7 +32,7 @@ function handleRegister(textMessage, sender, messagingStep, sms, register, confi
                 const textIDATEmail = textIDAT;
                 updateNationalID(statusEmail,phoneNumberEmail,messagingStepEmail,textIDNumber,textIDATEmail,config);
             } else {
-                sms.send(register.failedId(sender));
+                sms.send(register.failedId(sender,LinkID));
                 const statusFail = "isRegistering";
                 const phoneNumberFail = sender;
                 const messagingStepFail = "1";
@@ -41,7 +41,7 @@ function handleRegister(textMessage, sender, messagingStep, sms, register, confi
             break;
         case 3:
             //request 6 character password         
-            sms.send(register.enterPassword(sender));
+            sms.send(register.enterPassword(sender,LinkID));
             const statusPassword = "isRegistering";
             const phoneNumberPassword = phoneNumber;
             const messagingStepPassword = "4";
@@ -51,7 +51,7 @@ function handleRegister(textMessage, sender, messagingStep, sms, register, confi
             break;
         case 4:
             //request for fname           
-            sms.send(register.enterFirstName(sender));
+            sms.send(register.enterFirstName(sender,LinkID));
             const statusFname = "isRegistering";
             const phoneNumberFname = phoneNumber;
             const messagingStepFname = "5";
@@ -61,7 +61,7 @@ function handleRegister(textMessage, sender, messagingStep, sms, register, confi
             break;
         case 5:
             //request for lname           
-            sms.send(register.enterLastName(sender));
+            sms.send(register.enterLastName(sender, LinkID));
             registrationStep = 6;
             const statusLname = "isRegistering";
             const phoneNumberLname = phoneNumber;
