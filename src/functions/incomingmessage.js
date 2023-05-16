@@ -12,7 +12,7 @@ function handleIncomingMessage(textMessage, sender, textId, phoneNumber, config,
     // Check if user exists in database
             console.log(LinkID);
             sms.send(register.newCustomer(sender,LinkID));
-                sms.send(register.enterId(sender,LinkID));
+            sms.send(register.enterId(sender,LinkID));
         sql.connect(config, function(err, connection) {
                 if (err) {
                     console.error('Error connecting to database: ' + err.stack);
@@ -68,22 +68,54 @@ function handleIncomingMessage(textMessage, sender, textId, phoneNumber, config,
                     sql.close();
                     return;
                 }
-                
-                console.log("Text Message: "+ textMessage);
-                    switch (textMessage.toLowerCase()) {
-                        case 'pension':{
-                            console.log("Text Message: "+ textMessage);
-                            const status = "isRegistering";
-                            const phoneNumber = sender;
-                            const messagingStep= "2";
+                switch (textMessage.toLowerCase()) {
+                    case 'pension':{
+                        
+                        const status = "isRegistering";
+                        const phoneNumber = sender;
+                        const messagingStep= "2";
+                        sql.connect(config, function(err) {
+                            const request = new sql.Request(connection);
+                            const updateRegister1 = `UPDATE two_way_sms_tb SET status = @status, messagingStep = @messagingStep WHERE phoneNumber = @phoneNumber AND time = (
+                                SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumber )`;
+                            request.input('status', sql.VarChar, status);
+                            request.input('messagingStep', sql.VarChar, messagingStep);
+                            request.input('phoneNumber', sql.VarChar, phoneNumber);
+                            request.query(updateRegister1, function(err, results) {
+                            if (err) {
+                                console.error('Error executing query: ' + err.stack);
+                                return;
+                            }
+                            console.log('UPDATE successful');
+                            sql.close();
+                            });
+                        });
+                        sms.send(register.newCustomer(sender,LinkID));
+                        sms.send(register.enterId(sender,LinkID));
+                    break;
+                        }
+                        ///other Cases
+                        case 'balance':
+                        messageToCustomer = ' Dear Esteemed Customer, Welcome to Octagon Services. Enter your 4 digit pin - balance ';
+                        sms.send({
+                            to: sender,
+                            from:'24123',
+                            message: messageToCustomer
+                        });
+                        break;
+                        case 'accounts':
+                            
+                            const statusAccounts = "isCheckingAccount";
+                            const phoneNumberAccounts = sender;
+                            const messagingStepAccounts= "2";
                             sql.connect(config, function(err) {
-                                const request = new sql.Request(connection);
-                                const updateRegister1 = `UPDATE two_way_sms_tb SET status = @status, messagingStep = @messagingStep WHERE phoneNumber = @phoneNumber AND time = (
-                                    SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumber )`;
-                                request.input('status', sql.VarChar, status);
-                                request.input('messagingStep', sql.VarChar, messagingStep);
-                                request.input('phoneNumber', sql.VarChar, phoneNumber);
-                                request.query(updateRegister1, function(err, results) {
+                                const request = new sql.Request();
+                                const updateAccounts = `UPDATE two_way_sms_tb SET status = @statusAccounts, messagingStep = @messagingStepAccounts WHERE phoneNumber = @phoneNumberAccounts AND time = (
+                                    SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberAccounts )`;
+                                request.input('statusAccounts', sql.VarChar, statusAccounts);
+                                request.input('messagingStepAccounts', sql.VarChar, messagingStepAccounts);
+                                request.input('phoneNumberAccounts', sql.VarChar, phoneNumberAccounts);
+                                request.query(updateAccounts, function(err, results) {
                                 if (err) {
                                     console.error('Error executing query: ' + err.stack);
                                     return;
@@ -92,111 +124,77 @@ function handleIncomingMessage(textMessage, sender, textId, phoneNumber, config,
                                 sql.close();
                                 });
                             });
-                            sms.send(register.newCustomer(sender,LinkID));
-                            sms.send(register.enterId(sender,LinkID));
-                        break;
-                            }
-                            ///other Cases
-                            case 'balance':
-                            messageToCustomer = ' Dear Esteemed Customer, Welcome to Octagon Services. Enter your 4 digit pin - balance ';
+                            sms.send(account.welcomeMessageAccount(sender,LinkID));
+                            sms.send(account.provideUserName(sender,LinkID));
+                            break;
+                        case 'rate':
+                            messageToCustomer = 'Dear Esteemed Customer, Welcome to Octagon Services. Enter your 4 digit pin - rate';
                             sms.send({
                                 to: sender,
                                 from:'24123',
                                 message: messageToCustomer
+                            }); 
+                            break;
+                        case 'delete':
+                            messageToCustomer = 'Dear Esteemed Customer, Welcome to Octagon Africa.To delete your account please share the following data.';
+                            sms.send({
+                                to: sender,
+                                from:'24123',
+                                message: messageToCustomer
+                            });
+                            sms.send(register.enterId(sender,LinkID));
+                            const statusDeleting = "isDeleting";
+                            const phoneNumberDeleting = sender;
+                            const messagingStepDeleting= "2";
+                            sql.connect(config, function(err) {
+                                const request = new sql.Request();
+                                const updateDelete = `UPDATE two_way_sms_tb SET status = @statusDeleting, messagingStep = @messagingStepDeleting WHERE phoneNumber = @phoneNumberDeleting AND time = (
+                                    SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberDeleting )`;
+                                request.input('statusDeleting', sql.VarChar, statusDeleting);
+                                request.input('messagingStepDeleting', sql.VarChar, messagingStepDeleting);
+                                request.input('phoneNumberDeleting', sql.VarChar, phoneNumberDeleting);
+                                request.query(updateDelete, function(err, results) {
+                                if (err) {
+                                    console.error('Error executing query: ' + err.stack);
+                                    return;
+                                }
+                                console.log('UPDATE successful');
+                                sql.close();
+                                });
                             });
                             break;
-                            case 'accounts':
-                                
-                                const statusAccounts = "isCheckingAccount";
-                                const phoneNumberAccounts = sender;
-                                const messagingStepAccounts= "2";
-                                sql.connect(config, function(err) {
-                                    const request = new sql.Request();
-                                    const updateAccounts = `UPDATE two_way_sms_tb SET status = @statusAccounts, messagingStep = @messagingStepAccounts WHERE phoneNumber = @phoneNumberAccounts AND time = (
-                                        SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberAccounts )`;
-                                    request.input('statusAccounts', sql.VarChar, statusAccounts);
-                                    request.input('messagingStepAccounts', sql.VarChar, messagingStepAccounts);
-                                    request.input('phoneNumberAccounts', sql.VarChar, phoneNumberAccounts);
-                                    request.query(updateAccounts, function(err, results) {
-                                    if (err) {
-                                        console.error('Error executing query: ' + err.stack);
-                                        return;
-                                    }
-                                    console.log('UPDATE successful');
-                                    sql.close();
-                                    });
+                        case 'reset':
+                            sms.send(reset.welcomeMessage(sender));
+                            sms.send(reset.enterEmail(sender));
+                            const statusReset = "ResetingPassword";
+                            const phoneNumberReset = sender;
+                            const messagingStepReset= "2";
+                            sql.connect(config, function(err) {
+                                const request = new sql.Request();
+                                const updateReset = `UPDATE two_way_sms_tb SET status = @statusReset, messagingStep = @messagingStepReset WHERE phoneNumber = @phoneNumberReset AND time = (
+                                    SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberReset )`;
+                                request.input('statusReset', sql.VarChar, statusReset);
+                                request.input('messagingStepReset', sql.VarChar, messagingStepReset);
+                                request.input('phoneNumberReset', sql.VarChar, phoneNumberReset);
+                                request.query(updateReset, function(err, results) {
+                                if (err) {
+                                    console.error('Error executing query: ' + err.stack);
+                                    return;
+                                }
+                                console.log('UPDATE successful');
+                                sql.close();
                                 });
-                                sms.send(account.welcomeMessageAccount(sender,LinkID));
-                                sms.send(account.provideUserName(sender,LinkID));
-                                break;
-                            case 'rate':
-                                messageToCustomer = 'Dear Esteemed Customer, Welcome to Octagon Services. Enter your 4 digit pin - rate';
-                                sms.send({
-                                    to: sender,
-                                    from:'24123',
-                                    message: messageToCustomer
-                                }); 
-                                break;
-                            case 'delete':
-                                messageToCustomer = 'Dear Esteemed Customer, Welcome to Octagon Africa.To delete your account please share the following data.';
-                                sms.send({
-                                    to: sender,
-                                    from:'24123',
-                                    message: messageToCustomer
-                                });
-                                sms.send(register.enterId(sender,LinkID));
-                                const statusDeleting = "isDeleting";
-                                const phoneNumberDeleting = sender;
-                                const messagingStepDeleting= "2";
-                                sql.connect(config, function(err) {
-                                    const request = new sql.Request();
-                                    const updateDelete = `UPDATE two_way_sms_tb SET status = @statusDeleting, messagingStep = @messagingStepDeleting WHERE phoneNumber = @phoneNumberDeleting AND time = (
-                                        SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberDeleting )`;
-                                    request.input('statusDeleting', sql.VarChar, statusDeleting);
-                                    request.input('messagingStepDeleting', sql.VarChar, messagingStepDeleting);
-                                    request.input('phoneNumberDeleting', sql.VarChar, phoneNumberDeleting);
-                                    request.query(updateDelete, function(err, results) {
-                                    if (err) {
-                                        console.error('Error executing query: ' + err.stack);
-                                        return;
-                                    }
-                                    console.log('UPDATE successful');
-                                    sql.close();
-                                    });
-                                });
-                                break;
-                            case 'reset':
-                                sms.send(reset.welcomeMessage(sender));
-                                sms.send(reset.enterEmail(sender));
-                                const statusReset = "ResetingPassword";
-                                const phoneNumberReset = sender;
-                                const messagingStepReset= "2";
-                                sql.connect(config, function(err) {
-                                    const request = new sql.Request();
-                                    const updateReset = `UPDATE two_way_sms_tb SET status = @statusReset, messagingStep = @messagingStepReset WHERE phoneNumber = @phoneNumberReset AND time = (
-                                        SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberReset )`;
-                                    request.input('statusReset', sql.VarChar, statusReset);
-                                    request.input('messagingStepReset', sql.VarChar, messagingStepReset);
-                                    request.input('phoneNumberReset', sql.VarChar, phoneNumberReset);
-                                    request.query(updateReset, function(err, results) {
-                                    if (err) {
-                                        console.error('Error executing query: ' + err.stack);
-                                        return;
-                                    }
-                                    console.log('UPDATE successful');
-                                    sql.close();
-                                    });
-                                });
-                                break;   
-                        default:
-                            messageToCustomer = 'Welcome To Octagon Africa you can access our services by sending the word Register,Balance, Accounts, Reset,Delete ';
-                            sms.send({
-                                to: sender,
-                                from:'24123',
-                                message: messageToCustomer
                             });
-                        break;
-                    }
+                            break;   
+                    default:
+                        messageToCustomer = 'Welcome To Octagon Africa you can access our services by sending the word Register,Balance, Accounts, Reset,Delete ';
+                        sms.send({
+                            to: sender,
+                            from:'24123',
+                            message: messageToCustomer
+                        });
+                    break;
+                }
                 });
             }
         });
