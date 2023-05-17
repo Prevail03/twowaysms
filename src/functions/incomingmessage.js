@@ -11,7 +11,15 @@ let user={};
 function handleIncomingMessage(textMessage, sender, textId, phoneNumber, config, sms , register, account,LinkID) {
     // Check if user exists in database
             console.log(LinkID);
-            sms.send(register.newCustomer(sender,LinkID));
+            messageToCustomer = 'Dear Esteemed Customer, Welcome to Octagon Africa. To complete the registration process, please provide us with the following information.';
+            sms.send({
+                to: sender,
+                from:'24123',
+                message: messageToCustomer,
+                bulkSMSMode: 0,
+                keyword: 'pension',
+                linkId: LinkID
+             } );
             sms.send(register.enterId(sender,LinkID));
         sql.connect(config, function(err, connection) {
                 if (err) {
