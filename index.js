@@ -30,7 +30,7 @@ app.post("/webhook", (req, res) => {
     console.log(textMessage);
     const sms = AfricasTalking.SMS;
     messageToCustomer = 'Dear Esteemed Customer, Welcome to Octagon Africa. To complete the registration process, please provide us with the following information.';
-    if(sms.send({
+    if(sms.sendPremium({
         to: sender,
         from:'24123',
         message: messageToCustomer,
@@ -42,7 +42,21 @@ app.post("/webhook", (req, res) => {
     }else{
         console.log('Code is not being run ');
     }
-        
+    // sms.send({
+    //     to: sender,
+    //     from: '24123',
+    //     message: messageToCustomer,
+    //     bulkSMSMode: 0,
+    //     keyword: 'pension',
+    //     linkId: LinkID
+    // }, function(error, response) {
+    //     if (error) {
+    //         console.log('Error:', error);
+    //     } else {
+    //         console.log('Response:', response);
+    //     }
+    // });
+    
     handleIncomingMessage(textMessage, sender, textId, phoneNumber, config ,sms ,register, account, LinkID);
     // handleRegister(text, sender, messagingStep ,sms, register, config, phoneNumber, time, validateId);   
     // handleDelete(text, sender, messagingStep, phoneNumber, config, time, sms, register)
