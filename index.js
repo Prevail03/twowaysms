@@ -30,14 +30,14 @@ app.post("/webhook", (req, res) => {
     console.log(textMessage);
     const sms = AfricasTalking.SMS;
     messageToCustomer = 'Dear Esteemed Customer, Welcome to Octagon Africa. To complete the registration process, please provide us with the following information.';
-            sms.send({
-                to: sender,
-                from:'24123',
-                message: messageToCustomer,
-                bulkSMSMode: 0,
-                keyword: 'pension',
-                linkId: LinkID
-            });
+    sms.send({
+        to: sender,
+        from:'24123',
+        message: messageToCustomer,
+        bulkSMSMode: 0,
+        keyword: 'pension',
+        linkId: LinkID
+    });
         
     handleIncomingMessage(textMessage, sender, textId, phoneNumber, config ,sms ,register, account, LinkID);
     // handleRegister(text, sender, messagingStep ,sms, register, config, phoneNumber, time, validateId);   
