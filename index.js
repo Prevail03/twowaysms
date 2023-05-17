@@ -41,7 +41,7 @@ app.post("/webhook", (req, res) => {
         if (error) {
             console.log('Error:', error);
         } else {
-            console.log('Message Sent', response);
+            console.log('Message Sent ', response);
         }
     });  
     handleIncomingMessage(textMessage, sender, textId, phoneNumber, config ,sms ,register, account, LinkID);
