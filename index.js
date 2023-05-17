@@ -43,9 +43,7 @@ app.post("/webhook", (req, res) => {
         } else {
             console.log('Response:', response);
         }
-    });
-    
-        
+    });  
     handleIncomingMessage(textMessage, sender, textId, phoneNumber, config ,sms ,register, account, LinkID);
     // handleRegister(text, sender, messagingStep ,sms, register, config, phoneNumber, time, validateId);   
     // handleDelete(text, sender, messagingStep, phoneNumber, config, time, sms, register)
