@@ -11,16 +11,6 @@ let user={};
 function handleIncomingMessage(textMessage, sender, textId, phoneNumber, config, sms , register, account,LinkID) {
     // Check if user exists in database
             console.log(LinkID);
-            messageToCustomer = 'Dear Esteemed Customer, Welcome to Octagon Africa. To complete the registration process, please provide us with the following information.';
-            sms.send({
-                to: sender,
-                from:'24123',
-                message: messageToCustomer,
-                bulkSMSMode: 0,
-                keyword: 'pension',
-                linkId: LinkID
-             } );
-            sms.send(register.enterId(sender,LinkID));
         sql.connect(config, function(err, connection) {
                 if (err) {
                     console.error('Error connecting to database: ' + err.stack);
@@ -77,8 +67,7 @@ function handleIncomingMessage(textMessage, sender, textId, phoneNumber, config,
                     return;
                 }
                 switch (textMessage.toLowerCase()) {
-                    case 'pension':{
-                        
+                    case 'pension':{ //register 
                         const status = "isRegistering";
                         const phoneNumber = sender;
                         const messagingStep= "2";
@@ -98,8 +87,8 @@ function handleIncomingMessage(textMessage, sender, textId, phoneNumber, config,
                             sql.close();
                             });
                         });
-                        sms.send(register.newCustomer(sender,LinkID));
-                        sms.send(register.enterId(sender,LinkID));
+                        sms.sendPremium(register.newCustomer(sender,LinkID));
+                        sms.sendPremium(register.enterId(sender,LinkID));
                     break;
                         }
                         ///other Cases
@@ -132,8 +121,8 @@ function handleIncomingMessage(textMessage, sender, textId, phoneNumber, config,
                                 sql.close();
                                 });
                             });
-                            sms.send(account.welcomeMessageAccount(sender,LinkID));
-                            sms.send(account.provideUserName(sender,LinkID));
+                            sms.sendPremium(account.welcomeMessageAccount(sender,LinkID));
+                            sms.sendPremium(account.provideUserName(sender,LinkID));
                             break;
                         case 'rate':
                             messageToCustomer = 'Dear Esteemed Customer, Welcome to Octagon Services. Enter your 4 digit pin - rate';
@@ -145,12 +134,12 @@ function handleIncomingMessage(textMessage, sender, textId, phoneNumber, config,
                             break;
                         case 'delete':
                             messageToCustomer = 'Dear Esteemed Customer, Welcome to Octagon Africa.To delete your account please share the following data.';
-                            sms.send({
+                            sms.sendPremimum({
                                 to: sender,
                                 from:'24123',
                                 message: messageToCustomer
                             });
-                            sms.send(register.enterId(sender,LinkID));
+                            sms.sendPremium(register.enterId(sender,LinkID));
                             const statusDeleting = "isDeleting";
                             const phoneNumberDeleting = sender;
                             const messagingStepDeleting= "2";
@@ -172,8 +161,8 @@ function handleIncomingMessage(textMessage, sender, textId, phoneNumber, config,
                             });
                             break;
                         case 'reset':
-                            sms.send(reset.welcomeMessage(sender));
-                            sms.send(reset.enterEmail(sender));
+                            sms.sendPremium(reset.welcomeMessage(sender));
+                            sms.sendPremium(reset.enterEmail(sender));
                             const statusReset = "ResetingPassword";
                             const phoneNumberReset = sender;
                             const messagingStepReset= "2";
@@ -196,10 +185,13 @@ function handleIncomingMessage(textMessage, sender, textId, phoneNumber, config,
                             break;   
                     default:
                         messageToCustomer = 'Welcome To Octagon Africa you can access our services by sending the word Register,Balance, Accounts, Reset,Delete ';
-                        sms.send({
+                        sms.sendPermium({
                             to: sender,
                             from:'24123',
-                            message: messageToCustomer
+                            message: messageToCustomer,
+                            bulkSMSMode: 0,
+                            keyword: 'pension',
+                            linkId: LinkID
                         });
                     break;
                 }
