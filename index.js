@@ -29,19 +29,19 @@ app.post("/webhook", (req, res) => {
     const textMessage = payload.text;
     console.log(textMessage);
     const sms = AfricasTalking.SMS;
-    messageToCustomer = 'Dear Esteemed Customer, Welcome to Octagon Africa. To complete the registration process, please provide us with the following information.';
-    if(sms.sendPremium({
-        to: sender,
-        from:'24123',
-        message: messageToCustomer,
-        bulkSMSMode: 0,
-        keyword: 'pension',
-        linkId: LinkID
-    })){
-        console.log('Code is being run but no response received');
-    }else{
-        console.log('Code is not being run ');
-    }
+    // messageToCustomer = 'Dear Esteemed Customer, Welcome to Octagon Africa. To complete the registration process, please provide us with the following information.';
+    // if(sms.sendPremium({
+    //     to: sender,
+    //     from:'24123',
+    //     message: messageToCustomer,
+    //     bulkSMSMode: 0,
+    //     keyword: 'pension',
+    //     linkId: LinkID
+    // })){
+    //     console.log('Code is being run but no response received');
+    // }else{
+    //     console.log('Code is not being run ');
+    // }
     // sms.send({
     //     to: sender,
     //     from: '24123',
