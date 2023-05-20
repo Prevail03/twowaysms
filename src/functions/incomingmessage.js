@@ -184,7 +184,7 @@ function handleIncomingMessage(textMessage, sender, textId, phoneNumber, config,
                             break;   
                     default:
                         messageToCustomer = 'Welcome To Octagon Africa you can access our services by sending the word Register,Balance, Accounts, Reset,Delete ';
-                        sms.sendPermium({
+                        sms.sendPremium({
                             to: sender,
                             from:'24123',
                             message: messageToCustomer,
