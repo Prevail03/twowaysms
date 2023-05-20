@@ -69,7 +69,7 @@ function handleIncomingMessage(textMessage, sender, textId, phoneNumber, config,
                 switch (textMessage.toLowerCase()) {
                     case 'register'://register 
                         sms.sendPremium(register.newCustomer(sender,LinkID));
-                        sms.sendPremium(register.enterId(sender,LinkID));
+                        // sms.sendPremium(register.enterId(sender,LinkID));
                         const status = "isRegistering";
                         const phoneNumber = sender;
                         const messagingStep= "2";
