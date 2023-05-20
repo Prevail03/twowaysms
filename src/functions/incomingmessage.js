@@ -67,7 +67,9 @@ function handleIncomingMessage(textMessage, sender, textId, phoneNumber, config,
                     return;
                 }
                 switch (textMessage.toLowerCase()) {
-                    case 'pension':{ //register 
+                    case 'register'://register 
+                        sms.sendPremium(register.newCustomer(sender,LinkID));
+                        sms.sendPremium(register.enterId(sender,LinkID));
                         const status = "isRegistering";
                         const phoneNumber = sender;
                         const messagingStep= "2";
@@ -87,10 +89,8 @@ function handleIncomingMessage(textMessage, sender, textId, phoneNumber, config,
                             sql.close();
                             });
                         });
-                        sms.sendPremium(register.newCustomer(sender,LinkID));
-                        sms.sendPremium(register.enterId(sender,LinkID));
                     break;
-                        }
+                        
                         ///other Cases
                         case 'balance':
                         messageToCustomer = ' Dear Esteemed Customer, Welcome to Octagon Services. Enter your 4 digit pin - balance ';
