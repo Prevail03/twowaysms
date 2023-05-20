@@ -47,13 +47,13 @@ function handleIncomingMessage(textMessage, sender, textId, phoneNumber, config,
                     handlePasswordReset(textMessage, sender, messagingStep, sms, reset, config , textIDAT, LinkID);
                     break;
                 default:
+                    sms.sendPremium(register.defaultMessage(sender,LinkID));
                     console.log('Unknown status: ' + status);
                     break;
                 }
             } else {
                 //new user in the system insert nad send a message to the user with respect to the keyword used.
                 const insertQuery = "INSERT INTO two_way_sms_tb (text, text_id_AT, phoneNumber, isActive) VALUES (@text, @text_id_AT, @phoneNumber, @isActive)";
-                console.log('Loogs');
                 const insertRequest = new sql.Request(connection);
                 insertRequest.input('text', sql.VarChar, textMessage);
                 insertRequest.input('text_id_AT', sql.VarChar, textId);

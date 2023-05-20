@@ -1,12 +1,11 @@
 const register = {
     newCustomer: (sender, LinkID) => {
         //send message with credentials
-        const messageToCustomer = 'Dear Esteemed Customer, Welcome to Octagon Africa. To complete the registration process, please provide us with the following information.\nPlease enter your ID number:';
-     
+        const messageToCustomer = 'Dear Esteemed Customer, Welcome to Octagon Africa. To complete the registration process, please provide us with the following information.\nPlease enter your ID number:';    
         return {
             to: sender,
             from:'24123',
-            message: messageToCustomer,
+            message: "Dear Esteemed Customer, Welcome to Octagon Africa. To complete the registration process, please provide us with the following information.\nPlease enter your ID number:",
             bulkSMSMode: 0,
             keyword: 'pension',
             linkId: LinkID
@@ -38,28 +37,23 @@ const register = {
         keyword: 'pension',
         linkId: LinkID 
     }),
-    enterPassword: (sender,LinkID) => ({
-        
+    enterPassword: (sender,LinkID) => ({        
         to: sender,
         from:'24123',
         message: "Please enter a 6 or more Characters password: ",
         bulkSMSMode: 0,
         keyword: 'pension',
-        linkId: LinkID
-    
+        linkId: LinkID   
 }),
-    enterFirstName: (sender,LinkID) => ({
-        
+    enterFirstName: (sender,LinkID) => ({   
         to: sender,
         from:'24123',
         message: "Please enter your first name:",
         bulkSMSMode: 0,
         keyword: 'pension',
         linkId: LinkID
-    
     }),
-    enterLastName: (sender, LinkID) => ({
-        
+    enterLastName: (sender, LinkID) => ({    
         to: sender,
         from:'24123',
         message: "Please enter your Last name:",
