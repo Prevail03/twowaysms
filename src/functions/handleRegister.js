@@ -23,7 +23,7 @@ function handleRegister(textMessage, sender, messagingStep, sms, register, confi
             // process ID number and request for county
             if (validateId(textMessage)) {
                 user = user ? { ...user, id: textMessage } : { id: textMessage };
-
+                console.log(LinkID);
                 sms.send(register.enterEmail(sender,LinkID));
                 const statusEmail = "isRegistering";
                 const phoneNumberEmail = phoneNumber;

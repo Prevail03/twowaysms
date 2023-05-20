@@ -10,7 +10,6 @@ const reset =require('../reset')
 let user={};
 function handleIncomingMessage(textMessage, sender, textId, phoneNumber, config, sms , register, account,LinkID) {
     // Check if user exists in database
-            console.log(LinkID);
         sql.connect(config, function(err, connection) {
                 if (err) {
                     console.error('Error connecting to database: ' + err.stack);
@@ -36,7 +35,7 @@ function handleIncomingMessage(textMessage, sender, textId, phoneNumber, config,
                 console.log(status+" "+messagingStep);
                 switch (status) {
                 case 'isRegistering':
-                    handleRegister(textMessage, sender, messagingStep ,sms, register, config, phoneNumber, textIDAT,LinkID);
+                    handleRegister(textMessage, sender, messagingStep ,sms, register, config, phoneNumber, textIDAT, LinkID);
                     break;
                 case 'isDeleting':
                     handleDelete(textMessage, sender, messagingStep, config, sms, register , textIDAT, LinkID);
