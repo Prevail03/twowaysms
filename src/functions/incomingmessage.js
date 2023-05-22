@@ -53,8 +53,8 @@ function handleIncomingMessage(textMessage, sender, textId, phoneNumber, config,
                     break;
                 }
             } // <-- Closing curly brace for if statement
-            else {
-                // Your logic when the record doesn't exist
+            else { 
+                //does not exist in two_way_sms_tb
                 sql.connect(config, function(err, connection) {
                     if (err) {
                         console.error('Error connecting to database: ' + err.stack);
@@ -83,7 +83,6 @@ function handleIncomingMessage(textMessage, sender, textId, phoneNumber, config,
             }
             sql.close();
         }); // <-- Closing parentheses for query function
-    }); // <-- Closing parentheses for sql.connect function
-    
+    }); // <-- Closing parentheses for sql.connect function  
 }
 module.exports = handleIncomingMessage;
