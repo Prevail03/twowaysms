@@ -27,7 +27,7 @@ function handleIncomingMessage(textMessage, sender, textId, phoneNumber, config,
             if (checkResults.recordset.length > 0) {
                
                 console.log('Existing user of two way sms');
-                //user exists check which procces and step
+                //user exists check which procces and step cc
                 console.log('User Exists');
                 const status = checkResults.recordset[0].status;
                 const messagingStep = checkResults.recordset[0].messagingStep;
