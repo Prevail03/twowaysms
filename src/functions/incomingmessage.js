@@ -12,7 +12,6 @@ function handleIncomingMessage(textMessage, sender, textId, phoneNumber, config,
             return;
         }
         console.log('Connected to database');
-
         const checkIfExistsQuery = "SELECT TOP 1 * FROM two_way_sms_tb WHERE phoneNumber = @phoneNumber AND isActive = 1";
         const checkIfExistsRequest = new sql.Request(connection);
         checkIfExistsRequest.input('phoneNumber', sql.VarChar, phoneNumber);
@@ -31,7 +30,6 @@ function handleIncomingMessage(textMessage, sender, textId, phoneNumber, config,
                 const status = checkResults.recordset[0].status;
                 const messagingStep = checkResults.recordset[0].messagingStep;
                 const textIDAT = checkResults.recordset[0].text_id_AT; ///text Id from Africas Talking
-                console.log(textIDAT);
                 console.log(status+" "+messagingStep);
                 switch (status) {
                     case 'isRegistering':
@@ -51,8 +49,10 @@ function handleIncomingMessage(textMessage, sender, textId, phoneNumber, config,
                         console.log('Unknown status: ' + status);
                     break;
                 }
+                 // Does not exist in two_way_sms_tb
             } else {
-                // Does not exist in two_way_sms_tb
+                // insert to two_way_sms_tb 
+               
                 const checkIfExistsQuerySysUsers = "SELECT TOP 1 * FROM sys_users_tb WHERE user_mobile = @phoneNumber OR user_phone = @phoneNumber";
                 const checkIfExistsRequestSysUsers = new sql.Request(connection);
                 checkIfExistsRequestSysUsers.input('phoneNumber', sql.VarChar, phoneNumber);
@@ -62,14 +62,33 @@ function handleIncomingMessage(textMessage, sender, textId, phoneNumber, config,
                         connection.close();
                         return;
                     }
-                    if (checkResultsSysUsers.recordset.length > 0) {
-                        // Record exists in sys_users_tb
+                    // Record exists in sys_users_tb
+                    if (checkResultsSysUsers.recordset.length > 0) {                       
                         console.log('Record exists in sys_users_tb');
                         sms.sendPremium(register.menuMessage(sender,LinkID));
                         // ... Handle existing record logic ...
-
+                        const status = "currentCustomer";
+                        const phoneNumber = sender;
+                        const messagingStep= "2";
+                        const insertQuery = "INSERT INTO two_way_sms_tb (text, text_id_AT, status, messagingStep,phoneNumber, isActive) VALUES (@text, @text_id_AT,@status, @messagingStep, @phoneNumber, @isActive)";
+                        const insertRequest = new sql.Request(connection);
+                        insertRequest.input('text', sql.VarChar, textMessage);
+                        insertRequest.input('text_id_AT', sql.VarChar, textId);
+                        insertRequest.input('status', sql.VarChar, status);
+                        insertRequest.input('messagingStep', sql.VarChar, messagingStep);
+                        insertRequest.input('phoneNumber', sql.VarChar, phoneNumber);
+                        insertRequest.input('isActive', sql.Bit, 1);
+                        insertRequest.query(insertQuery, function(insertErr, insertResults) {
+                            if (insertErr) {
+                                console.error('Error executing insertQuery: ' + insertErr.stack);
+                                sql.close();
+                                return;
+                            }
+                            console.log(" New User inserted successfully");
+                        });
+                    // Record does not exist in sys_users_tb == a new conversion
                     } else {
-                        // Record does not exist in sys_users_tb == a new conversion
+                        
                         sms.sendPremium(register.menuMessage(sender,LinkID));
                         console.log('Start Registration Process');
                         // ... Handle registration process logic ...
