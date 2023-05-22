@@ -80,12 +80,13 @@ function handleIncomingMessage(textMessage, sender, textId, phoneNumber, config,
                             insertRequest.input('phoneNumber', sql.VarChar, phoneNumber);
                             insertRequest.input('isActive', sql.Bit, 1);
                             insertRequest.query(insertQuery, function(insertErr, insertResults) {
-                                if (insertErr) {
-                                    console.error('Error executing insertQuery: ' + insertErr.stack);
-                                    sql.close();
-                                    return;
-                                }
-                                console.log('Registered current users');
+                            if (insertErr) {
+                            console.error('Error executing insertQuery: ' + insertErr.stack);
+                            connection.close();
+                            return;
+                            }
+                            console.log('Registered current users');
+                            connection.close();
                             });
                         // Record does not exist in sys_users_tb == a new conversion
                         } else {
