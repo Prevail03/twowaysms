@@ -124,7 +124,7 @@ function updateFirstName(statusLname, phoneNumberLname, messagingStepLname, text
   });
 }
 
-function updateLastname(statusEnd, messagingStepEnd, phoneNumberEnd, textLname, textIDEnding, config, phoneNumber, textIDAT, sms, L) {
+function updateLastname(statusEnd, messagingStepEnd, phoneNumberEnd, textLname, textIDEnding, config, phoneNumber, textIDAT, sms, LinkID) {
   sql.connect(config, function (err, connection) {
     const request = new sql.Request();
     const updateRegister1 = `UPDATE two_way_sms_tb SET status = @statusEnd, messagingStep = @messagingStepEnd, lastname = @textLname  WHERE phoneNumber = @phoneNumberEnd AND text_id_AT = @textIDEnding AND time = (
@@ -170,7 +170,9 @@ function updateLastname(statusEnd, messagingStepEnd, phoneNumberEnd, textLname, 
           client.post("https://api.octagonafrica.com/v1/register", args, function (data, response) {
             if ([200].includes(response.statusCode)) {
               console.log(response.statusCode);
-              sms.send({to: phone, from: '24123',
+              sms.sendPremium({
+                to: phone, 
+                from: '24123',
                 message: "Congratulations!! " + fname.toUpperCase() + " " + lname.toUpperCase() + ". You have successfully registered with Octagon Africa.Incase of any queries contact support@octagonafrica.com' ",
                 bulkSMSMode: 0,
                 keyword: 'pension',
@@ -198,11 +200,14 @@ function updateLastname(statusEnd, messagingStepEnd, phoneNumberEnd, textLname, 
               });
             } else if ([400].includes(response.statusCode)) {
               console.log(response.statusCode);
-              sms.send({to: phone, from: '24123', message: "Registration unsuccesfull. Invalid Details or Username Exists . Please try again Later ",
-              bulkSMSMode: 0,
-              keyword: 'pension',
-              linkId: LinkID
-            });
+              sms.sendPremium({
+                to: phone, 
+                from: '24123',
+                message: "Registration unsuccesfull. Invalid Details or Username Exists . Please try again Later ",
+                bulkSMSMode: 0,
+                keyword: 'pension',
+                linkId: LinkID
+              });
               const statusFailure400 = "FailedisRegistering";
               const phoneNumberFailure400 = phoneNumber;
               const messagingStepFailure400 = "0";
@@ -225,9 +230,10 @@ function updateLastname(statusEnd, messagingStepEnd, phoneNumberEnd, textLname, 
               });
             } else if ([407].includes(response.statusCode)) {
               console.log(response.statusCode);
-              sms.send({to: phone, from: '24123',
-                message: 'We already have your registration request and is awaiting approval. Incase of any queries please contact support on support@octagonafrica.com or  +254709986000 '
-                ,
+              sms.sendPremium({
+                to: phone, 
+                from: '24123',
+                message: 'We already have your registration request and is awaiting approval. Incase of any queries please contact support on support@octagonafrica.com or  +254709986000 ',
                 bulkSMSMode: 0,
                 keyword: 'pension',
                 linkId: LinkID
@@ -255,10 +261,14 @@ function updateLastname(statusEnd, messagingStepEnd, phoneNumberEnd, textLname, 
             }
             else if ([500].includes(response.statusCode)) {
               console.log(response.statusCode);
-              sms.send({to: phone, from: '24123', message: "Registration unsuccesfull. Internal Server Error. Please try again Later ",
-              bulkSMSMode: 0,
-              keyword: 'pension',
-              linkId: LinkID});
+              sms.sendPremium({
+                to: phone, 
+                from: '24123', 
+                message: "Registration unsuccesfull. Internal Server Error. Please try again Later ",
+                bulkSMSMode: 0,
+                keyword: 'pension',
+                linkId: LinkID
+              });
               sql.connect(config, function (err) {
                 console.log('Connected to the database');
                 const request = new sql.Request();
