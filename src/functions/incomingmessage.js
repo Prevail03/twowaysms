@@ -83,7 +83,7 @@ function handleIncomingMessage(textMessage, sender, textId, phoneNumber, config,
                             insertRequest.input('status', sql.VarChar, status);
                             insertRequest.input('messagingStep', sql.VarChar, messagingStep);
                             insertRequest.input('phoneNumber', sql.VarChar, phoneNumber);
-                            insertRequest.input('isActive', sql.Bit, true); // Use true instead of 1 for boolean values
+                            insertRequest.input('isActive', sql.Bit, 1); // Use true instead of 1 for boolean values
                             insertRequest.query(insertQuery, function(insertErr, insertResults) {
                                 if (insertErr) {
                                     console.error('Error executing insertQuery: ' + insertErr.stack);
@@ -92,7 +92,6 @@ function handleIncomingMessage(textMessage, sender, textId, phoneNumber, config,
                                 }
                                 console.log("New User inserted successfully");
                             });
-
                         // Record does not exist in sys_users_tb == a new conversion
                         } else {
                             sms.sendPremium(register.menuMessage(sender,LinkID));
