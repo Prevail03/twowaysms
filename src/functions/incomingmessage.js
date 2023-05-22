@@ -75,23 +75,24 @@ function handleIncomingMessage(textMessage, sender, textId, phoneNumber, config,
                             // ... Handle existing record logic ...
                             const status = "currentCustomer";
                             const phoneNumber = sender;
-                            const messagingStep= "2";
-                            const insertQuery = "INSERT INTO two_way_sms_tb (text, text_id_AT, status, messagingStep,phoneNumber, isActive) VALUES (@text, @text_id_AT,@status, @messagingStep, @phoneNumber, @isActive)";
+                            const messagingStep = "2";
+                            const insertQuery = "INSERT INTO two_way_sms_tb (text, text_id_AT, status, messagingStep, phoneNumber, isActive) VALUES (@text, @text_id_AT, @status, @messagingStep, @phoneNumber, @isActive)";
                             const insertRequest = new sql.Request(connection);
                             insertRequest.input('text', sql.VarChar, textMessage);
-                            insertRequest.input('text_id_AT', sql.VarChar, textId);
+                            insertRequest.input('text_id_AT', sql.VarChar, textId); // Make sure the variable name is correct
                             insertRequest.input('status', sql.VarChar, status);
                             insertRequest.input('messagingStep', sql.VarChar, messagingStep);
                             insertRequest.input('phoneNumber', sql.VarChar, phoneNumber);
-                            insertRequest.input('isActive', sql.Bit, 1);
+                            insertRequest.input('isActive', sql.Bit, true); // Use true instead of 1 for boolean values
                             insertRequest.query(insertQuery, function(insertErr, insertResults) {
                                 if (insertErr) {
                                     console.error('Error executing insertQuery: ' + insertErr.stack);
                                     sql.close();
                                     return;
                                 }
-                                console.log(" New User inserted successfully");
+                                console.log("New User inserted successfully");
                             });
+
                         // Record does not exist in sys_users_tb == a new conversion
                         } else {
                             sms.sendPremium(register.menuMessage(sender,LinkID));
@@ -99,23 +100,24 @@ function handleIncomingMessage(textMessage, sender, textId, phoneNumber, config,
                             // ... Handle registration process logic ...
                             const status = "isRegistering";
                             const phoneNumber = sender;
-                            const messagingStep= "2";
-                            const insertQuery = "INSERT INTO two_way_sms_tb (text, text_id_AT, status, messagingStep,phoneNumber, isActive) VALUES (@text, @text_id_AT,@status, @messagingStep, @phoneNumber, @isActive)";
+                            const messagingStep = "2";
+                            const insertQuery = "INSERT INTO two_way_sms_tb (text, text_id_AT, status, messagingStep, phoneNumber, isActive) VALUES (@text, @text_id_AT, @status, @messagingStep, @phoneNumber, @isActive)";
                             const insertRequest = new sql.Request(connection);
                             insertRequest.input('text', sql.VarChar, textMessage);
                             insertRequest.input('text_id_AT', sql.VarChar, textId);
                             insertRequest.input('status', sql.VarChar, status);
                             insertRequest.input('messagingStep', sql.VarChar, messagingStep);
                             insertRequest.input('phoneNumber', sql.VarChar, phoneNumber);
-                            insertRequest.input('isActive', sql.Bit, 1);
+                            insertRequest.input('isActive', sql.Bit, 1); // Use true instead of 1 for boolean values
                             insertRequest.query(insertQuery, function(insertErr, insertResults) {
                                 if (insertErr) {
                                     console.error('Error executing insertQuery: ' + insertErr.stack);
                                     sql.close();
                                     return;
                                 }
-                                console.log(" New User inserted successfully");
+                                console.log("New User inserted successfully");
                             });
+                            
                         }
                         connection.close();
                     });
