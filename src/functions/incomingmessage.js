@@ -1,6 +1,5 @@
 const sql = require('mssql');
-var Client = require('node-rest-client').Client;
-const validateId = require('../validateId');
+var Client = require('node-rest-client').Client;const validateId = require('../validateId');
 const handleRegister = require('./handleRegister');
 const handleDelete = require('./handleDelete');
 const handleAccountCheck = require('./handleAccountCheck');
@@ -10,7 +9,7 @@ const reset =require('../reset')
 let user={};
 function handleIncomingMessage(textMessage, sender, textId, phoneNumber, config, sms , register, account,LinkID) {
     // Check if user exists in database
-        sql.connect(config, function(err, connection) {
+    sql.connect(config, function(err, connection) {
                 if (err) {
                     console.error('Error connecting to database: ' + err.stack);
                     return;
