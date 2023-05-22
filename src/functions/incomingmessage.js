@@ -120,7 +120,6 @@ function handleIncomingMessage(textMessage, sender, textId, phoneNumber, config,
                         connection.close();
                     });
                 }
-                
             }
         });
     });
