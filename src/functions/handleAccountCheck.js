@@ -1,11 +1,9 @@
-const sql = require('mssql');
-var Client = require('node-rest-client').Client;
 const { updateUserNameFail, updateUserNameSuccess, updatePassword, updateDescription,updatePeriodName } = require('./Database/accountDB');
 
-function handleAccountCheck(textMessage, sender, messagingStep, sms, account, config, textIDAT) {
+function handleAccountCheck(textMessage, sender, messagingStep, sms, account, config, textIDAT, LinkID) {
     switch (parseInt(messagingStep)) {
         case 1:
-            sms.send(account.provideUserName(sender));
+            sms.sendPremium(account.provideUserName(sender,LinkID));
             const statusUserName = "isCheckingAccount";
             const phoneNumberUserName = sender;
             const messagingStepUserName = "2";
@@ -18,19 +16,19 @@ function handleAccountCheck(textMessage, sender, messagingStep, sms, account, co
             const textUsername = textMessage;
             const textIDATUserNameS = textIDAT;
             updateUserNameSuccess(phoneNumberUserNameS, textUsername, textIDATUserNameS, config)
-            sms.send(account.providePassword(sender));
+            sms.sendPremium(account.providePassword(sender,LinkID));
             break;
         case 3:
             const phoneNumberPassword = sender;
             const textPassword = textMessage;
             const textIDATPassword = textIDAT;
-            updatePassword(phoneNumberPassword, textPassword, textIDATPassword, sender, config, textIDAT, sms, account);
+            updatePassword(phoneNumberPassword, textPassword, textIDATPassword, sender, config, textIDAT, sms, account, LinkID);
             break;
         case 4:
             const phoneNumberDescription = sender;
             const textDescription = textMessage;
             const textIDATDescription = textIDAT;
-            updateDescription(phoneNumberDescription, textDescription, textIDATDescription, sender, config, textIDAT, sms, account);
+            updateDescription(phoneNumberDescription, textDescription, textIDATDescription, sender, config, textIDAT, sms, account, LinkID);
             break;
 
         case 5:
@@ -38,11 +36,11 @@ function handleAccountCheck(textMessage, sender, messagingStep, sms, account, co
             const phoneNumberperiodName = sender;
             const textperiodName = textMessage;
             const textIDATperiodName = textIDAT;
-            updatePeriodName(phoneNumberperiodName, textperiodName, textIDATperiodName, sender, config, textIDAT, sms);
+            updatePeriodName(phoneNumberperiodName, textperiodName, textIDATperiodName, sender, config, textIDAT, sms,LinkID);
             break;
         default:
             // do sthg
-            sms.send(account.wrongResponse(sender));
+            sms.sendPremium(account.wrongResponse(sender, LinkID));
             break;
     }
 }

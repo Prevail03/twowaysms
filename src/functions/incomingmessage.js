@@ -8,23 +8,25 @@ const reset =require('../reset')
 
 let user={};
 function handleIncomingMessage(textMessage, sender, textId, phoneNumber, config, sms , register, account,LinkID) {
-    // Check if user exists in database
     sql.connect(config, function(err, connection) {
-                if (err) {
-                    console.error('Error connecting to database: ' + err.stack);
-                    return;
-                }
-                console.log('Connected to database');
-            const checkIfExistsQuery = "SELECT TOP 1 * FROM two_way_sms_tb WHERE phoneNumber = @phoneNumber AND isActive = 1";
-            const checkIfExistsRequest = new sql.Request(connection);
-            checkIfExistsRequest.input('phoneNumber', sql.VarChar, phoneNumber);
-            checkIfExistsRequest.query(checkIfExistsQuery, function(checkErr, checkResults) {
+        if (err) {
+            console.error('Error connecting to database: ' + err.stack);
+            return;
+        }
+        console.log('Connected to database');
+        //check if its an existing user of the two way sms system
+        const checkIfExistsQuery = "SELECT TOP 1 * FROM two_way_sms_tb WHERE phoneNumber = @phoneNumber AND isActive = 1";
+        const checkIfExistsRequest = new sql.Request(connection);
+        checkIfExistsRequest.input('phoneNumber', sql.VarChar, phoneNumber);
+        checkIfExistsRequest.query(checkIfExistsQuery, function(checkErr, checkResults) {
             if (checkErr) {
                 console.error('Error executing checkIfExistsQuery: ' + checkErr.stack);
                 sql.close();
                 return;
             }
             if (checkResults.recordset.length > 0) {
+               
+                console.log('Existing user of two way sms');
                 //user exists check which procces and step
                 console.log('User Exists');
                 const status = checkResults.recordset[0].status;
@@ -50,144 +52,38 @@ function handleIncomingMessage(textMessage, sender, textId, phoneNumber, config,
                     console.log('Unknown status: ' + status);
                     break;
                 }
-            } else {
-                //new user in the system insert nad send a message to the user with respect to the keyword used.
-                const insertQuery = "INSERT INTO two_way_sms_tb (text, text_id_AT, phoneNumber, isActive) VALUES (@text, @text_id_AT, @phoneNumber, @isActive)";
-                const insertRequest = new sql.Request(connection);
-                insertRequest.input('text', sql.VarChar, textMessage);
-                insertRequest.input('text_id_AT', sql.VarChar, textId);
-                insertRequest.input('phoneNumber', sql.VarChar, phoneNumber);
-                insertRequest.input('isActive', sql.Bit, 1);
-                insertRequest.query(insertQuery, function(insertErr, insertResults) {
-                if (insertErr) {
-                    console.error('Error executing insertQuery: ' + insertErr.stack);
-                    sql.close();
-                    return;
-                }
-                switch (textMessage.toLowerCase()) {
-                    case 'register'://register 
-                        sms.sendPremium(register.newCustomer(sender,LinkID));
-                        // sms.sendPremium(register.enterId(sender,LinkID));
-                        const status = "isRegistering";
-                        const phoneNumber = sender;
-                        const messagingStep= "2";
-                        sql.connect(config, function(err) {
-                            const request = new sql.Request(connection);
-                            const updateRegister1 = `UPDATE two_way_sms_tb SET status = @status, messagingStep = @messagingStep WHERE phoneNumber = @phoneNumber AND time = (
-                                SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumber )`;
-                            request.input('status', sql.VarChar, status);
-                            request.input('messagingStep', sql.VarChar, messagingStep);
-                            request.input('phoneNumber', sql.VarChar, phoneNumber);
-                            request.query(updateRegister1, function(err, results) {
-                            if (err) {
-                                console.error('Error executing query: ' + err.stack);
-                                return;
-                            }
-                            console.log('Register UPDATE successful');
+            } // <-- Closing curly brace for if statement
+            else {
+                // Your logic when the record doesn't exist
+                sql.connect(config, function(err, connection) {
+                    if (err) {
+                        console.error('Error connecting to database: ' + err.stack);
+                        return;
+                    }
+                    const checkIfExistsQuery = "SELECT TOP 1 * FROM sys_users_tb WHERE user_mobile = @phoneNumber OR user_phone = @phoneNumber";
+                    const checkIfExistsRequest = new sql.Request(connection);
+                    checkIfExistsRequest.input('phoneNumber', sql.VarChar, phoneNumber);
+                    checkIfExistsRequest.query(checkIfExistsQuery, function(checkErr, checkResults) {
+                        if (checkErr) {
+                            console.error('Error executing checkIfExistsQuery: ' + checkErr.stack);
                             sql.close();
-                            });
-                        });
-                    break;
-                        
-                        ///other Cases
-                        case 'balance':
-                        messageToCustomer = ' Dear Esteemed Customer, Welcome to Octagon Services. Enter your 4 digit pin - balance ';
-                        sms.send({
-                            to: sender,
-                            from:'24123',
-                            message: messageToCustomer
-                        });
-                        break;
-                        case 'accounts':
-                            
-                            const statusAccounts = "isCheckingAccount";
-                            const phoneNumberAccounts = sender;
-                            const messagingStepAccounts= "2";
-                            sql.connect(config, function(err) {
-                                const request = new sql.Request();
-                                const updateAccounts = `UPDATE two_way_sms_tb SET status = @statusAccounts, messagingStep = @messagingStepAccounts WHERE phoneNumber = @phoneNumberAccounts AND time = (
-                                    SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberAccounts )`;
-                                request.input('statusAccounts', sql.VarChar, statusAccounts);
-                                request.input('messagingStepAccounts', sql.VarChar, messagingStepAccounts);
-                                request.input('phoneNumberAccounts', sql.VarChar, phoneNumberAccounts);
-                                request.query(updateAccounts, function(err, results) {
-                                if (err) {
-                                    console.error('Error executing query: ' + err.stack);
-                                    return;
-                                }
-                                console.log('UPDATE successful');
-                                sql.close();
-                                });
-                            });
-                            sms.sendPremium(account.welcomeMessageAccount(sender,LinkID));
-                            sms.sendPremium(account.provideUserName(sender,LinkID));
-                            break;
-                        case 'rate':
-                            messageToCustomer = 'Dear Esteemed Customer, Welcome to Octagon Services. Enter your 4 digit pin - rate';
-                            sms.send({
-                                to: sender,
-                                from:'24123',
-                                message: messageToCustomer
-                            }); 
-                            break;
-                        case 'delete':
-                            messageToCustomer = 'Dear Esteemed Customer, Welcome to Octagon Africa.To delete your account please share the following data.';
-                            sms.sendPremimum({
-                                to: sender,
-                                from:'24123',
-                                message: messageToCustomer
-                            });
-                            sms.sendPremium(register.enterId(sender,LinkID));
-                            const statusDeleting = "isDeleting";
-                            const phoneNumberDeleting = sender;
-                            const messagingStepDeleting= "2";
-                            sql.connect(config, function(err) {
-                                const request = new sql.Request();
-                                const updateDelete = `UPDATE two_way_sms_tb SET status = @statusDeleting, messagingStep = @messagingStepDeleting WHERE phoneNumber = @phoneNumberDeleting AND time = (
-                                    SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberDeleting )`;
-                                request.input('statusDeleting', sql.VarChar, statusDeleting);
-                                request.input('messagingStepDeleting', sql.VarChar, messagingStepDeleting);
-                                request.input('phoneNumberDeleting', sql.VarChar, phoneNumberDeleting);
-                                request.query(updateDelete, function(err, results) {
-                                if (err) {
-                                    console.error('Error executing query: ' + err.stack);
-                                    return;
-                                }
-                                console.log('UPDATE successful');
-                                sql.close();
-                                });
-                            });
-                            break;
-                        case 'reset':
-                            sms.sendPremium(reset.welcomeMessage(sender));
-                            sms.sendPremium(reset.enterEmail(sender));
-                            const statusReset = "ResetingPassword";
-                            const phoneNumberReset = sender;
-                            const messagingStepReset= "2";
-                            sql.connect(config, function(err) {
-                                const request = new sql.Request();
-                                const updateReset = `UPDATE two_way_sms_tb SET status = @statusReset, messagingStep = @messagingStepReset WHERE phoneNumber = @phoneNumberReset AND time = (
-                                    SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberReset )`;
-                                request.input('statusReset', sql.VarChar, statusReset);
-                                request.input('messagingStepReset', sql.VarChar, messagingStepReset);
-                                request.input('phoneNumberReset', sql.VarChar, phoneNumberReset);
-                                request.query(updateReset, function(err, results) {
-                                if (err) {
-                                    console.error('Error executing query: ' + err.stack);
-                                    return;
-                                }
-                                console.log('UPDATE successful');
-                                sql.close();
-                                });
-                            });
-                            break;   
-                    default:
-                        sms.sendPremium(register.defaultMessage(sender,LinkID));
-                    break;
-                }
-                });
+                            return;
+                        }
+                        if (checkResults.recordset.length > 0) {
+                            // Your logic when the record exists in sysusers
+                            sms.sendPremium(register.menuMessage(sender,LinkID));
+                        } // <-- Closing curly brace for if statement
+                        else {
+                            sms.sendPremium(register.newCustomer(sender,LinkID));
+                            console.log("Start Registration Proccess");
+                        }
+                        sql.close();
+                    }); // <-- Closing parentheses for query function
+                }); // <-- Closing parentheses for sql.connect function
             }
-        });
-    });
+            sql.close();
+        }); // <-- Closing parentheses for query function
+    }); // <-- Closing parentheses for sql.connect function
+    
 }
 module.exports = handleIncomingMessage;

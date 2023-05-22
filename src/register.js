@@ -44,7 +44,7 @@ const register = {
         bulkSMSMode: 0,
         keyword: 'pension',
         linkId: LinkID   
-}),
+    }),
     enterFirstName: (sender,LinkID) => ({   
         to: sender,
         from:'24123',
@@ -65,6 +65,14 @@ const register = {
         to: sender,
         from:'24123',
         message: "Welcome To Octagon Africa you can access our services by sending the word Register,Balance, Accounts, Reset,Delete:",
+        bulkSMSMode: 0,
+        keyword: 'pension',
+        linkId: LinkID
+    }),
+    menuMessage: (sender, LinkID) => ({
+        to: sender,
+        from:'24123',
+        message: "Dear Esteemed Customer, Welcome to Octagon Africa:\n 1. Generate Member Statement. \n 2. Reset Password.  \n 3.Delete Account.",
         bulkSMSMode: 0,
         keyword: 'pension',
         linkId: LinkID
