@@ -15,7 +15,7 @@ function handleIncomingMessage(textMessage, sender, textId, phoneNumber, config,
         }
         console.log('Connected to database');
         //check if its an existing user of the two way sms system
-        const checkIfExistsQuery = "SELECT TOP 1 * FROM two_way_sms_tb WHERE phoneNumber = @phoneNumber AND isActive = 1";
+        const checkIfExistsQuery = "SELECT TOP 1 * FROM two_way_sms_tb WHERE phoneNumber = @phoneNumber AND isActive = 1"; ///add another check
         const checkIfExistsRequest = new sql.Request(connection);
         checkIfExistsRequest.input('phoneNumber', sql.VarChar, phoneNumber);
         checkIfExistsRequest.query(checkIfExistsQuery, function(checkErr, checkResults) {
@@ -76,6 +76,25 @@ function handleIncomingMessage(textMessage, sender, textId, phoneNumber, config,
                         else {
                             sms.sendPremium(register.newCustomer(sender,LinkID));
                             console.log("Start Registration Proccess");
+                            const status = "isRegistering";
+                            const phoneNumber = sender;
+                            const messagingStep= "2";
+                            sql.connect(config, function(err) {
+                                const request = new sql.Request(connection);
+                                const updateRegister1 = `UPDATE two_way_sms_tb SET status = @status, messagingStep = @messagingStep WHERE phoneNumber = @phoneNumber AND time = (
+                                    SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumber )`;
+                                request.input('status', sql.VarChar, status);
+                                request.input('messagingStep', sql.VarChar, messagingStep);
+                                request.input('phoneNumber', sql.VarChar, phoneNumber);
+                                request.query(updateRegister1, function(err, results) {
+                                    if (err) {
+                                        console.error('Error executing query: ' + err.stack);
+                                        return;
+                                    }
+                                    console.log('Register UPDATE successful');
+                                    sql.close();
+                                });
+                            });
                         }
                         sql.close();
                     }); // <-- Closing parentheses for query function
