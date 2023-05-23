@@ -57,25 +57,26 @@ function handleIncomingMessage(textMessage, sender, textId, phoneNumber, config,
                 if (textMessage == 1) {
                     console.log("Generate Member statement Workflow");
                     sms.sendPremium(account.welcomeMessageAccount(sender,LinkID));
+                    const currentStatus = "existingCustomer";
                     const statusAccounts = "isCheckingAccount";
-                            const phoneNumberAccounts = sender;
-                            const messagingStepAccounts= "2";
-                            sql.connect(config, function(err) {
-                                const request = new sql.Request();
-                                const updateAccounts = `UPDATE two_way_sms_tb SET status = @statusAccounts, messagingStep = @messagingStepAccounts WHERE phoneNumber = @phoneNumberAccounts AND time = (
-                                    SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberAccounts )`;
-                                request.input('statusAccounts', sql.VarChar, statusAccounts);
-                                request.input('messagingStepAccounts', sql.VarChar, messagingStepAccounts);
-                                request.input('phoneNumberAccounts', sql.VarChar, phoneNumberAccounts);
-                                request.query(updateAccounts, function(err, results) {
-                                if (err) {
-                                    console.error('Error executing query: ' + err.stack);
-                                    return;
-                                }
-                                console.log('UPDATE successful');
-                                sql.close();
-                                });
-                            });
+                    const phoneNumberAccounts = sender;
+                    const messagingStepAccounts= "2";
+                    const request = new sql.Request(connection);
+                    const updateAccounts = `UPDATE two_way_sms_tb SET status = @statusAccounts,isActive=@isActive, messagingStep = @messagingStepAccounts WHERE phoneNumber = @phoneNumberAccounts AND time = (
+                        SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberAccounts and status =@currentStatus )`;
+                    request.input('statusAccounts', sql.VarChar, statusAccounts);
+                    request.input('currentStatus', sql.VarChar, currentStatus);
+                    request.input('messagingStepAccounts', sql.VarChar, messagingStepAccounts);
+                    request.input('phoneNumberAccounts', sql.VarChar, phoneNumberAccounts);
+                    request.input('isActive', sql.Bit, 1);
+                    request.query(updateAccounts, function(err, results) {
+                    if (err) {
+                        console.error('Error executing query: ' + err.stack);
+                        return;
+                    }
+                    console.log('UPDATE successful');
+                    connection.close();
+                    });
                 } else if (textMessage == 2) {
                     console.log("Reset Password Workflow");
                 } else if (textMessage == 3) {
