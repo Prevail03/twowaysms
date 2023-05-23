@@ -56,6 +56,26 @@ function handleIncomingMessage(textMessage, sender, textId, phoneNumber, config,
                 // insert to two_way_sms_tb
                 if (textMessage == 1) {
                     console.log("Generate Member statement Workflow");
+                    sms.sendPremium(account.welcomeMessageAccount(sender,LinkID));
+                    const statusAccounts = "isCheckingAccount";
+                            const phoneNumberAccounts = sender;
+                            const messagingStepAccounts= "2";
+                            sql.connect(config, function(err) {
+                                const request = new sql.Request();
+                                const updateAccounts = `UPDATE two_way_sms_tb SET status = @statusAccounts, messagingStep = @messagingStepAccounts WHERE phoneNumber = @phoneNumberAccounts AND time = (
+                                    SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberAccounts )`;
+                                request.input('statusAccounts', sql.VarChar, statusAccounts);
+                                request.input('messagingStepAccounts', sql.VarChar, messagingStepAccounts);
+                                request.input('phoneNumberAccounts', sql.VarChar, phoneNumberAccounts);
+                                request.query(updateAccounts, function(err, results) {
+                                if (err) {
+                                    console.error('Error executing query: ' + err.stack);
+                                    return;
+                                }
+                                console.log('UPDATE successful');
+                                sql.close();
+                                });
+                            });
                 } else if (textMessage == 2) {
                     console.log("Reset Password Workflow");
                 } else if (textMessage == 3) {
@@ -75,52 +95,53 @@ function handleIncomingMessage(textMessage, sender, textId, phoneNumber, config,
                             console.log('Record exists in sys_users_tb');
                             sms.sendPremium(register.menuMessage(sender, LinkID));
                             // ... Handle existing record logic ...
-                            const insertQuery = "INSERT INTO two_way_sms_tb (text, text_id_AT, phoneNumber, isActive) VALUES (@text, @text_id_AT, @phoneNumber, @isActive)";
+                            const status = "existingCustomer";
+                            const insertQuery = "INSERT INTO two_way_sms_tb (text, text_id_AT, phoneNumber, status) VALUES (@text, @text_id_AT, @phoneNumber, @status)";
                             const insertRequest = new sql.Request(connection);
                             insertRequest.input('text', sql.VarChar, textMessage);
                             insertRequest.input('text_id_AT', sql.VarChar, textId);
                             insertRequest.input('phoneNumber', sql.VarChar, phoneNumber);
-                            insertRequest.input('isActive', sql.Bit, 1);
+                            insertRequest.input('status', sql.VarChar, status);
                             insertRequest.query(insertQuery, function(insertErr, insertResults) {
-                            if (insertErr) {
-                            console.error('Error executing insertQuery: ' + insertErr.stack);
-                            connection.close();
-                            return;
-                            }
-                            console.log('Registered current users');
-                            connection.close();
+                                if (insertErr) {
+                                    console.error('Error executing insertQuery: ' + insertErr.stack);
+                                    connection.close();
+                                    return;
+                                }
+                                console.log('Registered current users');
+                                connection.close();
                             });
                             // Record does not exist in sys_users_tb == a new conversion
                             } else {
-                            sms.sendPremium(register.menuMessage(sender, LinkID));
-                            console.log('Start Registration Process');
-                            // ... Handle registration process logic ...
-                            const status = "isRegistering";
-                            const messagingStep = "2";
-                            const insertQuery = "INSERT INTO two_way_sms_tb (text, text_id_AT, status, messagingStep, phoneNumber, isActive) VALUES (@text, @text_id_AT, @status, @messagingStep, @phoneNumber, @isActive)";
-                            const insertRequest = new sql.Request(connection);
-                            insertRequest.input('text', sql.VarChar, textMessage);
-                            insertRequest.input('text_id_AT', sql.VarChar, textId);
-                            insertRequest.input('status', sql.VarChar, status);
-                            insertRequest.input('messagingStep', sql.VarChar, messagingStep);
-                            insertRequest.input('phoneNumber', sql.VarChar, phoneNumber);
-                            insertRequest.input('isActive', sql.Bit, 1); // Use true instead of 1 for boolean values
-                            insertRequest.query(insertQuery, function(insertErr, insertResults) {
-                            if (insertErr) {
-                            console.error('Error executing insertQuery: ' + insertErr.stack);
-                            connection.close();
-                            return;
-                            }
-                            console.log("New User inserted successfully");
-                            connection.close();
+                                sms.sendPremium(register.menuMessage(sender, LinkID));
+                                console.log('Start Registration Process');
+                                // ... Handle registration process logic ...
+                                const status = "isRegistering";
+                                const messagingStep = "2";
+                                const insertQuery = "INSERT INTO two_way_sms_tb (text, text_id_AT, status, messagingStep, phoneNumber, isActive) VALUES (@text, @text_id_AT, @status, @messagingStep, @phoneNumber, @isActive)";
+                                const insertRequest = new sql.Request(connection);
+                                insertRequest.input('text', sql.VarChar, textMessage);
+                                insertRequest.input('text_id_AT', sql.VarChar, textId);
+                                insertRequest.input('status', sql.VarChar, status);
+                                insertRequest.input('messagingStep', sql.VarChar, messagingStep);
+                                insertRequest.input('phoneNumber', sql.VarChar, phoneNumber);
+                                insertRequest.input('isActive', sql.Bit, 1); // Use true instead of 1 for boolean values
+                                insertRequest.query(insertQuery, function(insertErr, insertResults) {
+                                    if (insertErr) {
+                                        console.error('Error executing insertQuery: ' + insertErr.stack);
+                                        connection.close();
+                                        return;
+                                    }
+                                    console.log("New User inserted successfully");
+                                connection.close();
                             });
-                            }
-                            });
-                            }
-                            }
-                            });
-                            });
-                            }
+                        }
+                    });
+                }
+            }
+        });
+    });
+}
 
 // function handleIncomingMessage(textMessage, sender, textId, phoneNumber, config, sms, register, account, LinkID) {
 //     sql.connect(config, function(err, connection) {

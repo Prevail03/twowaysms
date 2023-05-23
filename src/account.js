@@ -1,72 +1,99 @@
 //file that handles all Accounts request information
 const account = {
-    welcomeMessageAccount: (sender) => {
-        messageToCustomer = ' Dear Esteemed Customer, Welcome to Octagon Services. To check you account, please provide the following details. ';
+    welcomeMessageAccount: (sender, LinkID) => {
+        messageToCustomer = ' Dear Esteemed Customer, Welcome to Octagon Services. To check you account, please provide the following details. \nPlease enter your username. ';
         return {
             to: sender,
             from:'24123',
-            message: messageToCustomer
+            message: messageToCustomer,
+            bulkSMSMode: 0,
+            keyword: 'pension',
+            linkId: LinkID,
         };
      
     },
-    provideUserName: (sender) => {
+    provideUserName: (sender, LinkID) => {
         messageToCustomer = 'Please enter your username.';
         return {
             to: sender,
             from:'24123',
-            message: messageToCustomer
+            message: messageToCustomer,
+            bulkSMSMode: 0,
+            keyword: 'pension',
+            linkId: LinkID
         };
     },
-    providePassword: (sender) => {
+    providePassword: (sender, LinkID) => {
         messageToCustomer = 'Please Enter your password.';
         return {
             to: sender,
             from:'24123',
-            message: messageToCustomer
+            message: messageToCustomer,
+            bulkSMSMode: 0,
+            keyword: 'pension',
+            linkId: LinkID
         };
     },
-    confirmLogin: (sender) => {
+    confirmLogin: (sender, LinkID) => {
         messageToCustomer = 'Login Successfull';
         return {
             to: sender,
             from:'24123',
-            message: messageToCustomer
+            message: messageToCustomer,
+            bulkSMSMode: 0,
+            keyword: 'pension',
+            linkId: LinkID
         };
     },
-    enterRequestStatements: (sender) => {
+    enterRequestStatements: (sender, LinkID) => {
         messageToCustomer = 'Enter User ID';
         return {
             to: sender,
             from:'24123',
-            message: messageToCustomer
+            message: messageToCustomer,
+            bulkSMSMode: 0,
+            keyword: 'pension',
+            linkId: LinkID
         };
     },
-    wrongResponse: (sender) => {
+    wrongResponse: (sender, LinkID) => {
         return {
             to: sender,
             from:'24123',
-            message: "Invalid response:!!"
+            message: "Invalid response:!!",
+            bulkSMSMode: 0,
+            keyword: 'pension',
+            linkId: LinkID
         };
     },
-    Response400: (sender) => {
+    Response400: (sender, LinkID) => {
         return {
             to: sender,
             from:'24123',
-            message: "Invalid Details!!. Check your details and please try again Later"
+            message: "Invalid Details!!. Check your details and please try again Later",
+            bulkSMSMode: 0,
+            keyword: 'pension',
+            linkId: LinkID
         };
     },
-    Response: (sender) => {
+    Response: (sender, LinkID) => {
         return {
             to: sender,
             from:'24123',
-            message: "Invalid Details!!. Check your details and please try again Later"
+            message: "Invalid Details!!. Check your details and please try again Later",
+            bulkSMSMode: 0,
+            keyword: 'pension',
+            linkId: LinkID
         };
     },
-    providePeriodName: (sender) => {
+    providePeriodName: (sender, LinkID) => {
         return {
             to: sender,
             from:'24123',
-            message: "Please enter the period name as provided in the above message"
+            message: "Please enter the period name as provided in the above message",
+            bulkSMSMode: 0,
+            keyword: 'pension',
+            linkId: LinkID
         };
     },
 }
