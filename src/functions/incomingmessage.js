@@ -74,7 +74,7 @@ function handleIncomingMessage(textMessage, sender, textId, phoneNumber, config,
                         console.error('Error executing query: ' + err.stack);
                         return;
                     }
-                    console.log('UPDATE successful');
+                    console.log('Accounts UPDATE successful');
                     connection.close();
                     });
                 } else if (textMessage == 2) {
