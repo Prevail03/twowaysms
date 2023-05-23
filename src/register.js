@@ -72,7 +72,7 @@ const register = {
     menuMessage: (sender, LinkID) => ({
         to: sender,
         from:'24123',
-        message: "Dear Esteemed Customer, Welcome to Octagon Africa:\n 1. Generate Member Statement. \n 2. Reset Password.  \n 3. Deactivate Account.",
+        message: "Welcome to Octagon:\n1.Balance Enquiry\n2. Statements. \n3.Deposit\n4.Claims/Withdrawals\n5.Products & Services\n6.My Account\n7.Help\n8.Rate Us\n9.Reset Password \n10.Deactivate Account",
         bulkSMSMode: 0,
         keyword: 'pension',
         linkId: LinkID

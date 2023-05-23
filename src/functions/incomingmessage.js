@@ -79,6 +79,28 @@ function handleIncomingMessage(textMessage, sender, textId, phoneNumber, config,
                     });
                 } else if (textMessage == 2) {
                     console.log("Reset Password Workflow");
+                    sms.sendPremium(reset.welcomeMessage(sender));
+                    sms.sendPremium(reset.enterEmail(sender));
+                    const currentStatus = "existingCustomer";
+                    const statusAccounts = "ResetingPassword";
+                    const phoneNumberAccounts = sender;
+                    const messagingStepAccounts= "2";
+                    const request = new sql.Request(connection);
+                    const updateAccounts = `UPDATE two_way_sms_tb SET status = @statusAccounts,isActive=@isActive, messagingStep = @messagingStepAccounts WHERE phoneNumber = @phoneNumberAccounts AND time = (
+                        SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberAccounts and status =@currentStatus )`;
+                    request.input('statusAccounts', sql.VarChar, statusAccounts);
+                    request.input('currentStatus', sql.VarChar, currentStatus);
+                    request.input('messagingStepAccounts', sql.VarChar, messagingStepAccounts);
+                    request.input('phoneNumberAccounts', sql.VarChar, phoneNumberAccounts);
+                    request.input('isActive', sql.Bit, 1);
+                    request.query(updateAccounts, function(err, results) {
+                    if (err) {
+                        console.error('Error executing query: ' + err.stack);
+                        return;
+                    }
+                    console.log('Accounts UPDATE successful');
+                    connection.close();
+                    });
                 } else if (textMessage == 3) {
                     console.log("Deactivate Account Workflow");
                 } else {
