@@ -303,7 +303,7 @@ function updatePassword(phoneNumberPassword, textPassword, textIDATPassword, sen
                 console.log('Connected to the database');
                 const request = new sql.Request();
                 const statuserror404 = "isCheckingAccount";
-                const messagingSteperror404 = "2";
+                const messagingSteperror404 = "3";
                 const phoneNumbererror404 = sender;
                 const textIDATerror404 = textIDAT;
                 const updateFail = `UPDATE two_way_sms_tb SET status = @statuserror404, messagingStep = @messagingSteperror404  WHERE phoneNumber = @phoneNumbererror404 AND text_id_AT =@textIDATerror404 AND time = (
