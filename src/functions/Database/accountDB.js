@@ -319,7 +319,7 @@ function updatePassword(phoneNumberPassword, textPassword, textIDATPassword, sen
                     console.error('Error executing query: ' + err.stack);
                     return;
                   }
-                  console.log(' Reset Password Attempt unsuccessful');
+                  console.log('Login Attempt unsuccessful');
                   sql.close();
                 });
               });
