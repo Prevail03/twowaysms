@@ -1,7 +1,7 @@
 const register = {
     newCustomer: (sender, LinkID) => {
         //send message with credentials
-        const messageToCustomer = 'Dear Esteemed Customer, Welcome to Octagon Africa. To complete the registration process, please provide us with the following information.\nPlease enter your ID number:';    
+        // const messageToCustomer = 'Dear Esteemed Customer, Welcome to Octagon Africa. To complete the registration process, please provide us with the following information.\nPlease enter your ID number:';    
         return {
             to: sender,
             from:'24123',
@@ -72,7 +72,7 @@ const register = {
     menuMessage: (sender, LinkID) => ({
         to: sender,
         from:'24123',
-        message: "Welcome to Octagon:\n1.Balance Enquiry\n2.Statements.\n3.Deposit\n4.Claims/Withdrawals\n5.Products & Services\n6.My Account\n7.Help\n8.Rate Us\n9.Reset Password \n10.Deactivate Account",
+        message: "Welcome to Octagon:\n1. Balance Enquiry\n2. Statements.\n3. Deposits\n4. Claims/Withdrawals\n5. Products & Services\n6. My Account\n7. Help\n8. Rate our Services\n9. Reset Password \n10. Deactivate Account",
         bulkSMSMode: 0,
         keyword: 'pension',
         linkId: LinkID

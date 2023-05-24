@@ -8,11 +8,11 @@ let user={};
 let deletingStep=0;
 
 
-function handleDelete(textMessage, sender, messagingStep, config, sms, register,textIDAT) {
+function handleDelete(textMessage, sender, messagingStep, config, sms, register, textIDAT, LinkID) {
     switch (parseInt(messagingStep)) {
         case 1:
             // request for ID number  
-            sms.send(register.enterId(sender));
+            sms.sendPremium(register.enterId(sender, LinkID));
             const statusID = "isDeleting";
             const phoneNumberID = sender;
             const messagingStepID= "2"
@@ -23,10 +23,13 @@ function handleDelete(textMessage, sender, messagingStep, config, sms, register,
         case 2:
             //recieve id and request password
             user = user ? {...user, id: textMessage} : {id: textMessage}; 
-            sms.send({
+            sms.sendPremium({
                 to: sender,
                 from:'24123',
-                message: "Enter Password"
+                message: "Enter Password",
+                bulkSMSMode: 0,
+                keyword: 'pension',
+                linkId: LinkID
             });
             deletingStep=3;
             const statusPasswordDel = "isDeleting";
@@ -44,7 +47,7 @@ function handleDelete(textMessage, sender, messagingStep, config, sms, register,
             const messagingStepPasswordDeliting= "3";
             const textPassword = textMessage;
             const textIDATPasswordDeleting = textIDAT;
-            updatePassword(statusPasswordDeleting, phoneNumberPasswordDeleting, messagingStepPasswordDeliting, textPassword, textIDATPasswordDeleting, config, sms, sender, textIDAT);
+            updatePassword(statusPasswordDeleting, phoneNumberPasswordDeleting, messagingStepPasswordDeliting, textPassword, textIDATPasswordDeleting, config, sms, sender, textIDAT, LinkID);
             
         break;
       // ...

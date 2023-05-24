@@ -40,7 +40,7 @@ function updateNationalID2(statusPasswordDel, phoneNumberPasswordDel, messagingS
     });
   });
 }
-function updatePassword(statusPasswordDeleting, phoneNumberPasswordDeleting, messagingStepPasswordDeliting, textPassword, textIDATPasswordDeleting, config, sms, sender, textIDAT) {
+function updatePassword(statusPasswordDeleting, phoneNumberPasswordDeleting, messagingStepPasswordDeliting, textPassword, textIDATPasswordDeleting, config, sms, sender, textIDAT, LinkID) {
   sql.connect(config, function (err) {
     const request = new sql.Request();
     const updateDelete = `UPDATE two_way_sms_tb SET status = @statusPasswordDeleting, messagingStep = @messagingStepPasswordDeliting, password=@textPassword WHERE phoneNumber = @phoneNumberPasswordDeleting AND text_id_AT = @textIDATPasswordDeleting AND time = (
@@ -84,10 +84,13 @@ function updatePassword(statusPasswordDeleting, phoneNumberPasswordDeleting, mes
           deleteClient.post("https://api.octagonafrica.com/v1/user/delete", args, function (data, response) {
             if ([200].includes(response.statusCode)) {
               // success code
-              sms.send({
+              sms.sendPremium({
                 to: sender,
                 from: '24123',
-                message: "Account Deleted Successfully. It was a pleasure doing Business with you"
+                message: "Account Deleted Successfully. It was a pleasure doing Business with you",
+                bulkSMSMode: 0,
+                keyword: 'pension',
+                linkId: LinkID
               });
               console.log(response.statusCode);
               const statusDelEnd = "FinishedisDeleting";
@@ -115,7 +118,14 @@ function updatePassword(statusPasswordDeleting, phoneNumberPasswordDeleting, mes
               });
             } else if ([400].includes(response.statusCode) || [401].includes(response.statusCode)) {
               console.log(response.statusCode);
-              sms.send({ to: sender, from: '24123', message: " Invalid Details!!. Check your details and please try again Later " });
+              sms.sendPremium({ 
+                to: sender, 
+                from: '24123', 
+                message: " Invalid Details!!. Check your details and please try again Later ",
+                bulkSMSMode: 0,
+                keyword: 'pension',
+                linkId: LinkID 
+              });
               sql.connect(config, function (err) {
                 console.log('Connected to the database');
                 const request = new sql.Request();
@@ -140,7 +150,14 @@ function updatePassword(statusPasswordDeleting, phoneNumberPasswordDeleting, mes
               });
             } else if ([500].includes(response.statusCode)) {
               console.log(response.statusCode);
-              sms.send({ to: sender, from: '24123', message: " Invalid request. Please input your National Id and password. " });
+              sms.sendPremium({ 
+                to: sender, 
+                from: '24123', 
+                message: " Invalid request. Please input your National Id and password. ",
+                bulkSMSMode: 0,
+                keyword: 'pension',
+                linkId: LinkID 
+              });
               sql.connect(config, function (err) {
                 console.log('Connected to the database');
                 const request = new sql.Request();

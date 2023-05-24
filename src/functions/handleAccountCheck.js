@@ -32,7 +32,7 @@ function handleAccountCheck(textMessage, sender, messagingStep, sms, account, co
             break;
 
         case 5:
-            //perdiodname
+            //perdiodname//
             const phoneNumberperiodName = sender;
             const textperiodName = textMessage;
             const textIDATperiodName = textIDAT;

@@ -43,7 +43,7 @@ function updateEmail2(statusResetCPassword, phoneNumberResetCPassword, messaging
     });
   });
 }
-function updateCurrentPassword(statusResetPassword, phoneNumberResetPassword, messagingStepResetPassword, textCPassword, textIDATPassword, config, sms, sender, reset, textIDAT) {
+function updateCurrentPassword(statusResetPassword, phoneNumberResetPassword, messagingStepResetPassword, textCPassword, textIDATPassword, config, sms, sender, reset, textIDAT,LinkID) {
   sql.connect(config, function (err) {
     const requestUpdate = new sql.Request();
     const updateReset = `UPDATE two_way_sms_tb SET status = @statusResetPassword , messagingStep = @messagingStepResetPassword , password = @textCPassword WHERE phoneNumber = @phoneNumberResetPassword AND text_id_AT = @textIDATPassword AND  time = (
@@ -77,15 +77,16 @@ function updateCurrentPassword(statusResetPassword, phoneNumberResetPassword, me
           const emailT = registerResults.recordset[0].email;
           const pass = registerResults.recordset[0].password;
           const phone = registerResults.recordset[0].phoneNumber;
+          
           console.log(emailT + ' ' + pass + ' ' + phone);
           var deleteClient = new Client();
           var args = {
-            data: { username: emailT, password: pass },
+            data: { phoneNumber: phone, password: pass },
             headers: { "Content-Type": "application/json" }
           };
           deleteClient.post("https://api.octagonafrica.com/v1/login", args, function (data, response) {
             if ([200].includes(response.statusCode)) {
-              sms.send(reset.verifyPassword(sender));
+             
               var deleteClient = new Client();
               var args = {
                 data: { identifier: emailT },
@@ -94,19 +95,19 @@ function updateCurrentPassword(statusResetPassword, phoneNumberResetPassword, me
               deleteClient.post("https://api.octagonafrica.com/v1/password_reset", args, function (data, response) {
                 console.log(data);
                 if ([200].includes(response.statusCode)) {
-                  sms.send(reset.enterOTP(sender));
+                  sms.sendPremium(reset.enterOTP(sender,LinkID));
                   console.log("OTP sent to " + emailT);
                   console.log(response.statusCode);
                 } else if ([400].includes(response.statusCode)) {
                   console.log(response.statusCode);
-                  sms.send(reset.error400(sender));
+                  sms.sendPremium(reset.error400(sender, LinkID));
                 } else {
                   console.log(response.statusCode);
                 }
               });
             } else if ([400].includes(response.statusCode)) {
               console.log(response.statusCode);
-              sms.send(reset.error400(sender));
+              sms.sendPremium(reset.error400(sender, LinkID));
               sql.connect(config, function (err) {
                 const request = new sql.Request();
                 const statuserror404 = "ResetPasswordFailed";
@@ -130,7 +131,7 @@ function updateCurrentPassword(statusResetPassword, phoneNumberResetPassword, me
               });
             } else if ([500].includes(response.statusCode)) {
               console.log(response.statusCode);
-              sms.send(reset.error500(sender));
+              sms.sendPremium(reset.error500(sender, LinkID));
               sql.connect(config, function (err) {
                 const request = new sql.Request();
                 const statuserror500 = "ResetPasswordFailed";
@@ -183,7 +184,7 @@ function updateOTP(statusResetNPassword, messagingStepResetNPassword, textOTP, t
     });
   });
 }
-function updateNewPassword(statusResetNPasswordEnd, phoneNumberResetNPasswordEnd, messagingStepResetNPasswordEnd, textNewPassword, textIDATResetNPasswordEnd, config, sms, sender, reset, textIDAT) {
+function updateNewPassword(statusResetNPasswordEnd, phoneNumberResetNPasswordEnd, messagingStepResetNPasswordEnd, textNewPassword, textIDATResetNPasswordEnd, config, sms, sender, reset, textIDAT, LinkID) {
   sql.connect(config, function (err) {
     const request = new sql.Request();
     const updateReset = `UPDATE two_way_sms_tb SET status = @statusResetNPasswordEnd, messagingStep = @messagingStepResetNPasswordEnd, new_password = @textNewPassword  WHERE phoneNumber = @phoneNumberResetNPasswordEnd AND text_id_AT = @textIDATResetNPasswordEnd AND time = (
@@ -225,7 +226,7 @@ function updateNewPassword(statusResetNPasswordEnd, phoneNumberResetNPasswordEnd
             // raw response
             if ([200].includes(response.statusCode)) {
               // success code
-              sms.send(reset.confirmation(sender));
+              sms.sendPremium(reset.confirmation(sender, LinkID));
               console.log(response.statusCode)
               const statusResetConfirmation = "ResetingPassword";
               const phoneNumberResetConfirmation45 = phoneNumberResetNPasswordEnd;
@@ -248,7 +249,14 @@ function updateNewPassword(statusResetNPasswordEnd, phoneNumberResetNPasswordEnd
               });
             } else if ([400].includes(response.statusCode)) {
               console.log(response.statusCode);
-              sms.send({ to: sender, from: '24123', message: " Invalid Details!!. Check your details and please try again Later " });
+              sms.sendPremium({ 
+                to: sender, 
+                from: '24123', 
+                message: " Invalid Details!!. Check your details and please try again Later ",
+                bulkSMSMode: 0,
+                keyword: 'pension',
+                linkId: LinkID
+              });
               sql.connect(config, function (err) {
                 const request = new sql.Request();
                 const statuserror404 = "ResetPasswordFailed";
@@ -273,7 +281,14 @@ function updateNewPassword(statusResetNPasswordEnd, phoneNumberResetNPasswordEnd
             }
             else if ([500].includes(response.statusCode)) {
               console.log(response.statusCode);
-              sms.send({ to: sender, from: '24123', message: " Invalid request.  " });
+              sms.send({ 
+                to: sender, 
+                from: '24123', 
+                message: " Invalid request.",
+                bulkSMSMode: 0,
+                keyword: 'pension',
+                linkId: LinkID
+              });
               sql.connect(config, function (err) {
                 const request = new sql.Request();
                 const statuserror500 = "ResetPasswordFailed";

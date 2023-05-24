@@ -54,7 +54,9 @@ function handleIncomingMessage(textMessage, sender, textId, phoneNumber, config,
                 // Does not exist in two_way_sms_tb
             } else {
                 // insert to two_way_sms_tb
-                if (textMessage == 1) {
+
+                //generate
+                if (textMessage == 2) {
                     console.log("Generate Member statement Workflow");
                     sms.sendPremium(account.welcomeMessageAccount(sender,LinkID));
                     const currentStatus = "existingCustomer";
@@ -77,7 +79,7 @@ function handleIncomingMessage(textMessage, sender, textId, phoneNumber, config,
                     console.log('Accounts UPDATE successful');
                     connection.close();
                     });
-                } else if (textMessage == 2) {
+                } else if (textMessage == 9) {
                     console.log("Reset Password Workflow");
                     sms.sendPremium(reset.welcomeMessage(sender));
                     sms.sendPremium(reset.enterEmail(sender));
@@ -101,9 +103,23 @@ function handleIncomingMessage(textMessage, sender, textId, phoneNumber, config,
                     console.log('Accounts UPDATE successful');
                     connection.close();
                     });
-                } else if (textMessage == 3) {
+                }else if(textMessage == 10) {
                     console.log("Deactivate Account Workflow");
-                } else {
+                }else if(textMessage == 8){
+                    console.log("Rate us  Workflow");
+                }else if(textMessage ==7){
+                    console.log("Help us  Workflow");
+                }else if(textMessage == 6) {
+                    console.log("My Account  Workflow");
+                }else if(textMessage == 5) {
+                    console.log("Products Workflow");
+                }else if(textMessage == 4) {
+                    console.log("Claims/Withdrawals Workflow");
+                }else if(textMessage == 3) {
+                    console.log("Deposit Workflow");
+                }else if(textMessage == 1) {
+                    console.log("Balance Enquiry Workflow");
+                }else {
                     const checkIfExistsQuerySysUsers = "SELECT TOP 1 * FROM sys_users_tb WHERE user_mobile = @phoneNumber OR user_phone = @phoneNumber";
                     const checkIfExistsRequestSysUsers = new sql.Request(connection);
                     checkIfExistsRequestSysUsers.input('phoneNumber', sql.VarChar, phoneNumber);
@@ -136,9 +152,9 @@ function handleIncomingMessage(textMessage, sender, textId, phoneNumber, config,
                             });
                             // Record does not exist in sys_users_tb == a new conversion
                             } else {
-                                sms.sendPremium(register.menuMessage(sender, LinkID));
+                                sms.sendPremium(register.newCustomer(sender, LinkID));
                                 console.log('Start Registration Process');
-                                // ... Handle registration process logic ...
+                                // ... Handle registration process logic ... //
                                 const status = "isRegistering";
                                 const messagingStep = "2";
                                 const insertQuery = "INSERT INTO two_way_sms_tb (text, text_id_AT, status, messagingStep, phoneNumber, isActive) VALUES (@text, @text_id_AT, @status, @messagingStep, @phoneNumber, @isActive)";
