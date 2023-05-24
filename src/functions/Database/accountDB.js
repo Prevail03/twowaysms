@@ -81,14 +81,15 @@ function updatePassword(phoneNumberPassword, textPassword, textIDATPassword, sen
           console.error('Error executing query: ' + err.stack);
           return;
         }
-
         if (passwordResults.recordset.length > 0) {
           const username = passwordResults.recordset[0].user_username;
           const password = passwordResults.recordset[0].password;
+          let phoneNumber = phoneNumberPassword;
+          phoneNumber = phoneNumber.replace("+", "");
           var accountsClient = new Client();
           // set content-type header and data as json in args parameter
           var args = {
-            data: { username: username, password: password },
+            data: { phoneNumber: phoneNumber, password: password },
             headers: { "Content-Type": "application/json" }
           }
           accountsClient.post("https://api.octagonafrica.com/v1/login", args, function (data, response) {
