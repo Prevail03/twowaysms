@@ -98,6 +98,7 @@ function updatePassword(phoneNumberPassword, textPassword, textIDATPassword, sen
               console.log('Login Succesfully Completed');
               console.log(response.statusCode);
               const user_username = data.data.username;
+              const user_fullname = data.data.user_full_names;
               console.log(user_username);
               // sms.send(account.confirmLogin(sender));
               var accountIDClient = new Client();
@@ -179,7 +180,7 @@ function updatePassword(phoneNumberPassword, textPassword, textIDATPassword, sen
                                 const totalAccountsPension = pension.total_accounts;
                                 const pensionData = pension.data;
                                 //Dear custoomer here are yoour accoiunt  
-                                let preAccounts = "Dear " + username + ", Here are your accounts \n "
+                                let preAccounts = "Dear " + user_fullname + ", Here are your accounts \n "
                                 let insuranceMessage = "";
                                 for (let i = 0; i < totalAccountsInsurance; i++) {
                                   insuranceMessage += " Insurance Account Description: " + insuranceData[i].Code + " Name: " + insuranceData[i].Description + " .Active Since: " + insuranceData[i].dateFrom + ".\n";
