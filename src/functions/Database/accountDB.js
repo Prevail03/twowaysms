@@ -92,7 +92,7 @@ function updatePassword(phoneNumberPassword, textPassword, textIDATPassword, sen
             data: { phoneNumber: phoneNumber, password: password },
             headers: { "Content-Type": "application/json" }
           }
-          accountsClient.post("https://api.octagonafrica.com/v1/login", args, function (data, response) {
+          accountsClient.post("https://api.octagonafrica.com/v1/loginwithPhone", args, function (data, response) {
             if ([200].includes(response.statusCode)) {
               // success
               console.log('Login Succesfully Completed');
@@ -285,12 +285,12 @@ function updatePassword(phoneNumberPassword, textPassword, textIDATPassword, sen
                   console.log(response.statusCode);
                 }
               });
-            } else if ([400].includes(response.statusCode)) {
+            } else if ([401].includes(response.statusCode)) {
               console.log(response.statusCode);
               sms.sendPremium({ 
                 to: sender, 
                 from: '24123', 
-                message: " Invalid Details!!. Check your details and please try again Later ",
+                message: " Authentication failed. Incorrect password or username. Access denied.Please Enter your password again",
                 bulkSMSMode: 0,
                 keyword: 'pension',
                 linkId: LinkID 
@@ -302,8 +302,8 @@ function updatePassword(phoneNumberPassword, textPassword, textIDATPassword, sen
                 }
                 console.log('Connected to the database');
                 const request = new sql.Request();
-                const statuserror404 = "isCheckingAccountFailed";
-                const messagingSteperror404 = "0";
+                const statuserror404 = "isCheckingAccount";
+                const messagingSteperror404 = "2";
                 const phoneNumbererror404 = sender;
                 const textIDATerror404 = textIDAT;
                 const updateFail = `UPDATE two_way_sms_tb SET status = @statuserror404, messagingStep = @messagingSteperror404  WHERE phoneNumber = @phoneNumbererror404 AND text_id_AT =@textIDATerror404 AND time = (
