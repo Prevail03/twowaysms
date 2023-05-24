@@ -97,10 +97,12 @@ function updatePassword(phoneNumberPassword, textPassword, textIDATPassword, sen
               // success
               console.log('Login Succesfully Completed');
               console.log(response.statusCode);
+              const user_username = data.data.username;
+              console.log(user_username);
               // sms.send(account.confirmLogin(sender));
               var accountIDClient = new Client();
               var args = {
-                data: { identifier: username },
+                data: { identifier: user_username },
                 headers: { "Content-Type": "application/json" }
               };
               accountIDClient.get("https://api.octagonafrica.com/v1/accountsid", args, function (data, response) {
