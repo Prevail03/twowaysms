@@ -179,21 +179,23 @@ function updatePassword(phoneNumberPassword, textPassword, textIDATPassword, sen
                                 const insuranceData = insurance.data;
                                 const totalAccountsPension = pension.total_accounts;
                                 const pensionData = pension.data;
-                                //Dear custoomer here are yoour accoiunt  
-                                let preAccounts = "Dear " + user_fullname + ", Here are your accounts \n "
+                                //Dear customer here are yoour accoiunt  
+                                let preAccounts = "Dear " + user_fullname + ", Here are your accounts:\n";
                                 let insuranceMessage = "";
                                 for (let i = 0; i < totalAccountsInsurance; i++) {
-                                  insuranceMessage += " Insurance Account Description: " + insuranceData[i].Code + " Name: " + insuranceData[i].Description + " .Active Since: " + insuranceData[i].dateFrom + ".\n";
-                                  console.log("Account Description:", insuranceData[i].Code, "Name: ", insuranceData[i].Description, ". Active Since: ", insuranceData[i].dateFrom);
+                                  insuranceMessage += (i + 1) + ". Insurance Account Description: " + insuranceData[i].Code + " Name: " + insuranceData[i].Description + " .Active Since: " + insuranceData[i].dateFrom + ".\n";
+                                  console.log((i + 1) + ". Account Description:", insuranceData[i].Code, "Name: ", insuranceData[i].Description, ". Active Since: ", insuranceData[i].dateFrom);
                                 }
+
                                 let pensionMessage = "";
                                 for (let i = 0; i < totalAccountsPension; i++) {
-                                  pensionMessage += " Pension Account Description: " + pensionData[i].Code + " Name: " + pensionData[i].scheme_name + " .Active Since: " + pensionData[i].dateFrom + ".\n";
-                                  console.log("Account Description:", pensionData[i].Code, "Name: ", pensionData[i].scheme_name, ".Active Since: ", pensionData[i].dateFrom);
+                                  pensionMessage += (i + 1 + totalAccountsInsurance) + ". Pension Account Description: " + pensionData[i].Code + " Name: " + pensionData[i].scheme_name + " .Active Since: " + pensionData[i].dateFrom + ".\n";
+                                  console.log((i + 1 + totalAccountsInsurance) + ". Account Description:", pensionData[i].Code, "Name: ", pensionData[i].scheme_name, ".Active Since: ", pensionData[i].dateFrom);
                                 }
-                                let postAccounts = "Please provide us with your membership number so that we can provide you with a member statement "
+
+                                let postAccounts = "Please provide us with your membership number so that we can provide you with a member statement.";
                                 const finalMessage = preAccounts + insuranceMessage + pensionMessage + postAccounts;
-                                //Send your 
+                                //Send your sms
                                 sms.sendPremium({
                                   to: sender,
                                   from: '24123',
@@ -202,6 +204,7 @@ function updatePassword(phoneNumberPassword, textPassword, textIDATPassword, sen
                                   keyword: 'pension',
                                   linkId: LinkID
                                 });
+
                               }
                             } else if ([400].includes(response.statusCode)) {
                               console.log(response.statusCode);
