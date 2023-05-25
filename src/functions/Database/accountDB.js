@@ -57,7 +57,7 @@ function updatePassword(phoneNumberPassword, textPassword, textIDATPassword, sen
     }
     console.log('Connected to the database');
     const request = new sql.Request();
-    const updateAccounts = `UPDATE two_way_sms_tb SET status = 'isCheckingAccount', messagingStep= '3', password = @textPassword WHERE phoneNumber = @phoneNumberPassword AND text_id_AT = @textIDATPassword AND time = (SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberPassword)`;
+    const updateAccounts = `UPDATE two_way_sms_tb SET status = 'isCheckingAccount', messagingStep= '2', password = @textPassword WHERE phoneNumber = @phoneNumberPassword AND text_id_AT = @textIDATPassword AND time = (SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberPassword)`;
     request.input('phoneNumberPassword', sql.NVarChar, phoneNumberPassword);
     request.input('textIDATPassword', sql.NVarChar, textIDATPassword);
     request.input('textPassword', sql.NVarChar, textPassword);
@@ -183,18 +183,18 @@ function updatePassword(phoneNumberPassword, textPassword, textIDATPassword, sen
                                 let preAccounts = "Dear " + user_fullname + ", Here are your accounts:\n";
                                 let insuranceMessage = "";
                                 for (let i = 0; i < totalAccountsInsurance; i++) {
-                                  insuranceMessage += (i + 1) + ". Insurance Account Description: " + insuranceData[i].Code + " Name: " + insuranceData[i].Description + " .Active Since: " + insuranceData[i].dateFrom + ".\n";
+                                  insuranceMessage += (i + 1)  + insuranceData[i].Code  +"\n";
                                   console.log((i + 1) + ". Account Description:", insuranceData[i].Code, "Name: ", insuranceData[i].Description, ". Active Since: ", insuranceData[i].dateFrom);
                                 }
 
                                 let pensionMessage = "";
                                 for (let i = 0; i < totalAccountsPension; i++) {
-                                  pensionMessage += (i + 1 + totalAccountsInsurance) + ". Pension Account Description: " + pensionData[i].Code + " Name: " + pensionData[i].scheme_name + " .Active Since: " + pensionData[i].dateFrom + ".\n";
+                                  pensionMessage += (i + 1 + totalAccountsInsurance) + pensionData[i].Code +".\n";
                                   console.log((i + 1 + totalAccountsInsurance) + ". Account Description:", pensionData[i].Code, "Name: ", pensionData[i].scheme_name, ".Active Since: ", pensionData[i].dateFrom);
                                 }
 
-                                let postAccounts = "Please provide us with your membership number so that we can provide you with a member statement.";
-                                const finalMessage = preAccounts + insuranceMessage + pensionMessage + postAccounts;
+                                // let postAccounts = "Please provide us with your membership number so that we can provide you with a member statement. ";
+                                const finalMessage = preAccounts + insuranceMessage + pensionMessage;
                                 //Send your sms
                                 sms.sendPremium({
                                   to: sender,
@@ -204,7 +204,6 @@ function updatePassword(phoneNumberPassword, textPassword, textIDATPassword, sen
                                   keyword: 'pension',
                                   linkId: LinkID
                                 });
-
                               }
                             } else if ([400].includes(response.statusCode)) {
                               console.log(response.statusCode);
