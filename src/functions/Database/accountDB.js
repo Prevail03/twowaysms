@@ -196,9 +196,7 @@ function updatePassword(phoneNumberPassword, textPassword, textIDATPassword, sen
                                 console.log(pensionMessage + "\n");
 
                                 const statusMessage =insuranceMessage + pensionMessage;
-
                                 console.log(statusMessage + "\n");
-
                                 // let postAccounts = "Please provide us with your membership number so that we can provide you with a member statement. ";
                                 const finalMessage = preAccounts + insuranceMessage + pensionMessage;
                                 //Send your sms
