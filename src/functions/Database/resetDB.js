@@ -81,10 +81,10 @@ function updateCurrentPassword(statusResetPassword, phoneNumberResetPassword, me
           console.log(emailT + ' ' + pass + ' ' + phone);
           var deleteClient = new Client();
           var args = {
-            data: { phoneNumber: phone, password: pass },
+            data: { username: emailT, password: pass },
             headers: { "Content-Type": "application/json" }
           };
-          deleteClient.post("https://api.octagonafrica.com/v1/loginwithPhone", args, function (data, response) {
+          deleteClient.post("https://api.octagonafrica.com/v1/login", args, function (data, response) {
             if ([200].includes(response.statusCode)) {
              
               var deleteClient = new Client();
@@ -105,7 +105,7 @@ function updateCurrentPassword(statusResetPassword, phoneNumberResetPassword, me
                   console.log(response.statusCode);
                 }
               });
-            } else if ([401].includes(response.statusCode)) {
+            } else if ([400].includes(response.statusCode)) {
               console.log(response.statusCode);
               sms.sendPremium(reset.error400(sender, LinkID));
               sql.connect(config, function (err) {
