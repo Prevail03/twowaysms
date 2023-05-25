@@ -105,7 +105,7 @@ function updateCurrentPassword(statusResetPassword, phoneNumberResetPassword, me
                   console.log(response.statusCode);
                 }
               });
-            } else if ([400].includes(response.statusCode)) {
+            } else if ([401].includes(response.statusCode)) {
               console.log(response.statusCode);
               sms.sendPremium(reset.error400(sender, LinkID));
               sql.connect(config, function (err) {
