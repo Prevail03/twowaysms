@@ -9,7 +9,7 @@ function handlePasswordReset(textMessage, sender, messagingStep, sms, reset, con
     switch (parseInt(messagingStep)) {
         case 1:
             //request username
-            sms.send(reset.enterEmail(sender));
+            sms.sendPremium(reset.enterEmail(sender,LinkID));
             resetStep = 2;
             const statusResetEmail = "ResetingPassword";
             const phoneNumberResetEmail = sender;
@@ -21,7 +21,7 @@ function handlePasswordReset(textMessage, sender, messagingStep, sms, reset, con
 
         case 2:
             //request current password 
-            sms.send(reset.enterCurrentPassword(sender));
+            sms.sendPremium(reset.enterCurrentPassword(sender,LinkID));
             const statusResetCPassword = "ResetingPassword";
             const phoneNumberResetCPassword = sender;
             const messagingStepResetCPassword = "3";
@@ -37,11 +37,11 @@ function handlePasswordReset(textMessage, sender, messagingStep, sms, reset, con
             const messagingStepResetPassword = "4";
             const textCPassword = textMessage;
             const textIDATPassword = textIDAT;
-            updateCurrentPassword(statusResetPassword, phoneNumberResetPassword, messagingStepResetPassword, textCPassword, textIDATPassword, config, sms, sender, reset, textIDAT);
+            updateCurrentPassword(statusResetPassword, phoneNumberResetPassword, messagingStepResetPassword, textCPassword, textIDATPassword, config, sms, sender, reset, textIDAT,LinkID);
             break;
         case 4:
             //request new Password
-            sms.send(reset.enterNewPassword(sender, LinkID));
+            sms.sendPremium(reset.enterNewPassword(sender, LinkID));
             const statusResetNPassword = "ResetingPassword";
             const phoneNumberResetNPassword = sender;
             const messagingStepResetNPassword = "5";
@@ -57,7 +57,7 @@ function handlePasswordReset(textMessage, sender, messagingStep, sms, reset, con
             const messagingStepResetNPasswordEnd = "5";
             const textIDATResetNPasswordEnd = textIDAT;
             const textNewPassword = textMessage;
-            updateNewPassword(statusResetNPasswordEnd, phoneNumberResetNPasswordEnd, messagingStepResetNPasswordEnd, textNewPassword, textIDATResetNPasswordEnd, config, sms, sender, reset, textIDAT);
+            updateNewPassword(statusResetNPasswordEnd, phoneNumberResetNPasswordEnd, messagingStepResetNPasswordEnd, textNewPassword, textIDATResetNPasswordEnd, config, sms, sender, reset, textIDAT, LinkID);
             break;
     }
 }
