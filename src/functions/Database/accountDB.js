@@ -57,7 +57,7 @@ function updatePassword(phoneNumberPassword, textPassword, textIDATPassword, sen
     }
     console.log('Connected to the database');
     const request = new sql.Request();
-    const updateAccounts = `UPDATE two_way_sms_tb SET status = 'isCheckingAccount', messagingStep= '2', password = @textPassword WHERE phoneNumber = @phoneNumberPassword AND text_id_AT = @textIDATPassword AND time = (SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberPassword)`;
+    const updateAccounts = `UPDATE two_way_sms_tb SET status = 'isCheckingAccount', messagingStep= '3', password = @textPassword WHERE phoneNumber = @phoneNumberPassword AND text_id_AT = @textIDATPassword AND time = (SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberPassword)`;
     request.input('phoneNumberPassword', sql.NVarChar, phoneNumberPassword);
     request.input('textIDATPassword', sql.NVarChar, textIDATPassword);
     request.input('textPassword', sql.NVarChar, textPassword);
@@ -183,15 +183,21 @@ function updatePassword(phoneNumberPassword, textPassword, textIDATPassword, sen
                                 let preAccounts = "Dear " + user_fullname + ", Here are your accounts:\n";
                                 let insuranceMessage = "";
                                 for (let i = 0; i < totalAccountsInsurance; i++) {
-                                  insuranceMessage += (i + 1) +". " + insuranceData[i].Code  +"\n";
+                                  insuranceMessage += (i + 1)  + insuranceData[i].Code  +". "  +"\n";
                                   console.log((i + 1) + ". Account Description:", insuranceData[i].Code, "Name: ", insuranceData[i].Description, ". Active Since: ", insuranceData[i].dateFrom);
                                 }
 
                                 let pensionMessage = "";
                                 for (let i = 0; i < totalAccountsPension; i++) {
-                                  pensionMessage += (i + 1 + totalAccountsInsurance)  +". " + pensionData[i].Code +".\n";
+                                  pensionMessage += (i + 1 + totalAccountsInsurance) +". "  + pensionData[i].Code +".\n";
                                   console.log((i + 1 + totalAccountsInsurance) + ". Account Description:", pensionData[i].Code, "Name: ", pensionData[i].scheme_name, ".Active Since: ", pensionData[i].dateFrom);
                                 }
+                                console.log(insuranceMessage + "\n");
+                                console.log(pensionMessage + "\n");
+
+                                const statusMessage =insuranceMessage + pensionMessage;
+
+                                console.log(statusMessage + "\n");
 
                                 // let postAccounts = "Please provide us with your membership number so that we can provide you with a member statement. ";
                                 const finalMessage = preAccounts + insuranceMessage + pensionMessage;
@@ -468,7 +474,7 @@ function updateDescription(phoneNumberDescription, textDescription, textIDATDesc
                     console.error('Error executing query: ' + err.stack);
                     return;
                   }
-                  console.log(' Reset Password Attempt unsuccessful');
+                  console.log(' Generate Member Statement Attempt unsuccessful');
                   sql.close();
                 });
               });
@@ -504,7 +510,7 @@ function updateDescription(phoneNumberDescription, textDescription, textIDATDesc
                     console.error('Error executing query: ' + err.stack);
                     return;
                   }
-                  console.log(' Reset Password Attempt unsuccessful');
+                  console.log(' Generate Member Statement Attempt unsuccessful');
                   sql.close();
                 });
               });
