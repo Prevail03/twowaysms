@@ -1,6 +1,6 @@
 const reset={
     welcomeMessage: (sender,LinkID) => {
-        messageToCustomer = 'Dear Esteemed Customer, Welcome to Octagon Africa. To Reset Your Account Password, please provide the following details. ';
+        messageToCustomer = 'Dear Esteemed Customer, Welcome to Octagon Africa. To Reset Your Account Password, please provide the following details. \nPlease enter your email address.';
         return {
             to: sender,
             from:'24123',

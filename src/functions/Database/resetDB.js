@@ -220,7 +220,7 @@ function updateNewPassword(statusResetNPasswordEnd, phoneNumberResetNPasswordEnd
             data: { code: OTP, password: password },
             headers: { "Content-Type": "application/json" }
           };
-          deleteClient.put("https://api.octagonafrica.com/v1/new_password", args, function (data, response) {// Actual Octagon Delete User Account API
+          deleteClient.put("https://api.octagonafrica.com/v1/new_password", args, function (data, response) {
             // parsed response body as js object
             console.log(data);
             // raw response

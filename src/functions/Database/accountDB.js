@@ -425,7 +425,7 @@ function updateDescription(phoneNumberDescription, textDescription, textIDATDesc
                 const period_name = periods[i].period_name;
                 finalMessage += `${i + 1}. ${period_name}\n`;
               }
-              sms.send({
+              sms.sendPremium({
                 to: sender,
                 from: '24123',
                 message: finalMessage + ".\n Please enter the period name as provided in the above message",

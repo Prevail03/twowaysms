@@ -20,7 +20,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 const handleIncomingMessage = require('./src/functions/incomingmessage.js');
 app.post("/webhook", (req, res) => {
     const payload = req.body;
-    console.log(payload);
+    // console.log(payload);
     const sender = payload.from;
     const textId = payload.id;
     const phoneNumber=sender;

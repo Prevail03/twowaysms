@@ -1,7 +1,7 @@
 //file that handles all Accounts request information
 const account = {
     welcomeMessageAccount: (sender, LinkID) => {
-        messageToCustomer = ' Dear Esteemed Customer, Welcome to Octagon Services. To check you account, please provide the following details. \nPlease enter your username. ';
+        messageToCustomer = ' Dear Esteemed Customer, Welcome to Octagon Services. To check you account, please provide the following details. \nPlease Enter your password.';
         return {
             to: sender,
             from:'24123',

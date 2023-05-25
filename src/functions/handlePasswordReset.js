@@ -41,7 +41,7 @@ function handlePasswordReset(textMessage, sender, messagingStep, sms, reset, con
             break;
         case 4:
             //request new Password
-            sms.send(reset.enterNewPassword(sender));
+            sms.send(reset.enterNewPassword(sender, LinkID));
             const statusResetNPassword = "ResetingPassword";
             const phoneNumberResetNPassword = sender;
             const messagingStepResetNPassword = "5";

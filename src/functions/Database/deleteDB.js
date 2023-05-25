@@ -1,7 +1,7 @@
 const sql = require('mssql');
 var Client = require('node-rest-client').Client;
 
-function updateNationalID1(textIDATID, phoneNumberID, statusID, messagingStepID, sms) {
+function  updateNationalID1(textIDATID, phoneNumberID, statusID,messagingStepID) {
   sql.connect(config, function (err) {
     const request = new sql.Request();
     const updateDelete = `UPDATE two_way_sms_tb SET status = @statusID, messagingStep = @messagingStepID WHERE phoneNumber = @phoneNumberID AND text_id_AT = @textIDATID AND time = (
