@@ -84,7 +84,7 @@ function updateCurrentPassword(statusResetPassword, phoneNumberResetPassword, me
             data: { phoneNumber: phone, password: pass },
             headers: { "Content-Type": "application/json" }
           };
-          deleteClient.post("https://api.octagonafrica.com/v1/login", args, function (data, response) {
+          deleteClient.post("https://api.octagonafrica.com/v1/loginwithPhone", args, function (data, response) {
             if ([200].includes(response.statusCode)) {
              
               var deleteClient = new Client();
