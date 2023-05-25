@@ -183,13 +183,13 @@ function updatePassword(phoneNumberPassword, textPassword, textIDATPassword, sen
                                 let preAccounts = "Dear " + user_fullname + ", Here are your accounts:\n";
                                 let insuranceMessage = "";
                                 for (let i = 0; i < totalAccountsInsurance; i++) {
-                                  insuranceMessage += (i + 1)  + insuranceData[i].Code  +"\n";
+                                  insuranceMessage += (i + 1) +". " + insuranceData[i].Code  +"\n";
                                   console.log((i + 1) + ". Account Description:", insuranceData[i].Code, "Name: ", insuranceData[i].Description, ". Active Since: ", insuranceData[i].dateFrom);
                                 }
 
                                 let pensionMessage = "";
                                 for (let i = 0; i < totalAccountsPension; i++) {
-                                  pensionMessage += (i + 1 + totalAccountsInsurance) + pensionData[i].Code +".\n";
+                                  pensionMessage += (i + 1 + totalAccountsInsurance)  +". " + pensionData[i].Code +".\n";
                                   console.log((i + 1 + totalAccountsInsurance) + ". Account Description:", pensionData[i].Code, "Name: ", pensionData[i].scheme_name, ".Active Since: ", pensionData[i].dateFrom);
                                 }
 
