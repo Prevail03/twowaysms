@@ -218,7 +218,7 @@ function updatePassword(phoneNumberPassword, textPassword, textIDATPassword, sen
                                 sql.connect(config, function (err) {
                                   console.log('Connected to the database');
                                   const request = new sql.Request();
-                                  const statusAccountsEntry = "isCheckingAccountFailed";
+                                  const statusAccountsEntry = "isCheckingAccount";
                                   // const messagingAccountsEntry = "0";
                                   const phoneNumberAccountsEntry = sender;
                                   const textIDATAccountsEntry = textIDAT;
