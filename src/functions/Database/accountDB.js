@@ -457,6 +457,7 @@ function updateDescription(phoneNumberDescription, textDescription, textIDATDesc
             if ([200].includes(response.statusCode)) {
               console.log(response.statusCode);
               const periods = data.data;
+              console.log(periods);
               let finalMessage = "Available periods are: \n";
               for (let i = 0; i < periods.length; i++) {
                 const period_name = periods[i].period_name;
