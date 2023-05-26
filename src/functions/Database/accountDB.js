@@ -217,13 +217,14 @@ function updatePassword(phoneNumberPassword, textPassword, textIDATPassword, sen
                                   const messagingAccountsEntry = "0";
                                   const phoneNumberAccountsEntry = sender;
                                   const textIDATAccountsEntry = textIDAT;
+                                  const allAccounts =statusMessage;
                                   const updateFail = `UPDATE two_way_sms_tb SET status = @statusAccountsEntry, messagingStep = @messagingAccountsEntry, allAccounts =@allAccounts   WHERE phoneNumber = @phoneNumberAccountsEntry AND text_id_AT =@textIDATAccountsEntry AND time = (
                                            SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberAccountsEntry )`;
                                   request.input('statusAccountsEntry', sql.VarChar, statusAccountsEntry);
                                   request.input('messagingAccountsEntry', sql.VarChar, messagingAccountsEntry);
                                   request.input('phoneNumberAccountsEntry', sql.NVarChar, phoneNumberAccountsEntry);
                                   request.input('textIDATAccountsEntry', sql.NVarChar, textIDATAccountsEntry);
-                                  request.input('statusMessage', sql.NVarChar, statusMessage);
+                                  request.input('allAccounts', sql.NVarChar, allAccounts);
                                   request.query(updateFail, function (err, results) {
                                     if (err) {
                                       console.error('Error executing query: ' + err.stack);
