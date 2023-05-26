@@ -47,10 +47,11 @@ function handleAccountCheck(textMessage, sender, messagingStep, sms, account, co
                         return;
                     }
                     if (checkResults.recordset.length > 0) {
-                    const allAccounts = checkResults.recordset[0].allAccounts;
-                    const accountsArray = allAccounts.split(',')
-                    .map(account => account.trim().replace(/^\d+\.\s*/, ''));
-                    console.log(accountsArray);
+                        const allAccounts = checkResults.recordset[0].allAccounts;
+                        const accountsArray = allAccounts.split(',')
+                          .map(account => account.trim().replace(/^\d+\.\s*/, ''))
+                          .filter(account => account !== '');
+                        console.log(accountsArray);
                     
                     }else{
                         console.log('Record does not exist');
