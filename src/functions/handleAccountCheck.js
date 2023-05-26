@@ -55,13 +55,11 @@ function handleAccountCheck(textMessage, sender, messagingStep, sms, account, co
                           .filter(account => account !== '');
                         
                         console.log("Array count:", accountsArray.length);
-                        
-                        // const accountDescription = 2; // Example value, can be dynamic
-                        
                         if (accountDescription >= 1 && accountDescription <= accountsArray.length) {
                           const selectedAccount = accountsArray[accountDescription - 1];
                           console.log("Selected account:", selectedAccount);
-                          // You can use the selected account as textDescription as per your requirement
+                          textDescription=selectedAccount
+                          con
                         } else {
                           console.log("Invalid account description");
                         }
@@ -71,9 +69,9 @@ function handleAccountCheck(textMessage, sender, messagingStep, sms, account, co
                     }
                 });
             });
+            console.log("Account Description:" +textDescription);
             // updateDescription(phoneNumberDescription, textDescription, textIDATDescription, sender, config, textIDAT, sms, account, LinkID);
             break;
-
         case 5:
             //perdiodname//
             const phoneNumberperiodName = sender;
