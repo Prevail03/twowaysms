@@ -1,3 +1,5 @@
+const sql = require('mssql');
+var Client = require('node-rest-client').Client;
 const { updateUserNameFail, updateUserNameSuccess, updatePassword, updateDescription,updatePeriodName } = require('./Database/accountDB');
 
 function handleAccountCheck(textMessage, sender, messagingStep, sms, account, config, textIDAT, LinkID) {
