@@ -30,7 +30,7 @@ function handleAccountCheck(textMessage, sender, messagingStep, sms, account, co
         case 4:
             const phoneNumberDescription = sender;
             const accountDescription = textMessage;
-            const textDescription = "";
+            let textDescription = "";
             const textIDATDescription = textIDAT;
             sql.connect(config, function(err, connection) {
                 if (err) {
