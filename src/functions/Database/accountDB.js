@@ -183,7 +183,7 @@ function updatePassword(phoneNumberPassword, textPassword, textIDATPassword, sen
                                 let preAccounts = "Dear " + user_fullname + ", Here are your accounts:\n";
                                 let insuranceMessage = "";
                                 for (let i = 0; i < totalAccountsInsurance; i++) {
-                                  insuranceMessage += (i + 1)  + insuranceData[i].Code  +". "  +"\n";
+                                  insuranceMessage += (i + 1) +". "  + insuranceData[i].Code   +"\n";
                                   console.log((i + 1) + ". Account Description:", insuranceData[i].Code, "Name: ", insuranceData[i].Description, ". Active Since: ", insuranceData[i].dateFrom);
                                 }
 
@@ -197,6 +197,8 @@ function updatePassword(phoneNumberPassword, textPassword, textIDATPassword, sen
 
                                 const statusMessage =insuranceMessage + pensionMessage;
                                 console.log(statusMessage + "\n");
+
+
                                 // let postAccounts = "Please provide us with your membership number so that we can provide you with a member statement. ";
                                 const finalMessage = preAccounts + insuranceMessage + pensionMessage;
                                 //Send your sms
@@ -207,6 +209,29 @@ function updatePassword(phoneNumberPassword, textPassword, textIDATPassword, sen
                                   bulkSMSMode: 0,
                                   keyword: 'pension',
                                   linkId: LinkID
+                                });
+                                sql.connect(config, function (err) {
+                                  console.log('Connected to the database');
+                                  const request = new sql.Request();
+                                  const statusAccountsEntry = "isCheckingAccountFailed";
+                                  const messagingAccountsEntry = "0";
+                                  const phoneNumberAccountsEntry = sender;
+                                  const textIDATAccountsEntry = textIDAT;
+                                  const updateFail = `UPDATE two_way_sms_tb SET status = @statusAccountsEntry, messagingStep = @messagingAccountsEntry, allAccounts =@allAccounts   WHERE phoneNumber = @phoneNumberAccountsEntry AND text_id_AT =@textIDATAccountsEntry AND time = (
+                                           SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberAccountsEntry )`;
+                                  request.input('statusAccountsEntry', sql.VarChar, statusAccountsEntry);
+                                  request.input('messagingAccountsEntry', sql.VarChar, messagingAccountsEntry);
+                                  request.input('phoneNumberAccountsEntry', sql.NVarChar, phoneNumberAccountsEntry);
+                                  request.input('textIDATAccountsEntry', sql.NVarChar, textIDATAccountsEntry);
+                                  request.input('statusMessage', sql.NVarChar, statusMessage);
+                                  request.query(updateFail, function (err, results) {
+                                    if (err) {
+                                      console.error('Error executing query: ' + err.stack);
+                                      return;
+                                    }
+                                    console.log('Adding  accounts Attempt successful');
+                                    sql.close();
+                                  });
                                 });
                               }
                             } else if ([400].includes(response.statusCode)) {
