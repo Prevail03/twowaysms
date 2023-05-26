@@ -68,6 +68,7 @@ function handleAccountCheck(textMessage, sender, messagingStep, sms, account, co
                     }
                 });
             });
+            console.log("Selected account:", selectedAccount);
             console.log("Account Description:" +textDescription);
             // updateDescription(phoneNumberDescription, textDescription, textIDATDescription, sender, config, textIDAT, sms, account, LinkID);
             break;
