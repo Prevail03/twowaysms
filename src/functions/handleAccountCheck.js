@@ -59,7 +59,6 @@ function handleAccountCheck(textMessage, sender, messagingStep, sms, account, co
                           const selectedAccount = accountsArray[accountDescription - 1];
                           console.log("Selected account:", selectedAccount);
                           textDescription=selectedAccount
-                          con
                         } else {
                           console.log("Invalid account description");
                         }
