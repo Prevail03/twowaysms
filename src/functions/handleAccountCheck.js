@@ -28,7 +28,31 @@ function handleAccountCheck(textMessage, sender, messagingStep, sms, account, co
             const phoneNumberDescription = sender;
             const textDescription = textMessage;
             const textIDATDescription = textIDAT;
-            updateDescription(phoneNumberDescription, textDescription, textIDATDescription, sender, config, textIDAT, sms, account, LinkID);
+            sql.connect(config, function(err, connection) {
+                if (err) {
+                    console.error('Error connecting to database: ' + err.stack);
+                    return;
+                }
+                console.log('Connected to database');
+    
+                const checkIfExistsQuery = "SELECT TOP 1 *   FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberDescription AND isActive = 1 AND status = 'isCheckingAccount' AND time = ( SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberDescription ";
+                const checkIfExistsRequest = new sql.Request(connection);
+                checkIfExistsRequest.input('phoneNumberDescription', sql.VarChar, phoneNumberDescription);
+                checkIfExistsRequest.query(checkIfExistsQuery, function(checkErr, checkResults) {
+                    if (checkErr) {
+                        console.error('Error executing checkIfExistsQuery: ' + checkErr.stack);
+                        connection.close();
+                        return;
+                    }
+                    if (checkResults.recordset.length > 0) {
+                    const allAccounts = checkResults.recordset[0].allAccounts;
+                    console.log(allAccounts);
+                    }else{
+                        console.log('Record does not exist');
+                    }
+                });
+            });
+            // updateDescription(phoneNumberDescription, textDescription, textIDATDescription, sender, config, textIDAT, sms, account, LinkID);
             break;
 
         case 5:
