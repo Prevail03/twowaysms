@@ -218,7 +218,7 @@ function updatePassword(phoneNumberPassword, textPassword, textIDATPassword, sen
                                   // const messagingAccountsEntry = "0";
                                   const phoneNumberAccountsEntry = sender;
                                   const textIDATAccountsEntry = textIDAT;
-                                  const allAccounts =statusArrray;
+                                  const allAccounts = statusArray;
                                   const updateFail = `UPDATE two_way_sms_tb SET status = @statusAccountsEntry, allAccounts =@allAccounts   WHERE phoneNumber = @phoneNumberAccountsEntry AND text_id_AT =@textIDATAccountsEntry AND time = (
                                            SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberAccountsEntry )`;
                                   request.input('statusAccountsEntry', sql.VarChar, statusAccountsEntry);
