@@ -37,9 +37,10 @@ function handleAccountCheck(textMessage, sender, messagingStep, sms, account, co
                 }
                 console.log('Connected to database');
     
-                const checkIfExistsQuery = "SELECT TOP 1 *   FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberDescription AND isActive = 1 AND status = 'isCheckingAccount' AND time = ( SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberDescription ";
+                const checkIfExistsQuery = "SELECT TOP 1 * FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberDescription AND isActive = 1 AND status = 'isCheckingAccount' AND time = (SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberDescription)";
                 const checkIfExistsRequest = new sql.Request(connection);
                 checkIfExistsRequest.input('phoneNumberDescription', sql.VarChar, phoneNumberDescription);
+
                 checkIfExistsRequest.query(checkIfExistsQuery, function(checkErr, checkResults) {
                     if (checkErr) {
                         console.error('Error executing checkIfExistsQuery: ' + checkErr.stack);
