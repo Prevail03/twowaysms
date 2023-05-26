@@ -40,7 +40,6 @@ function handleAccountCheck(textMessage, sender, messagingStep, sms, account, co
                 const checkIfExistsQuery = "SELECT TOP 1 * FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberDescription AND isActive = 1 AND status = 'isCheckingAccount' AND time = (SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberDescription)";
                 const checkIfExistsRequest = new sql.Request(connection);
                 checkIfExistsRequest.input('phoneNumberDescription', sql.VarChar, phoneNumberDescription);
-
                 checkIfExistsRequest.query(checkIfExistsQuery, function(checkErr, checkResults) {
                     if (checkErr) {
                         console.error('Error executing checkIfExistsQuery: ' + checkErr.stack);
@@ -49,7 +48,10 @@ function handleAccountCheck(textMessage, sender, messagingStep, sms, account, co
                     }
                     if (checkResults.recordset.length > 0) {
                     const allAccounts = checkResults.recordset[0].allAccounts;
-                    console.log(allAccounts);
+                    const accountsArray = allAccounts.split(',')
+                    .map(account => account.trim().replace(/^\d+\.\s*/, ''));
+                    console.log(accountsArray);
+                    
                     }else{
                         console.log('Record does not exist');
                     }
