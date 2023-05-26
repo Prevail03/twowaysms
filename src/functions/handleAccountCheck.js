@@ -1,6 +1,7 @@
 const sql = require('mssql');
 var Client = require('node-rest-client').Client;
 const { updateUserNameFail, updateUserNameSuccess, updatePassword, updateDescription,updatePeriodName } = require('./Database/accountDB');
+const { countBy } = require('lodash');
 
 function handleAccountCheck(textMessage, sender, messagingStep, sms, account, config, textIDAT, LinkID) {
     switch (parseInt(messagingStep)) {
@@ -28,7 +29,8 @@ function handleAccountCheck(textMessage, sender, messagingStep, sms, account, co
             break;
         case 4:
             const phoneNumberDescription = sender;
-            const textDescription = textMessage;
+            const accountDescription = textMessage;
+            const textDescription = "";
             const textIDATDescription = textIDAT;
             sql.connect(config, function(err, connection) {
                 if (err) {
@@ -51,7 +53,18 @@ function handleAccountCheck(textMessage, sender, messagingStep, sms, account, co
                         const accountsArray = allAccounts.split(',')
                           .map(account => account.trim().replace(/^\d+\.\s*/, ''))
                           .filter(account => account !== '');
-                        console.log(accountsArray);
+                        
+                        console.log("Array count:", accountsArray.length);
+                        
+                        // const accountDescription = 2; // Example value, can be dynamic
+                        
+                        if (accountDescription >= 1 && accountDescription <= accountsArray.length) {
+                          const selectedAccount = accountsArray[accountDescription - 1];
+                          console.log("Selected account:", selectedAccount);
+                          // You can use the selected account as textDescription as per your requirement
+                        } else {
+                          console.log("Invalid account description");
+                        }
                     
                     }else{
                         console.log('Record does not exist');
