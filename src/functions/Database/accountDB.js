@@ -182,23 +182,27 @@ function updatePassword(phoneNumberPassword, textPassword, textIDATPassword, sen
                                 //Dear customer here are yoour accoiunt  
                                 let preAccounts = "Dear " + user_fullname + ", Here are your accounts:\n";
                                 let insuranceMessage = "";
+                                let insuranceMessage1 = "";
                                 for (let i = 0; i < totalAccountsInsurance; i++) {
                                   insuranceMessage += (i + 1) +". "  + insuranceData[i].Code   +"\n";
+                                  insuranceMessage1 += (i + 1) +". "  + insuranceData[i].Code   +",\n";
                                   console.log((i + 1) + ". Account Description:", insuranceData[i].Code, "Name: ", insuranceData[i].Description, ". Active Since: ", insuranceData[i].dateFrom);
                                 }
 
                                 let pensionMessage = "";
+                                let pensionMessage1 = "";
                                 for (let i = 0; i < totalAccountsPension; i++) {
                                   pensionMessage += (i + 1 + totalAccountsInsurance) +". "  + pensionData[i].Code +"\n";
+                                  pensionMessage1 += (i + 1 + totalAccountsInsurance) +". "  + pensionData[i].Code +",\n";
                                   console.log((i + 1 + totalAccountsInsurance) + ". Account Description:", pensionData[i].Code, "Name: ", pensionData[i].scheme_name, ".Active Since: ", pensionData[i].dateFrom);
                                 }
-                                console.log(insuranceMessage + "\n");
-                                console.log(pensionMessage + "\n");
+                                console.log(insuranceMessage1 + "\n");
+                                console.log(pensionMessage1 + "\n");
 
-                                const statusMessage =insuranceMessage + pensionMessage;
+                                const statusMessage = insuranceMessage1 +","+ pensionMessage1;
                                 console.log(statusMessage + "\n");
-                                let statusArray = statusMessage.split("\n").map((item) => item.replace(/^\d+\.\s*/, ''));
-                                console.log(statusArray);
+                                // let statusArray = statusMessage.split("\n").map((item) => item.replace(/^\d+\.\s*/, ''));
+                                // console.log(statusArray);
 
                                 // let postAccounts = "Please provide us with your membership number so that we can provide you with a member statement. ";
                                 const finalMessage = preAccounts + insuranceMessage + pensionMessage;
@@ -218,7 +222,7 @@ function updatePassword(phoneNumberPassword, textPassword, textIDATPassword, sen
                                   // const messagingAccountsEntry = "0";
                                   const phoneNumberAccountsEntry = sender;
                                   const textIDATAccountsEntry = textIDAT;
-                                  const allAccounts = statusArray;
+                                  const allAccounts = statusMessage;
                                   const updateFail = `UPDATE two_way_sms_tb SET status = @statusAccountsEntry, allAccounts =@allAccounts   WHERE phoneNumber = @phoneNumberAccountsEntry AND text_id_AT =@textIDATAccountsEntry AND time = (
                                            SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberAccountsEntry )`;
                                   request.input('statusAccountsEntry', sql.VarChar, statusAccountsEntry);
