@@ -457,8 +457,8 @@ function updateDescription(phoneNumberDescription, textDescription, textIDATDesc
             if ([200].includes(response.statusCode)) {
               console.log(response.statusCode);
               const periods = data.data;
-              console.log(periods);
-              let finalMessage = "Available periods are: \n";
+              // console.log(periods);
+              let preMessage = "Available periods are: \n";
               for (let i = 0; i < periods.length; i++) {
                 const period_name = periods[i].period_name;
                 finalMessage += `${i + 1}. ${period_name}\n`;
@@ -466,12 +466,12 @@ function updateDescription(phoneNumberDescription, textDescription, textIDATDesc
               sms.sendPremium({
                 to: sender,
                 from: '24123',
-                message: finalMessage + ".\n Please enter the period name as provided in the above message",
+                message: preMessage + finalMessage + ".\n Please enter the period name as provided in the above message",
                 bulkSMSMode: 0,
                 keyword: 'pension',
                 linkId: LinkID
               });
-              // sms.send(account.providePeriodName(sender));
+              
             } else if ([400].includes(response.statusCode)) {
               console.log(response.statusCode);
               sms.sendPremium({ 
