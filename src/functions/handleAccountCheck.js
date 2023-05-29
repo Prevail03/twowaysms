@@ -96,7 +96,7 @@ function handleAccountCheck(textMessage, sender, messagingStep, sms, account, co
                     // console.log('Check periods');
                     const allPeriods = checkResults.recordset[0].allPeriods;
                     // console.log(allPeriods);
-                    const periodsArray = allperiods.split(',')
+                    const periodsArray = allPeriods.split(',')
                         .map(account => account.trim().replace(/^\d+\.\s*/, ''))
                         .filter(account => account !== '');
                     console.log("Array count:", periodsArray.length);
