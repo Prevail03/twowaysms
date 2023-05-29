@@ -3,6 +3,8 @@ const handleRegister = require('./handleRegister');
 const handleDelete = require('./handleDelete');
 const handleAccountCheck = require('./handleAccountCheck');
 const handlePasswordReset = require('./handlePasswordReset');
+const handleForgotPassword = require('./handleForgotPassword');
+
 const reset =require('../reset')
 var Client = require('node-rest-client').Client;
 
@@ -110,20 +112,23 @@ function handleIncomingMessage(textMessage, sender, textId, phoneNumber, config,
                     switch (status) {
                         case 'isRegistering':
                             handleRegister(textMessage, sender, messagingStep, sms, register, config, phoneNumber, textIDAT, LinkID);
-                            break;
+                        break;
                         case 'isDeleting':
                             handleDelete(textMessage, sender, messagingStep, config, sms, register, textIDAT, LinkID);
-                            break;
+                        break;
                         case 'isCheckingAccount':
                             handleAccountCheck(textMessage, sender, messagingStep, sms, account, config, textIDAT, LinkID);
-                            break;
+                        break;
                         case 'ResetingPassword':
                             handlePasswordReset(textMessage, sender, messagingStep, sms, reset, config, textIDAT, LinkID);
-                            break;
+                        break;
+                        case 'isForgotPassword':
+                            handleForgotPassword(textMessage, sender, messagingStep, sms, forgotPassword, config, textIDAT, LinkID);
+                        break;    
                         default:
                             sms.sendPremium(register.defaultMessage(sender, LinkID));
                             console.log('Unknown status: ' + status);
-                            break;
+                        break;
                     }
                     // Does not exist in two_way_sms_tb
                 } else {
