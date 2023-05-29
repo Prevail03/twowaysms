@@ -199,7 +199,7 @@ function updateNewPassword(statusResetNPasswordEnd, phoneNumberResetNPasswordEnd
         console.error('Error executing query: ' + err.stack);
         return;
       }
-      console.log('OTP UPDATE successful');
+      console.log('New Password UPDATE successful');
       const statusResetEnd = "ResetingPassword";
       const phoneNumberEnding = phoneNumberResetNPasswordEnd;
       const textIDEnd = textIDATResetNPasswordEnd;

@@ -123,7 +123,7 @@ function handleIncomingMessage(textMessage, sender, textId, phoneNumber, config,
                             handlePasswordReset(textMessage, sender, messagingStep, sms, reset, config, textIDAT, LinkID);
                         break;
                         case 'isForgotPassword':
-                            handleForgotPassword(textMessage, sender, messagingStep, sms, forgotPassword, config, textIDAT, LinkID);
+                            handleForgotPassword(textMessage, sender, messagingStep, sms, forgotPassword, config, textIDAT, LinkID,reset);
                         break;    
                         default:
                             sms.sendPremium(register.defaultMessage(sender, LinkID));

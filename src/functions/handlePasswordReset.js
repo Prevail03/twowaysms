@@ -51,8 +51,6 @@ function handlePasswordReset(textMessage, sender, messagingStep, sms, reset, con
             break;
         case 5:
             //confirmation of password reset
-            
-            user.newPassword = textMessage;
             const statusResetNPasswordEnd = "ResetingPassword";
             const phoneNumberResetNPasswordEnd = sender;
             const messagingStepResetNPasswordEnd = "5";
