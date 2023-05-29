@@ -63,6 +63,7 @@ function handleAccountCheck(textMessage, sender, messagingStep, sms, account, co
                         updateDescription(phoneNumberDescription, textDescription, textIDATDescription, sender, config, textIDAT, sms, account, LinkID);
                     } else {
                         console.log("Invalid account description");
+                        sms.sendPremium(account.invalidResponse(sender, LinkID));
                     }
                 } else {
                 console.log('Record does not exist');
@@ -106,20 +107,16 @@ function handleAccountCheck(textMessage, sender, messagingStep, sms, account, co
                             console.log("Selected period:", selectedPeriod);
                             textperiodName = selectedPeriod;
                             console.log("Period Name: " + textperiodName);
+                            updatePeriodName(phoneNumberperiodName, textperiodName, textIDATperiodName, sender, config, textIDAT, sms,LinkID);
                         } else {
-                            console.log("Invalid account description");
+                            sms.sendPremium(account.invalidResponse(sender, LinkID));
                         }
                     } else {
                     console.log('Record does not exist');
                     }
                 });
             });
-
-
-
-
-            // updatePeriodName(phoneNumberperiodName, textperiodName, textIDATperiodName, sender, config, textIDAT, sms,LinkID);
-            break;
+        break;
         default:
             // do sthg
             sms.sendPremium(account.wrongResponse(sender, LinkID));
