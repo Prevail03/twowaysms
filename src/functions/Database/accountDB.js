@@ -465,10 +465,35 @@ function updateDescription(phoneNumberDescription, textDescription, textIDATDesc
                 finalMessage += `${i + 1}. ${period_name}.\n`;
               }
               console.log("Available periods are: \n" + finalMessage);
+              
+              sql.connect(config, function (err) {
+                console.log('Connected to the database');
+                const request = new sql.Request();
+                const statusPeriodsEntry = "isCheckingAccount";
+                // const messagingPeriodsEntry = "0";
+                const phoneNumberPeriodsEntry = sender;
+                const textIDATPeriodsEntry = textIDAT;
+                const allPeriods = finalMessage;
+                const updateAllPeriods = `UPDATE two_way_sms_tb SET status = @statusPeriodsEntry, allPeriods =@allPeriods   WHERE phoneNumber = @phoneNumberPeriodsEntry AND text_id_AT =@textIDATPeriodsEntry AND time = (
+                         SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberPeriodsEntry )`;
+                request.input('statusPeriodsEntry', sql.VarChar, statusPeriodsEntry);
+                // request.input('messagingPeriodsEntry', sql.VarChar, messagingPeriodsEntry);
+                request.input('phoneNumberPeriodsEntry', sql.NVarChar, phoneNumberPeriodsEntry);
+                request.input('textIDATPeriodsEntry', sql.NVarChar, textIDATPeriodsEntry);
+                request.input('allPeriods', sql.NVarChar, allPeriods);
+                request.query(updateAllPeriods, function (err, results) {
+                  if (err) {
+                    console.error('Error executing query: ' + err.stack);
+                    return;
+                  }
+                  console.log('Adding periods attempt successful');
+                  sql.close();
+                });
+              });
               sms.sendPremium({
                 to: sender,
                 from: '24123',
-                message: preMessage + finalMessage + ".",
+                message: preMessage + finalMessage,
                 bulkSMSMode: 0,
                 keyword: 'pension',
                 linkId: LinkID
