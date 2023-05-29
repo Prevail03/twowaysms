@@ -100,7 +100,6 @@ function handleAccountCheck(textMessage, sender, messagingStep, sms, account, co
                         .split('\n')
                         .map(period => period.replace(/^\d+\.\s*/, '').replace(/\.$/, ''))
                         .filter(period => period.trim() !== '');
-
                     console.log(periodsArray);
                     console.log("Array count:", periodsArray.length);
                     console.log(periodsArray);
