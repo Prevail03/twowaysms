@@ -464,14 +464,17 @@ function updateDescription(phoneNumberDescription, textDescription, textIDATDesc
                 const period_name = periods[i].period_name;
                 finalMessage += `${i + 1}. ${period_name}.\n`;
               }
+              console.log("Available periods are: \n" + finalMessage);
+              console.log(finalMessage);
               sms.sendPremium({
                 to: sender,
                 from: '24123',
-                message: preMessage + finalMessage + ".\n Please enter the period name as provided in the above message",
+                message: preMessage + finalMessage + ".",
                 bulkSMSMode: 0,
                 keyword: 'pension',
                 linkId: LinkID
               });
+              console.log(finalMessage);
               
             } else if ([400].includes(response.statusCode)) {
               console.log(response.statusCode);
