@@ -10,8 +10,39 @@ const reset =require('../reset')
 
 function handleIncomingMessage(textMessage, sender, textId, phoneNumber, config, sms, register, account,forgotPassword, LinkID) {
     if(textMessage == 98){
+
         console.log('Forgot Password Work Flow');
+        sql.connect(config, function(err, connection) {
+            if (err) {
+                console.error('Error connecting to database: ' + err.stack);
+                return;
+            }
+            console.log('Connected to database');
+            let phoneNumber = phoneNumberPassword;
+            phoneNumber = phoneNumber.replace("+", "");
+            const checkIfExistsQuerySysUsers = "SELECT TOP 1 * FROM sys_users_tb WHERE user_mobile = @phoneNumber OR user_phone = @phoneNumber";
+            const checkIfExistsRequestSysUsers = new sql.Request(connection);
+            checkIfExistsRequestSysUsers.input('phoneNumber', sql.VarChar, phoneNumber);
+            checkIfExistsRequestSysUsers.query(checkIfExistsQuerySysUsers, function(checkErrSysUsers, checkResultsSysUsers) {
+                if (checkErrSysUsers) {
+                    console.error('Error executing checkIfExistsQuerySysUsers: ' + checkErrSysUsers.stack);
+                    connection.close();
+                    return;
+                }
+                // Record exists in sys_users_tb
+                if (checkResultsSysUsers.recordset.length > 0) {
+                    console.log('User exists');
+                    const email = checkResults.recordset[0].user_email;
+                    console.log(email);
+                }else{
+                    console.log('You do not have an account with us please register');
+                    sms.sendPremium(forgotPassword.missingAccount(sender, LinkID));
+                }   
+            });
+        });        
         sms.sendPremium(forgotPassword.welcomeMessageForgotPassword(sender, LinkID));
+
+
     }else{ 
         sql.connect(config, function(err, connection) {
             if (err) {
