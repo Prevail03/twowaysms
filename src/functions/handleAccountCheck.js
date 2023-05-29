@@ -93,23 +93,9 @@ function handleAccountCheck(textMessage, sender, messagingStep, sms, account, co
                 return;
                 }
                 if (checkResults.recordset.length > 0) {
-                const allPeriods = checkResults.recordset[0].allPeriods;
-                console.log(allPeriods);
-                // const periodsArray = allPeriods.split(',')
-                //     .map(account => account.trim().replace(/^\d+\.\s*/, ''))
-                //     .filter(account => account !== '');
-
-                // console.log("Array count:", periodsArray.length);
-                // console.log("Periods:", periodsArray);
-                // if (periodNumber >= 1 && periodNumber <= periodsArray.length) {
-                //     const selectedAccount = periodsArray[periodNumber - 1];
-                //     console.log("Selected account:", selectedAccount);
-                //     textperiodName = selectedAccount;
-                //     console.log("Account Description: " + textperiodName);
-                //     // updateDescription(phoneNumberDescription, textperiodName, textIDATDescription, sender, config, textIDAT, sms, account, LinkID);
-                // } else {
-                //     console.log("Invalid account description");
-                // }
+                    console.log('Check periods');
+                    const allPeriods = checkResults.recordset[0].allPeriods;
+                    console.log(allPeriods);
                 } else {
                 console.log('Record does not exist');
                 }
