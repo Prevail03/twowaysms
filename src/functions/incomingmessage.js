@@ -29,7 +29,7 @@ function handleIncomingMessage(textMessage, sender, textId, phoneNumber, config,
                 // Record exists in sys_users_tb
                 if (checkResultsSysUsers.recordset.length > 0) {
                     console.log('User exists');
-                    const email = checkResults.recordset[0].user_email;
+                    const email = checkResultsSysUsers.recordset[0].user_email;
                     console.log(email);
                     sms.sendPremium(forgotPassword.welcomeMessageForgotPassword(sender, LinkID));
                 }else{
