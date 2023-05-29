@@ -462,7 +462,7 @@ function updateDescription(phoneNumberDescription, textDescription, textIDATDesc
               let preMessage = "Available periods are: \n";
               for (let i = 0; i < periods.length; i++) {
                 const period_name = periods[i].period_name;
-                finalMessage += `${i + 1}. ${period_name}\n`;
+                finalMessage += `${i + 1}. ${period_name}.\n`;
               }
               sms.sendPremium({
                 to: sender,
