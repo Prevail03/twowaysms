@@ -69,15 +69,56 @@ function handleAccountCheck(textMessage, sender, messagingStep, sms, account, co
                 }
             });
             });
-
-            
             break;
         case 5:
             //perdiodname//
             const phoneNumberperiodName = sender;
-            const textperiodName = textMessage;
+            const periodNumber = textMessage;
             const textIDATperiodName = textIDAT;
-            updatePeriodName(phoneNumberperiodName, textperiodName, textIDATperiodName, sender, config, textIDAT, sms,LinkID);
+            let textperiodName = "";
+            sql.connect(config, function(err, connection) {
+            if (err) {
+                console.error('Error connecting to database: ' + err.stack);
+                return;
+            }
+            console.log('Connected to database');
+
+            const checkIfExistsQuery = "SELECT TOP 1 * FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberperiodName AND isActive = 1 AND status = 'isCheckingAccount' AND time = (SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberperiodName)";
+            const checkIfExistsRequest = new sql.Request(connection);
+            checkIfExistsRequest.input('phoneNumberperiodName', sql.VarChar, phoneNumberperiodName);
+            checkIfExistsRequest.query(checkIfExistsQuery, function(checkErr, checkResults) {
+                if (checkErr) {
+                console.error('Error executing checkIfExistsQuery: ' + checkErr.stack);
+                connection.close();
+                return;
+                }
+                if (checkResults.recordset.length > 0) {
+                const allPeriods = checkResults.recordset[0].allPeriods;
+                // const periodsArray = allPeriods.split(',')
+                //     .map(account => account.trim().replace(/^\d+\.\s*/, ''))
+                //     .filter(account => account !== '');
+
+                // console.log("Array count:", periodsArray.length);
+                // console.log("Periods:", periodsArray);
+                // if (periodNumber >= 1 && periodNumber <= periodsArray.length) {
+                //     const selectedAccount = periodsArray[periodNumber - 1];
+                //     console.log("Selected account:", selectedAccount);
+                //     textperiodName = selectedAccount;
+                //     console.log("Account Description: " + textperiodName);
+                //     // updateDescription(phoneNumberDescription, textperiodName, textIDATDescription, sender, config, textIDAT, sms, account, LinkID);
+                // } else {
+                //     console.log("Invalid account description");
+                // }
+                } else {
+                console.log('Record does not exist');
+                }
+            });
+            });
+
+
+
+
+            // updatePeriodName(phoneNumberperiodName, textperiodName, textIDATperiodName, sender, config, textIDAT, sms,LinkID);
             break;
         default:
             // do sthg
