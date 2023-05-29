@@ -5,6 +5,7 @@ const options = require('./env.js');
 const config = require('./dbconnect.js');
 const register = require('./src/register.js');
 const account = require('./src/account.js');
+const forgotPassword = require('./src/forgotPassword.jss');
 const AfricasTalking = require('africastalking')(options);
 const app = express();
 const bodyParser = require("body-parser");
@@ -28,7 +29,7 @@ app.post("/webhook", (req, res) => {
     const textMessage = payload.text;
     const sms = AfricasTalking.SMS;
 
-    handleIncomingMessage(textMessage, sender, textId, phoneNumber, config ,sms ,register, account, LinkID);
+    handleIncomingMessage(textMessage, sender, textId, phoneNumber, config ,sms ,register, account, forgotPassword, LinkID);
     // handleRegister(text, sender, messagingStep ,sms, register, config, phoneNumber, time, validateId);
     // handleDelete(text, sender, messagingStep, phoneNumber, config, time, sms, register);
     // handleAccountCheck(text, sender, messagingStep, sms, account, config, phoneNumber);
