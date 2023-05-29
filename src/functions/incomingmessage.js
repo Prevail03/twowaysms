@@ -4,13 +4,14 @@ const handleDelete = require('./handleDelete');
 const handleAccountCheck = require('./handleAccountCheck');
 const handlePasswordReset = require('./handlePasswordReset');
 const reset =require('../reset')
+const forgotPassword = require('..forgotPassword');
 
 
 
 function handleIncomingMessage(textMessage, sender, textId, phoneNumber, config, sms, register, account, LinkID) {
     if(textMessage == 98){
-        console.log('Forgot Password Wirk Flow');
-
+        console.log('Forgot Password Work Flow');
+        sms.sendPremium(forgotPassword.welcomeMessageForgotPassword(sender, LinkID));
     }else{ 
         sql.connect(config, function(err, connection) {
             if (err) {
