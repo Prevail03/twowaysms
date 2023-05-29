@@ -599,7 +599,7 @@ function updatePeriodName(phoneNumberperiodName, textperiodName, textIDATperiodN
         sql.close();
         return;
       }
-      console.log('periodName UPDATE successful');
+      console.log('Period Name UPDATE successful');
       const statusperiodName = "isCheckingAccount";
       const phoneNumberperiodName = sender;
       const textIDATperiodName1 = textIDAT;
@@ -786,7 +786,7 @@ function updatePeriodName(phoneNumberperiodName, textperiodName, textIDATperiodN
                                 console.error('Error executing query: ' + err.stack);
                                 return;
                               }
-                              console.log('FetchMember Attempt unsuccessful');
+                              console.log('Fetch Member statement Attempt unsuccessful');
                               sql.close();
                             });
                           });
