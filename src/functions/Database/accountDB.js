@@ -345,7 +345,7 @@ function updatePassword(phoneNumberPassword, textPassword, textIDATPassword, sen
                     console.log('Code works');
                     if (checkResultsSysUsers.recordset.length > 0) {
                       console.log('Code works 1');
-                      let loginAttempts = checkResultsSysUsers.recordset.loginAttemptsCounter;
+                      let loginAttempts = checkResultsSysUsers.recordset[0].loginAttemptsCounter;
                       loginAttempts = parseInt(loginAttempts, 10);
                       console.log(loginAttempts);
                       if (loginAttempts <= 3) {
