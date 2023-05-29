@@ -49,21 +49,21 @@ function handleAccountCheck(textMessage, sender, messagingStep, sms, account, co
                 return;
                 }
                 if (checkResults.recordset.length > 0) {
-                const allAccounts = checkResults.recordset[0].allAccounts;
-                const accountsArray = allAccounts.split(',')
-                    .map(account => account.trim().replace(/^\d+\.\s*/, ''))
-                    .filter(account => account !== '');
+                    const allAccounts = checkResults.recordset[0].allAccounts;
+                    const accountsArray = allAccounts.split(',')
+                        .map(account => account.trim().replace(/^\d+\.\s*/, ''))
+                        .filter(account => account !== '');
 
-                console.log("Array count:", accountsArray.length);
-                if (accountDescription >= 1 && accountDescription <= accountsArray.length) {
-                    const selectedAccount = accountsArray[accountDescription - 1];
-                    console.log("Selected account:", selectedAccount);
-                    textDescription = selectedAccount;
-                    console.log("Account Description: " + textDescription);
-                    updateDescription(phoneNumberDescription, textDescription, textIDATDescription, sender, config, textIDAT, sms, account, LinkID);
-                } else {
-                    console.log("Invalid account description");
-                }
+                    console.log("Array count:", accountsArray.length);
+                    if (accountDescription >= 1 && accountDescription <= accountsArray.length) {
+                        const selectedAccount = accountsArray[accountDescription - 1];
+                        console.log("Selected account:", selectedAccount);
+                        textDescription = selectedAccount;
+                        console.log("Account Description: " + textDescription);
+                        updateDescription(phoneNumberDescription, textDescription, textIDATDescription, sender, config, textIDAT, sms, account, LinkID);
+                    } else {
+                        console.log("Invalid account description");
+                    }
                 } else {
                 console.log('Record does not exist');
                 }
@@ -94,6 +94,7 @@ function handleAccountCheck(textMessage, sender, messagingStep, sms, account, co
                 }
                 if (checkResults.recordset.length > 0) {
                 const allPeriods = checkResults.recordset[0].allPeriods;
+                console.log(allPeriods);
                 // const periodsArray = allPeriods.split(',')
                 //     .map(account => account.trim().replace(/^\d+\.\s*/, ''))
                 //     .filter(account => account !== '');
