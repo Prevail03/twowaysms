@@ -100,17 +100,15 @@ function handleAccountCheck(textMessage, sender, messagingStep, sms, account, co
                         .split('\n')
                         .map(period => period.replace(/^\d+\.\s*/, '').replace(/\.$/, ''))
                         .filter(period => period.trim() !== '');
-                    console.log(periodsArray);
                     console.log("Array count:", periodsArray.length);
-                    console.log(periodsArray);
-                    // if (accountDescription >= 1 && accountDescription <= periodsArray.length) {
-                    //     const selectedAccount = periodsArray[accountDescription - 1];
-                    //     console.log("Selected account:", selectedAccount);
-                    //     textDescription = selectedAccount;
-                    //     console.log("Account Description: " + textDescription);
-                    // } else {
-                    //     console.log("Invalid account description");
-                    // }
+                    if (periodNumber >= 1 && periodNumber <= periodsArray.length) {
+                        const selectedPeriod = periodsArray[periodNumber - 1];
+                        console.log("Selected period:", selectedPeriod);
+                        textperiodName = selectedPeriod;
+                        console.log("Period Name: " + textperiodName);
+                    } else {
+                        console.log("Invalid account description");
+                    }
                 } else {
                 console.log('Record does not exist');
                 }
