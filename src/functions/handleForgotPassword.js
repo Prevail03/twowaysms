@@ -1,14 +1,14 @@
 const sql = require('mssql');
 var Client = require('node-rest-client').Client;
 const httpProxy = require('http-proxy');
-function handleForgotPassword(textMessage, sender, messagingStep, sms, reset, config, textIDAT, LinkID) {
+function handleForgotPassword(textMessage, sender, messagingStep, sms, forgotPassword, config, textIDAT, LinkID) {
 
   switch (parseInt(messagingStep)) {
     case 1:
       //enter OTP///
       const textMessageOTP = textMessage;
       const phoneNumberOTP = phoneNumber;
-      const messagingStepOTP  = "1";
+      const messagingStepOTP  = "2";
       const textIDATOTP = textIDAT;
       const statusOTP = "isForgotPassword";
       sql.connect(config, function (err) {
@@ -29,6 +29,7 @@ function handleForgotPassword(textMessage, sender, messagingStep, sms, reset, co
           sql.close();
         });
       });
+      sms.sendPremium(forgotPassword.enterNewPassword(sender, LinkID));
     break;
     case 2:
       // new password///

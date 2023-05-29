@@ -22,5 +22,16 @@ const forgotPassword = {
         linkId: LinkID,
     };
   },
+  enterNewPassword: (sender,LinkID) => {
+    messageToCustomer = 'Please enter your new password  ';
+    return {
+        to: sender,
+        from:'24123',
+        message: messageToCustomer,
+        bulkSMSMode: 0,
+        keyword: 'pension',
+        linkId: LinkID
+    };
+},
 }
 module.exports = forgotPassword;

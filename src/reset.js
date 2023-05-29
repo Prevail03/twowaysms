@@ -9,7 +9,6 @@ const reset={
             keyword: 'pension',
             linkId: LinkID
         };
-     
     },
     enterEmail: (sender,LinkID) => {
         messageToCustomer = 'Please enter your email address. ';
@@ -21,7 +20,6 @@ const reset={
             keyword: 'pension',
             linkId: LinkID
         };
-     
     },
     enterCurrentPassword: (sender, LinkID) => {
         messageToCustomer = 'Please enter your Current password ';
@@ -33,7 +31,6 @@ const reset={
             keyword: 'pension',
             linkId: LinkID
         };
-     
     },
     verifyPassword: (sender,LinkID) => {
         messageToCustomer = 'Account Verified ';
@@ -45,7 +42,6 @@ const reset={
             keyword: 'pension',
             linkId: LinkID
         };
-     
     },
     enterOTP: (sender,LinkID) => {
         messageToCustomer = 'Account Verified.\nPlease enter the OTP Sent to your email account ';
@@ -57,7 +53,6 @@ const reset={
             keyword: 'pension',
             linkId: LinkID
         };
-     
     },
     enterNewPassword: (sender,LinkID) => {
         messageToCustomer = 'Please enter Your new Password ';
@@ -69,7 +64,6 @@ const reset={
             keyword: 'pension',
             linkId: LinkID
         };
-     
     },
     error400: (sender,LinkID) => {
         messageToCustomer = 'Invalid Details!!. Check your details and please try again Later ';
@@ -105,7 +99,6 @@ const reset={
             keyword: 'pension',
             linkId: LinkID
         };
-     
     },
 }
 module.exports=reset;
