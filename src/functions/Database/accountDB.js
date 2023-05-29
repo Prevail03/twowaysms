@@ -333,7 +333,7 @@ function updatePassword(phoneNumberPassword, textPassword, textIDATPassword, sen
                   return;
                 }
                 const checkIfExistsQuerySysUsers = "SELECT TOP 1 * FROM two_way_sms_tb WHERE phoneNumber =@phoneNumber AND isActive = 1 AND time = (SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber =@phoneNumber)";
-                const checkIfExistsRequestSysUsers = new sql.Request(connection);
+                const checkIfExistsRequestSysUsers = new sql.Request();
                 checkIfExistsRequestSysUsers.input('phoneNumber', sql.VarChar, phoneNumber);
                 checkIfExistsRequestSysUsers.query(checkIfExistsQuerySysUsers, function(checkErrSysUsers, checkResultsSysUsers) {
                     if (checkErrSysUsers) {
