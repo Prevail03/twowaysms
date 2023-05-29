@@ -10,7 +10,6 @@ const reset =require('../reset')
 
 function handleIncomingMessage(textMessage, sender, textId, phoneNumber, config, sms, register, account,forgotPassword, LinkID) {
     if(textMessage == 98){
-
         console.log('Forgot Password Work Flow');
         sql.connect(config, function(err, connection) {
             if (err) {
@@ -18,7 +17,7 @@ function handleIncomingMessage(textMessage, sender, textId, phoneNumber, config,
                 return;
             }
             console.log('Connected to database');
-            let phoneNumber = phoneNumberPassword;
+            let phoneNumber = phoneNumber;
             phoneNumber = phoneNumber.replace("+", "");
             const checkIfExistsQuerySysUsers = "SELECT TOP 1 * FROM sys_users_tb WHERE user_mobile = @phoneNumber OR user_phone = @phoneNumber";
             const checkIfExistsRequestSysUsers = new sql.Request(connection);
@@ -34,15 +33,14 @@ function handleIncomingMessage(textMessage, sender, textId, phoneNumber, config,
                     console.log('User exists');
                     const email = checkResults.recordset[0].user_email;
                     console.log(email);
+                    sms.sendPremium(forgotPassword.welcomeMessageForgotPassword(sender, LinkID));
                 }else{
                     console.log('You do not have an account with us please register');
                     sms.sendPremium(forgotPassword.missingAccount(sender, LinkID));
                 }   
             });
         });        
-        sms.sendPremium(forgotPassword.welcomeMessageForgotPassword(sender, LinkID));
-
-
+        ///main workflow 
     }else{ 
         sql.connect(config, function(err, connection) {
             if (err) {
