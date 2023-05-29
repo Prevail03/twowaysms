@@ -101,7 +101,6 @@ function handleAccountCheck(textMessage, sender, messagingStep, sms, account, co
                         .filter(account => account !== '');
                     console.log("Array count:", periodsArray.length);
                     console.log(periodsArray);
-
                     // if (accountDescription >= 1 && accountDescription <= periodsArray.length) {
                     //     const selectedAccount = periodsArray[accountDescription - 1];
                     //     console.log("Selected account:", selectedAccount);
