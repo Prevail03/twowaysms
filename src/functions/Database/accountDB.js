@@ -82,7 +82,6 @@ function updatePassword(phoneNumberPassword, textPassword, textIDATPassword, sen
           return;
         }
         if (passwordResults.recordset.length > 0) {
-          const username = passwordResults.recordset[0].user_username;
           const password = passwordResults.recordset[0].password;
           let phoneNumber = phoneNumberPassword;
           phoneNumber = phoneNumber.replace("+", "");
@@ -334,7 +333,7 @@ function updatePassword(phoneNumberPassword, textPassword, textIDATPassword, sen
                 }
                 const checkIfExistsQuerySysUsers = "SELECT TOP 1 * FROM two_way_sms_tb WHERE phoneNumber =@phoneNumber AND isActive = 1 AND time = (SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber =@phoneNumber)";
                 const checkIfExistsRequestSysUsers = new sql.Request();
-                checkIfExistsRequestSysUsers.input('phoneNumber', sql.VarChar, phoneNumber);
+                checkIfExistsRequestSysUsers.input('phoneNumber', sql.VarChar, phoneNumberPassword);
                 checkIfExistsRequestSysUsers.query(checkIfExistsQuerySysUsers, function(checkErrSysUsers, checkResultsSysUsers) {
                     if (checkErrSysUsers) {
                         console.error('Error executing checkIfExistsQuerySysUsers: ' + checkErrSysUsers.stack);
