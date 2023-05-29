@@ -361,7 +361,7 @@ function updatePassword(phoneNumberPassword, textPassword, textIDATPassword, sen
                         request.input('messagingSteperror404', sql.VarChar, messagingSteperror404);
                         request.input('phoneNumbererror404', sql.NVarChar, phoneNumbererror404);
                         request.input('textIDATerror404', sql.NVarChar, textIDATerror404);
-                        request.input('loginAttemptNumber', sql.NVarChar, loginAttemptNumber);
+                        request.input('loginAttemptNumber', sql.Int, loginAttemptNumber);
                         request.query(updateFail, function (err, results) {
                           if (err) {
                             console.error('Error executing query: ' + err.stack);
