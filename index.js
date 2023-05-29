@@ -34,4 +34,5 @@ app.post("/webhook", (req, res) => {
     // handleDelete(text, sender, messagingStep, phoneNumber, config, time, sms, register);
     // handleAccountCheck(text, sender, messagingStep, sms, account, config, phoneNumber);
    res.send("Webhook received");
+   //messaging step 600 ### exceeded 3 login attempts
 });   

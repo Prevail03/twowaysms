@@ -327,42 +327,88 @@ function updatePassword(phoneNumberPassword, textPassword, textIDATPassword, sen
               });
             } else if ([401].includes(response.statusCode)) {
               console.log(response.statusCode);
-              sms.sendPremium({ 
-                to: sender, 
-                from: '24123', 
-                message: " Authentication failed. Incorrect password or username. Access denied.Please Enter your password again",
-                bulkSMSMode: 0,
-                keyword: 'pension',
-                linkId: LinkID 
-              });
               sql.connect(config, function (err) {
                 if (err) {
                   console.error('Error connecting to the database: ' + err.stack);
                   return;
                 }
-                console.log('Connected to the database');
-                const request = new sql.Request();
-                const statuserror404 = "isCheckingAccount";
-                const messagingSteperror404 = "3";
-                const phoneNumbererror404 = sender;
-                const textIDATerror404 = textIDAT;
-                const updateFail = `UPDATE two_way_sms_tb SET status = @statuserror404, messagingStep = @messagingSteperror404  WHERE phoneNumber = @phoneNumbererror404 AND text_id_AT =@textIDATerror404 AND time = (
-                                         SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumbererror404 )`;
-                request.input('statuserror404', sql.VarChar, statuserror404);
-                request.input('messagingSteperror404', sql.VarChar, messagingSteperror404);
-                request.input('phoneNumbererror404', sql.NVarChar, phoneNumbererror404);
-                request.input('textIDATerror404', sql.NVarChar, textIDATerror404);
-                request.query(updateFail, function (err, results) {
-                  if (err) {
-                    console.error('Error executing query: ' + err.stack);
-                    return;
-                  }
-                  console.log('Login Attempt unsuccessful');
-                  sql.close();
-                });
+                const checkIfExistsQuerySysUsers = "SELECT TOP 1 * FROM two_way_sms_tb WHERE phoneNumber =@phoneNumber AND isActive = 1 AND time = (SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber =@phoneNumber)";
+                const checkIfExistsRequestSysUsers = new sql.Request(connection);
+                checkIfExistsRequestSysUsers.input('phoneNumber', sql.VarChar, phoneNumber);
+                checkIfExistsRequestSysUsers.query(checkIfExistsQuerySysUsers, function(checkErrSysUsers, checkResultsSysUsers) {
+                    if (checkErrSysUsers) {
+                        console.error('Error executing checkIfExistsQuerySysUsers: ' + checkErrSysUsers.stack);
+                        connection.close();
+                        return;
+                    }
+                    // Record exists in sys_users_tb
+                    if (checkResultsSysUsers.recordset.length > 0) {
+                      let loginAttempts = checkErrSysUsers.recordset.loginAttemptsCounter;
+                      loginAttempts = parseInt(loginAttempts, 10);
+                      if (loginAttempts <= 3) {
+                        const loginAttemptNumber = loginAttempts + 1;
+                        const request = new sql.Request();
+                        const statuserror404 = "isCheckingAccount";
+                        const messagingSteperror404 = "3";
+                        const phoneNumbererror404 = sender;
+                        const textIDATerror404 = textIDAT;
+                        const updateFail = `UPDATE two_way_sms_tb SET status = @statuserror404, messagingStep = @messagingSteperror404 , loginAttemptsCounter= @loginAttemptNumber WHERE phoneNumber = @phoneNumbererror404 AND text_id_AT =@textIDATerror404 AND time = (
+                                                SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumbererror404 )`;
+                        request.input('statuserror404', sql.VarChar, statuserror404);
+                        request.input('messagingSteperror404', sql.VarChar, messagingSteperror404);
+                        request.input('phoneNumbererror404', sql.NVarChar, phoneNumbererror404);
+                        request.input('textIDATerror404', sql.NVarChar, textIDATerror404);
+                        request.input('loginAttemptNumber', sql.NVarChar, loginAttemptNumber);
+                        request.query(updateFail, function (err, results) {
+                          if (err) {
+                            console.error('Error executing query: ' + err.stack);
+                            return;
+                          }
+                          console.log('Login Attempt unsuccessful');
+                          sql.close();
+                        });
+                        sms.sendPremium({ 
+                        to: sender, 
+                        from: '24123', 
+                        message: " Authentication failed. Incorrect password or username. Access denied.Please Enter your password again. Incase you have forgotten your password respond to this message with 98 ",
+                        bulkSMSMode: 0,
+                        keyword: 'pension',
+                        linkId: LinkID 
+                        });
+                      } else {
+                        // Lock the user out and send them to reset the password
+                        const request = new sql.Request();
+                        const statuserror404 = "isForgotPassword";
+                        const messagingSteperror404 = "600";
+                        const phoneNumbererror404 = sender;
+                        const textIDATerror404 = textIDAT;
+                        const updateFail = `UPDATE two_way_sms_tb SET status = @statuserror404, messagingStep = @messagingSteperror404  WHERE phoneNumber = @phoneNumbererror404 AND text_id_AT =@textIDATerror404 AND time = (
+                                                SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumbererror404 )`;
+                        request.input('statuserror404', sql.VarChar, statuserror404);
+                        request.input('messagingSteperror404', sql.VarChar, messagingSteperror404);
+                        request.input('phoneNumbererror404', sql.NVarChar, phoneNumbererror404);
+                        request.input('textIDATerror404', sql.NVarChar, textIDATerror404);
+                        request.query(updateFail, function (err, results) {
+                          if (err) {
+                            console.error('Error executing query: ' + err.stack);
+                            return;
+                          }
+                          console.log('Login Attempt unsuccessful. Locked out.');
+                          sql.close();
+                        });
+                        sms.sendPremium({ 
+                        to: sender, 
+                        from: '24123', 
+                        message: "Authentication failed. Incorrect password or username. Access denied.Please visit our website to set up a new password or contact support at support@octagonafrica.com or call 0709 986 000",
+                        bulkSMSMode: 0,
+                        keyword: 'pension',
+                        linkId: LinkID 
+                        });
+                      }
+                    }
+                  });
               });
-            }
-            else if ([500].includes(response.statusCode)) {
+            }else if ([500].includes(response.statusCode)) {
               console.log(response.statusCode);
               sms.sendPremium({ 
                 to: sender, 
