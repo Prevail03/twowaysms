@@ -18,9 +18,12 @@ function handleIncomingMessage(textMessage, sender, textId, phoneNumber, config,
                 return;
             }
             console.log('Connected to database');
+            let phone= phoneNumber;
+            phone = phone.replace("+", "");
+
             const checkIfExistsQuerySysUsers = "SELECT TOP 1 * FROM sys_users_tb WHERE user_mobile LIKE '%' + @phoneNumber + '%' OR user_phone LIKE '%' + @phoneNumber + '%'";
             const checkIfExistsRequestSysUsers = new sql.Request(connection);
-            checkIfExistsRequestSysUsers.input('phoneNumber', sql.VarChar, phoneNumber);
+            checkIfExistsRequestSysUsers.input('phoneNumber', sql.VarChar, phone);
             checkIfExistsRequestSysUsers.query(checkIfExistsQuerySysUsers, function(checkErrSysUsers, checkResultsSysUsers) {
                 if (checkErrSysUsers) {
                     console.error('Error executing checkIfExistsQuerySysUsers: ' + checkErrSysUsers.stack);
@@ -41,33 +44,32 @@ function handleIncomingMessage(textMessage, sender, textId, phoneNumber, config,
                     forgotPasswordClient.post("https://api.octagonafrica.com/v1/password_reset", args, function (data, response) {
                         console.log(data);
                         if ([200].includes(response.statusCode)) {
-                        console.log("OTP sent to " + email);
-                        sms.sendPremium(forgotPassword.welcomeMessageForgotPassword(sender, LinkID));
-                        console.log(response.statusCode);
-                        const messagingStep = "1";
-                        const status = "isForgotPassword";
-                        const insertQuery = "INSERT INTO two_way_sms_tb (text, text_id_AT, messagingStep, phoneNumber, status) VALUES (@text, @text_id_AT, @messagingStep, @phoneNumber, @status)";
-                        const insertRequest = new sql.Request(connection);
-                        insertRequest.input('text', sql.VarChar, textMessage);
-                        insertRequest.input('text_id_AT', sql.VarChar, textId);
-                        insertRequest.input('phoneNumber', sql.VarChar, phoneNumber);
-                        insertRequest.input('status', sql.VarChar, status);
-                        insertRequest.input('messagingStep', sql.VarChar, messagingStep);
-                        insertRequest.query(insertQuery, function(insertErr, insertResults) {
-                            if (insertErr) {
-                                console.error('Error executing insertQuery: ' + insertErr.stack);
+                            console.log("OTP sent to " + email);
+                            sms.sendPremium(forgotPassword.welcomeMessageForgotPassword(sender, LinkID));
+                            console.log(response.statusCode);
+                            const messagingStep = "1";
+                            const status = "isForgotPassword";
+                            const insertQuery = "INSERT INTO two_way_sms_tb (text, text_id_AT, messagingStep, phoneNumber, status) VALUES (@text, @text_id_AT, @messagingStep, @phoneNumber, @status)";
+                            const insertRequest = new sql.Request(connection);
+                            insertRequest.input('text', sql.VarChar, textMessage);
+                            insertRequest.input('text_id_AT', sql.VarChar, textId);
+                            insertRequest.input('phoneNumber', sql.VarChar, phoneNumber);
+                            insertRequest.input('status', sql.VarChar, status);
+                            insertRequest.input('messagingStep', sql.VarChar, messagingStep);
+                            insertRequest.query(insertQuery, function(insertErr, insertResults) {
+                                if (insertErr) {
+                                    console.error('Error executing insertQuery: ' + insertErr.stack);
+                                    connection.close();
+                                    return;
+                                }
+                                console.log('Added new user to two way sms');
                                 connection.close();
-                                return;
-                            }
-                            console.log('Registered current users');
-                            connection.close();
-                        });
-
+                            });
                         } else if ([400].includes(response.statusCode)) {
-                        console.log(response.statusCode);
-                        sms.sendPremium(reset.error400(sender, LinkID));
+                            console.log(response.statusCode);
+                            sms.sendPremium(reset.error400(sender, LinkID));
                         } else {
-                        console.log(response.statusCode);
+                            console.log(response.statusCode);
                         }
                     });
                     
