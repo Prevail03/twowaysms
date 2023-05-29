@@ -77,42 +77,42 @@ function handleAccountCheck(textMessage, sender, messagingStep, sms, account, co
             const textIDATperiodName = textIDAT;
             let textperiodName = "";
             sql.connect(config, function(err, connection) {
-            if (err) {
-                console.error('Error connecting to database: ' + err.stack);
-                return;
-            }
-            console.log('Connected to database');
+                if (err) {
+                    console.error('Error connecting to database: ' + err.stack);
+                    return;
+                }
+                console.log('Connected to database');
 
-            const checkIfExistsQuery = "SELECT TOP 1 * FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberperiodName AND isActive = 1 AND status = 'isCheckingAccount' AND time = (SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberperiodName)";
-            const checkIfExistsRequest = new sql.Request(connection);
-            checkIfExistsRequest.input('phoneNumberperiodName', sql.VarChar, phoneNumberperiodName);
-            checkIfExistsRequest.query(checkIfExistsQuery, function(checkErr, checkResults) {
-                if (checkErr) {
-                console.error('Error executing checkIfExistsQuery: ' + checkErr.stack);
-                connection.close();
-                return;
-                }
-                if (checkResults.recordset.length > 0) {
-                    // console.log('Check periods');
-                    const allPeriods = checkResults.recordset[0].allPeriods;
-                    // console.log(allPeriods);
-                    const periodsArray = allPeriods
-                        .split('\n')
-                        .map(period => period.replace(/^\d+\.\s*/, '').replace(/\.$/, ''))
-                        .filter(period => period.trim() !== '');
-                    console.log("Array count:", periodsArray.length);
-                    if (periodNumber >= 1 && periodNumber <= periodsArray.length) {
-                        const selectedPeriod = periodsArray[periodNumber - 1];
-                        console.log("Selected period:", selectedPeriod);
-                        textperiodName = selectedPeriod;
-                        console.log("Period Name: " + textperiodName);
-                    } else {
-                        console.log("Invalid account description");
+                const checkIfExistsQuery = "SELECT TOP 1 * FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberperiodName AND isActive = 1 AND status = 'isCheckingAccount' AND time = (SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberperiodName)";
+                const checkIfExistsRequest = new sql.Request(connection);
+                checkIfExistsRequest.input('phoneNumberperiodName', sql.VarChar, phoneNumberperiodName);
+                checkIfExistsRequest.query(checkIfExistsQuery, function(checkErr, checkResults) {
+                    if (checkErr) {
+                    console.error('Error executing checkIfExistsQuery: ' + checkErr.stack);
+                    connection.close();
+                    return;
                     }
-                } else {
-                console.log('Record does not exist');
-                }
-            });
+                    if (checkResults.recordset.length > 0) {
+                        // console.log('Check periods');
+                        const allPeriods = checkResults.recordset[0].allPeriods;
+                        // console.log(allPeriods);
+                        const periodsArray = allPeriods
+                            .split('\n')
+                            .map(period => period.replace(/^\d+\.\s*/, '').replace(/\.$/, ''))
+                            .filter(period => period.trim() !== '');
+                        console.log("Array count:", periodsArray.length);
+                        if (periodNumber >= 1 && periodNumber <= periodsArray.length) {
+                            const selectedPeriod = periodsArray[periodNumber - 1];
+                            console.log("Selected period:", selectedPeriod);
+                            textperiodName = selectedPeriod;
+                            console.log("Period Name: " + textperiodName);
+                        } else {
+                            console.log("Invalid account description");
+                        }
+                    } else {
+                    console.log('Record does not exist');
+                    }
+                });
             });
 
 
