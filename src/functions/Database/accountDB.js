@@ -342,9 +342,11 @@ function updatePassword(phoneNumberPassword, textPassword, textIDATPassword, sen
                         return;
                     }
                     // Record exists in sys_users_tb
+                    console.error('Code works');
                     if (checkResultsSysUsers.recordset.length > 0) {
                       let loginAttempts = checkErrSysUsers.recordset.loginAttemptsCounter;
                       loginAttempts = parseInt(loginAttempts, 10);
+                      console.log(loginAttempts);
                       if (loginAttempts <= 3) {
                         const loginAttemptNumber = loginAttempts + 1;
                         const request = new sql.Request();
