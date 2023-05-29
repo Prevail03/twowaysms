@@ -342,9 +342,10 @@ function updatePassword(phoneNumberPassword, textPassword, textIDATPassword, sen
                         return;
                     }
                     // Record exists in sys_users_tb
-                    console.error('Code works');
+                    console.log('Code works');
                     if (checkResultsSysUsers.recordset.length > 0) {
-                      let loginAttempts = checkErrSysUsers.recordset.loginAttemptsCounter;
+                      console.log('Code works 1');
+                      let loginAttempts = checkResultsSysUsers.recordset.loginAttemptsCounter;
                       loginAttempts = parseInt(loginAttempts, 10);
                       console.log(loginAttempts);
                       if (loginAttempts <= 3) {
