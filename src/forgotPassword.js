@@ -12,7 +12,7 @@ const forgotPassword = {
     };
   },
   missingAccount: (sender, LinkID) => {
-    messageToCustomer = 'Dear Esteemed You do not have an account with us.Visit our website .';
+    messageToCustomer = 'Dear Esteemed You do not have an account with us.Visit our website https://www.octagonafrica.com or send the word pension to 24123 or dowload our app from App Store or Play Store ';
     return {
         to: sender,
         from:'24123',
