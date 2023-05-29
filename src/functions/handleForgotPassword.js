@@ -7,7 +7,7 @@ function handleForgotPassword(textMessage, sender, messagingStep, sms, forgotPas
     case 1:
       //enter OTP///
       const textMessageOTP = textMessage;
-      const phoneNumberOTP = phoneNumber;
+      const phoneNumberOTP = sender;
       const messagingStepOTP  = "2";
       const textIDATOTP = textIDAT;
       const statusOTP = "isForgotPassword";
