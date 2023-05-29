@@ -17,9 +17,7 @@ function handleIncomingMessage(textMessage, sender, textId, phoneNumber, config,
                 return;
             }
             console.log('Connected to database');
-            let phoneNumber = phoneNumber;
-            phoneNumber = phoneNumber.replace("+", "");
-            const checkIfExistsQuerySysUsers = "SELECT TOP 1 * FROM sys_users_tb WHERE user_mobile = @phoneNumber OR user_phone = @phoneNumber";
+            const checkIfExistsQuerySysUsers = "SELECT TOP 1 * FROM sys_users_tb WHERE user_mobile LIKE '%' + @phoneNumber + '%' OR user_phone LIKE '%' + @phoneNumber + '%'";
             const checkIfExistsRequestSysUsers = new sql.Request(connection);
             checkIfExistsRequestSysUsers.input('phoneNumber', sql.VarChar, phoneNumber);
             checkIfExistsRequestSysUsers.query(checkIfExistsQuerySysUsers, function(checkErrSysUsers, checkResultsSysUsers) {

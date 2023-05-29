@@ -1,7 +1,7 @@
 //file that handles all Accounts request information
 const forgotPassword = {
   welcomeMessageForgotPassword: (sender, LinkID) => {
-    messageToCustomer = 'Welcome to Octagon Services. If you have forgoten your password , please provide the following details. \nPlease enter the otp sent your email.';
+    messageToCustomer = 'Welcome to Octagon Services. If you have forgoten your password , please provide the following details. \nEnter the otp sent your email.';
     return {
         to: sender,
         from:'24123',
