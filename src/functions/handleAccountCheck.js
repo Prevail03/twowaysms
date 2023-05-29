@@ -96,9 +96,12 @@ function handleAccountCheck(textMessage, sender, messagingStep, sms, account, co
                     // console.log('Check periods');
                     const allPeriods = checkResults.recordset[0].allPeriods;
                     // console.log(allPeriods);
-                    const periodsArray = allPeriods.split(',')
-                        .map(account => account.trim().replace(/^\d+\.\s*/, ''))
-                        .filter(account => account !== '');
+                    const periodsArray = allPeriods
+                        .split('\n')
+                        .map(period => period.replace(/^\d+\.\s*/, '').replace(/\.$/, ''))
+                        .filter(period => period.trim() !== '');
+
+                    console.log(periodsArray);
                     console.log("Array count:", periodsArray.length);
                     console.log(periodsArray);
                     // if (accountDescription >= 1 && accountDescription <= periodsArray.length) {
