@@ -112,6 +112,7 @@ function updateCurrentPassword(statusResetPassword, phoneNumberResetPassword, me
                   console.error('Error connecting to the database: ' + err.stack);
                   return;
                 }
+                const phoneNumber = sender;
                 const checkIfExistsQuerySysUsers = "SELECT TOP 1 * FROM two_way_sms_tb WHERE phoneNumber =@phoneNumber AND isActive = 1 AND time = (SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber =@phoneNumber)";
                 const checkIfExistsRequestSysUsers = new sql.Request();
                 checkIfExistsRequestSysUsers.input('phoneNumber', sql.VarChar, phoneNumber);
