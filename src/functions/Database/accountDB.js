@@ -331,7 +331,6 @@ function updatePassword(phoneNumberPassword, textPassword, textIDATPassword, sen
                   console.error('Error connecting to the database: ' + err.stack);
                   return;
                 }
-                console.log('Tests');
                 const checkIfExistsQuerySysUsers = "SELECT TOP 1 * FROM two_way_sms_tb WHERE phoneNumber =@phoneNumber AND isActive = 1 AND time = (SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber =@phoneNumber)";
                 const checkIfExistsRequestSysUsers = new sql.Request();
                 checkIfExistsRequestSysUsers.input('phoneNumber', sql.VarChar, phoneNumber);
@@ -341,10 +340,7 @@ function updatePassword(phoneNumberPassword, textPassword, textIDATPassword, sen
                         connection.close();
                         return;
                     }
-                    // Record exists in sys_users_tb
-                    console.log('Code works');
                     if (checkResultsSysUsers.recordset.length > 0) {
-                      console.log('Code works 1');
                       let loginAttempts = checkResultsSysUsers.recordset[0].loginAttemptsCounter;
                       loginAttempts = parseInt(loginAttempts, 10);
                       console.log(loginAttempts);
@@ -371,17 +367,17 @@ function updatePassword(phoneNumberPassword, textPassword, textIDATPassword, sen
                           sql.close();
                         });
                         sms.sendPremium({ 
-                        to: sender, 
-                        from: '24123', 
-                        message: " Authentication failed. Incorrect password or username. Access denied.Please Enter your password again. Incase you have forgotten your password respond to this message with 98 ",
-                        bulkSMSMode: 0,
-                        keyword: 'pension',
-                        linkId: LinkID 
+                          to: sender, 
+                          from: '24123', 
+                          message: " Authentication failed. Incorrect password or username. Access denied.Please Enter your password again. Incase you have forgotten your password respond to this message with 98 ",
+                          bulkSMSMode: 0,
+                          keyword: 'pension',
+                          linkId: LinkID 
                         });
                       } else {
                         // Lock the user out and send them to reset the password
                         const request = new sql.Request();
-                        const statuserror404 = "isForgotPassword";
+                        const statuserror404 = "isCheckingAccount";
                         const messagingSteperror404 = "600";
                         const phoneNumbererror404 = sender;
                         const textIDATerror404 = textIDAT;
@@ -400,12 +396,12 @@ function updatePassword(phoneNumberPassword, textPassword, textIDATPassword, sen
                           sql.close();
                         });
                         sms.sendPremium({ 
-                        to: sender, 
-                        from: '24123', 
-                        message: "Authentication failed. Incorrect password or username. Access denied.Please visit our website to set up a new password or contact support at support@octagonafrica.com or call 0709 986 000",
-                        bulkSMSMode: 0,
-                        keyword: 'pension',
-                        linkId: LinkID 
+                          to: sender, 
+                          from: '24123', 
+                          message: "Authentication failed. Incorrect password or username. Access denied.Please visit our website to set up a new password or contact support at support@octagonafrica.com or call 0709 986 000",
+                          bulkSMSMode: 0,
+                          keyword: 'pension',
+                          linkId: LinkID 
                         });
                       }
                     }
