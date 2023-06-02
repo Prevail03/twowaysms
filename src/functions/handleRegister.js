@@ -24,7 +24,7 @@ function handleRegister(textMessage, sender, messagingStep, sms, register, confi
             if (validateId(textMessage)) {
                 user = user ? { ...user, id: textMessage } : { id: textMessage };
                 console.log(LinkID);
-                sms.sendPremium(register.enterEmail(sender,LinkID));
+                
                 const statusEmail = "isRegistering";
                 const phoneNumberEmail = phoneNumber;
                 const messagingStepEmail = "3";
@@ -48,8 +48,27 @@ function handleRegister(textMessage, sender, messagingStep, sms, register, confi
                         }
                         if (checkResults.recordset.length > 0) {
                             console.log("Existing user. Login");
+                            sms.sendPremium(register.menuMessage(sender, LinkID));
+                                // ... Handle existing record logic ..
+                                const status="existingCustomer";
+                                const messagingStep = 0;
+                                const phoneNumber = sender;
+                                const request = new sql.Request();
+                                const updateRegister1 = `UPDATE two_way_sms_tb SET status = @statusEmail, messagingStep = @messagingStepEmail, national_ID=@textIDNUmber WHERE phoneNumber = @phoneNumberEmail AND text_id_AT = @textIDATEmail AND time = (
+                                SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberEmail )`;
+                                request.input('statusEmail', sql.VarChar, status);
+                                request.input('messagingStep', sql.VarChar, messagingStep);
+                                request.input('phoneNumber', sql.VarChar, phoneNumber);
+                                request.query(updateRegister1, function (err, results) {
+                                if (err) {
+                                    console.error('Error executing query: ' + err.stack);
+                                    return;
+                                }
+                                console.log('Menu Sent');
+                                });
                         }else{
-                            console.log("New user. Register");
+                           sms.sendPremium(register.enterEmail(sender,LinkID));
+                           updateNationalID(statusEmail,phoneNumberEmail,messagingStepEmail,textIDNumber,textIDATEmail,config);
                         }
 
                         });
@@ -58,7 +77,7 @@ function handleRegister(textMessage, sender, messagingStep, sms, register, confi
 
 
 
-                // updateNationalID(statusEmail,phoneNumberEmail,messagingStepEmail,textIDNumber,textIDATEmail,config);
+                
             } else {
                 sms.sendPremium(register.failedId(sender,LinkID));
                 const statusFail = "isRegistering";
