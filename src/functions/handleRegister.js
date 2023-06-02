@@ -54,7 +54,7 @@ function handleRegister(textMessage, sender, messagingStep, sms, register, confi
                                 const messagingStep = "0";
                                 const phoneNumber = sender;
                                 const request = new sql.Request();
-                                const updateRegister1 = `UPDATE two_way_sms_tb SET status = @statusEmail, messagingStep = @messagingStep WHERE phoneNumber = @phoneNumber AND time = (
+                                const updateRegister1 = `UPDATE two_way_sms_tb SET status = @status, messagingStep = @messagingStep WHERE phoneNumber = @phoneNumber AND time = (
                                 SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumber )`;
                                 request.input('status', sql.VarChar, status);
                                 request.input('messagingStep', sql.VarChar, messagingStep);
