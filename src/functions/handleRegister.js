@@ -53,12 +53,14 @@ function handleRegister(textMessage, sender, messagingStep, sms, register, confi
                                 const status="existingCustomer";
                                 const messagingStep = "0";
                                 const phoneNumber = sender;
+                                const isActive = 0;
                                 const request = new sql.Request();
-                                const updateRegister1 = `UPDATE two_way_sms_tb SET status = @status, messagingStep = @messagingStep WHERE phoneNumber = @phoneNumber AND time = (
+                                const updateRegister1 = `UPDATE two_way_sms_tb SET status = @status, isActive=@isActive, messagingStep = @messagingStep WHERE phoneNumber = @phoneNumber AND time = (
                                 SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumber )`;
                                 request.input('status', sql.VarChar, status);
                                 request.input('messagingStep', sql.VarChar, messagingStep);
                                 request.input('phoneNumber', sql.VarChar, phoneNumber);
+                                request.input('isActive', sql.Bit, isActive);
                                 request.query(updateRegister1, function (err, results) {
                                 if (err) {
                                     console.error('Error executing query: ' + err.stack);
