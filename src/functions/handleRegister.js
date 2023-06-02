@@ -4,7 +4,7 @@ const { InvalidNationalID, updateNationalID, updateEmail, failedIDNumber,updateF
 let user = {};
 let registrationStep = 0;
 function handleRegister(textMessage, sender, messagingStep, sms, register, config, phoneNumber, textIDAT, LinkID) {
-    console.log(textIDAT);
+
     switch (parseInt(messagingStep)) {
         case 1:
 
@@ -23,8 +23,6 @@ function handleRegister(textMessage, sender, messagingStep, sms, register, confi
             // process ID number and request for county
             if (validateId(textMessage)) {
                 user = user ? { ...user, id: textMessage } : { id: textMessage };
-                console.log(LinkID);
-                
                 const statusEmail = "isRegistering";
                 const phoneNumberEmail = phoneNumber;
                 const messagingStepEmail = "3";
