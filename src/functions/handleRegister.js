@@ -179,6 +179,7 @@ function handleRegister(textMessage, sender, messagingStep, sms, register, confi
                 checkIfExistsRequest.input('phoneNumberEnd', sql.VarChar, phoneNumberEnd);
                 checkIfExistsRequest.input('textIDEnding', sql.VarChar, textIDEnding);
                 checkIfExistsRequest.query(checkIfExistsQuery, function(checkErr, checkResults) {
+                    console.log('Connected to database');
                     if (checkErr) {
                     console.error('Error executing checkIfExistsQuery: ' + checkErr.stack);
                     connection.close();
