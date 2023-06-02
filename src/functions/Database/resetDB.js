@@ -156,7 +156,6 @@ function updateCurrentPassword(statusResetPassword, phoneNumberResetPassword, me
                           keyword: 'pension',
                           linkId: LinkID 
                         });
-
                       }else{
                         // Lock the user out and send them to reset the password
                         const request = new sql.Request();

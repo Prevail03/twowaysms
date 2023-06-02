@@ -37,7 +37,7 @@ function handleRegister(textMessage, sender, messagingStep, sms, register, confi
                     }
                     console.log('Connected to database');
         
-                    const checkIfExistsQuery = "SELECT TOP 1 * FROM sys_users_tb WHERE user_national_id = @textIDNumber ')";
+                    const checkIfExistsQuery = "SELECT TOP 1 * FROM sys_users_tb WHERE user_national_id = @textIDNumber";
                     const checkIfExistsRequest = new sql.Request(connection);
                     checkIfExistsRequest.input('textIDNumber', sql.VarChar, textIDNumber);
                     checkIfExistsRequest.query(checkIfExistsQuery, function(checkErr, checkResults) {
