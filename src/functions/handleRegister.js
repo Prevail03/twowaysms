@@ -187,9 +187,10 @@ function handleRegister(textMessage, sender, messagingStep, sms, register, confi
                     if (checkResults.recordset.length > 0) {
                         const firstname = checkResults.recordset[0].firstname;
                         // 2.combinefname and lastname
-                        const username =firstname + '.' + textLname;
+                        let username = firstname + '.' + textLname;
+                        username = username.toLowerCase();
                         console.log(username);
-                          // 3.check if the combination exists
+                        // 3.check if the combination exists
                         const checkIfExistsQuery = "SELECT TOP 1 * FROM sys_users_tb WHERE user_username = @username";
                         const checkIfExistsRequest = new sql.Request(connection);
                         checkIfExistsRequest.input('username', sql.VarChar, username);
