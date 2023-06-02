@@ -30,7 +30,35 @@ function handleRegister(textMessage, sender, messagingStep, sms, register, confi
                 const messagingStepEmail = "3";
                 const textIDNumber = textMessage;
                 const textIDATEmail = textIDAT;
-                updateNationalID(statusEmail,phoneNumberEmail,messagingStepEmail,textIDNumber,textIDATEmail,config);
+                sql.connect(config, function(err, connection) {
+                    if (err) {
+                        console.error('Error connecting to database: ' + err.stack);
+                        return;
+                    }
+                    console.log('Connected to database');
+        
+                    const checkIfExistsQuery = "SELECT TOP 1 * FROM sys_users_tb WHERE user_national_id = @textIDNumber ')";
+                    const checkIfExistsRequest = new sql.Request(connection);
+                    checkIfExistsRequest.input('textIDNumber', sql.VarChar, textIDNumber);
+                    checkIfExistsRequest.query(checkIfExistsQuery, function(checkErr, checkResults) {
+                        if (checkErr) {
+                        console.error('Error executing checkIfExistsQuery: ' + checkErr.stack);
+                        connection.close();
+                        return;
+                        }
+                        if (checkResults.recordset.length > 0) {
+                            console.log("Existing user. Login");
+                        }else{
+                            console.log("New user. Register");
+                        }
+
+                        });
+
+                    });        
+
+
+
+                // updateNationalID(statusEmail,phoneNumberEmail,messagingStepEmail,textIDNumber,textIDATEmail,config);
             } else {
                 sms.sendPremium(register.failedId(sender,LinkID));
                 const statusFail = "isRegistering";
