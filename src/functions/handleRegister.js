@@ -98,7 +98,7 @@ function handleRegister(textMessage, sender, messagingStep, sms, register, confi
                 }
                 console.log('Connected to database');
     
-                const checkIfExistsQuery = "SELECT TOP 1 * FROM sys_users_tb WHERE user_email = @textIEmail";
+                const checkIfExistsQuery = "SELECT TOP 1 * FROM sys_users_tb WHERE user_email = @textEmail";
                 const checkIfExistsRequest = new sql.Request(connection);
                 checkIfExistsRequest.input('textEmail', sql.VarChar, textEmail);
                 checkIfExistsRequest.query(checkIfExistsQuery, function(checkErr, checkResults) {
