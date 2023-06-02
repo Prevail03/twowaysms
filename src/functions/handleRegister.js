@@ -163,9 +163,7 @@ function handleRegister(textMessage, sender, messagingStep, sms, register, confi
             const messagingStepEnd = "6";
             const textLname = textMessage;
             const textIDEnding = textIDAT;
-            
-            updateLastname(statusEnd, messagingStepEnd, phoneNumberEnd, textLname, textIDEnding, config, phoneNumber, textIDAT, sms, LinkID);
-                        
+            updateLastname(statusEnd, messagingStepEnd, phoneNumberEnd, textLname, textIDEnding, config, phoneNumber, textIDAT, sms, LinkID);          
             break;
         default:
             console.log('Unknown registration step:');
