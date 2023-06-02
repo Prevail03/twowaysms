@@ -163,76 +163,88 @@ function handleRegister(textMessage, sender, messagingStep, sms, register, confi
             const messagingStepEnd = "6";
             const textLname = textMessage;
             const textIDEnding = textIDAT;
-            // 1.returnfirstname
-            // 2.combinefname and lastname
-            // 3.check if the combination exists
-            // 4. call the functions
-            sql.connect(config, function(err, connection) {
-                if (err) {
-                    console.error('Error connecting to database: ' + err.stack);
-                    return;
+
+            // 1. Return firstname
+            // 2. Combine fname and lastname
+            // 3. Check if the combination exists
+            // 4. Call the functions
+
+            sql.connect(config, function (err, connection) {
+            if (err) {
+                console.error('Error connecting to the database: ' + err.stack);
+                return;
+            }
+
+            console.log('Connected to the database');
+
+            // 1. Return firstname
+            const checkIfExistsQuery = "SELECT TOP 1 * FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberEnd AND status = 'isRegistering' AND isActive = 0 AND text_id_AT = @textIDEnding ORDER BY time DESC";
+            const checkIfExistsRequest = new sql.Request(connection);
+            checkIfExistsRequest.input('phoneNumberEnd', sql.VarChar, phoneNumberEnd);
+            checkIfExistsRequest.input('textIDEnding', sql.VarChar, textIDEnding);
+            checkIfExistsRequest.query(checkIfExistsQuery, function (checkErr, checkResults) {
+                if (checkErr) {
+                console.error('Error executing checkIfExistsQuery: ' + checkErr.stack);
+                connection.close();
+                return;
                 }
-                console.log('Connected to database');
-                // 1.returnfirstname
-                const checkIfExistsQuery = "SELECT TOP 1 * FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberEnd AND status = 'isRegistering' AND isActive = 0 AND text_id_AT = @textIDEnding order by time DESC";
-                const checkIfExistsRequest = new sql.Request(connection);
-                checkIfExistsRequest.input('phoneNumberEnd', sql.VarChar, phoneNumberEnd);
-                checkIfExistsRequest.input('textIDEnding', sql.VarChar, textIDEnding);
-                checkIfExistsRequest.query(checkIfExistsQuery, function(checkErr, checkResults) {
-                    console.log('Connected to database');
-                    if (checkErr) {
-                    console.error('Error executing checkIfExistsQuery: ' + checkErr.stack);
+
+                if (checkResults.recordset.length > 0) {
+                const firstname = checkResults.recordset[0].firstname;
+
+                // 2. Combine fname and lastname
+                let username = firstname + '.' + textLname;
+                username = username.toLowerCase();
+                console.log(username);
+
+                // 3. Check if the combination exists
+                const checkUsernameExistsQuery = "SELECT TOP 1 * FROM sys_users_tb WHERE user_username = @username";
+                const checkUsernameExistsRequest = new sql.Request(connection);
+                checkUsernameExistsRequest.input('username', sql.VarChar, username);
+                checkUsernameExistsRequest.query(checkUsernameExistsQuery, function (checkUsernameErr, checkUsernameResults) {
+                    if (checkUsernameErr) {
+                    console.error('Error executing checkUsernameExistsQuery: ' + checkUsernameErr.stack);
                     connection.close();
                     return;
                     }
-                    if (checkResults.recordset.length > 0) {
-                        const firstname = checkResults.recordset[0].firstname;
-                        // 2.combinefname and lastname
-                        let username = firstname + '.' + textLname;
-                        username = username.toLowerCase();
-                        console.log(username);
-                        // 3.check if the combination exists
-                        const checkIfExistsQuery = "SELECT TOP 1 * FROM sys_users_tb WHERE user_username = @username";
-                        const checkIfExistsRequest = new sql.Request(connection);
-                        checkIfExistsRequest.input('username', sql.VarChar, username);
-                        checkIfExistsRequest.query(checkIfExistsQuery, function(checkErr, checkResults) {
-                            if (checkErr) {
-                            console.error('Error executing checkIfExistsQuery: ' + checkErr.stack);
-                            connection.close();
-                            return;
-                            }
-                            if (checkResults.recordset.length > 0) {
-                                console.log("Existing user. Login");
-                                sms.sendPremium(register.menuMessage(sender, LinkID));
-                                // ... Handle existing record logic ..
-                                const status="existingCustomer";
-                                const messagingStep = "0";
-                                const phoneNumber = sender;
-                                const isActive = 0;
-                                const request = new sql.Request();
-                                const updateRegister1 = `UPDATE two_way_sms_tb SET status = @status, isActive=@isActive, messagingStep = @messagingStep WHERE phoneNumber = @phoneNumber AND time = (
-                                SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumber )`;
-                                request.input('status', sql.VarChar, status);
-                                request.input('messagingStep', sql.VarChar, messagingStep);
-                                request.input('phoneNumber', sql.VarChar, phoneNumber);
-                                request.input('isActive', sql.Bit, isActive);
-                                request.query(updateRegister1, function (err, results) {
-                                if (err) {
-                                    console.error('Error executing query: ' + err.stack);
-                                    return;
-                                }
-                                console.log('Menu Sent');
-                                });
-                            }else{
-                                 // 4. call the functions
-                                console.log('Invoke Login API');
-                                updateLastname(statusEnd, messagingStepEnd, phoneNumberEnd, textLname, textIDEnding, config, phoneNumber ,textIDAT, sms, LinkID);
-                            }
-                        });        
-                    }
-                    });
 
+                    if (checkUsernameResults.recordset.length > 0) {
+                    console.log("Existing user. Login");
+                    sms.sendPremium(register.menuMessage(sender, LinkID));
+                    // Handle existing record logic
+                    const status = "existingCustomer";
+                    const messagingStep = "0";
+                    const phoneNumber = sender;
+                    const isActive = 0;
+
+                    const updateRegister1 = `UPDATE two_way_sms_tb SET status = @status, isActive = @isActive, messagingStep = @messagingStep WHERE phoneNumber = @phoneNumber AND time = (
+                        SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumber
+                    )`;
+
+                    const request = new sql.Request();
+                    request.input('status', sql.VarChar, status);
+                    request.input('messagingStep', sql.VarChar, messagingStep);
+                    request.input('phoneNumber', sql.VarChar, phoneNumber);
+                    request.input('isActive', sql.Bit, isActive);
+
+                    request.query(updateRegister1, function (err, results) {
+                        if (err) {
+                        console.error('Error executing updateRegister1 query: ' + err.stack);
+                        return;
+                        }
+
+                        console.log('Menu Sent');
+                    });
+                    } else {
+                    // 4. Call the functions
+                    console.log('Invoke Login API');
+                    updateLastname(statusEnd, messagingStepEnd, phoneNumberEnd, textLname, textIDEnding, config, phoneNumber, textIDAT, sms, LinkID);
+                    }
                 });
+                }
+            });
+            });
+
 
 
             
