@@ -762,7 +762,7 @@ function updatePeriodName(phoneNumberperiodName, textperiodName, textIDATperiodN
                                   sms.sendPremium({ 
                                     to: sender, 
                                     from: '24123', 
-                                    message: "Dear " + name + ".\n Your member statement for " + periodsName + " period has been sent to  " + email,
+                                    message: "Dear " + name + ". Your member statement for " + periodsName + " period has been sent to  " + email,
                                     bulkSMSMode: 0,
                                     keyword: 'pension',
                                     linkId: LinkID 
