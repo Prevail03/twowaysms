@@ -17,7 +17,7 @@ function handleIncomingMessage(textMessage, sender, textId, phoneNumber, config,
             }
             console.log('Connected to database');
             let phone= phoneNumber;
-            phone = phone.replace("+", "");
+            phone = phone.replace("+254", "07");
 
             const checkIfExistsQuerySysUsers = "SELECT TOP 1 * FROM sys_users_tb WHERE user_mobile LIKE '%' + @phoneNumber + '%' OR user_phone LIKE '%' + @phoneNumber + '%'";
             const checkIfExistsRequestSysUsers = new sql.Request(connection);
@@ -192,9 +192,11 @@ function handleIncomingMessage(textMessage, sender, textId, phoneNumber, config,
                     }else if(textMessage == 1) {
                         console.log("Balance Enquiry Workflow");
                     }else {
-                        const checkIfExistsQuerySysUsers = "SELECT TOP 1 * FROM sys_users_tb WHERE user_mobile = @phoneNumber OR user_phone = @phoneNumber";
+                        let phone= phoneNumber;
+                        phone = phone.replace("+", "");
+                        const checkIfExistsQuerySysUsers = "SELECT TOP 1 * FROM sys_users_tb WHERE user_mobile LIKE '%' + @phoneNumber + '%' OR user_phone LIKE '%' + @phoneNumber + '%'";
                         const checkIfExistsRequestSysUsers = new sql.Request(connection);
-                        checkIfExistsRequestSysUsers.input('phoneNumber', sql.VarChar, phoneNumber);
+                        checkIfExistsRequestSysUsers.input('phoneNumber', sql.VarChar, phone);
                         checkIfExistsRequestSysUsers.query(checkIfExistsQuerySysUsers, function(checkErrSysUsers, checkResultsSysUsers) {
                             if (checkErrSysUsers) {
                                 console.error('Error executing checkIfExistsQuerySysUsers: ' + checkErrSysUsers.stack);
