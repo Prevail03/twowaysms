@@ -28,6 +28,7 @@ app.post("/webhook", (req, res) => {
     const  LinkID = payload.linkId;
     const textMessage = payload.text;
     const sms = AfricasTalking.SMS;
+    console.log(payload);
 
     handleIncomingMessage(textMessage, sender, textId, phoneNumber, config ,sms ,register, account, forgotPassword, LinkID);
     // handleRegister(text, sender, messagingStep ,sms, register, config, phoneNumber, time, validateId);

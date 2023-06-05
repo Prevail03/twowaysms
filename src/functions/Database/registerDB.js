@@ -287,7 +287,7 @@ function updateLastname(statusEnd, messagingStepEnd, phoneNumberEnd, textLname, 
                     console.error('Error executing query: ' + err.stack);
                     return;
                   }
-                  console.log(' FetchPeriodsID Attempt unsuccessful');
+                  console.log(' Registration Attempt unsuccessful');
                   sql.close();
                 });
               });
