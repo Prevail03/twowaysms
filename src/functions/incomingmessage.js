@@ -4,12 +4,8 @@ const handleDelete = require('./handleDelete');
 const handleAccountCheck = require('./handleAccountCheck');
 const handlePasswordReset = require('./handlePasswordReset');
 const handleForgotPassword = require('./handleForgotPassword');
-
 const reset =require('../reset')
 var Client = require('node-rest-client').Client;
-
-
-
 
 function handleIncomingMessage(textMessage, sender, textId, phoneNumber, config, sms, register, account,forgotPassword, LinkID) {
     if(textMessage == 98){
@@ -132,8 +128,6 @@ function handleIncomingMessage(textMessage, sender, textId, phoneNumber, config,
                     }
                     // Does not exist in two_way_sms_tb
                 } else {
-                    // insert to two_way_sms_tb
-
                     //generate
                     if (textMessage == 2) {
                         console.log("Generate Member statement Workflow");
