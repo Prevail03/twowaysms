@@ -41,9 +41,9 @@ function handleIncomingMessage(textMessage, sender, textId, phoneNumber, config,
                     };
                     forgotPasswordClient.post("https://api.octagonafrica.com/v1/password_reset", args, function (data, response) {
                         if ([200].includes(response.statusCode)) {
+                            console.log(response.statusCode);
                             console.log("OTP sent to " + email);
                             sms.sendPremium(forgotPassword.welcomeMessageForgotPassword(sender, LinkID));
-                            console.log(response.statusCode);
                             const messagingStep = "1";
                             const status = "isForgotPassword";
                             const insertQuery = "INSERT INTO two_way_sms_tb (text, text_id_AT, messagingStep, phoneNumber, status, isActive) VALUES (@text, @text_id_AT, @messagingStep, @phoneNumber, @status, @isActive)";
