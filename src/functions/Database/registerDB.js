@@ -159,6 +159,7 @@ function updateLastname(statusEnd, messagingStepEnd, phoneNumberEnd, textLname, 
           const national_ID = registerResults.recordset[0].national_ID;
           const emailT = registerResults.recordset[0].email;
           const pass = registerResults.recordset[0].password;
+          const phoneNo = registerResults.recordset[0].phoneNumber;
           let phone = registerResults.recordset[0].phoneNumber;
           phone = phone.replace("+", "");
           //send to API
@@ -172,7 +173,7 @@ function updateLastname(statusEnd, messagingStepEnd, phoneNumberEnd, textLname, 
             if ([200].includes(response.statusCode)) {
               console.log(response.statusCode);
               sms.sendPremium({
-                to: phone, 
+                to: phoneNumber, 
                 from: '24123',
                 message: "Congratulations!! " + fname.toUpperCase() + " " + lname.toUpperCase() + ". You have successfully registered with Octagon Africa.Incase of any queries contact support@octagonafrica.com' ",
                 bulkSMSMode: 0,
@@ -202,7 +203,7 @@ function updateLastname(statusEnd, messagingStepEnd, phoneNumberEnd, textLname, 
             } else if ([400].includes(response.statusCode)) {
               console.log(response.statusCode);
               sms.sendPremium({
-                to: phone, 
+                to: phoneNumber, 
                 from: '24123',
                 message: "Registration unsuccesfull. Invalid Details or Username Exists . Please try again Later ",
                 bulkSMSMode: 0,
@@ -232,7 +233,7 @@ function updateLastname(statusEnd, messagingStepEnd, phoneNumberEnd, textLname, 
             } else if ([407].includes(response.statusCode)) {
               console.log(response.statusCode);
               sms.sendPremium({
-                to: phone, 
+                to: phoneNumber, 
                 from: '24123',
                 message: 'We already have your registration request and is awaiting approval. Incase of any queries please contact support on support@octagonafrica.com or  +254709986000 ',
                 bulkSMSMode: 0,
@@ -263,7 +264,7 @@ function updateLastname(statusEnd, messagingStepEnd, phoneNumberEnd, textLname, 
             else if ([500].includes(response.statusCode)) {
               console.log(response.statusCode);
               sms.sendPremium({
-                to: phone, 
+                to: phoneNumber, 
                 from: '24123', 
                 message: "Registration unsuccesfull. Internal Server Error. Please try again Later ",
                 bulkSMSMode: 0,
