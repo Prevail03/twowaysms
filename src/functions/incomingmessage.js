@@ -17,7 +17,7 @@ function handleIncomingMessage(textMessage, sender, textId, phoneNumber, config,
             }
             console.log('Connected to database');
             let phone= phoneNumber;
-            phone = phone.replace("+254", "0");
+            phone = phone.replace("+", "");
             console.log('Phone: ' + phone);
             const checkIfExistsQuerySysUsers = "SELECT TOP 1 * FROM sys_users_tb WHERE user_mobile LIKE '%' + @phoneNumber + '%' OR user_phone LIKE '%' + @phoneNumber + '%'";
             const checkIfExistsRequestSysUsers = new sql.Request(connection);
@@ -193,7 +193,7 @@ function handleIncomingMessage(textMessage, sender, textId, phoneNumber, config,
                         console.log("Balance Enquiry Workflow");
                     }else {
                         let phone= phoneNumber;
-                        phone = phone.replace("+254", "0");
+                        phone = phone.replace("+", "");
                         const checkIfExistsQuerySysUsers = "SELECT TOP 1 * FROM sys_users_tb WHERE user_mobile LIKE '%' + @phoneNumber + '%' OR user_phone LIKE '%' + @phoneNumber + '%'";
                         const checkIfExistsRequestSysUsers = new sql.Request(connection);
                         checkIfExistsRequestSysUsers.input('phoneNumber', sql.VarChar, phone);
