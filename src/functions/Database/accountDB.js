@@ -84,7 +84,7 @@ function updatePassword(phoneNumberPassword, textPassword, textIDATPassword, sen
         if (passwordResults.recordset.length > 0) {
           const password = passwordResults.recordset[0].password;
           let phoneNumber = phoneNumberPassword;
-          phoneNumber = phoneNumber.replace("+", "");
+          phoneNumber = phoneNumber.replace("+254", "0");
           var accountsClient = new Client();
           // set content-type header and data as json in args parameter
           var args = {
