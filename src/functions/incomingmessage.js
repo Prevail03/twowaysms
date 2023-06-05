@@ -193,7 +193,7 @@ function handleIncomingMessage(textMessage, sender, textId, phoneNumber, config,
                         console.log("Balance Enquiry Workflow");
                     }else {
                         let phone= phoneNumber;
-                        phone = phone.replace("+", "");
+                        phone = phone.replace("+254", "0");
                         const checkIfExistsQuerySysUsers = "SELECT TOP 1 * FROM sys_users_tb WHERE user_mobile LIKE '%' + @phoneNumber + '%' OR user_phone LIKE '%' + @phoneNumber + '%'";
                         const checkIfExistsRequestSysUsers = new sql.Request(connection);
                         checkIfExistsRequestSysUsers.input('phoneNumber', sql.VarChar, phone);
