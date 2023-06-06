@@ -341,10 +341,10 @@ function updateNewPassword(statusResetNPasswordEnd, phoneNumberResetNPasswordEnd
               });
             }else if ([500].includes(response.statusCode)) {
               console.log(response.statusCode);
-              sms.send({ 
+              sms.sendPremium({ 
                 to: sender, 
                 from: '24123', 
-                message: " Invalid request.",
+                message: " Invalid request. Invalid Details!!. Check your details and please try again Later ",
                 bulkSMSMode: 0,
                 keyword: 'pension',
                 linkId: LinkID
