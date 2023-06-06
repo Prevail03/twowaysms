@@ -372,6 +372,7 @@ function updateNewPassword(statusResetNPasswordEnd, phoneNumberResetNPasswordEnd
               });
             } else {
               // error code
+              console.log(response.statusCode);
               sms.sendPremium({ 
                 to: sender, 
                 from: '24123', 
@@ -380,7 +381,7 @@ function updateNewPassword(statusResetNPasswordEnd, phoneNumberResetNPasswordEnd
                 keyword: 'pension',
                 linkId: LinkID
               });
-              console.log(response.statusCode);
+              
               sql.connect(config, function (err) {
                 const request = new sql.Request();
                 const statuserror500 = "ResetPasswordFailed";
