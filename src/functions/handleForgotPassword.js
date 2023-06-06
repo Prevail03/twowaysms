@@ -148,7 +148,7 @@ function handleForgotPassword(textMessage, sender, messagingStep, sms, forgotPas
                     const messagingSteperror500 = "0";
                     const phoneNumbererror500 = phoneNumberNewPassword;
                     const textIDATerror500 = textIDAT;
-                    const updateDelete = `UPDATE two_way_sms_tb SET status = @statuserror500, messagingStep = @messagingSteperror500  WHERE phoneNumber = @phoneNumbererror500 AND text_id_AT =@textIDATerror500 AND time = (
+                    const updateDelete = `UPDATE two_way_sms_tb SET status = @statuserror500, messagingStep = @messagingSteperror500, isActive ='0'  WHERE phoneNumber = @phoneNumbererror500 AND text_id_AT =@textIDATerror500 AND time = (
                                                  SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumbererror500 )`;
                     request.input('statuserror500', sql.VarChar, statuserror500);
                     request.input('messagingSteperror500', sql.VarChar, messagingSteperror500);
@@ -172,7 +172,7 @@ function handleForgotPassword(textMessage, sender, messagingStep, sms, forgotPas
                     const messagingSteperror500 = "404";
                     const phoneNumbererror500 = phoneNumberNewPassword;
                     const textIDATerror500 = textIDAT;
-                    const updateDelete = `UPDATE two_way_sms_tb SET status = @statuserror500, messagingStep = @messagingSteperror500  WHERE phoneNumber = @phoneNumbererror500 AND text_id_AT =@textIDATerror500 AND time = (
+                    const updateDelete = `UPDATE two_way_sms_tb SET status = @statuserror500, messagingStep = @messagingSteperror500, isActive='0'  WHERE phoneNumber = @phoneNumbererror500 AND text_id_AT =@textIDATerror500 AND time = (
                                                  SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumbererror500 )`;
                     request.input('statuserror500', sql.VarChar, statuserror500);
                     request.input('messagingSteperror500', sql.VarChar, messagingSteperror500);
