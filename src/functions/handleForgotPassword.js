@@ -105,7 +105,7 @@ function handleForgotPassword(textMessage, sender, messagingStep, sms, forgotPas
                   sms.sendPremium({ 
                     to: sender, 
                     from: '24123', 
-                    message: " Invalid Details!!. Check your details and please try again Later ",
+                    message: "Invalid Details!!. Check your details and please try again Later ",
                     bulkSMSMode: 0,
                     keyword: 'pension',
                     linkId: LinkID
@@ -127,17 +127,17 @@ function handleForgotPassword(textMessage, sender, messagingStep, sms, forgotPas
                         console.error('Error executing query: ' + err.stack);
                         return;
                       }
-                      console.log(' Forgot Password Attempt unsuccessful');
+                      console.log('Forgot Password Attempt unsuccessful');
                       sql.close();
                     });
                   });
                 }
                 else if ([500].includes(response.statusCode)) {
                   console.log(response.statusCode);
-                  sms.send({ 
+                  sms.sendPremium({ 
                     to: sender, 
                     from: '24123', 
-                    message: " Invalid request.",
+                    message: "Invalid Details!!. Check your details and please try again Later.",
                     bulkSMSMode: 0,
                     keyword: 'pension',
                     linkId: LinkID
@@ -166,6 +166,14 @@ function handleForgotPassword(textMessage, sender, messagingStep, sms, forgotPas
                 } else {
                   // error code
                   console.log(response.statusCode);
+                  sms.sendPremium({ 
+                    to: sender, 
+                    from: '24123', 
+                    message: "Invalid Details!!. Check your details and please try again Later.",
+                    bulkSMSMode: 0,
+                    keyword: 'pension',
+                    linkId: LinkID
+                  });
                   sql.connect(config, function (err) {
                     const request = new sql.Request();
                     const statuserror500 = "ResetPasswordFailed";
