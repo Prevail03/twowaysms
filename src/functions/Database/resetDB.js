@@ -372,6 +372,14 @@ function updateNewPassword(statusResetNPasswordEnd, phoneNumberResetNPasswordEnd
               });
             } else {
               // error code
+              sms.sendPremium({ 
+                to: sender, 
+                from: '24123', 
+                message: " Invalid request. Invalid Details!!. Check your details and please try again Later ",
+                bulkSMSMode: 0,
+                keyword: 'pension',
+                linkId: LinkID
+              });
               console.log(response.statusCode);
               sql.connect(config, function (err) {
                 const request = new sql.Request();
