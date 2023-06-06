@@ -169,7 +169,7 @@ function handleForgotPassword(textMessage, sender, messagingStep, sms, forgotPas
                   sql.connect(config, function (err) {
                     const request = new sql.Request();
                     const statuserror500 = "ResetPasswordFailed";
-                    const messagingSteperror500 = response.statusCode;
+                    const messagingSteperror500 = "404";
                     const phoneNumbererror500 = phoneNumberNewPassword;
                     const textIDATerror500 = textIDAT;
                     const updateDelete = `UPDATE two_way_sms_tb SET status = @statuserror500, messagingStep = @messagingSteperror500  WHERE phoneNumber = @phoneNumbererror500 AND text_id_AT =@textIDATerror500 AND time = (
