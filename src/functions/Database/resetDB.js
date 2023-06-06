@@ -324,7 +324,7 @@ function updateNewPassword(statusResetNPasswordEnd, phoneNumberResetNPasswordEnd
                 const messagingSteperror404 = "0";
                 const phoneNumbererror404 = phoneNumberResetNPasswordEnd;
                 const textIDATerror404 = textIDAT;
-                const updateDelete = `UPDATE two_way_sms_tb SET status = @statuserror404, messagingStep = @messagingSteperror404  WHERE phoneNumber = @phoneNumbererror404 AND text_id_AT =@textIDATerror404 AND time = (
+                const updateDelete = `UPDATE two_way_sms_tb SET status = @statuserror404, messagingStep = @messagingSteperror404,  isActive = '0'  WHERE phoneNumber = @phoneNumbererror404 AND text_id_AT =@textIDATerror404 AND time = (
                             SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumbererror404 )`;
                 request.input('statuserror404', sql.VarChar, statuserror404);
                 request.input('messagingSteperror404', sql.VarChar, messagingSteperror404);
@@ -356,7 +356,7 @@ function updateNewPassword(statusResetNPasswordEnd, phoneNumberResetNPasswordEnd
                 const messagingSteperror500 = "0";
                 const phoneNumbererror500 = phoneNumberResetNPasswordEnd;
                 const textIDATerror500 = textIDAT;
-                const updateDelete = `UPDATE two_way_sms_tb SET status = @statuserror500, messagingStep = @messagingSteperror500  WHERE phoneNumber = @phoneNumbererror500 AND text_id_AT =@textIDATerror500 AND time = (
+                const updateDelete = `UPDATE two_way_sms_tb SET status = @statuserror500, messagingStep = @messagingSteperror500, isActive = '0'  WHERE phoneNumber = @phoneNumbererror500 AND text_id_AT =@textIDATerror500 AND time = (
                                              SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumbererror500 )`;
                 request.input('statuserror500', sql.VarChar, statuserror500);
                 request.input('messagingSteperror500', sql.VarChar, messagingSteperror500);
@@ -377,10 +377,10 @@ function updateNewPassword(statusResetNPasswordEnd, phoneNumberResetNPasswordEnd
               sql.connect(config, function (err) {
                 const request = new sql.Request();
                 const statuserror500 = "ResetPasswordFailed";
-                const messagingSteperror500 = response.statusCode;
+                const messagingSteperror500 = "404";
                 const phoneNumbererror500 = phoneNumberResetNPasswordEnd;
                 const textIDATerror500 = textIDAT;
-                const updateDelete = `UPDATE two_way_sms_tb SET status = @statuserror500, messagingStep = @messagingSteperror500  WHERE phoneNumber = @phoneNumbererror500 AND text_id_AT =@textIDATerror500 AND time = (
+                const updateDelete = `UPDATE two_way_sms_tb SET status = @statuserror500, messagingStep = @messagingSteperror500, isActive = '0'  WHERE phoneNumber = @phoneNumbererror500 AND text_id_AT =@textIDATerror500 AND time = (
                                              SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumbererror500 )`;
                 request.input('statuserror500', sql.VarChar, statuserror500);
                 request.input('messagingSteperror500', sql.VarChar, messagingSteperror500);

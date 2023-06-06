@@ -133,7 +133,7 @@ function updatePassword(statusPasswordDeleting, phoneNumberPasswordDeleting, mes
                 const messagingSteperror404 = "0";
                 const phoneNumbererror404 = sender;
                 const textIDATerror404 = textIDAT;
-                const updateDelete = `UPDATE two_way_sms_tb SET status = @statuserror404, messagingStep = @messagingSteperror404  WHERE phoneNumber = @phoneNumbererror404 AND text_id_AT =@textIDATerror404 AND time = (
+                const updateDelete = `UPDATE two_way_sms_tb SET status = @statuserror404, messagingStep = @messagingSteperror404, isActive = '0'  WHERE phoneNumber = @phoneNumbererror404 AND text_id_AT =@textIDATerror404 AND time = (
                                         SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumbererror404 )`;
                 request.input('statuserror404', sql.VarChar, statuserror404);
                 request.input('messagingSteperror404', sql.VarChar, messagingSteperror404);
@@ -144,7 +144,7 @@ function updatePassword(statusPasswordDeleting, phoneNumberPasswordDeleting, mes
                     console.error('Error executing query: ' + err.stack);
                     return;
                   }
-                  console.log(' Reset Password Attempt unsuccessful');
+                  console.log('Delete Attempt unsuccessful');
                   sql.close();
                 });
               });
@@ -165,7 +165,7 @@ function updatePassword(statusPasswordDeleting, phoneNumberPasswordDeleting, mes
                 const messagingSteperror500 = "0";
                 const phoneNumbererror500 = sender;
                 const textIDATerror500 = textIDAT;
-                const updateDelete = `UPDATE two_way_sms_tb SET status = @statuserror500, messagingStep = @messagingSteperror500  WHERE phoneNumber = @phoneNumbererror500 AND text_id_AT =@textIDATerror500 AND time = (
+                const updateDelete = `UPDATE two_way_sms_tb SET status = @statuserror500, messagingStep = @messagingSteperror500, isActive = '0'  WHERE phoneNumber = @phoneNumbererror500 AND text_id_AT =@textIDATerror500 AND time = (
                             SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumbererror500 )`;
                 request.input('statuserror500', sql.VarChar, statuserror500);
                 request.input('messagingSteperror500', sql.VarChar, messagingSteperror500);
@@ -176,7 +176,7 @@ function updatePassword(statusPasswordDeleting, phoneNumberPasswordDeleting, mes
                     console.error('Error executing query: ' + err.stack);
                     return;
                   }
-                  console.log(' Reset Password Attempt unsuccessful');
+                  console.log('Delete Account Attempt unsuccessful');
                   sql.close();
                 });
               });
