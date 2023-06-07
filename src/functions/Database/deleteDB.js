@@ -107,7 +107,7 @@ function updatePassword(statusPasswordDeleting, phoneNumberPasswordDeleting, mes
                 request.input('messagingStepDelEnd', sql.VarChar, messagingStepDelEnd);
                 request.input('phoneNumberDelEnd', sql.NVarChar, phoneNumberDelEnd);
                 request.input('isActiveDelEnd', sql.Bit, isActiveDelEnd);
-                request.input('textIDATDelEnd', sql.Bit, textIDATDelEnd);
+                request.input('textIDATDelEnd', sql.NVarChar, textIDATDelEnd);
                 request.query(updateDelete, function (err, results) {
                   if (err) {
                     console.error('Error executing query: ' + err.stack);

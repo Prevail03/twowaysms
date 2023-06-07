@@ -179,18 +179,18 @@ function handleIncomingMessage(textMessage, sender, textId, phoneNumber, config,
                         console.log("Deactivate Account Workflow");
                         sms.sendPremium(reset.welcomeMessage(sender, LinkID));
                         const currentStatus = "existingCustomer";
-                        const statusAccounts = "isDeleting";
-                        const phoneNumberAccounts = sender;
-                        const messagingStepAccounts= "2";
+                        const statusDeactivate = "isDeleting";
+                        const phoneNumberDeactivate = sender;
+                        const messagingStepDeactivate= "2";
                         const request = new sql.Request(connection);
-                        const updateAccounts = `UPDATE two_way_sms_tb SET status = @statusAccounts,isActive=@isActive, messagingStep = @messagingStepAccounts WHERE phoneNumber = @phoneNumberAccounts AND time = (
-                            SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberAccounts and status =@currentStatus )`;
-                        request.input('statusAccounts', sql.VarChar, statusAccounts);
+                        const updateDeactivate = `UPDATE two_way_sms_tb SET status = @statusDeactivate,isActive=@isActive, messagingStep = @messagingStepDeactivate WHERE phoneNumber = @phoneNumberDeactivate AND time = (
+                            SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberDeactivate and status =@currentStatus )`;
+                        request.input('statusDeactivate', sql.VarChar, statusDeactivate);
                         request.input('currentStatus', sql.VarChar, currentStatus);
-                        request.input('messagingStepAccounts', sql.VarChar, messagingStepAccounts);
-                        request.input('phoneNumberAccounts', sql.VarChar, phoneNumberAccounts);
+                        request.input('messagingStepDeactivate', sql.VarChar, messagingStepDeactivate);
+                        request.input('phoneNumberDeactivate', sql.VarChar, phoneNumberDeactivate);
                         request.input('isActive', sql.Bit, 1);
-                        request.query(updateAccounts, function(err, results) {
+                        request.query(updateDeactivate, function(err, results) {
                         if (err) {
                             console.error('Error executing query: ' + err.stack);
                             return;

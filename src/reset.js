@@ -1,6 +1,6 @@
 const reset={
     welcomeMessage: (sender,LinkID) => {
-        messageToCustomer = 'Dear Esteemed Customer, Welcome to Octagon Africa. To Reset Your Account Password, please provide the following details. \nPlease enter your email address.';
+        messageToCustomer = 'Dear Esteemed Customer, Welcome to Octagon Africa. To reset your account password, please provide the following details. \nPlease enter your email address.';
         return {
             to: sender,
             from:'24123',
@@ -91,6 +91,17 @@ const reset={
     },
     confirmation: (sender,LinkID) => {
         messageToCustomer = "Your password has been successfully changed .If this wasn't you, your account may have been compromised and you should contact us at support@octagonafrica.com ";
+        return {
+            to: sender,
+            from:'24123',
+            message: messageToCustomer,
+            bulkSMSMode: 0,
+            keyword: 'pension',
+            linkId: LinkID
+        };
+    },
+    deactivateAccount: (sender,LinkID) => {
+        messageToCustomer = "Dear Esteemed Customer, Welcome to Octagon Africa. To deactivate your account Password, please provide the following details. \nEnter your national ID number. ";
         return {
             to: sender,
             from:'24123',
