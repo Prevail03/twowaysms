@@ -131,7 +131,6 @@ function updatePassword(phoneNumberPassword, textPassword, textIDATPassword, sen
                         return;
                       }
                       console.log('User ID UPDATE successful');
-                      console.log('Query results:', results);
                       const statusUserIDRequest = "isCheckingAccount";
                       const phoneNumberUserIDRequest = sender;
                       const textIDATUserIDRequest = textIDAT;
@@ -244,7 +243,7 @@ function updatePassword(phoneNumberPassword, textPassword, textIDATPassword, sen
                               sms.sendPremium({ 
                                 to: sender, 
                                 from: '24123', 
-                                message: " Invalid Details Try again later.  ",
+                                message: "You do not have an account with us. Send an email  to support@octagonafrica.com",
                                 bulkSMSMode: 0,
                                 keyword: 'pension',
                                 linkId: LinkID 
