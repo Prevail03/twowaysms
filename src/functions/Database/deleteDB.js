@@ -8,6 +8,7 @@ function  updateNationalID1(textIDATID, phoneNumberID, statusID,messagingStepID)
         SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberID )`;
     request.input('statusID', sql.VarChar, statusID);
     request.input('messagingStepID', sql.VarChar, messagingStepID);
+    request.input('textIDATID', sql.VarChar, textIDATID);
     request.input('phoneNumberID', sql.VarChar, phoneNumberID);
     request.query(updateDelete, function (err, results) {
       if (err) {

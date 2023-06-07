@@ -159,7 +159,6 @@ function updateLastname(statusEnd, messagingStepEnd, phoneNumberEnd, textLname, 
           const national_ID = registerResults.recordset[0].national_ID;
           const emailT = registerResults.recordset[0].email;
           const pass = registerResults.recordset[0].password;
-          const phoneNo = registerResults.recordset[0].phoneNumber;
           let phone = registerResults.recordset[0].phoneNumber;
           phone = phone.replace("+", "");
           //send to API

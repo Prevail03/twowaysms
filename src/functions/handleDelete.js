@@ -31,7 +31,7 @@ function handleDelete(textMessage, sender, messagingStep, config, sms, register,
                 keyword: 'pension',
                 linkId: LinkID
             });
-            deletingStep=3;
+            // deletingStep=3;
             const statusPasswordDel = "isDeleting";
             const phoneNumberPasswordDel = sender;
             const messagingStepPasswordDel= "3";
