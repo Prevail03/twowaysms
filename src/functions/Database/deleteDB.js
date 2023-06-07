@@ -88,7 +88,7 @@ function updatePassword(statusPasswordDeleting, phoneNumberPasswordDeleting, mes
               sms.sendPremium({
                 to: sender,
                 from: '24123',
-                message: "Account Deleted Successfully. It was a pleasure doing Business with you",
+                message: "Account Deactivated Successfully. It was a pleasure doing Business with you",
                 bulkSMSMode: 0,
                 keyword: 'pension',
                 linkId: LinkID
