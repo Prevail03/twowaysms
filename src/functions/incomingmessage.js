@@ -177,7 +177,7 @@ function handleIncomingMessage(textMessage, sender, textId, phoneNumber, config,
                         });
                     }else if(textMessage == 10) {
                         console.log("Deactivate Account Workflow");
-                        sms.sendPremium(reset.welcomeMessage(sender, LinkID));
+                        sms.sendPremium(reset.deactivateAccount(sender, LinkID));
                         const currentStatus = "existingCustomer";
                         const statusDeactivate = "isDeleting";
                         const phoneNumberDeactivate = sender;
@@ -195,7 +195,7 @@ function handleIncomingMessage(textMessage, sender, textId, phoneNumber, config,
                             console.error('Error executing query: ' + err.stack);
                             return;
                         }
-                        console.log('Reset Password UPDATE successful');
+                        console.log('Deactivate Account UPDATE successful');
                         connection.close();
                         });
                     }else if(textMessage == 8){
