@@ -364,17 +364,17 @@ function updatePassword(phoneNumberPassword, textPassword, textIDATPassword, sen
                             return;
                           }
                           console.log('Login Attempt unsuccessful');
-                          sms.sendPremium({ 
-                            to: sender, 
-                            from: '24123', 
-                            message: " Invalid credentials!! Please re-enter your password.",
-                            bulkSMSMode: 0,
-                            keyword: 'pension',
-                            linkId: LinkID
-                          });
-                          console.log("Message sent");
                           sql.close();
                         });
+                        sms.sendPremium({ 
+                          to: sender, 
+                          from: '24123', 
+                          message: " Invalid credentials!! Please re-enter your password.",
+                          bulkSMSMode: 0,
+                          keyword: 'pension',
+                          linkId: LinkID
+                        });
+                        console.log("Message sent");
                       } else {
                         // Lock the user out and send them to reset the password
                         const request = new sql.Request();
