@@ -339,9 +339,10 @@ function updatePassword(phoneNumberPassword, textPassword, textIDATPassword, sen
                   console.error('Error connecting to the database: ' + err.stack);
                   return;
                 }
+                const phoneNumberLogin = sender;
                 const checkIfExistsQuerySysUsers = "SELECT TOP 1 * FROM two_way_sms_tb WHERE phoneNumber =@phoneNumber AND isActive = 1 AND time = (SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber =@phoneNumber)";
                 const checkIfExistsRequestSysUsers = new sql.Request();
-                checkIfExistsRequestSysUsers.input('phoneNumber', sql.VarChar, sender);
+                checkIfExistsRequestSysUsers.input('phoneNumber', sql.VarChar, phoneNumberLogin);
                 checkIfExistsRequestSysUsers.query(checkIfExistsQuerySysUsers, function(checkErrSysUsers, checkResultsSysUsers) {
                     if (checkErrSysUsers) {
                         console.error('Error executing checkIfExistsQuerySysUsers: ' + checkErrSysUsers.stack);
