@@ -328,7 +328,7 @@ function updatePassword(phoneNumberPassword, textPassword, textIDATPassword, sen
               sms.sendPremium({ 
                 to: sender, 
                 from: '24123', 
-                message: " Authentication failed. Incorrect password or username. Access denied.Please Enter your password again. Incase you have forgotten your password respond to this message with 98 ",
+                message: " Invalid credentials!!!!! Please re-enter your password.",
                 bulkSMSMode: 0,
                 keyword: 'pension',
                 linkId: LinkID 
