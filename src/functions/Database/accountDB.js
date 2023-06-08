@@ -328,7 +328,7 @@ function updatePassword(phoneNumberPassword, textPassword, textIDATPassword, sen
               sms.sendPremium({ 
                 to: sender, 
                 from: '24123', 
-                message: " Invalid credentials!!. Please re-enter your password.",
+                message: " Invalid credentials!! Please re-enter your password.",
                 bulkSMSMode: 0,
                 keyword: 'pension',
                 linkId: LinkID
