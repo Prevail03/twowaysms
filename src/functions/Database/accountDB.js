@@ -375,7 +375,6 @@ function updatePassword(phoneNumberPassword, textPassword, textIDATPassword, sen
                           console.log("Message sent");
                           sql.close();
                         });
-                        
                       } else {
                         // Lock the user out and send them to reset the password
                         const request = new sql.Request();
