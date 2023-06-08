@@ -328,10 +328,10 @@ function updatePassword(phoneNumberPassword, textPassword, textIDATPassword, sen
               sms.sendPremium({ 
                 to: sender, 
                 from: '24123', 
-                message: " Invalid credentials!!!!! Please re-enter your password.",
+                message: " Invalid credentials!!. Please re-enter your password.",
                 bulkSMSMode: 0,
                 keyword: 'pension',
-                linkId: LinkID 
+                linkId: LinkID
               });
               console.log("Message sent");
               sql.connect(config, function (err) {
@@ -341,7 +341,7 @@ function updatePassword(phoneNumberPassword, textPassword, textIDATPassword, sen
                 }
                 const checkIfExistsQuerySysUsers = "SELECT TOP 1 * FROM two_way_sms_tb WHERE phoneNumber =@phoneNumber AND isActive = 1 AND time = (SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber =@phoneNumber)";
                 const checkIfExistsRequestSysUsers = new sql.Request();
-                checkIfExistsRequestSysUsers.input('phoneNumber', sql.VarChar, phoneNumber);
+                checkIfExistsRequestSysUsers.input('phoneNumber', sql.VarChar, sender);
                 checkIfExistsRequestSysUsers.query(checkIfExistsQuerySysUsers, function(checkErrSysUsers, checkResultsSysUsers) {
                     if (checkErrSysUsers) {
                         console.error('Error executing checkIfExistsQuerySysUsers: ' + checkErrSysUsers.stack);
