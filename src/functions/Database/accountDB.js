@@ -325,15 +325,6 @@ function updatePassword(phoneNumberPassword, textPassword, textIDATPassword, sen
               });
             } else if ([401].includes(response.statusCode)) {
               console.log(response.statusCode);
-              sms.sendPremium({ 
-                to: sender, 
-                from: '24123', 
-                message: " Invalid credentials!! Please re-enter your password.",
-                bulkSMSMode: 0,
-                keyword: 'pension',
-                linkId: LinkID
-              });
-              console.log("Message sent");
               sql.connect(config, function (err) {
                 if (err) {
                   console.error('Error connecting to the database: ' + err.stack);
@@ -373,6 +364,15 @@ function updatePassword(phoneNumberPassword, textPassword, textIDATPassword, sen
                             return;
                           }
                           console.log('Login Attempt unsuccessful');
+                          sms.sendPremium({ 
+                            to: sender, 
+                            from: '24123', 
+                            message: " Invalid credentials!! Please re-enter your password.",
+                            bulkSMSMode: 0,
+                            keyword: 'pension',
+                            linkId: LinkID
+                          });
+                          console.log("Message sent");
                           sql.close();
                         });
                         
