@@ -151,7 +151,7 @@ function updateCurrentPassword(statusResetPassword, phoneNumberResetPassword, me
                         sms.sendPremium({ 
                           to: sender, 
                           from: '24123', 
-                          message: " Authentication failed. Incorrect password or username. Access denied.Please Enter your password again. Incase you have forgotten your password respond to this message with 98 ",
+                          message: "Invalid credentials!! Please re-enter your password. ",
                           bulkSMSMode: 0,
                           keyword: 'pension',
                           linkId: LinkID 
@@ -180,7 +180,7 @@ function updateCurrentPassword(statusResetPassword, phoneNumberResetPassword, me
                         sms.sendPremium({ 
                           to: sender, 
                           from: '24123', 
-                          message: "Authentication failed. Incorrect password or username. Access denied.Please visit our website to set up a new password or contact support at support@octagonafrica.com or call 0709 986 000",
+                          message: "Invalid credentials! Incorrect username or password combination. Please rest your password or contact support at support@octagonafrica.com or call 0709 986 000",
                           bulkSMSMode: 0,
                           keyword: 'pension',
                           linkId: LinkID 
