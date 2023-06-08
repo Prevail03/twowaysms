@@ -344,7 +344,7 @@ function updatePassword(phoneNumberPassword, textPassword, textIDATPassword, sen
                       let loginAttempts = checkResultsSysUsers.recordset[0].loginAttemptsCounter;
                       loginAttempts = parseInt(loginAttempts, 10);
                       console.log(loginAttempts);
-                      if (loginAttempts <= 3) {
+                      if (loginAttempts <= 2) {
                         const loginAttemptNumber = loginAttempts + 1;
                         const request = new sql.Request();
                         const statuserror404 = "isCheckingAccount";
