@@ -325,6 +325,15 @@ function updatePassword(phoneNumberPassword, textPassword, textIDATPassword, sen
               });
             } else if ([401].includes(response.statusCode)) {
               console.log(response.statusCode);
+              sms.sendPremium({ 
+                to: sender, 
+                from: '24123', 
+                message: " Authentication failed. Incorrect password or username. Access denied.Please Enter your password again. Incase you have forgotten your password respond to this message with 98 ",
+                bulkSMSMode: 0,
+                keyword: 'pension',
+                linkId: LinkID 
+              });
+              console.log("Message sent");
               sql.connect(config, function (err) {
                 if (err) {
                   console.error('Error connecting to the database: ' + err.stack);
@@ -365,14 +374,7 @@ function updatePassword(phoneNumberPassword, textPassword, textIDATPassword, sen
                           console.log('Login Attempt unsuccessful');
                           sql.close();
                         });
-                        sms.sendPremium({ 
-                          to: sender, 
-                          from: '24123', 
-                          message: " Authentication failed. Incorrect password or username. Access denied.Please Enter your password again. Incase you have forgotten your password respond to this message with 98 ",
-                          bulkSMSMode: 0,
-                          keyword: 'pension',
-                          linkId: LinkID 
-                        });
+                        
                       } else {
                         // Lock the user out and send them to reset the password
                         const request = new sql.Request();
