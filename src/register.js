@@ -64,7 +64,7 @@ const register = {
     defaultMessage: (sender, LinkID) => ({
         to: sender,
         from:'24123',
-        message: "Welcome To Octagon Africa you can access our services by sending the word Register,Balance, Accounts, Reset,Delete:",
+        message: "Welcome To Octagon Africa you can access our services by sending the word pension:",
         bulkSMSMode: 0,
         keyword: 'pension',
         linkId: LinkID
@@ -77,9 +77,16 @@ const register = {
         bulkSMSMode: 0,
         keyword: 'pension',
         linkId: LinkID
-    })
+    }),
+    wrongMenuValue: (sender, LinkID) => ({
+        to: sender,
+        from:'24123',
+        message: "You have entered a wrong menu value! Please enter a valid one:",
+        bulkSMSMode: 0,
+        keyword: 'pension',
+        linkId: LinkID
+    }),
 }
-
 module.exports = register;
 
 

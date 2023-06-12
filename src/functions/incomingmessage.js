@@ -200,18 +200,25 @@ function handleIncomingMessage(textMessage, sender, textId, phoneNumber, config,
                         });
                     }else if(textMessage == 8){
                         console.log("Rate us  Workflow");
+                        sms.sendPremium(register.wrongMenuValue(sender, LinkID));
                     }else if(textMessage ==7){
                         console.log("Help us  Workflow");
+                        sms.sendPremium(register.wrongMenuValue(sender, LinkID));
                     }else if(textMessage == 6) {
                         console.log("My Account  Workflow");
+                        sms.sendPremium(register.wrongMenuValue(sender, LinkID));
                     }else if(textMessage == 5) {
                         console.log("Products Workflow");
+                        sms.sendPremium(register.wrongMenuValue(sender, LinkID));
                     }else if(textMessage == 4) {
                         console.log("Claims/Withdrawals Workflow");
+                        sms.sendPremium(register.wrongMenuValue(sender, LinkID));
                     }else if(textMessage == 3) {
                         console.log("Deposit Workflow");
+                        sms.sendPremium(register.wrongMenuValue(sender, LinkID));
                     }else if(textMessage == 1) {
                         console.log("Balance Enquiry Workflow");
+                        sms.sendPremium(register.wrongMenuValue(sender, LinkID));
                     }else {
                         let phone= phoneNumber;
                         phone = phone.replace("+", "");
