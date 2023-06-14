@@ -4,7 +4,8 @@ const handleDelete = require('./handleDelete');
 const handleAccountCheck = require('./handleAccountCheck');
 const handlePasswordReset = require('./handlePasswordReset');
 const handleForgotPassword = require('./handleForgotPassword');
-const reset =require('../reset')
+const reset =require('../reset');
+const claims = require('../claims');
 var Client = require('node-rest-client').Client;
 
 function handleIncomingMessage(textMessage, sender, textId, phoneNumber, config, sms, register, account,forgotPassword, LinkID) {
@@ -212,7 +213,7 @@ function handleIncomingMessage(textMessage, sender, textId, phoneNumber, config,
                         sms.sendPremium(register.wrongMenuValue(sender, LinkID));
                     }else if(textMessage == 4) {
                         console.log("Claims/Withdrawals Workflow");
-                        sms.sendPremium(register.wrongMenuValue(sender, LinkID));
+                        sms.sendPremium(claims.startClaims(sender, LinkID));
                     }else if(textMessage == 3) {
                         console.log("Deposit Workflow");
                         sms.sendPremium(register.wrongMenuValue(sender, LinkID));
