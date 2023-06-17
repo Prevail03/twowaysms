@@ -1,10 +1,5 @@
-const sql = require('mssql');
-var Client = require('node-rest-client').Client;
-const httpProxy = require('http-proxy');
-const proxy = httpProxy.createProxyServer({});
 const { updateEmail1, updateEmail2, updateCurrentPassword, updateOTP,updateNewPassword } = require('./Database/resetDB');
 
-let user = {};
 function handlePasswordReset(textMessage, sender, messagingStep, sms, reset, config, textIDAT, LinkID) {
     switch (parseInt(messagingStep)) {
         case 1:

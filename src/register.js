@@ -1,7 +1,5 @@
 const register = {
     newCustomer: (sender, LinkID) => {
-        //send message with credentials
-        // const messageToCustomer = 'Dear Esteemed Customer, Welcome to Octagon Africa. To complete the registration process, please provide us with the following information.\nPlease enter your ID number:';    
         return {
             to: sender,
             from:'24123',

@@ -9,6 +9,16 @@ const claims = {
           linkId: LinkID
       };
   },
+  invalidResponse: (sender, LinkID) => {
+    return {
+        to: sender,
+        from:'24123',
+        message: "Invalid response please enter a valid response as provides in the menu!!",
+        bulkSMSMode: 0,
+        keyword: 'pension',
+        linkId: LinkID
+    };
+  },
 }
 module.exports = claims;
 

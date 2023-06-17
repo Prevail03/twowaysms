@@ -4,6 +4,7 @@ const handleDelete = require('./handleDelete');
 const handleAccountCheck = require('./handleAccountCheck');
 const handlePasswordReset = require('./handlePasswordReset');
 const handleForgotPassword = require('./handleForgotPassword');
+const handleClaims = require('./handleClaims');
 const reset =require('../reset');
 const claims = require('../claims');
 var Client = require('node-rest-client').Client;
@@ -122,6 +123,9 @@ function handleIncomingMessage(textMessage, sender, textId, phoneNumber, config,
                         case 'isForgotPassword':
                             handleForgotPassword(textMessage, sender, messagingStep, sms, forgotPassword, config, textIDAT, LinkID,reset);
                         break;    
+                        case 'isMakingClaim':
+                            handleClaims(textMessage, sender, messagingStep, sms, config, textIDAT, LinkID, claims);
+                        break;
                         default:
                             sms.sendPremium(register.defaultMessage(sender, LinkID));
                             console.log('Unknown status: ' + status);
@@ -214,6 +218,25 @@ function handleIncomingMessage(textMessage, sender, textId, phoneNumber, config,
                     }else if(textMessage == 4) {
                         console.log("Claims/Withdrawals Workflow");
                         sms.sendPremium(claims.startClaims(sender, LinkID));
+                        const messagingStep = "1";
+                        const status = "isMakingClaim";
+                        const insertQuery = "INSERT INTO two_way_sms_tb (text, text_id_AT, messagingStep, phoneNumber, status, isActive) VALUES (@text, @text_id_AT, @messagingStep, @phoneNumber, @status, @isActive)";
+                        const insertRequest = new sql.Request(connection);
+                        insertRequest.input('text', sql.VarChar, textMessage);
+                        insertRequest.input('text_id_AT', sql.VarChar, textId);
+                        insertRequest.input('phoneNumber', sql.VarChar, phoneNumber);
+                        insertRequest.input('status', sql.VarChar, status);
+                        insertRequest.input('messagingStep', sql.VarChar, messagingStep);
+                        insertRequest.input('isActive', sql.Bit, 1);
+                        insertRequest.query(insertQuery, function(insertErr, insertResults) {
+                            if (insertErr) {
+                                console.error('Error executing insertQuery: ' + insertErr.stack);
+                                connection.close();
+                                return;
+                            }
+                            console.log('Added new user to two way sms (Claims)');
+                            connection.close();
+                        });
                     }else if(textMessage == 3) {
                         console.log("Deposit Workflow");
                         sms.sendPremium(register.wrongMenuValue(sender, LinkID));
@@ -274,7 +297,7 @@ function handleIncomingMessage(textMessage, sender, textId, phoneNumber, config,
                                             connection.close();
                                             return;
                                         }
-                                        console.log("New User inserted successfully");
+                                        console.log("New User inserted successfully(registration)");
                                     connection.close();
                                 });
                             }
