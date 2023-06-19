@@ -430,6 +430,7 @@ function updateDescription(phoneNumberDescription, textDescription, textIDATDesc
         sql.close();
         return;
       }
+      console.log('Member Number Update Successfully done'); 
       const statusUserIDRequest = "isMakingClaim";
       const phoneNumberUserIDRequest = sender;
       const textIDATUserIDRequest = textIDAT;
