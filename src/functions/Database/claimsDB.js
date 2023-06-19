@@ -791,7 +791,7 @@ function updateReasonForExit(statusReason ,phoneNumberReason, textReasonForExit,
   });
 }
 
-function updateDateForExit(statusDate ,phoneNumberDate, textDate, textIDATDate, config) {
+function updateDateOfExit(statusDate ,phoneNumberDate, textDate, textIDATDate, config) {
   const messagingStepReason="5";
   sql.connect(config, function (err) {
     const request = new sql.Request();
@@ -807,9 +807,9 @@ function updateDateForExit(statusDate ,phoneNumberDate, textDate, textIDATDate, 
         console.error('Error executing query: ' + err.stack);
         return;
       }
-      console.log('Reason For Exit UPDATE successful');
+      console.log('Date of Exit UPDATE successful');
       sql.close();
     });
   });
 }
-module.exports = {updatePassword, updateDescription, updateOTP, updateReasonForExit, updateDateForExit};
+module.exports = {updatePassword, updateDescription, updateOTP, updateReasonForExit, updateDateOfExit};
