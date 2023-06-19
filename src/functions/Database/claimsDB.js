@@ -569,7 +569,7 @@ function checkIfExistsQuery(sender, config, textIDAT, sms, account, LinkID) {
 function updateOTP(statusOTP, phoneNumberOTP, messagingStepOTP, textOTP, textIDATOTP, config, sms, sender, textIDAT, LinkID){
   sql.connect(config, function (err) {
     const request = new sql.Request();
-    const updateReset = `UPDATE two_way_sms_tb SET status = @statusOTP, messagingStep = @messagingStepOTP, email_OTP = @textOTP  WHERE phoneNumber = @phoneNumberOTP AND text_id_AT = @textIDATOTP AND time = (
+    const updateReset = `UPDATE two_way_sms_tb SET status = @statusOTP, messagingStep = @messagingStepOTP, claimsOTP = @textOTP  WHERE phoneNumber = @phoneNumberOTP AND text_id_AT = @textIDATOTP AND time = (
                 SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberOTP )`;
     request.input('statusOTP', sql.VarChar, statusOTP);
     request.input('messagingStepOTP', sql.VarChar, messagingStepOTP);
