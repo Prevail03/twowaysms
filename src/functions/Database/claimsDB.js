@@ -464,15 +464,15 @@ function checkIfExistsQuery(sender, config, textIDAT, sms, account, LinkID) {
 
       if (results.recordset.length > 0) {
         const userID = results.recordset[0].user_id;
-        const fetchClient = new fetch.FetchClient();
-        const requestBody = { user_id: userID };
-        const requestOptions = {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(requestBody)
+        console.log(userID);
+        var fetchClient = new Client();
+        // set content-type header and data as json in args parameter
+        var args = {
+          data: { user_id: userID },
+          headers: { "Content-Type": "application/json" }
         };
-
-        fetchClient.fetch('https://api.octagonafrica.com/v1/claims/sendClaimsOTP', requestOptions, function (data, response) {
+        fetchClient.get("https://api.octagonafrica.com/v1/accounts", args, function (data, response) {
+        
           if (response.status === 200) {
             sms.sendPremium({
               to: sender,
