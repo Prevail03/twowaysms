@@ -437,15 +437,25 @@ function updateDescription(phoneNumberDescription, textDescription, textIDATDesc
       const textIDATUserIDRequest = textIDAT;
 
       // Bind the values to the parameters
-      const checkifIDExists = new sql.Request();
-      const requestIDQuery = ("SELECT TOP 1 * FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberUserIDRequest AND status = @statusUserIDRequest AND isActive = 1 AND text_id_AT = @textIDATUserIDRequest order by time DESC");
-      checkifIDExists.input('statusUserIDRequest', sql.NVarChar(50), statusUserIDRequest);
-      checkifIDExists.input('phoneNumberUserIDRequest', sql.NVarChar(50), phoneNumberUserIDRequest);
-      checkifIDExists.input('textIDATUserIDRequest', sql.VarChar(100), textIDATUserIDRequest);
-      checkifIDExists.query(requestIDQuery, function (err, userIDResults) {
-        if (err) {
-          console.error('Error executing query: ' + err.stack);
-          return;
+      // const checkIfExistsRequest = new sql.Request();
+      // const requestIDQuery = ;
+      
+      // checkifIDExists.query(requestIDQuery, function (err, userIDResults) {
+      //   if (err) {
+      //     console.error('Error executing query: ' + err.stack);
+      //     return;
+      //   }
+      //   if (userIDResults.recordset.length > 0) {
+        const checkIfExistsQuery = "SELECT TOP 1 * FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberUserIDRequest AND status = @statusUserIDRequest AND isActive = 1 AND text_id_AT = @textIDATUserIDRequest order by time DESC";
+        const checkIfExistsRequest = new sql.Request(connection);
+        checkIfExistsRequest.input('statusUserIDRequest', sql.NVarChar(50), statusUserIDRequest);
+        checkIfExistsRequest.input('phoneNumberUserIDRequest', sql.NVarChar(50), phoneNumberUserIDRequest);
+        checkIfExistsRequest.input('textIDATUserIDRequest', sql.VarChar(100), textIDATUserIDRequest);
+        checkIfExistsRequest.query(checkIfExistsQuery, function(checkErr, userIDResults) {
+        if (checkErr) {
+        console.error('Error executing checkIfExistsQuery: ' + checkErr.stack);
+        connection.close();
+        return;
         }
         if (userIDResults.recordset.length > 0) {
           const userID = userIDResults.recordset[0].user_id;
