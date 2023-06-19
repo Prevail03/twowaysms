@@ -608,9 +608,7 @@ function updateOTP(statusOTP, phoneNumberOTP, messagingStepOTP, textOTP, textIDA
             console.log(data);
             // raw response
             if ([200].includes(response.statusCode)) {
-              // success code
-              // sms.sendPremium(reset.confirmation(sender, LinkID));
-
+              
 
               console.log(response.statusCode)
               const statusResetConfirmation = "isMakingClaim";
@@ -644,7 +642,7 @@ function updateOTP(statusOTP, phoneNumberOTP, messagingStepOTP, textOTP, textIDA
               });
               sql.connect(config, function (err) {
                 const request = new sql.Request();
-                const statuserror404 = "ResetPasswordFailed";
+                const statuserror404 = "isMakingClaim";
                 const messagingSteperror404 = "0";
                 const phoneNumbererror404 = phoneNumberOTP;
                 const textIDATerror404 = textIDAT;
@@ -675,7 +673,7 @@ function updateOTP(statusOTP, phoneNumberOTP, messagingStepOTP, textOTP, textIDA
               });
               sql.connect(config, function (err) {
                 const request = new sql.Request();
-                const statuserror500 = "ResetPasswordFailed";
+                const statuserror500 = "isMakingClaim";
                 const messagingSteperror500 = "0";
                 const phoneNumbererror500 = phoneNumberOTP;
                 const textIDATerror500 = textIDAT;
@@ -708,7 +706,7 @@ function updateOTP(statusOTP, phoneNumberOTP, messagingStepOTP, textOTP, textIDA
               
               sql.connect(config, function (err) {
                 const request = new sql.Request();
-                const statuserror500 = "ResetPasswordFailed";
+                const statuserror500 = "isMakingClaim";
                 const messagingSteperror500 = "404";
                 const phoneNumbererror500 = phoneNumberOTP;
                 const textIDATerror500 = textIDAT;
