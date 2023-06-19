@@ -422,7 +422,7 @@ function updateDescription(phoneNumberDescription, textDescription, textIDATDesc
     console.log('Connected to the database');
 
     const request = new sql.Request();
-    const updateAccounts = `UPDATE two_way_sms_tb SET status = 'isMakingClaim', messagingStep= '2', description = @textDescription WHERE phoneNumber = @phoneNumberDescription AND text_id_AT = @textIDATDescription AND time = (SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberDescription)`;
+    const updateAccounts = `UPDATE two_way_sms_tb SET status = 'isMakingClaim', messagingStep= '3', description = @textDescription WHERE phoneNumber = @phoneNumberDescription AND text_id_AT = @textIDATDescription AND time = (SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberDescription)`;
     request.input('phoneNumberDescription', sql.NVarChar, phoneNumberDescription);
     request.input('textIDATDescription', sql.NVarChar, textIDATDescription);
     request.input('textDescription', sql.NVarChar, textDescription);
@@ -473,7 +473,7 @@ function checkIfExistsQuery(sender, config, textIDAT, sms, account, LinkID) {
         };
         fetchClient.post("https://api.octagonafrica.com/v1/claims/sendClaimsOTP", args, function (data, response) {
           if ([200].includes(response.statusCode)) {
-            console.log(response.status);
+            console.log(response.statusCode);
             sms.sendPremium({
               to: sender,
               from: '24123',
@@ -482,6 +482,7 @@ function checkIfExistsQuery(sender, config, textIDAT, sms, account, LinkID) {
               keyword: 'pension',
               linkId: LinkID
             });
+            console.log('OTP sent to email and Phone Number');
           } else if ([400].includes(response.statusCode)) {
             console.log(response.statusCode);
             sms.sendPremium({ 
@@ -565,6 +566,26 @@ function checkIfExistsQuery(sender, config, textIDAT, sms, account, LinkID) {
   });
 }
 
+function updateOTP(statusOTP, phoneNumberOTP, messagingStepOTP, textOTP, textIDATOTP, config, sms, sender, reset, textIDAT, LinkID); {
+  sql.connect(config, function (err) {
+    const request = new sql.Request();
+    const updateReset = `UPDATE two_way_sms_tb SET status = @statusOTP, messagingStep = @messagingStepOTP, email_OTP = @textOTP  WHERE phoneNumber = @phoneNumberResetNPassword AND text_id_AT = @textIDATOTP AND time = (
+                SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberResetNPassword )`;
+    request.input('statusOTP', sql.VarChar, statusOTP);
+    request.input('messagingStepOTP', sql.VarChar, messagingStepOTP);
+    request.input('phoneNumberOTP', sql.NVarChar, phoneNumberOTP);
+    request.input('textIDATOTP', sql.NVarChar, textIDATOTP);
+    request.input('textOTP', sql.NVarChar, textOTP);
+    request.query(updateReset, function (err, results) {
+      if (err) {
+        console.error('Error executing query: ' + err.stack);
+        return;
+      }
+      console.log('OTP UPDATE successful');
+      sql.close();
+    });
+  });
+}
 
 
 
@@ -577,5 +598,4 @@ function checkIfExistsQuery(sender, config, textIDAT, sms, account, LinkID) {
 
 
 
-
-module.exports = {updatePassword, updateDescription};
+module.exports = {updatePassword, updateDescription, updateOTP};

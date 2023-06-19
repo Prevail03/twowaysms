@@ -1,5 +1,5 @@
 const sql = require('mssql');
-const {updatePassword,updateDescription}= require('./Database/claimsDB');
+const {updatePassword,updateDescription, updateOTP}= require('./Database/claimsDB');
 function  handleClaims(textMessage, sender, messagingStep, sms,  config, textIDAT, LinkID, claims,account){
   switch (parseInt(messagingStep)) {
   //1.enter Password
@@ -69,7 +69,15 @@ function  handleClaims(textMessage, sender, messagingStep, sms,  config, textIDA
     });
     break;
     case 3:
-
+            //confirmation of password reset
+            const statusOTP = "ResetingPassword";
+            const phoneNumberOTP = sender;
+            const messagingStepOTP = "5";
+            const textIDATOTP = textIDAT;
+            const textOTP = textMessage;
+            textOTP = toUpperCase(textOTP);
+            updateOTP(statusOTP, phoneNumberOTP, messagingStepOTP, textOTP, textIDATOTP, config, sms, sender, reset, textIDAT, LinkID);
+        break;
     break;
 
   
