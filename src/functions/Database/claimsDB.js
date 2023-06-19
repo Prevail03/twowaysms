@@ -430,22 +430,23 @@ function updateDescription(phoneNumberDescription, textDescription, textIDATDesc
         sql.close();
         return;
       }
-      console.log('Member Number Update Successfully done'); 
+      console.log('Member Number Update Successfully done');
+
       const statusUserIDRequest = "isMakingClaim";
       const phoneNumberUserIDRequest = sender;
       const textIDATUserIDRequest = textIDAT;
+
       // Bind the values to the parameters
-      const requestQuery = new sql.Request();
-      requestQuery.input('statusUserIDRequest', sql.NVarChar(50), statusUserIDRequest);
-      requestQuery.input('phoneNumberUserIDRequest', sql.NVarChar(50), phoneNumberUserIDRequest);
-      requestQuery.input('textIDATUserIDRequest', sql.VarChar(100), textIDATUserIDRequest);
-      requestQuery.query("SELECT TOP 1 * FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberUserIDRequest AND status = @statusUserIDRequest AND isActive = 1 AND text_id_AT = @textIDATUserIDRequest order by time DESC", function (err, userIDResults) {
+      const request2 = new sql.Request();
+      request2.input('statusUserIDRequest', sql.NVarChar(50), statusUserIDRequest);
+      request2.input('phoneNumberUserIDRequest', sql.NVarChar(50), phoneNumberUserIDRequest);
+      request2.input('textIDATUserIDRequest', sql.VarChar(100), textIDATUserIDRequest);
+      request2.query("SELECT TOP 1 * FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberUserIDRequest AND status = @statusUserIDRequest AND isActive = 1 AND text_id_AT = @textIDATUserIDRequest order by time DESC", function (err, userIDResults) {
         if (err) {
           console.error('Error executing query: ' + err.stack);
           return;
         }
-        
-      if (userIDResults.recordset.length > 0) {
+        if (userIDResults.recordset.length > 0) {
           const userID = userIDResults.recordset[0].user_id;
           var fetchClient = new Client();
           // set content-type header and data as json in args parameter
@@ -455,52 +456,52 @@ function updateDescription(phoneNumberDescription, textDescription, textIDATDesc
           };
           fetchClient.get("https://api.octagonafrica.com/v1/claims/sendClaimsOTP", args, function (data, response) {
 
-          if ([200].includes(response.statusCode)) {
-            sms.sendPremium({ 
-              to: sender, 
-              from: '24123', 
-              message: "Enter the claim benefits OTP",
-              bulkSMSMode: 0,
-              keyword: 'pension',
-              linkId: LinkID 
-            });
-          } else if ([400].includes(response.statusCode)) {
-            console.log(response.statusCode);
-            sms.sendPremium({ 
-              to: sender, 
-              from: '24123', 
-              message: "You do not have an account with us or your profile is not complete. Please contact your scheme admin or contact support at support@octagonafrica.com or 0709 986 000",
-              bulkSMSMode: 0,
-              keyword: 'pension',
-              linkId: LinkID 
-            });
-            sql.connect(config, function (err) {
-              console.log('Connected to the database');
-              const request = new sql.Request();
-              const statuserror404 = "isMakingClaimFailed";
-              const messagingSteperror404 = "0";
-              const phoneNumbererror404 = sender;
-              const textIDATerror404 = textIDAT;
-              const updateFail = `UPDATE two_way_sms_tb SET status = @statuserror404, messagingStep = @messagingSteperror404,  isActive = '0'  WHERE phoneNumber = @phoneNumbererror404 AND text_id_AT =@textIDATerror404 AND time = (
-                        SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumbererror404 )`;
-              request.input('statuserror404', sql.VarChar, statuserror404);
-              request.input('messagingSteperror404', sql.VarChar, messagingSteperror404);
-              request.input('phoneNumbererror404', sql.NVarChar, phoneNumbererror404);
-              request.input('textIDATerror404', sql.NVarChar, textIDATerror404);
-              request.query(updateFail, function (err, results) {
-                if (err) {
-                  console.error('Error executing query: ' + err.stack);
-                  return;
-                }
-                console.log(' Checking account failed Attempt unsuccessful');
-                sql.close();
+            if ([200].includes(response.statusCode)) {
+              sms.sendPremium({
+                to: sender,
+                from: '24123',
+                message: "Enter the claim benefits OTP",
+                bulkSMSMode: 0,
+                keyword: 'pension',
+                linkId: LinkID
               });
-            });
-          }else if ([500].includes(response.statusCode)) {
+            } else if ([400].includes(response.statusCode)) {
               console.log(response.statusCode);
-              sms.sendPremium({ 
-                to: sender, 
-                from: '24123', 
+              sms.sendPremium({
+                to: sender,
+                from: '24123',
+                message: "You do not have an account with us or your profile is not complete. Please contact your scheme admin or contact support at support@octagonafrica.com or 0709 986 000",
+                bulkSMSMode: 0,
+                keyword: 'pension',
+                linkId: LinkID
+              });
+              sql.connect(config, function (err) {
+                console.log('Connected to the database');
+                const request = new sql.Request();
+                const statuserror404 = "isMakingClaimFailed";
+                const messagingSteperror404 = "0";
+                const phoneNumbererror404 = sender;
+                const textIDATerror404 = textIDAT;
+                const updateFail = `UPDATE two_way_sms_tb SET status = @statuserror404, messagingStep = @messagingSteperror404,  isActive = '0'  WHERE phoneNumber = @phoneNumbererror404 AND text_id_AT =@textIDATerror404 AND time = (
+                        SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumbererror404 )`;
+                request.input('statuserror404', sql.VarChar, statuserror404);
+                request.input('messagingSteperror404', sql.VarChar, messagingSteperror404);
+                request.input('phoneNumbererror404', sql.NVarChar, phoneNumbererror404);
+                request.input('textIDATerror404', sql.NVarChar, textIDATerror404);
+                request.query(updateFail, function (err, results) {
+                  if (err) {
+                    console.error('Error executing query: ' + err.stack);
+                    return;
+                  }
+                  console.log(' Checking account failed Attempt unsuccessful');
+                  sql.close();
+                });
+              });
+            } else if ([500].includes(response.statusCode)) {
+              console.log(response.statusCode);
+              sms.sendPremium({
+                to: sender,
+                from: '24123',
                 message: " Invalid request. Please input your National Id and password.",
                 bulkSMSMode: 0,
                 keyword: 'pension',
@@ -531,7 +532,7 @@ function updateDescription(phoneNumberDescription, textDescription, textIDATDesc
                   sql.close();
                 });
               });
-          } else {
+            } else {
               // error code
               console.log(response.statusCode);
             }
@@ -542,5 +543,6 @@ function updateDescription(phoneNumberDescription, textDescription, textIDATDesc
     });
   });
 }
+
 
 module.exports = {updatePassword, updateDescription};
