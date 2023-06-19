@@ -770,7 +770,7 @@ function updateOTP(statusOTP, phoneNumberOTP, messagingStepOTP, textOTP, textIDA
 }
 
 function updateReasonForExit(statusReason ,phoneNumberReason, textReasonForExit, textIDATReason, config) {
-  const messagingStepReason="4";
+  const messagingStepReason="5";
   sql.connect(config, function (err) {
     const request = new sql.Request();
     const updateReset = `UPDATE two_way_sms_tb SET status = @statusReason, messagingStep = @messagingStepReason, reasonforexit = @textReasonForExit  WHERE phoneNumber = @phoneNumberReason AND text_id_AT = @textIDATReason AND time = (
@@ -792,7 +792,7 @@ function updateReasonForExit(statusReason ,phoneNumberReason, textReasonForExit,
 }
 
 function updateDateOfExit(statusDate ,phoneNumberDate, textDate, textIDATDate, config) {
-  const messagingStepReason="5";
+  const messagingStepReason="6";
   sql.connect(config, function (err) {
     const request = new sql.Request();
     const updateReset = `UPDATE two_way_sms_tb SET status = @statusDate, messagingStep = @messagingStepReason, dateOfExit = @textDate  WHERE phoneNumber = @phoneNumberDate AND text_id_AT = @textIDATDate AND time = (
