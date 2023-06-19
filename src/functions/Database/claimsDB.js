@@ -426,7 +426,7 @@ function updateDescription(phoneNumberDescription, textDescription, textIDATDesc
     request.input('textDescription', sql.NVarChar, textDescription);
     request.query(updateAccounts, function (err, results) {
       if (err) {
-        console.error('Error executing query: ' + err.stack);
+        console.error('Error executing updateAccounts query: ' + err.stack);
         sql.close();
         return;
       }
@@ -436,7 +436,7 @@ function updateDescription(phoneNumberDescription, textDescription, textIDATDesc
       const phoneNumberUserIDRequest = sender;
       const textIDATUserIDRequest = textIDAT;
 
-      const checkIfExistsQuery = "SELECT TOP 1 * FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberUserIDRequest AND status = @statusUserIDRequest AND isActive = 1 AND text_id_AT = @textIDATUserIDRequest order by time DESC";
+      const checkIfExistsQuery = "SELECT TOP 1 * FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberUserIDRequest AND status = @statusUserIDRequest AND isActive = 1 AND text_id_AT = @textIDATUserIDRequest ORDER BY time DESC";
       const checkIfExistsRequest = new sql.Request();
       checkIfExistsRequest.input('statusUserIDRequest', sql.NVarChar(50), statusUserIDRequest);
       checkIfExistsRequest.input('phoneNumberUserIDRequest', sql.NVarChar(50), phoneNumberUserIDRequest);
@@ -450,13 +450,12 @@ function updateDescription(phoneNumberDescription, textDescription, textIDATDesc
         if (userIDResults.recordset.length > 0) {
           const userID = userIDResults.recordset[0].user_id;
           var fetchClient = new Client();
-          // set content-type header and data as JSON in args parameter
+          // set content-type header and data as json in args parameter
           var args = {
             data: { user_id: userID },
             headers: { "Content-Type": "application/json" }
           };
           fetchClient.get("https://api.octagonafrica.com/v1/claims/sendClaimsOTP", args, function (data, response) {
-
             if ([200].includes(response.statusCode)) {
               sms.sendPremium({
                 to: sender,
@@ -491,10 +490,10 @@ function updateDescription(phoneNumberDescription, textDescription, textIDATDesc
                 request.input('textIDATerror404', sql.NVarChar, textIDATerror404);
                 request.query(updateFail, function (err, results) {
                   if (err) {
-                    console.error('Error executing query: ' + err.stack);
+                    console.error('Error executing updateFail query: ' + err.stack);
                     return;
                   }
-                  console.log('Checking account failed Attempt unsuccessful');
+                  console.log('Checking account failed. Attempt unsuccessful');
                   sql.close();
                 });
               });
@@ -503,7 +502,7 @@ function updateDescription(phoneNumberDescription, textDescription, textIDATDesc
               sms.sendPremium({
                 to: sender,
                 from: '24123',
-                message: " Invalid request. Please input your National Id and password.",
+                message: "Invalid request. Please input your National ID and password.",
                 bulkSMSMode: 0,
                 keyword: 'pension',
                 linkId: LinkID
@@ -526,10 +525,10 @@ function updateDescription(phoneNumberDescription, textDescription, textIDATDesc
                 request.input('textIDATerror500', sql.NVarChar, textIDATerror500);
                 request.query(updateFail, function (err, results) {
                   if (err) {
-                    console.error('Error executing query: ' + err.stack);
+                    console.error('Error executing updateFail query: ' + err.stack);
                     return;
                   }
-                  console.log('Checking Account Failed Attempt unsuccessful');
+                  console.log('Checking Account Failed. Attempt unsuccessful');
                   sql.close();
                 });
               });
