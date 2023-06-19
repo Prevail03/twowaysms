@@ -73,7 +73,7 @@ function updatePassword(phoneNumberPassword, textPassword, textIDATPassword, sen
                     }
                     console.log('Connected to the database');
                     const request = new sql.Request();
-                    const updateAccounts = `UPDATE two_way_sms_tb SET status = 'isMakingClaim', messagingStep= '3', memberSchemeCode = @user_schemes, user_id = @textUserID WHERE phoneNumber = @phoneNumberUserID AND text_id_AT = @textIDATuserID AND time = (SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberUserID)`;
+                    const updateAccounts = `UPDATE two_way_sms_tb SET status = 'isMakingClaim', messagingStep= '2', memberSchemeCode = @user_schemes, user_id = @textUserID WHERE phoneNumber = @phoneNumberUserID AND text_id_AT = @textIDATuserID AND time = (SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberUserID)`;
                     request.input('phoneNumberUserID', sql.NVarChar, phoneNumberUserID);
                     request.input('textIDATUserID', sql.NVarChar, textIDATUserID);
                     request.input('textUserID', sql.NVarChar, textUserID);
