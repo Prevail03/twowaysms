@@ -75,7 +75,7 @@ function  handleClaims(textMessage, sender, messagingStep, sms,  config, textIDA
       const messagingStepOTP = "3";
       const textIDATOTP = textIDAT;
       const textOTP = textMessage;
-      updateOTP(statusOTP, phoneNumberOTP, messagingStepOTP, textOTP, textIDATOTP, config, sms, sender, reset, textIDAT, LinkID);
+      updateOTP(statusOTP, phoneNumberOTP, messagingStepOTP, textOTP, textIDATOTP, config, sms, sender, textIDAT, LinkID);
     break;
   } 
 
