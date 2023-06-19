@@ -655,12 +655,12 @@ function updateOTP(statusOTP, phoneNumberOTP, messagingStepOTP, textOTP, textIDA
                     sms.sendPremium({
                       to: sender,
                       from: '24123',
-                      message: finalMessage,
+                      message: "Reasons for making a claim:",
                       bulkSMSMode: 0,
                       keyword: 'pension',
                       linkId: LinkID
                     });
-                    console.log('All Reasons Updated successfully');   
+                    console.log('All Reasons Updated successfully');
                     sql.close();
                   });
                 });
