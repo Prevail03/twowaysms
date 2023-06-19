@@ -82,7 +82,6 @@ function updateAmount(statusAmount ,phoneNumberAmount, textAmount, textIDATAmoun
                   sql.close();
                 });
               }); 
-
             } else if ([404].includes(response.statusCode)) {
               console.log(response.statusCode);
               sms.sendPremium({ 
