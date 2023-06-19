@@ -436,16 +436,6 @@ function updateDescription(phoneNumberDescription, textDescription, textIDATDesc
       const phoneNumberUserIDRequest = sender;
       const textIDATUserIDRequest = textIDAT;
 
-      // Bind the values to the parameters
-      // const checkIfExistsRequest = new sql.Request();
-      // const requestIDQuery = ;
-      
-      // checkifIDExists.query(requestIDQuery, function (err, userIDResults) {
-      //   if (err) {
-      //     console.error('Error executing query: ' + err.stack);
-      //     return;
-      //   }
-      //   if (userIDResults.recordset.length > 0) {
         const checkIfExistsQuery = "SELECT TOP 1 * FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberUserIDRequest AND status = @statusUserIDRequest AND isActive = 1 AND text_id_AT = @textIDATUserIDRequest order by time DESC";
         const checkIfExistsRequest = new sql.Request(connection);
         checkIfExistsRequest.input('statusUserIDRequest', sql.NVarChar(50), statusUserIDRequest);
