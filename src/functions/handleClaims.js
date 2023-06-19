@@ -1,4 +1,4 @@
-
+const sql = require('mssql');
 const {updatePassword,updateDescription}= require('./Database/claimsDB');
 function  handleClaims(textMessage, sender, messagingStep, sms,  config, textIDAT, LinkID, claims){
   switch (parseInt(messagingStep)) {
