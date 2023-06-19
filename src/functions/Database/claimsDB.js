@@ -427,7 +427,6 @@ function updateDescription(phoneNumberDescription, textDescription, textIDATDesc
     request.query(updateAccounts, function (err, results) {
       if (err) {
         console.error('Error executing updateAccounts query: ' + err.stack);
-        sql.close();
         return;
       }
       console.log('Member Number Update Successfully done');
