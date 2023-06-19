@@ -598,7 +598,7 @@ function updateOTP(statusOTP, phoneNumberOTP, messagingStepOTP, textOTP, textIDA
         }
         if (verifyClaimsOTPResults.recordset.length > 0) {
           const username = verifyClaimsOTPResults.recordset[0].user_username;
-          const OTP = verifyClaimsOTPResults.recordset[0].email_OTP;
+          const OTP = verifyClaimsOTPResults.recordset[0].claimsOTP;
           var verifyClaimsOTP = new Client();
           var args = {// set content-type header and data as json in args parameter
             data: { otp: OTP, username: username },
