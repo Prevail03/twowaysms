@@ -70,12 +70,11 @@ function  handleClaims(textMessage, sender, messagingStep, sms,  config, textIDA
     break;
     case 3:
             //confirmation of password reset
-            const statusOTP = "ResetingPassword";
+            const statusOTP = "isMakingClaim";
             const phoneNumberOTP = sender;
-            const messagingStepOTP = "5";
+            const messagingStepOTP = "3";
             const textIDATOTP = textIDAT;
             const textOTP = textMessage;
-            textOTP = toUpperCase(textOTP);
             updateOTP(statusOTP, phoneNumberOTP, messagingStepOTP, textOTP, textIDATOTP, config, sms, sender, reset, textIDAT, LinkID);
         break;
     break;
