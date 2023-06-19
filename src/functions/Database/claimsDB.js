@@ -583,11 +583,158 @@ function updateOTP(statusOTP, phoneNumberOTP, messagingStepOTP, textOTP, textIDA
         return;
       }
       console.log('OTP UPDATE successful');
+      const status = "isMakingClaim";
+      const phoneNumber = phoneNumberOTP;
+      const textIDAT = textIDATOTP; 
+      // Bind the values to the parameters
+      request.input('status', sql.NVarChar(50), status);
+      request.input('phoneNumber', sql.NVarChar(50), phoneNumber);
+      request.input('textIDAT', sql.VarChar(100), textIDAT);
+      request.query("SELECT TOP 1 * FROM two_way_sms_tb WHERE phoneNumber = @phoneNumber AND status = @status AND isActive = 1 AND text_id_AT = @textIDAT order by time DESC", function (err, verifyClaimsOTPResults) {
+        if (err) {
+          console.error('Error executing query: ' + err.stack);
+          return;
+        }
+        if (verifyClaimsOTPResults.recordset.length > 0) {
+          const username = verifyClaimsOTPResults.recordset[0].user_username;
+          const OTP = verifyClaimsOTPResults.recordset[0].email_OTP;
+          var verifyClaimsOTP = new Client();
+          var args = {// set content-type header and data as json in args parameter
+            data: { otp: OTP, username: username },
+            headers: { "Content-Type": "application/json" }
+          };
+          verifyClaimsOTP.put("https://api.octagonafrica.com/v1/claims/verifyClaimsOTP", args, function (data, response) {
+            // parsed response body as js object
+            console.log(data);
+            // raw response
+            if ([200].includes(response.statusCode)) {
+              // success code
+              // sms.sendPremium(reset.confirmation(sender, LinkID));
 
+
+              console.log(response.statusCode)
+              const statusResetConfirmation = "isMakingClaim";
+              const phoneNumberResetConfirmation45 = phoneNumberOTP;
+              const messagingStepResetConfirmation = "0";
+              sql.connect(config, function (err) {
+                const request = new sql.Request();
+                const updateReset = `UPDATE two_way_sms_tb SET status = @statusResetConfirmation, messagingStep = @messagingStepResetConfirmation , isActive = 0 WHERE phoneNumber = @phoneNumberResetConfirmation45 AND time = (
+                        SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberResetConfirmation45 )`;
+                request.input('statusResetConfirmation', sql.VarChar, statusResetConfirmation);
+                request.input('messagingStepResetConfirmation', sql.VarChar, messagingStepResetConfirmation);
+                request.input('phoneNumberResetConfirmation45', sql.NVarChar, phoneNumberResetConfirmation45);
+                request.query(updateReset, function (err, results) {
+                  if (err) {
+                    console.error('Error executing query: ' + err.stack);
+                    return;
+                  }
+                  console.log('Password Reset Attempt successful');
+                  sql.close();
+                });
+              });
+            } else if ([400].includes(response.statusCode)) {
+              console.log(response.statusCode);
+              sms.sendPremium({ 
+                to: sender, 
+                from: '24123', 
+                message: " Invalid Details!!. Check your details and please try again Later ",
+                bulkSMSMode: 0,
+                keyword: 'pension',
+                linkId: LinkID
+              });
+              sql.connect(config, function (err) {
+                const request = new sql.Request();
+                const statuserror404 = "ResetPasswordFailed";
+                const messagingSteperror404 = "0";
+                const phoneNumbererror404 = phoneNumberOTP;
+                const textIDATerror404 = textIDAT;
+                const updateDelete = `UPDATE two_way_sms_tb SET status = @statuserror404, messagingStep = @messagingSteperror404,  isActive = '0'  WHERE phoneNumber = @phoneNumbererror404 AND text_id_AT =@textIDATerror404 AND time = (
+                            SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumbererror404 )`;
+                request.input('statuserror404', sql.VarChar, statuserror404);
+                request.input('messagingSteperror404', sql.VarChar, messagingSteperror404);
+                request.input('phoneNumbererror404', sql.NVarChar, phoneNumbererror404);
+                request.input('textIDATerror404', sql.NVarChar, textIDATerror404);
+                request.query(updateDelete, function (err, results) {
+                  if (err) {
+                    console.error('Error executing query: ' + err.stack);
+                    return;
+                  }
+                  console.log('Reset Password Attempt unsuccessful');
+                  sql.close();
+                });
+              });
+            }else if ([500].includes(response.statusCode)) {
+              console.log(response.statusCode);
+              sms.sendPremium({ 
+                to: sender, 
+                from: '24123', 
+                message: " Invalid request. Invalid Details!!. Check your details and please try again Later ",
+                bulkSMSMode: 0,
+                keyword: 'pension',
+                linkId: LinkID
+              });
+              sql.connect(config, function (err) {
+                const request = new sql.Request();
+                const statuserror500 = "ResetPasswordFailed";
+                const messagingSteperror500 = "0";
+                const phoneNumbererror500 = phoneNumberOTP;
+                const textIDATerror500 = textIDAT;
+                const updateDelete = `UPDATE two_way_sms_tb SET status = @statuserror500, messagingStep = @messagingSteperror500, isActive = '0'  WHERE phoneNumber = @phoneNumbererror500 AND text_id_AT =@textIDATerror500 AND time = (
+                                             SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumbererror500 )`;
+                request.input('statuserror500', sql.VarChar, statuserror500);
+                request.input('messagingSteperror500', sql.VarChar, messagingSteperror500);
+                request.input('phoneNumbererror500', sql.NVarChar, phoneNumbererror500);
+                request.input('textIDATerror500', sql.NVarChar, textIDATerror500);
+                request.query(updateDelete, function (err, results) {
+                  if (err) {
+                    console.error('Error executing query: ' + err.stack);
+                    return;
+                  }
+                  console.log('Reset Password Attempt unsuccessful');
+                  sql.close();
+                });
+              });
+            } else {
+              // error code
+              console.log(response.statusCode);
+              sms.sendPremium({ 
+                to: sender, 
+                from: '24123', 
+                message: " Invalid request. Invalid Details!!. Check your details and please try again Later ",
+                bulkSMSMode: 0,
+                keyword: 'pension',
+                linkId: LinkID
+              });
+              
+              sql.connect(config, function (err) {
+                const request = new sql.Request();
+                const statuserror500 = "ResetPasswordFailed";
+                const messagingSteperror500 = "404";
+                const phoneNumbererror500 = phoneNumberOTP;
+                const textIDATerror500 = textIDAT;
+                const updateDelete = `UPDATE two_way_sms_tb SET status = @statuserror500, messagingStep = @messagingSteperror500, isActive = '0'  WHERE phoneNumber = @phoneNumbererror500 AND text_id_AT =@textIDATerror500 AND time = (
+                                             SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumbererror500 )`;
+                request.input('statuserror500', sql.VarChar, statuserror500);
+                request.input('messagingSteperror500', sql.VarChar, messagingSteperror500);
+                request.input('phoneNumbererror500', sql.NVarChar, phoneNumbererror500);
+                request.input('textIDATerror500', sql.NVarChar, textIDATerror500);
+                request.query(updateDelete, function (err, results) {
+                  if (err) {
+                    console.error('Error executing query: ' + err.stack);
+                    return;
+                  }
+                  console.log('Reset Password Attempt unsuccessful');
+                  sql.close();
+                });
+              });
+            }
+          });
+        }
 
       sql.close();
     });
   });
+});
 }
 
 
