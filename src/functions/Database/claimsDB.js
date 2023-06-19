@@ -613,8 +613,7 @@ function updateOTP(statusOTP, phoneNumberOTP, messagingStepOTP, textOTP, textIDA
 
               const statusReasons = "isMakingClaim";
               const phoneNumberReasons = phoneNumberOTP;
-              const messagingStepReasons = "3";
-              
+              const messagingStepReasons = "3"; 
               sql.connect(config, function (err) {
                 if (err) {
                   console.error('Error connecting to the database: ' + err.stack);
@@ -650,8 +649,7 @@ function updateOTP(statusOTP, phoneNumberOTP, messagingStepOTP, textOTP, textIDA
                       console.error('Error executing updateReasons query: ' + err.stack);
                       sql.close();
                       return;
-                    }
-                    console.log('All Reasons Updated successfully');             
+                    }          
                     const premessage = "Reasons for making a claim:";
                     const finalMessage = premessage + "\n" + reasons.join('\n');            
                     sms.sendPremium({
@@ -662,6 +660,7 @@ function updateOTP(statusOTP, phoneNumberOTP, messagingStepOTP, textOTP, textIDA
                       keyword: 'pension',
                       linkId: LinkID
                     });
+                    console.log('All Reasons Updated successfully');   
                     sql.close();
                   });
                 });
