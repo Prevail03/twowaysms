@@ -418,6 +418,7 @@ function updateDescription(phoneNumberDescription, textDescription, textIDATDesc
       return;
     }
     console.log('Connected to the database');
+
     const request = new sql.Request();
     const updateAccounts = `UPDATE two_way_sms_tb SET status = 'isMakingClaim', messagingStep= '3', description = @textDescription WHERE phoneNumber = @phoneNumberDescription AND text_id_AT = @textIDATDescription AND time = (SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberDescription)`;
     request.input('phoneNumberDescription', sql.NVarChar, phoneNumberDescription);
@@ -432,8 +433,8 @@ function updateDescription(phoneNumberDescription, textDescription, textIDATDesc
       console.log('Member Number Update Successfully done');
 
       const statusUserIDRequest = "isMakingClaim";
-      const phoneNumberUserIDRequest = phoneNumberDescription;
-      const textIDATUserIDRequest = textIDATDescription;
+      const phoneNumberUserIDRequest = sender;
+      const textIDATUserIDRequest = textIDAT;
 
       const checkIfExistsQuery = "SELECT TOP 1 * FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberUserIDRequest AND status = @statusUserIDRequest AND isActive = 1 AND text_id_AT = @textIDATUserIDRequest ORDER BY time DESC";
       const checkIfExistsRequest = new sql.Request();
