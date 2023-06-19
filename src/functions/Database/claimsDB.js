@@ -411,101 +411,109 @@ function updatePassword(phoneNumberPassword, textPassword, textIDATPassword, sen
   });
 }
 
-function updateDescription(phoneNumberDescription, textDescription, textIDATDescription, sender, config, textIDAT, sms, account, LinkID) {
-  sql.connect(config)
-    .then(() => {
-      console.log('Connected to the database');
 
-      const request = new sql.Request();
-      const updateAccounts = `UPDATE two_way_sms_tb SET status = 'isMakingClaim', messagingStep= '3', description = @textDescription WHERE phoneNumber = @phoneNumberDescription AND text_id_AT = @textIDATDescription AND time = (SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberDescription)`;
-      request.input('phoneNumberDescription', sql.NVarChar, phoneNumberDescription);
-      request.input('textIDATDescription', sql.NVarChar, textIDATDescription);
-      request.input('textDescription', sql.NVarChar, textDescription);
-      return request.query(updateAccounts);
-    })
-    .then(() => {
-      console.log('Member Number Update Successfully done');
-      return checkIfExistsQuery(sender, config, textIDAT, sms, account, LinkID);
-    })
-    .then(() => {
-      sql.close();
-    })
-    .catch(err => {
-      console.error('Error: ' + err.stack);
-      sql.close();
+function updateDescription(phoneNumberDescription, textDescription, textIDATDescription, sender, config, textIDAT, sms, account, LinkID) {
+  sql.connect(config, function (err) {
+    if (err) {
+      console.error('Error connecting to the database: ' + err.stack);
+      return;
+    }
+
+    console.log('Connected to the database');
+
+    const request = new sql.Request();
+    const updateAccounts = `UPDATE two_way_sms_tb SET status = 'isMakingClaim', messagingStep= '3', description = @textDescription WHERE phoneNumber = @phoneNumberDescription AND text_id_AT = @textIDATDescription AND time = (SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberDescription)`;
+    request.input('phoneNumberDescription', sql.NVarChar, phoneNumberDescription);
+    request.input('textIDATDescription', sql.NVarChar, textIDATDescription);
+    request.input('textDescription', sql.NVarChar, textDescription);
+
+    request.query(updateAccounts, function (err) {
+      if (err) {
+        console.error('Error executing updateAccounts: ' + err.stack);
+        sql.close();
+        return;
+      }
+
+      console.log('Member Number Update successfully done');
+      checkIfExistsQuery(sender, config, textIDAT, sms, account, LinkID);
     });
+  });
 }
 
 function checkIfExistsQuery(sender, config, textIDAT, sms, account, LinkID) {
-  sql.connect(config)
-    .then(() => {
-      console.log('Connected to the database');
+  sql.connect(config, function (err) {
+    if (err) {
+      console.error('Error connecting to the database: ' + err.stack);
+      return;
+    }
 
-      const request = new sql.Request();
-      const checkIfExistsQuery = `SELECT TOP 1 * FROM two_way_sms_tb WHERE phoneNumber = @phoneNumber AND status = @status AND isActive = 1 AND text_id_AT = @textIDAT ORDER BY time DESC`;
-      request.input('phoneNumber', sql.NVarChar, sender);
-      request.input('status', sql.NVarChar, 'isMakingClaim');
-      request.input('textIDAT', sql.NVarChar, textIDAT);
+    console.log('Connected to the database');
 
-      return request.query(checkIfExistsQuery);
-    })
-    .then(results => {
+    const request = new sql.Request();
+    const checkIfExistsQuery = `SELECT TOP 1 * FROM two_way_sms_tb WHERE phoneNumber = @phoneNumber AND status = @status AND isActive = 1 AND text_id_AT = @textIDAT ORDER BY time DESC`;
+    request.input('phoneNumber', sql.NVarChar, sender);
+    request.input('status', sql.NVarChar, 'isMakingClaim');
+    request.input('textIDAT', sql.NVarChar, textIDAT);
+
+    request.query(checkIfExistsQuery, function (err, results) {
+      if (err) {
+        console.error('Error executing checkIfExistsQuery: ' + err.stack);
+        sql.close();
+        return;
+      }
+
       if (results.recordset.length > 0) {
         const userID = results.recordset[0].user_id;
-        var fetchClient = new Client();
-        // set content-type header and data as json in args parameter
-        var args = {
-          data: { userID: userID },
-          headers: { "Content-Type": "application/json" }
+        const fetchClient = new fetch.FetchClient();
+        const requestBody = { user_id: userID };
+        const requestOptions = {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(requestBody)
         };
-        fetchClient.get("https://api.octagonafrica.com/v1/claims/sendClaimsOTP", args, function (data, response) {
-            if (response.status === 200) {
-              sms.sendPremium({
-                to: sender,
-                from: '24123',
-                message: 'Enter the claim benefits OTP',
-                bulkSMSMode: 0,
-                keyword: 'pension',
-                linkId: LinkID
-              });
-            } else if (response.status === 400) {
-              console.log(response.status);
-              sms.sendPremium({
-                to: sender,
-                from: '24123',
-                message: 'You do not have an account with us or your profile is not complete. Please update your profile first.',
-                bulkSMSMode: 0,
-                keyword: 'pension',
-                linkId: LinkID
-              });
-              sql.close();
-            } else if (response.status === 500) {
-              console.log(response.status);
-              sms.sendPremium({
-                to: sender,
-                from: '24123',
-                message: 'An error occurred. Please try again later.',
-                bulkSMSMode: 0,
-                keyword: 'pension',
-                linkId: LinkID
-              });
-              sql.close();
-            }
-          })
-          .catch(error => {
-            console.error('Error sending OTP: ' + error.stack);
-            sql.close();
-          });
+
+        fetchClient.fetch('https://api.octagonafrica.com/v1/claims/sendClaimsOTP', requestOptions, function (data, response) {
+          if (response.status === 200) {
+            sms.sendPremium({
+              to: sender,
+              from: '24123',
+              message: 'Enter the claim benefits OTP',
+              bulkSMSMode: 0,
+              keyword: 'pension',
+              linkId: LinkID
+            });
+          } else if (response.status === 400) {
+            console.log(response.status);
+            sms.sendPremium({
+              to: sender,
+              from: '24123',
+              message: 'You do not have an account with us or your profile is not complete. Please update your profile first.',
+              bulkSMSMode: 0,
+              keyword: 'pension',
+              linkId: LinkID
+            });
+          } else if (response.status === 500) {
+            console.log(response.status);
+            sms.sendPremium({
+              to: sender,
+              from: '24123',
+              message: 'An error occurred. Please try again later.',
+              bulkSMSMode: 0,
+              keyword: 'pension',
+              linkId: LinkID
+            });
+          }
+
+          sql.close();
+        });
       } else {
         console.log('No matching record found');
         sql.close();
       }
-    })
-    .catch(err => {
-      console.error('Error executing checkIfExistsQuery: ' + err.stack);
-      sql.close();
     });
+  });
 }
+
 
 
 
