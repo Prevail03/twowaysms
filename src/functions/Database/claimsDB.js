@@ -613,7 +613,7 @@ function updateOTP(statusOTP, phoneNumberOTP, messagingStepOTP, textOTP, textIDA
 
               const statusReasons = "isMakingClaim";
               const phoneNumberReasons = phoneNumberOTP;
-              const messagingStepReasons = "3"; 
+              const messagingStepReasons = "4"; 
               sql.connect(config, function (err) {
                 if (err) {
                   console.error('Error connecting to the database: ' + err.stack);
@@ -651,11 +651,10 @@ function updateOTP(statusOTP, phoneNumberOTP, messagingStepOTP, textOTP, textIDA
                     }          
                     const premessage = "Reasons for making a claim:";
                     const finalMessage = premessage + "\n" + reasons.join('\n');         
-                    console.log(finalMessage);   
                     sms.sendPremium({
                       to: sender,
                       from: '24123',
-                      message: "Reasons for making a claim:",
+                      message: finalMessage,
                       bulkSMSMode: 0,
                       keyword: 'pension',
                       linkId: LinkID
@@ -770,15 +769,25 @@ function updateOTP(statusOTP, phoneNumberOTP, messagingStepOTP, textOTP, textIDA
 });
 }
 
-
-
-
-
-
-
-
-
-
-
-
-module.exports = {updatePassword, updateDescription, updateOTP};
+function updateReasonForExit(statusReason ,phoneNumberReason, textReasonForExit, textIDATReason, config) {
+  const messagingStepReason="4";
+  sql.connect(config, function (err) {
+    const request = new sql.Request();
+    const updateReset = `UPDATE two_way_sms_tb SET status = @statusReason, messagingStep = @messagingStepReason, reasonforexit = @textReasonForExit  WHERE phoneNumber = @phoneNumberReason AND text_id_AT = @textIDATReason AND time = (
+                SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberReason )`;
+    request.input('statusReason', sql.VarChar, statusReason);
+    request.input('messagingStepReason', sql.VarChar, messagingStepReason);
+    request.input('phoneNumberReason', sql.NVarChar, phoneNumberReason);
+    request.input('textIDATReason', sql.NVarChar, textIDATReason);
+    request.input('textReasonForExit', sql.NVarChar, textReasonForExit);
+    request.query(updateReset, function (err, results) {
+      if (err) {
+        console.error('Error executing query: ' + err.stack);
+        return;
+      }
+      console.log('OTP UPDATE successful');
+      sql.close();
+    });
+  });
+}
+module.exports = {updatePassword, updateDescription, updateOTP, updateReasonForExit};

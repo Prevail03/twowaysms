@@ -19,6 +19,27 @@ const claims = {
         linkId: LinkID
     };
   },
+  amount: (sender, LinkID) => {
+    return {
+        to: sender,
+        from:'24123',
+        message: "Please Enter the amount you want to access",
+        bulkSMSMode: 0,
+        keyword: 'pension',
+        linkId: LinkID
+    };
+  },
+  dateOfExit: (sender, LinkID) => {
+    return {
+        to: sender,
+        from:'24123',
+        message: "Please enter the date of exit (YYYY-MM-DD)",
+        bulkSMSMode: 0,
+        keyword: 'pension',
+        linkId: LinkID
+    };
+  },
+  
 }
 module.exports = claims;
 
