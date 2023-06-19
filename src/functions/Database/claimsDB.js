@@ -643,7 +643,6 @@ function updateOTP(statusOTP, phoneNumberOTP, messagingStepOTP, textOTP, textIDA
                   request.input('messagingStepReasons', sql.VarChar, messagingStepReasons);
                   request.input('reasonsString', sql.NVarChar, reasonsString);
                   request.input('phoneNumberReasons', sql.NVarChar, phoneNumberReasons);
-              
                   request.query(updateReasons, function (err, results) {
                     if (err) {
                       console.error('Error executing updateReasons query: ' + err.stack);
@@ -651,7 +650,8 @@ function updateOTP(statusOTP, phoneNumberOTP, messagingStepOTP, textOTP, textIDA
                       return;
                     }          
                     const premessage = "Reasons for making a claim:";
-                    const finalMessage = premessage + "\n" + reasons.join('\n');            
+                    const finalMessage = premessage + "\n" + reasons.join('\n');         
+                    console.log(finalMessage);   
                     sms.sendPremium({
                       to: sender,
                       from: '24123',
