@@ -444,6 +444,7 @@ function updateDescription(phoneNumberDescription, textDescription, textIDATDesc
           console.error('Error executing query: ' + err.stack);
           return;
         }
+        
       if (userIDResults.recordset.length > 0) {
           const userID = userIDResults.recordset[0].user_id;
           var fetchClient = new Client();
