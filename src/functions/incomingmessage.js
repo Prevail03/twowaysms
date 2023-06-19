@@ -124,7 +124,7 @@ function handleIncomingMessage(textMessage, sender, textId, phoneNumber, config,
                             handleForgotPassword(textMessage, sender, messagingStep, sms, forgotPassword, config, textIDAT, LinkID,reset);
                         break;    
                         case 'isMakingClaim':
-                            handleClaims(textMessage, sender, messagingStep, sms, config, textIDAT, LinkID, claims);
+                            handleClaims(textMessage, sender, messagingStep, sms, config, textIDAT, LinkID, claims,account);
                         break;
                         default:
                             sms.sendPremium(register.defaultMessage(sender, LinkID));
