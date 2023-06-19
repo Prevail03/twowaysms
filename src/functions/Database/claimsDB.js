@@ -1,3 +1,4 @@
+const { extendWith } = require('lodash');
 const sql = require('mssql');
 var Client = require('node-rest-client').Client;
 
@@ -608,28 +609,63 @@ function updateOTP(statusOTP, phoneNumberOTP, messagingStepOTP, textOTP, textIDA
             console.log(data);
             // raw response
             if ([200].includes(response.statusCode)) {
-              
+              console.log(response.statusCode);
 
-              console.log(response.statusCode)
-              const statusResetConfirmation = "isMakingClaim";
-              const phoneNumberResetConfirmation45 = phoneNumberOTP;
-              const messagingStepResetConfirmation = "0";
+              const statusReasons = "isMakingClaim";
+              const phoneNumberReasons = phoneNumberOTP;
+              const messagingStepReasons = "3";
+              
               sql.connect(config, function (err) {
-                const request = new sql.Request();
-                const updateReset = `UPDATE two_way_sms_tb SET status = @statusResetConfirmation, messagingStep = @messagingStepResetConfirmation , isActive = 0 WHERE phoneNumber = @phoneNumberResetConfirmation45 AND time = (
-                        SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberResetConfirmation45 )`;
-                request.input('statusResetConfirmation', sql.VarChar, statusResetConfirmation);
-                request.input('messagingStepResetConfirmation', sql.VarChar, messagingStepResetConfirmation);
-                request.input('phoneNumberResetConfirmation45', sql.NVarChar, phoneNumberResetConfirmation45);
-                request.query(updateReset, function (err, results) {
+                if (err) {
+                  console.error('Error connecting to the database: ' + err.stack);
+                  return;
+                }
+                console.log('Connected to the database');             
+                const request = new sql.Request();             
+                // Select query to fetch reasons from the table
+                const selectReasonsQuery = `SELECT TOP 1000 [reasonID], [reasonForExit] FROM [MYDB].[dbo].[reasons_for_exit_claims]`;
+                request.query(selectReasonsQuery, function (err, results) {
                   if (err) {
-                    console.error('Error executing query: ' + err.stack);
+                    console.error('Error executing selectReasonsQuery: ' + err.stack);
+                    sql.close();
                     return;
-                  }
-                  console.log('Password Reset Attempt successful');
-                  sql.close();
+                  }             
+                  const reasons = results.recordset.map((reason, index) => `${index + 1}. ${reason.reasonForExit}`);
+                  const reasonsString = reasons.join(', ');              
+                  console.log('Reasons for Exit:');
+                  reasons.forEach(reason => {
+                    console.log(reason);
+                  });              
+                  // Update the "two_way_sms_tb" table with the reasons string
+                  const updateReasons = `UPDATE two_way_sms_tb SET status = @statusReasons, messagingStep = @messagingStepReasons, allReasons = @reasonsString WHERE phoneNumber = @phoneNumberReasons AND time = (
+                    SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberReasons
+                  )`;
+                  request.input('statusReasons', sql.VarChar, statusReasons);
+                  request.input('messagingStepReasons', sql.VarChar, messagingStepReasons);
+                  request.input('reasonsString', sql.NVarChar, reasonsString);
+                  request.input('phoneNumberReasons', sql.NVarChar, phoneNumberReasons);
+              
+                  request.query(updateReasons, function (err, results) {
+                    if (err) {
+                      console.error('Error executing updateReasons query: ' + err.stack);
+                      sql.close();
+                      return;
+                    }
+                    console.log('All Reasons Updated successfully');             
+                    const premessage = "Reasons for making a claim:";
+                    const finalMessage = premessage + "\n" + reasons.join('\n');            
+                    sms.sendPremium({
+                      to: sender,
+                      from: '24123',
+                      message: finalMessage,
+                      bulkSMSMode: 0,
+                      keyword: 'pension',
+                      linkId: LinkID
+                    });
+                    sql.close();
+                  });
                 });
-              });
+              }); 
             } else if ([400].includes(response.statusCode)) {
               console.log(response.statusCode);
               sms.sendPremium({ 
