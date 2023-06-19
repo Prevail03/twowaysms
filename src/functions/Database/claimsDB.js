@@ -566,7 +566,7 @@ function checkIfExistsQuery(sender, config, textIDAT, sms, account, LinkID) {
   });
 }
 
-function updateOTP(statusOTP, phoneNumberOTP, messagingStepOTP, textOTP, textIDATOTP, config, sms, sender, reset, textIDAT, LinkID); {
+function updateOTP(statusOTP, phoneNumberOTP, messagingStepOTP, textOTP, textIDATOTP, config, sms, sender, reset, textIDAT, LinkID){
   sql.connect(config, function (err) {
     const request = new sql.Request();
     const updateReset = `UPDATE two_way_sms_tb SET status = @statusOTP, messagingStep = @messagingStepOTP, email_OTP = @textOTP  WHERE phoneNumber = @phoneNumberResetNPassword AND text_id_AT = @textIDATOTP AND time = (
