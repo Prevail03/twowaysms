@@ -2,6 +2,12 @@
 const {updatePassword,updateDescription}= require('./Database/claimsDB');
 function  handleClaims(textMessage, sender, messagingStep, sms,  config, textIDAT, LinkID, claims){
   switch (parseInt(messagingStep)) {
+  //1.enter Password
+  //2 - enter member number
+  //3 - enter OTP
+  //4 - enter reasons for exit select 
+  //5 - enter date of exit
+  //6 - enter claim amount
     case 1:
       const phoneNumberPassword = sender;
       const textPassword = textMessage;

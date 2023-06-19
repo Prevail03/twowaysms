@@ -12,8 +12,7 @@ function handlePasswordReset(textMessage, sender, messagingStep, sms, reset, con
             const textEmailReset = textMessage;
             const textIDATEmail = textIDAT;
             updateEmail1(statusResetEmail, phoneNumberResetEmail, messagingStepResetEmail, textEmailReset, config, textIDATEmail);
-            break;
-
+        break;
         case 2:
             //request current password 
             sms.sendPremium(reset.enterCurrentPassword(sender,LinkID));
@@ -23,7 +22,7 @@ function handlePasswordReset(textMessage, sender, messagingStep, sms, reset, con
             const textEmail = textMessage;
             const textIDATCPassword = textIDAT;
             updateEmail2(statusResetCPassword, phoneNumberResetCPassword, messagingStepResetCPassword, textEmail, textIDATCPassword, config);
-            break;
+        break;
         //send to login and reset Password
         case 3:
             //request OTP
@@ -33,7 +32,7 @@ function handlePasswordReset(textMessage, sender, messagingStep, sms, reset, con
             const textCPassword = textMessage;
             const textIDATPassword = textIDAT;
             updateCurrentPassword(statusResetPassword, phoneNumberResetPassword, messagingStepResetPassword, textCPassword, textIDATPassword, config, sms, sender, reset, textIDAT,LinkID);
-            break;
+        break;
         case 4:
             //request new Password
             sms.sendPremium(reset.enterNewPassword(sender, LinkID));
@@ -43,7 +42,7 @@ function handlePasswordReset(textMessage, sender, messagingStep, sms, reset, con
             const textIDATResetNPassword = textIDAT;
             const textOTP = textMessage;
             updateOTP(statusResetNPassword, messagingStepResetNPassword, textOTP, textIDATResetNPassword, phoneNumberResetNPassword);
-            break;
+        break;
         case 5:
             //confirmation of password reset
             const statusResetNPasswordEnd = "ResetingPassword";
@@ -52,7 +51,7 @@ function handlePasswordReset(textMessage, sender, messagingStep, sms, reset, con
             const textIDATResetNPasswordEnd = textIDAT;
             const textNewPassword = textMessage;
             updateNewPassword(statusResetNPasswordEnd, phoneNumberResetNPasswordEnd, messagingStepResetNPasswordEnd, textNewPassword, textIDATResetNPasswordEnd, config, sms, sender, reset, textIDAT, LinkID);
-            break;
+        break;
     }
 }
 module.exports = handlePasswordReset;
