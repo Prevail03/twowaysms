@@ -436,83 +436,77 @@ function updateDescription(phoneNumberDescription, textDescription, textIDATDesc
     });
 }
 
-
 function checkIfExistsQuery(sender, config, textIDAT, sms, account, LinkID) {
-  sql.connect(config, function (err) {
-    if (err) {
-      console.error('Error connecting to the database: ' + err.stack);
-      return;
-    }
+  sql.connect(config)
+    .then(() => {
+      console.log('Connected to the database');
 
-    const request = new sql.Request();
-    const checkIfExistsQuery = `SELECT TOP 1 * FROM two_way_sms_tb WHERE phoneNumber = @phoneNumber AND status = @status AND isActive = 1 AND text_id_AT = @textIDAT ORDER BY time DESC`;
-    request.input('phoneNumber', sql.NVarChar, sender);
-    request.input('status', sql.NVarChar, 'isMakingClaim');
-    request.input('textIDAT', sql.NVarChar, textIDAT);
+      const request = new sql.Request();
+      const checkIfExistsQuery = `SELECT TOP 1 * FROM two_way_sms_tb WHERE phoneNumber = @phoneNumber AND status = @status AND isActive = 1 AND text_id_AT = @textIDAT ORDER BY time DESC`;
+      request.input('phoneNumber', sql.NVarChar, sender);
+      request.input('status', sql.NVarChar, 'isMakingClaim');
+      request.input('textIDAT', sql.NVarChar, textIDAT);
 
-    request.query(checkIfExistsQuery, function (err, results) {
-      if (err) {
-        console.error('Error executing checkIfExistsQuery: ' + err.stack);
-        sql.close();
-        return;
-      }
-
+      return request.query(checkIfExistsQuery);
+    })
+    .then(results => {
       if (results.recordset.length > 0) {
         const userID = results.recordset[0].user_id;
         var fetchClient = new Client();
         // set content-type header and data as json in args parameter
         var args = {
-          data: { user_id: userID },
+          data: { userID: userID },
           headers: { "Content-Type": "application/json" }
         };
         fetchClient.get("https://api.octagonafrica.com/v1/claims/sendClaimsOTP", args, function (data, response) {
-          if ([200].includes(response.statusCode)) {
-            sms.sendPremium({
-              to: sender,
-              from: '24123',
-              message: "Enter the claim benefits OTP",
-              bulkSMSMode: 0,
-              keyword: 'pension',
-              linkId: LinkID
-            });
-          } else if ([400].includes(response.statusCode)) {
-            console.log(response.statusCode);
-            sms.sendPremium({
-              to: sender,
-              from: '24123',
-              message: "You do not have an account with us or your profile is not complete. Please update your profile first.",
-              bulkSMSMode: 0,
-              keyword: 'pension',
-              linkId: LinkID
-            });
-            sql.connect(config, function (err) {
-              console.error('Error connecting to the database: ' + err.stack);
-              return;
-            });
-          } else if ([500].includes(response.statusCode)) {
-            console.log(response.statusCode);
-            sms.sendPremium({
-              to: sender,
-              from: '24123',
-              message: "An error occurred. Please try again later.",
-              bulkSMSMode: 0,
-              keyword: 'pension',
-              linkId: LinkID
-            });
-            sql.connect(config, function (err) {
-              console.error('Error connecting to the database: ' + err.stack);
-              return;
-            });
-          }
-          sql.close();
-        });
+            if (response.status === 200) {
+              sms.sendPremium({
+                to: sender,
+                from: '24123',
+                message: 'Enter the claim benefits OTP',
+                bulkSMSMode: 0,
+                keyword: 'pension',
+                linkId: LinkID
+              });
+            } else if (response.status === 400) {
+              console.log(response.status);
+              sms.sendPremium({
+                to: sender,
+                from: '24123',
+                message: 'You do not have an account with us or your profile is not complete. Please update your profile first.',
+                bulkSMSMode: 0,
+                keyword: 'pension',
+                linkId: LinkID
+              });
+              sql.close();
+            } else if (response.status === 500) {
+              console.log(response.status);
+              sms.sendPremium({
+                to: sender,
+                from: '24123',
+                message: 'An error occurred. Please try again later.',
+                bulkSMSMode: 0,
+                keyword: 'pension',
+                linkId: LinkID
+              });
+              sql.close();
+            }
+          })
+          .catch(error => {
+            console.error('Error sending OTP: ' + error.stack);
+            sql.close();
+          });
       } else {
         console.log('No matching record found');
         sql.close();
       }
+    })
+    .catch(err => {
+      console.error('Error executing checkIfExistsQuery: ' + err.stack);
+      sql.close();
     });
-  });
 }
+
 
 
 
