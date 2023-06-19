@@ -435,11 +435,11 @@ function updateDescription(phoneNumberDescription, textDescription, textIDATDesc
       const phoneNumberUserIDRequest = sender;
       const textIDATUserIDRequest = textIDAT;
       // Bind the values to the parameters
-      const request = new sql.Request();
-      request.input('statusUserIDRequest', sql.NVarChar(50), statusUserIDRequest);
-      request.input('phoneNumberUserIDRequest', sql.NVarChar(50), phoneNumberUserIDRequest);
-      request.input('textIDATUserIDRequest', sql.VarChar(100), textIDATUserIDRequest);
-      request.query("SELECT TOP 1 * FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberUserIDRequest AND status = @statusUserIDRequest AND isActive = 1 AND text_id_AT = @textIDATUserIDRequest order by time DESC", function (err, userIDResults) {
+      const requestQuery = new sql.Request();
+      requestQuery.input('statusUserIDRequest', sql.NVarChar(50), statusUserIDRequest);
+      requestQuery.input('phoneNumberUserIDRequest', sql.NVarChar(50), phoneNumberUserIDRequest);
+      requestQuery.input('textIDATUserIDRequest', sql.VarChar(100), textIDATUserIDRequest);
+      requestQuery.query("SELECT TOP 1 * FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberUserIDRequest AND status = @statusUserIDRequest AND isActive = 1 AND text_id_AT = @textIDATUserIDRequest order by time DESC", function (err, userIDResults) {
         if (err) {
           console.error('Error executing query: ' + err.stack);
           return;
