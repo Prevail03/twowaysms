@@ -48,7 +48,6 @@ function  handleClaims(textMessage, sender, messagingStep, sms,  config, textIDA
                 textDescription = selectedAccount;
                 console.log("Account Description: " + textDescription);
                 updateDescription(phoneNumberDescription, textDescription, textIDATDescription, sender, config, textIDAT, sms, account, LinkID);
-                connection.close();
             } else {
                 console.log("Invalid account description");
                 sms.sendPremium(claims.invalidResponse(sender, LinkID));
