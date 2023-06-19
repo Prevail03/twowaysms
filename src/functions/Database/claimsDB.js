@@ -411,32 +411,6 @@ function updatePassword(phoneNumberPassword, textPassword, textIDATPassword, sen
   });
 }
 
-function updateDescription(phoneNumberDescription, textDescription, textIDATDescription, sender, config, textIDAT, sms, account, LinkID) {
-  sql.connect(config, function (err) {
-    if (err) {
-      console.error('Error connecting to the database: ' + err.stack);
-      return;
-    }
-    console.log('Connected to the database');
-
-    const request = new sql.Request();
-    const updateAccounts = `UPDATE two_way_sms_tb SET status = 'isMakingClaim', messagingStep= '3', description = @textDescription WHERE phoneNumber = @phoneNumberDescription AND text_id_AT = @textIDATDescription AND time = (SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberDescription)`;
-    request.input('phoneNumberDescription', sql.NVarChar, phoneNumberDescription);
-    request.input('textIDATDescription', sql.NVarChar, textIDATDescription);
-    request.input('textDescription', sql.NVarChar, textDescription);
-    request.query(updateAccounts, function (err, results) {
-      if (err) {
-        console.error('Error executing updateAccounts query: ' + err.stack);
-        sql.close();
-        return;
-      }
-      console.log('Member Number Update Successfully done');
-
-      checkIfExistsQuery(sender, config, textIDAT, sms, account, LinkID);
-    });
-  });
-}
-
 function checkIfExistsQuery(sender, config, textIDAT, sms, account, LinkID) {
   sql.connect(config, function (err) {
     if (err) {
@@ -513,6 +487,33 @@ function checkIfExistsQuery(sender, config, textIDAT, sms, account, LinkID) {
     });
   });
 }
+
+function updateDescription(phoneNumberDescription, textDescription, textIDATDescription, sender, config, textIDAT, sms, account, LinkID) {
+  sql.connect(config, function (err) {
+    if (err) {
+      console.error('Error connecting to the database: ' + err.stack);
+      return;
+    }
+    console.log('Connected to the database');
+
+    const request = new sql.Request();
+    const updateAccounts = `UPDATE two_way_sms_tb SET status = 'isMakingClaim', messagingStep= '3', description = @textDescription WHERE phoneNumber = @phoneNumberDescription AND text_id_AT = @textIDATDescription AND time = (SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberDescription)`;
+    request.input('phoneNumberDescription', sql.NVarChar, phoneNumberDescription);
+    request.input('textIDATDescription', sql.NVarChar, textIDATDescription);
+    request.input('textDescription', sql.NVarChar, textDescription);
+    request.query(updateAccounts, function (err, results) {
+      if (err) {
+        console.error('Error executing updateAccounts query: ' + err.stack);
+        sql.close();
+        return;
+      }
+      checkIfExistsQuery(sender, config, textIDAT, sms, account, LinkID);
+      console.log('Member Number Update Successfully done');
+    });
+  });
+}
+
+
 
 
 
