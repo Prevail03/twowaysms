@@ -603,7 +603,7 @@ function updateOTP(statusOTP, phoneNumberOTP, messagingStepOTP, textOTP, textIDA
             data: { otp: OTP, username: username },
             headers: { "Content-Type": "application/json" }
           };
-          verifyClaimsOTP.put("https://api.octagonafrica.com/v1/claims/verifyClaimsOTP", args, function (data, response) {
+          verifyClaimsOTP.post("https://api.octagonafrica.com/v1/claims/verifyClaimsOTP", args, function (data, response) {
             // parsed response body as js object
             console.log(data);
             // raw response
