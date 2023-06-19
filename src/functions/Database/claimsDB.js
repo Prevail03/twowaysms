@@ -857,7 +857,7 @@ function updateAmount(statusAmount ,phoneNumberAmount, textAmount, textIDATAmoun
             headers: { "Content-Type": "application/json" }
             
           };
-          console.log(data);
+          console.log(args);
           addnewclaim.post("https://api.octagonafrica.com/v1/claims/addnewclaim", args, function (data, response) {
             // parsed response body as js object
             console.log(data);
