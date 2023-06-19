@@ -795,7 +795,7 @@ function updateDateOfExit(statusDate ,phoneNumberDate, textDate, textIDATDate, c
   const messagingStepReason="5";
   sql.connect(config, function (err) {
     const request = new sql.Request();
-    const updateReset = `UPDATE two_way_sms_tb SET status = @statusDate, messagingStep = @messagingStepReason, dateofExit = @textDate  WHERE phoneNumber = @phoneNumberDate AND text_id_AT = @textIDATDate AND time = (
+    const updateReset = `UPDATE two_way_sms_tb SET status = @statusDate, messagingStep = @messagingStepReason, dateOfExit = @textDate  WHERE phoneNumber = @phoneNumberDate AND text_id_AT = @textIDATDate AND time = (
                 SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberDate )`;
     request.input('statusDate', sql.VarChar, statusDate);
     request.input('messagingStepReason', sql.VarChar, messagingStepReason);
