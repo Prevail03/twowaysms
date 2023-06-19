@@ -845,12 +845,12 @@ function updateAmount(statusAmount ,phoneNumberAmount, textAmount, textIDATAmoun
         if (sendClaimDataResults.recordset.length > 0) {
           const description = sendClaimDataResults.recordset[0].description;
           const parts = description.split(":");
-          const memberNumber = parts[1];
+          const memberNumber = trim(parts[1]);
           console.log("Member Details:", memberNumber);
-          const memberSchemeCode = sendClaimDataResults.recordset[0].memberSchemeSchemeCode;
-          const reasonForExit = sendClaimDataResults.recordset[0].reasonforExit;
-          const amount = sendClaimDataResults.recordset[0].amount;
-          const dateOfExit = sendClaimDataResults.recordset[0].dateOfExit;
+          const memberSchemeCode = trim(sendClaimDataResults.recordset[0].memberSchemeCode);
+          const reasonForExit = trim(sendClaimDataResults.recordset[0].reasonforExit);
+          const amount = trim(sendClaimDataResults.recordset[0].amount);
+          const dateOfExit = trim(sendClaimDataResults.recordset[0].dateOfExit);
           var addnewclaim = new Client();
           var args = {// set content-type header and data as json in args parameter
             data: { memberNo: memberNumber, memberSchemeCode : memberSchemeCode, reasonforExit: reasonForExit, amount: amount, dateOfExit : dateOfExit },
