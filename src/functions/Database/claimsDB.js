@@ -785,9 +785,31 @@ function updateReasonForExit(statusReason ,phoneNumberReason, textReasonForExit,
         console.error('Error executing query: ' + err.stack);
         return;
       }
-      console.log('OTP UPDATE successful');
+      console.log('Reason For Exit UPDATE successful');
       sql.close();
     });
   });
 }
-module.exports = {updatePassword, updateDescription, updateOTP, updateReasonForExit};
+
+function updateDateForExit(statusDate ,phoneNumberDate, textDate, textIDATDate, config) {
+  const messagingStepReason="5";
+  sql.connect(config, function (err) {
+    const request = new sql.Request();
+    const updateReset = `UPDATE two_way_sms_tb SET status = @statusDate, messagingStep = @messagingStepReason, reasonforexit = @textDate  WHERE phoneNumber = @phoneNumberDate AND text_id_AT = @textIDATDate AND time = (
+                SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberDate )`;
+    request.input('statusDate', sql.VarChar, statusDate);
+    request.input('messagingStepReason', sql.VarChar, messagingStepReason);
+    request.input('phoneNumberDate', sql.NVarChar, phoneNumberDate);
+    request.input('textIDATDate', sql.NVarChar, textIDATDate);
+    request.input('textDate', sql.NVarChar, textDate);
+    request.query(updateReset, function (err, results) {
+      if (err) {
+        console.error('Error executing query: ' + err.stack);
+        return;
+      }
+      console.log('Reason For Exit UPDATE successful');
+      sql.close();
+    });
+  });
+}
+module.exports = {updatePassword, updateDescription, updateOTP, updateReasonForExit, updateDateForExit};

@@ -61,7 +61,6 @@ function  handleClaims(textMessage, sender, messagingStep, sms,  config, textIDA
     break;
 
     case 3:
-      //confirmation of password reset
       const statusOTP = "isMakingClaim";
       const phoneNumberOTP = sender;
       const messagingStepOTP = "4";
@@ -114,7 +113,16 @@ function  handleClaims(textMessage, sender, messagingStep, sms,  config, textIDA
       });
     });
     break;
-    
+
+    case 5:
+      const statusDate = "isMakingClaim";
+      const phoneNumberDate = sender;
+      const textIDATDate = textIDAT;
+      const textDate = textMessage;
+      updateDateForExit(statusDate ,phoneNumberDate, textDate, textIDATDate, config)
+    break;
+
+
   } 
 
  }
