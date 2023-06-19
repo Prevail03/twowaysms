@@ -855,7 +855,9 @@ function updateAmount(statusAmount ,phoneNumberAmount, textAmount, textIDATAmoun
           var args = {// set content-type header and data as json in args parameter
             data: { memberNo: memberNumber, memberSchemeCode : memberSchemeCode, reasonforExit: reasonForExit, amount: amount, dateOfExit : dateOfExit },
             headers: { "Content-Type": "application/json" }
+            
           };
+          console.log(data);
           addnewclaim.post("https://api.octagonafrica.com/v1/claims/addnewclaim", args, function (data, response) {
             // parsed response body as js object
             console.log(data);
@@ -1213,7 +1215,6 @@ function updateAmount(statusAmount ,phoneNumberAmount, textAmount, textIDATAmoun
             }
           });
         }
-
       sql.close();
     });
   });

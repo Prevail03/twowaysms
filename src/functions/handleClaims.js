@@ -131,6 +131,5 @@ function  handleClaims(textMessage, sender, messagingStep, sms,  config, textIDA
       updateAmount(statusAmount ,phoneNumberAmount, textAmount, textIDATAmount, config, sms, sender, textIDAT, LinkID)
     break;
   } 
-
  }
  module.exports = handleClaims;
