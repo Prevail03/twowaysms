@@ -422,7 +422,7 @@ function updateDescription(phoneNumberDescription, textDescription, textIDATDesc
     console.log('Connected to the database');
 
     const request = new sql.Request();
-    const updateAccounts = `UPDATE two_way_sms_tb SET status = 'isMakingClaim', messagingStep= '3', description = @textDescription WHERE phoneNumber = @phoneNumberDescription AND text_id_AT = @textIDATDescription AND time = (SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberDescription)`;
+    const updateAccounts = `UPDATE two_way_sms_tb SET status = 'isMakingClaim', messagingStep= '2', description = @textDescription WHERE phoneNumber = @phoneNumberDescription AND text_id_AT = @textIDATDescription AND time = (SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberDescription)`;
     request.input('phoneNumberDescription', sql.NVarChar, phoneNumberDescription);
     request.input('textIDATDescription', sql.NVarChar, textIDATDescription);
     request.input('textDescription', sql.NVarChar, textDescription);
