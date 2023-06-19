@@ -69,17 +69,14 @@ function  handleClaims(textMessage, sender, messagingStep, sms,  config, textIDA
     });
     break;
     case 3:
-            //confirmation of password reset
-            const statusOTP = "isMakingClaim";
-            const phoneNumberOTP = sender;
-            const messagingStepOTP = "3";
-            const textIDATOTP = textIDAT;
-            const textOTP = textMessage;
-            updateOTP(statusOTP, phoneNumberOTP, messagingStepOTP, textOTP, textIDATOTP, config, sms, sender, reset, textIDAT, LinkID);
-        break;
+      //confirmation of password reset
+      const statusOTP = "isMakingClaim";
+      const phoneNumberOTP = sender;
+      const messagingStepOTP = "3";
+      const textIDATOTP = textIDAT;
+      const textOTP = textMessage;
+      updateOTP(statusOTP, phoneNumberOTP, messagingStepOTP, textOTP, textIDATOTP, config, sms, sender, reset, textIDAT, LinkID);
     break;
-
-  
   } 
 
  }
