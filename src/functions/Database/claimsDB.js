@@ -436,16 +436,16 @@ function updateDescription(phoneNumberDescription, textDescription, textIDATDesc
       const phoneNumberUserIDRequest = sender;
       const textIDATUserIDRequest = textIDAT;
 
-        const checkIfExistsQuery = "SELECT TOP 1 * FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberUserIDRequest AND status = @statusUserIDRequest AND isActive = 1 AND text_id_AT = @textIDATUserIDRequest order by time DESC";
-        const checkIfExistsRequest = new sql.Request();
-        checkIfExistsRequest.input('statusUserIDRequest', sql.NVarChar(50), statusUserIDRequest);
-        checkIfExistsRequest.input('phoneNumberUserIDRequest', sql.NVarChar(50), phoneNumberUserIDRequest);
-        checkIfExistsRequest.input('textIDATUserIDRequest', sql.VarChar(100), textIDATUserIDRequest);
-        checkIfExistsRequest.query(checkIfExistsQuery, function(checkErr, userIDResults) {
+      const checkIfExistsQuery = "SELECT TOP 1 * FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberUserIDRequest AND status = @statusUserIDRequest AND isActive = 1 AND text_id_AT = @textIDATUserIDRequest order by time DESC";
+      const checkIfExistsRequest = new sql.Request();
+      checkIfExistsRequest.input('statusUserIDRequest', sql.NVarChar(50), statusUserIDRequest);
+      checkIfExistsRequest.input('phoneNumberUserIDRequest', sql.NVarChar(50), phoneNumberUserIDRequest);
+      checkIfExistsRequest.input('textIDATUserIDRequest', sql.VarChar(100), textIDATUserIDRequest);
+      checkIfExistsRequest.query(checkIfExistsQuery, function (checkErr, userIDResults) {
         if (checkErr) {
-        console.error('Error executing checkIfExistsQuery: ' + checkErr.stack);
-        sql.close();
-        return;
+          console.error('Error executing checkIfExistsQuery: ' + checkErr.stack);
+          sql.close();
+          return;
         }
         if (userIDResults.recordset.length > 0) {
           const userID = userIDResults.recordset[0].user_id;
@@ -456,7 +456,6 @@ function updateDescription(phoneNumberDescription, textDescription, textIDATDesc
             headers: { "Content-Type": "application/json" }
           };
           fetchClient.get("https://api.octagonafrica.com/v1/claims/sendClaimsOTP", args, function (data, response) {
-
             if ([200].includes(response.statusCode)) {
               sms.sendPremium({
                 to: sender,
@@ -476,62 +475,51 @@ function updateDescription(phoneNumberDescription, textDescription, textIDATDesc
                 keyword: 'pension',
                 linkId: LinkID
               });
-              sql.connect(config, function (err) {
-                console.log('Connected to the database');
-                const request = new sql.Request();
-                const statuserror404 = "isMakingClaimFailed";
-                const messagingSteperror404 = "0";
-                const phoneNumbererror404 = sender;
-                const textIDATerror404 = textIDAT;
-                const updateFail = `UPDATE two_way_sms_tb SET status = @statuserror404, messagingStep = @messagingSteperror404,  isActive = '0'  WHERE phoneNumber = @phoneNumbererror404 AND text_id_AT =@textIDATerror404 AND time = (
-                        SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumbererror404 )`;
-                request.input('statuserror404', sql.VarChar, statuserror404);
-                request.input('messagingSteperror404', sql.VarChar, messagingSteperror404);
-                request.input('phoneNumbererror404', sql.NVarChar, phoneNumbererror404);
-                request.input('textIDATerror404', sql.NVarChar, textIDATerror404);
-                request.query(updateFail, function (err, results) {
-                  if (err) {
-                    console.error('Error executing query: ' + err.stack);
-                    return;
-                  }
-                  console.log(' Checking account failed Attempt unsuccessful');
-                  sql.close();
-                });
+              const request = new sql.Request();
+              const statuserror404 = "isMakingClaimFailed400";
+              const messagingSteperror404 = "0";
+              const phoneNumbererror404 = sender;
+              const textIDATerror404 = textIDAT;
+              const updateFail = `UPDATE two_way_sms_tb SET status = @statuserror404, messagingStep = @messagingSteperror404, isActive = '0' WHERE phoneNumber = @phoneNumbererror404 AND text_id_AT = @textIDATerror404 AND time = (SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumbererror404)`;
+              request.input('statuserror404', sql.VarChar, statuserror404);
+              request.input('messagingSteperror404', sql.VarChar, messagingSteperror404);
+              request.input('phoneNumbererror404', sql.NVarChar, phoneNumbererror404);
+              request.input('textIDATerror404', sql.NVarChar, textIDATerror404);
+              request.query(updateFail, function (err, results) {
+                if (err) {
+                  console.error('Error executing query: ' + err.stack);
+                  return;
+                }
+                console.log('Checking account failed. Attempt unsuccessful');
+                sql.close();
               });
             } else if ([500].includes(response.statusCode)) {
               console.log(response.statusCode);
               sms.sendPremium({
                 to: sender,
                 from: '24123',
-                message: " Invalid request. Please input your National Id and password.",
+                message: "You do not have an account with us or your profile is not complete. Please contact your scheme admin or contact support at support@octagonafrica.com or 0709 986 000",
                 bulkSMSMode: 0,
                 keyword: 'pension',
                 linkId: LinkID
               });
-              sql.connect(config, function (err) {
+              const request = new sql.Request();
+              const statuserror500 = "isMakingClaimFailed%00";
+              const messagingSteperror500 = "0";
+              const phoneNumbererror500 = sender;
+              const textIDATerror500 = textIDAT;
+              const updateFail = `UPDATE two_way_sms_tb SET status = @statuserror500, messagingStep = @messagingSteperror500, isActive = '0' WHERE phoneNumber = @phoneNumbererror500 AND text_id_AT = @textIDATerror500 AND time = (SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumbererror500)`;
+              request.input('statuserror500', sql.VarChar, statuserror500);
+              request.input('messagingSteperror500', sql.VarChar, messagingSteperror500);
+              request.input('phoneNumbererror500', sql.NVarChar, phoneNumbererror500);
+              request.input('textIDATerror500', sql.NVarChar, textIDATerror500);
+              request.query(updateFail, function (err, results) {
                 if (err) {
-                  console.error('Error connecting to the database: ' + err.stack);
+                  console.error('Error executing query: ' + err.stack);
                   return;
                 }
-                const request = new sql.Request();
-                const statuserror500 = "isMakingClaimFailed";
-                const messagingSteperror500 = "0";
-                const phoneNumbererror500 = sender;
-                const textIDATerror500 = textIDAT;
-                const updateFail = `UPDATE two_way_sms_tb SET status = @statuserror500, messagingStep = @messagingSteperror500, isActive = '0'  WHERE phoneNumber = @phoneNumbererror500 AND text_id_AT =@textIDATerror500 AND time = (
-                  SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumbererror500 )`;
-                request.input('statuserror500', sql.VarChar, statuserror500);
-                request.input('messagingSteperror500', sql.VarChar, messagingSteperror500);
-                request.input('phoneNumbererror500', sql.NVarChar, phoneNumbererror500);
-                request.input('textIDATerror500', sql.NVarChar, textIDATerror500);
-                request.query(updateFail, function (err, results) {
-                  if (err) {
-                    console.error('Error executing query: ' + err.stack);
-                    return;
-                  }
-                  console.log('Checking Account Failed Attempt unsuccessful');
-                  sql.close();
-                });
+                console.log('Checking Account Failed. Attempt unsuccessful');
+                sql.close();
               });
             } else {
               // error code
@@ -544,6 +532,7 @@ function updateDescription(phoneNumberDescription, textDescription, textIDATDesc
     });
   });
 }
+
 
 
 module.exports = {updatePassword, updateDescription};
