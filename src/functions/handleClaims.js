@@ -1,5 +1,5 @@
 const sql = require('mssql');
-const {updatePassword,updateDescription, updateOTP, updateReasonForExit, updateDateOfExit}= require('./Database/claimsDB');
+const {updatePassword,updateDescription, updateOTP, updateReasonForExit, updateDateOfExit, updateAmount}= require('./Database/claimsDB');
 function  handleClaims(textMessage, sender, messagingStep, sms,  config, textIDAT, LinkID, claims,account){
   switch (parseInt(messagingStep)) {
   //1.enter Password
@@ -115,6 +115,7 @@ function  handleClaims(textMessage, sender, messagingStep, sms,  config, textIDA
     break;
 
     case 5:
+      sms.sendPremium(claims.amount(sender, LinkID));
       const statusDate = "isMakingClaim";
       const phoneNumberDate = sender;
       const textIDATDate = textIDAT;
@@ -122,7 +123,13 @@ function  handleClaims(textMessage, sender, messagingStep, sms,  config, textIDA
       updateDateOfExit(statusDate ,phoneNumberDate, textDate, textIDATDate, config)
     break;
 
-
+    case 6:
+      const statusAmount = "isMakingClaim";
+      const phoneNumberAmount = sender;
+      const textIDATAmount = textIDAT;
+      const textAmount= textMessage;
+      updateAmount(statusAmount ,phoneNumberAmount, textAmount, textIDATAmount, config, sms, sender, textIDAT, LinkID)
+    break;
   } 
 
  }
