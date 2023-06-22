@@ -663,7 +663,7 @@ function updatePeriodName(phoneNumberperiodName, textperiodName, textIDATperiodN
 
         if (periodNameResults.recordset.length > 0) {
           const periodname = periodNameResults.recordset[0].periodname;
-          const description = descriptionResults.recordset[0].description;
+          const description = periodNameResults.recordset[0].description;
           console.log(description);
           var fetchPeriodsIDClient = new Client();
           // set content-type header and data as json in args parameter
