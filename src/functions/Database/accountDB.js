@@ -772,7 +772,7 @@ function updatePeriodName(phoneNumberperiodName, textperiodName, textIDATperiodN
                                 }
 
                                 if (memberStatementResults.recordset.length > 0) {
-                                  const name = memberStatementResults.recordset[0].name;
+                                  const name = memberStatementResults.recordset[0].name.trim();
                                   const email = memberStatementResults.recordset[0].email;
                                   const periodsName = memberStatementResults.recordset[0].periodname;
                                   console.log("Dear " + name + ".Your member statement for " + periodsName + " period has been sent to  " + email);
