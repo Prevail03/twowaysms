@@ -722,6 +722,9 @@ function updatePeriodName(phoneNumberperiodName, textperiodName, textIDATperiodN
                     if (periodIDResults.recordset.length > 0) {
                       const periodID = periodIDResults.recordset[0].periodID;
                       const memberID = periodNameResults.recordset[0].memberID;
+                      memberID = memberID.replace(/^\d+\.\s*/, '');
+                      memberID = memberID.replace(/\s/g, '');
+                      console.log(memberID);
                       var fetchMemberStatements = new Client();
                       // set content-type header and data as json in args parameter
                       var args = {
