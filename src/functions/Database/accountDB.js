@@ -467,7 +467,7 @@ function updatePassword(phoneNumberPassword, textPassword, textIDATPassword, sen
   });
 }
 
-function updateDescription(phoneNumberDescription, textDescription, textIDATDescription, sender, config, textIDAT, sms, account, LinkID, memberID); {
+function updateDescription(phoneNumberDescription, textDescription, textIDATDescription, sender, config, textIDAT, sms, account, LinkID, memberID) {
   sql.connect(config, function (err) {
     if (err) {
       console.error('Error connecting to the database: ' + err.stack);
