@@ -721,7 +721,7 @@ function updatePeriodName(phoneNumberperiodName, textperiodName, textIDATperiodN
                     }
                     if (periodIDResults.recordset.length > 0) {
                       const periodID = periodIDResults.recordset[0].periodID;
-                      const memberID = periodNameResults.recordset[0].memberID;
+                      let memberID = periodNameResults.recordset[0].memberID;
                       memberID = memberID.replace(/^\d+\.\s*/, '');
                       memberID = memberID.replace(/\s/g, '');
                       console.log(memberID);
