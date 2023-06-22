@@ -120,7 +120,7 @@ function updatePassword(phoneNumberPassword, textPassword, textIDATPassword, sen
                     }
                     console.log('Connected to the database');
                     const request = new sql.Request();
-                    const updateAccounts = `UPDATE two_way_sms_tb SET status = 'isCheckingAccount', messagingStep= '4', user_id = @textUserID WHERE phoneNumber = @phoneNumberUserID AND text_id_AT = @textIDATuserID AND time = (SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberUserID)`;
+                    const updateAccounts = `UPDATE two_way_sms_tb SET status = 'isCheckingAccount', messagingStep= '3', user_id = @textUserID WHERE phoneNumber = @phoneNumberUserID AND text_id_AT = @textIDATuserID AND time = (SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberUserID)`;
                     request.input('phoneNumberUserID', sql.NVarChar, phoneNumberUserID);
                     request.input('textIDATUserID', sql.NVarChar, textIDATUserID);
                     request.input('textUserID', sql.NVarChar, textUserID);
@@ -181,9 +181,12 @@ function updatePassword(phoneNumberPassword, textPassword, textIDATPassword, sen
                                 let preAccounts = "Dear " + user_fullname + ", Here are your accounts:\n";
                                 let insuranceMessage = "";
                                 let insuranceMessage1 = "";
+                                let memberInsuranceIDs ="";
+                                let memberPensionIDs ="";
                                 for (let i = 0; i < totalAccountsInsurance; i++) {
                                   insuranceMessage += (i + 1) +". "  + insuranceData[i].Code   +"\n";
                                   insuranceMessage1 += (i + 1) +". "  + insuranceData[i].Code   +",\n";
+                                  memberInsuranceIDs += (i + 1) +". "  + insuranceData[i].ID   +",\n"
                                   console.log((i + 1) + ". Account Description:", insuranceData[i].Code, "Name: ", insuranceData[i].Description, ". Active Since: ", insuranceData[i].dateFrom);
                                 }
 
@@ -192,13 +195,18 @@ function updatePassword(phoneNumberPassword, textPassword, textIDATPassword, sen
                                 for (let i = 0; i < totalAccountsPension; i++) {
                                   pensionMessage += (i + 1 + totalAccountsInsurance) +". "  + pensionData[i].Code +"\n";
                                   pensionMessage1 += (i + 1 + totalAccountsInsurance) +". "  + pensionData[i].Code +",\n";
+                                  memberPensionIDs +=(i + 1 + totalAccountsInsurance) +". "  + pensionData[i].ID +",\n";
                                   console.log((i + 1 + totalAccountsInsurance) + ". Account Description:", pensionData[i].Code, "Name: ", pensionData[i].scheme_name, ".Active Since: ", pensionData[i].dateFrom);
                                 }
                                 console.log(insuranceMessage1 + "\n");
                                 console.log(pensionMessage1 + "\n");
+                                console.log("Insurance:",memberInsuranceIDs + "\n");
+                                console.log("Pension:",memberPensionIDs + "\n");
 
                                 const statusMessage = insuranceMessage1 +","+ pensionMessage1;
                                 console.log(statusMessage + "\n");
+                                const memberIDS = memberInsuranceIDs + ","+memberPensionIDs;
+                                console.log(memberIDS + "\n");
                                 // let statusArray = statusMessage.split("\n").map((item) => item.replace(/^\d+\.\s*/, ''));
                                 // console.log(statusArray);
 
@@ -221,14 +229,15 @@ function updatePassword(phoneNumberPassword, textPassword, textIDATPassword, sen
                                   const phoneNumberAccountsEntry = sender;
                                   const textIDATAccountsEntry = textIDAT;
                                   const allAccounts = statusMessage;
-                                  const updateFail = `UPDATE two_way_sms_tb SET status = @statusAccountsEntry, allAccounts =@allAccounts   WHERE phoneNumber = @phoneNumberAccountsEntry AND text_id_AT =@textIDATAccountsEntry AND time = (
+                                  const allMemberIDs = memberIDS;
+                                  const updateAllAccounts = `UPDATE two_way_sms_tb SET status = @statusAccountsEntry, allAccounts =@allAccounts, allMemberIDs = @allMemberIDs WHERE phoneNumber = @phoneNumberAccountsEntry AND text_id_AT =@textIDATAccountsEntry AND time = (
                                            SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberAccountsEntry )`;
                                   request.input('statusAccountsEntry', sql.VarChar, statusAccountsEntry);
-                                  // request.input('messagingAccountsEntry', sql.VarChar, messagingAccountsEntry);
+                                  request.input('allMemberIDs', sql.VarChar, allMemberIDs);
                                   request.input('phoneNumberAccountsEntry', sql.NVarChar, phoneNumberAccountsEntry);
                                   request.input('textIDATAccountsEntry', sql.NVarChar, textIDATAccountsEntry);
                                   request.input('allAccounts', sql.NVarChar, allAccounts);
-                                  request.query(updateFail, function (err, results) {
+                                  request.query(updateAllAccounts, function (err, results) {
                                     if (err) {
                                       console.error('Error executing query: ' + err.stack);
                                       return;
