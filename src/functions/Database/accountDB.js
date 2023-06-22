@@ -120,7 +120,7 @@ function updatePassword(phoneNumberPassword, textPassword, textIDATPassword, sen
                     }
                     console.log('Connected to the database');
                     const request = new sql.Request();
-                    const updateAccounts = `UPDATE two_way_sms_tb SET status = 'isCheckingAccount', messagingStep= '3', user_id = @textUserID WHERE phoneNumber = @phoneNumberUserID AND text_id_AT = @textIDATuserID AND time = (SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberUserID)`;
+                    const updateAccounts = `UPDATE two_way_sms_tb SET status = 'isCheckingAccount', messagingStep= '4', user_id = @textUserID WHERE phoneNumber = @phoneNumberUserID AND text_id_AT = @textIDATuserID AND time = (SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberUserID)`;
                     request.input('phoneNumberUserID', sql.NVarChar, phoneNumberUserID);
                     request.input('textIDATUserID', sql.NVarChar, textIDATUserID);
                     request.input('textUserID', sql.NVarChar, textUserID);
@@ -467,7 +467,7 @@ function updatePassword(phoneNumberPassword, textPassword, textIDATPassword, sen
   });
 }
 
-function updateDescription(phoneNumberDescription, textDescription, textIDATDescription, sender, config, textIDAT, sms, account, LinkID) {
+function updateDescription(phoneNumberDescription, textDescription, textIDATDescription, sender, config, textIDAT, sms, account, LinkID, memberID); {
   sql.connect(config, function (err) {
     if (err) {
       console.error('Error connecting to the database: ' + err.stack);
@@ -476,7 +476,7 @@ function updateDescription(phoneNumberDescription, textDescription, textIDATDesc
     console.log('Connected to the database');
 
     const request = new sql.Request();
-    const updateAccounts = `UPDATE two_way_sms_tb SET status = 'isCheckingAccount', messagingStep= '5', description = @textDescription WHERE phoneNumber = @phoneNumberDescription AND text_id_AT = @textIDATDescription AND time = (SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberDescription)`;
+    const updateAccounts = `UPDATE two_way_sms_tb SET status = 'isCheckingAccount', messagingStep= '5', description = @textDescription, memberID = @memberID WHERE phoneNumber = @phoneNumberDescription AND text_id_AT = @textIDATDescription AND time = (SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberDescription)`;
     request.input('phoneNumberDescription', sql.NVarChar, phoneNumberDescription);
     request.input('textIDATDescription', sql.NVarChar, textIDATDescription);
     request.input('textDescription', sql.NVarChar, textDescription);

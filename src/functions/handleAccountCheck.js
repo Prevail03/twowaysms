@@ -50,21 +50,34 @@ function handleAccountCheck(textMessage, sender, messagingStep, sms, account, co
                 }
                 if (checkResults.recordset.length > 0) {
                     const allAccounts = checkResults.recordset[0].allAccounts;
+                    const allMemberIDs = checkResults.recordset[0].allMemberIDs;
                     const accountsArray = allAccounts.split(',')
                         .map(account => account.trim().replace(/^\d+\.\s*/, ''))
                         .filter(account => account !== '');
 
+                    const memberIDsArray = allMemberIDs.split(',')
+                        .map(memberID => memberID.trim())
+                        .filter(memberID => memberID !== '');
+
                     console.log("Array count:", accountsArray.length);
+
                     if (accountDescription >= 1 && accountDescription <= accountsArray.length) {
                         const selectedAccount = accountsArray[accountDescription - 1];
+                        const selectedMemberID = memberIDsArray[accountDescription - 1]; // Get the corresponding memberID
+
                         console.log("Selected account:", selectedAccount);
+                        console.log("Selected memberID:", selectedMemberID);
+
                         textDescription = selectedAccount;
+                        memberID = selectedMemberID;
                         console.log("Account Description: " + textDescription);
-                        updateDescription(phoneNumberDescription, textDescription, textIDATDescription, sender, config, textIDAT, sms, account, LinkID);
+
+                        updateDescription(phoneNumberDescription, textDescription, textIDATDescription, sender, config, textIDAT, sms, account, LinkID, memberID); // Pass the selectedMemberID to the function
                     } else {
                         console.log("Invalid account description");
                         sms.sendPremium(account.invalidResponse(sender, LinkID));
                     }
+
                 } else {
                 console.log('Record does not exist');
                 }
