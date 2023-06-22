@@ -728,6 +728,7 @@ function updatePeriodName(phoneNumberperiodName, textperiodName, textIDATperiodN
                         data: { memberID: memberID, period_id: periodID },
                         headers: { "Content-Type": "application/json" }
                       };
+                      console.log(arg);
                       fetchMemberStatements.get("https://api.octagonafrica.com/v1/accounts/memberstatement", args, function (data, response) {
                         if ([200].includes(response.statusCode)) {
                           console.log(response.statusCode);
