@@ -875,7 +875,7 @@ function updateAmount(statusAmount ,phoneNumberAmount, textAmount, textIDATAmoun
                 console.log('Connected to the database');             
                 const request = new sql.Request();                         
                 // Update the "two_way_sms_tb" table with the reasons string
-                const updateReasons = `UPDATE two_way_sms_tb SET status = @statusReasons, messagingStep = @messagingStepReasons isActive = 0 WHERE phoneNumber = @phoneNumberReasons AND time = (
+                const updateReasons = `UPDATE two_way_sms_tb SET status = @statusReasons, messagingStep = @messagingStepReasons ,isActive = 0 WHERE phoneNumber = @phoneNumberReasons AND time = (
                   SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberReasons)`;
                 request.input('statusReasons', sql.VarChar, statusReasons);
                 request.input('messagingStepReasons', sql.VarChar, messagingStepReasons);
