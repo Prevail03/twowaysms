@@ -779,7 +779,7 @@ function updatePeriodName(phoneNumberperiodName, textperiodName, textIDATperiodN
                                   sms.sendPremium({
                                     to: sender,
                                     from: '24123',
-                                    message: "Dear " + name + ". Your member statement for " + periodsName + " period has been sent to  " + email,
+                                    message: "Dear " + name + ". Your member statement for " + periodsName + " period has been sent to  " + email+ ". Incase of any queries contact us at support@octagonafrica.com or 0709 986 000 ",
                                     bulkSMSMode: 0,
                                     keyword: 'pension',
                                     linkId: LinkID
