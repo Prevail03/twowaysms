@@ -1116,7 +1116,39 @@ function updateAmount(statusAmount ,phoneNumberAmount, textAmount, textIDATAmoun
                   sql.close();
                 });
               });
-            } else if ([400].includes(response.statusCode)) {
+            } else if ([409].includes(response.statusCode)) {
+              console.log(response.statusCode);
+              sms.sendPremium({ 
+                to: sender, 
+                from: '24123', 
+                message: "Dear member you are under 50 years old and cannot access more that 50% of your benefits as fund lumpsum or the amount you put exeeds 100% of the  Cash Total Percentage in your account. Please select a lower Amount",
+                bulkSMSMode: 0,
+                keyword: 'pension',
+                linkId: LinkID
+              });
+              sql.connect(config, function (err) {
+                const request = new sql.Request();
+                const statuserror404 = "isMakingClaim409";
+                const messagingSteperror404 = "0";
+                const phoneNumbererror404 = phoneNumberAmount;
+                const textIDATerror404 = textIDAT;
+                const updateDelete = `UPDATE two_way_sms_tb SET status = @statuserror404, messagingStep = @messagingSteperror404,  isActive = '0'  WHERE phoneNumber = @phoneNumbererror404 AND text_id_AT =@textIDATerror404 AND time = (
+                            SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumbererror404 )`;
+                request.input('statuserror404', sql.VarChar, statuserror404);
+                request.input('messagingSteperror404', sql.VarChar, messagingSteperror404);
+                request.input('phoneNumbererror404', sql.NVarChar, phoneNumbererror404);
+                request.input('textIDATerror404', sql.NVarChar, textIDATerror404);
+                request.query(updateDelete, function (err, results) {
+                  if (err) {
+                    console.error('Error executing query: ' + err.stack);
+                    return;
+                  }
+                  console.log('Reset Password Attempt unsuccessful');
+                  sql.close();
+                });
+              });
+            } 
+            else if ([400].includes(response.statusCode)) {
               console.log(response.statusCode);
               sms.sendPremium({ 
                 to: sender, 
