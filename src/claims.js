@@ -23,7 +23,7 @@ const claims = {
     return {
         to: sender,
         from:'24123',
-        message: "Please Enter the amount you want to access. NOTE: Thi amount will be used as the percentage of the total amount you want to access. ",
+        message: "Please Enter the amount you want to access. NOTE: This amount will be used as the percentage of the total amount you want to access. ",
         bulkSMSMode: 0,
         keyword: 'pension',
         linkId: LinkID
