@@ -39,7 +39,6 @@ const claims = {
         linkId: LinkID
     };
   },
-  
 }
 module.exports = claims;
 
