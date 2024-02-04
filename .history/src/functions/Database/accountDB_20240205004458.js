@@ -724,27 +724,24 @@ function updatePeriodName(phoneNumberperiodName, textperiodName, textIDATperiodN
                       let memberID = periodNameResults.recordset[0].memberID;
                       memberID = memberID.replace(/^\d+\.\s*/, '');
                       memberID = memberID.replace(/\s/g, '');
-                      
-                      console.log('Member ID: ' + memberID);
-                      const requestStatement = new sql.Request();
-                      requestStatement.input('memberID', sql.Int(13), memberID);
-                      requestStatement.query("SELECT TOP 1 * FROM members_tb WHERE m_id = @memberID", function (err, statementResults) {
+                      let schemeCode = '';
+                      let memberEmail = '';
+                      let memberName = '';
+                      const statusperiodID = "isCheckingAccount";
+                      const phoneNumberperiodID = sender;
+                      const textIDATperiodID1 = textIDAT;
+                      const request = new sql.Request();
+                      request.input('statusperiodID', sql.NVarChar(50), statusperiodID);
+                      request.input('phoneNumberperiodID', sql.NVarChar(50), phoneNumberperiodID);
+                      request.input('textIDATperiodID1', sql.NVarChar(50), textIDATperiodID1);
+                      request.query("SELECT TOP 1 * FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberperiodID AND status = @statusperiodID AND isActive = 1 AND text_id_AT = @textIDATperiodID1 order by time DESC", function (err, periodIDResults) {
                         if (err) {
                           console.error('Error executing query: ' + err.stack);
                           return;
                         }
-                        if (statementResults.recordset.length > 0) {
-                          console.log('Statement Works');
-                        }
-                      
-                      
-                      });
-
-                      
-                      
 
 
-                     
+                      console.log('Member ID: ' + memberID);
 
                       
 

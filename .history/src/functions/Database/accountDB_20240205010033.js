@@ -734,8 +734,6 @@ function updatePeriodName(phoneNumberperiodName, textperiodName, textIDATperiodN
                           return;
                         }
                         if (statementResults.recordset.length > 0) {
-                          console.log('Statement Works');
-                        }
                       
                       
                       });

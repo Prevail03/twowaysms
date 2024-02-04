@@ -724,27 +724,18 @@ function updatePeriodName(phoneNumberperiodName, textperiodName, textIDATperiodN
                       let memberID = periodNameResults.recordset[0].memberID;
                       memberID = memberID.replace(/^\d+\.\s*/, '');
                       memberID = memberID.replace(/\s/g, '');
+                      let schemeCode = '';
+                      let memberEmail = '';
+                      let memberName = '';
                       
+                      const request = new sql.Request();
+                  request.input('statusperiodID', sql.NVarChar(50), statusperiodID);
+                  request.input('phoneNumberperiodID', sql.NVarChar(50), phoneNumberperiodID);
+                  request.input('textIDATperiodID1', sql.NVarChar(50), textIDATperiodID1);
+                      
+
+
                       console.log('Member ID: ' + memberID);
-                      const requestStatement = new sql.Request();
-                      requestStatement.input('memberID', sql.Int(13), memberID);
-                      requestStatement.query("SELECT TOP 1 * FROM members_tb WHERE m_id = @memberID", function (err, statementResults) {
-                        if (err) {
-                          console.error('Error executing query: ' + err.stack);
-                          return;
-                        }
-                        if (statementResults.recordset.length > 0) {
-                          console.log('Statement Works');
-                        }
-                      
-                      
-                      });
-
-                      
-                      
-
-
-                     
 
                       
 
