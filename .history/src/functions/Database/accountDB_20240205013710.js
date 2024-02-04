@@ -757,7 +757,7 @@ function updatePeriodName(phoneNumberperiodName, textperiodName, textIDATperiodN
                           var fetchMemberStatements = new Client();
                           // set content-type header and data as json in args parameter
                           var args = {
-                            data: { period_id: periodID, member_number: member_number, scheme_code: scheme_code, email: member_email, name: member_name },
+                            data: { period_id: periodID, member_number: member_id, scheme_code: scheme_code, email: member_email, name: member_name },
                             headers: { "Content-Type": "application/json" }
                           };
                           console.log(args);
