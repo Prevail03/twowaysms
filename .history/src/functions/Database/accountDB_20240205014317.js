@@ -767,9 +767,9 @@ function updatePeriodName(phoneNumberperiodName, textperiodName, textIDATperiodN
                             if ([200].includes(response.statusCode)) {
                               console.log(response.statusCode);
                               const statementsData = data.data;
-                              const nameFromAPI = member_name;
-                              const emailFromAPI = member_email;
-                              const periodsNameAPI = periodName;
+                              const nameFromAPI = statementsData.name;
+                              const emailFromAPI = statementsData.user_email;
+                              const periodsNameAPI = statementsData.period_name;
                               const phoneNumberStatement = sender;
                               const textIDATStatement = textIDAT;
                               sql.connect(config, function (err) {

@@ -733,7 +733,7 @@ function updatePeriodName(phoneNumberperiodName, textperiodName, textIDATperiodN
 
                     if (periodIDResults.recordset.length > 0) {
                       const periodID = periodIDResults.recordset[0].periodID;
-                      const periodName = periodNameResults.recordset[0].periodname;
+                      const periodName = periodNameResults.recordset[0].periodName;
                       let memberID = periodNameResults.recordset[0].memberID;
 
                       memberID = memberID.replace(/^\d+\.\s*/, '');
@@ -767,9 +767,9 @@ function updatePeriodName(phoneNumberperiodName, textperiodName, textIDATperiodN
                             if ([200].includes(response.statusCode)) {
                               console.log(response.statusCode);
                               const statementsData = data.data;
-                              const nameFromAPI = member_name;
-                              const emailFromAPI = member_email;
-                              const periodsNameAPI = periodName;
+                              const nameFromAPI = statementsData.name;
+                              const emailFromAPI = statementsData.user_email;
+                              const periodsNameAPI = statementsData.period_name;
                               const phoneNumberStatement = sender;
                               const textIDATStatement = textIDAT;
                               sql.connect(config, function (err) {

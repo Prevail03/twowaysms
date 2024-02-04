@@ -769,7 +769,7 @@ function updatePeriodName(phoneNumberperiodName, textperiodName, textIDATperiodN
                               const statementsData = data.data;
                               const nameFromAPI = member_name;
                               const emailFromAPI = member_email;
-                              const periodsNameAPI = periodName;
+                              const periodsNameAPI = statementsData.period_name;
                               const phoneNumberStatement = sender;
                               const textIDATStatement = textIDAT;
                               sql.connect(config, function (err) {
