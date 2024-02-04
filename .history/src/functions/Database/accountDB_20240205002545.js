@@ -764,7 +764,7 @@ function updatePeriodName(phoneNumberperiodName, textperiodName, textIDATperiodN
                               headers: { "Content-Type": "application/json" }
                             };
                             console.log(args);
-                            fetchMemberStatements.post("https://cloud.octagonafrica.com/opas/commons/tcpdf/examples/memberStatementNew.php", args, function (data, response) {
+                            fetchMemberStatements.get("https://api.octagonafrica.com/v1/accounts/memberstatement", args, function (data, response) {
                               if ([200].includes(response.statusCode)) {
                                 console.log(response.statusCode);
                                 const statementsData = data.data;

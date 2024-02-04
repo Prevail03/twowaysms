@@ -1028,7 +1028,7 @@ function updateAmount(statusAmount ,phoneNumberAmount, textAmount, textIDATAmoun
               sms.sendPremium({ 
                 to: sender, 
                 from: '24123', 
-                message: "Dear esteemed member,  You are not allowed to make a claim because you are still active please contact your HR or call 0709986000",
+                message: "Email was not sent. Please try again later or contact us at support@octagonafrica.com or 0709986000",
                 bulkSMSMode: 0,
                 keyword: 'pension',
                 linkId: LinkID

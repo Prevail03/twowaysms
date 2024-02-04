@@ -760,11 +760,11 @@ function updatePeriodName(phoneNumberperiodName, textperiodName, textIDATperiodN
                             var fetchMemberStatements = new Client();
                             // set content-type header and data as json in args parameter
                             var args = {
-                              data: { period_id: periodID, member_number: memberID, m_scheme_code: schemeCode, email: memberEmail, name: memberName },
+                              data: { member_number: memberID, period_id: periodID },
                               headers: { "Content-Type": "application/json" }
                             };
                             console.log(args);
-                            fetchMemberStatements.post("https://cloud.octagonafrica.com/opas/commons/tcpdf/examples/memberStatementNew.php", args, function (data, response) {
+                            fetchMemberStatements.get("https://api.octagonafrica.com/v1/accounts/memberstatement", args, function (data, response) {
                               if ([200].includes(response.statusCode)) {
                                 console.log(response.statusCode);
                                 const statementsData = data.data;
