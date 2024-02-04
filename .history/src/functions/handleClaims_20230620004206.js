@@ -115,7 +115,6 @@ function  handleClaims(textMessage, sender, messagingStep, sms,  config, textIDA
     break;
 
     case 5:
-      console.log('Amount Prompt');
       sms.sendPremium(claims.amount(sender, LinkID));
       const statusDate = "isMakingClaim";
       const phoneNumberDate = sender;
