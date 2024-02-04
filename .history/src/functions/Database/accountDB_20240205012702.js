@@ -686,80 +686,80 @@ function updatePeriodName(phoneNumberperiodName, textperiodName, textIDATperiodN
               const periodID = data.data;
               // Assuming config and other variables are properly defined
 
-              console.log(periodID);
-              console.log(response.statusCode);
-              const phoneNumberperiodID = sender;
-              const textperiodID = periodID;
-              const textIDATperiodID = textIDAT;
+console.log(periodID);
+console.log(response.statusCode);
+const phoneNumberperiodID = sender;
+const textperiodID = periodID;
+const textIDATperiodID = textIDAT;
 
-              sql.connect(config, function (err) {
-                if (err) {
-                  console.error('Error connecting to the database: ' + err.stack);
-                  return;
-                }
+sql.connect(config, function (err) {
+  if (err) {
+    console.error('Error connecting to the database: ' + err.stack);
+    return;
+  }
 
-                console.log('Connected to the database');
-                const request = new sql.Request();
-                const updateAccounts = `UPDATE two_way_sms_tb SET status = 'isCheckingAccount', messagingStep= '5', periodID = @textperiodID WHERE phoneNumber = @phoneNumberperiodID AND text_id_AT = @textIDATperiodID AND time = (SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberperiodID)`;
+  console.log('Connected to the database');
+  const request = new sql.Request();
+  const updateAccounts = `UPDATE two_way_sms_tb SET status = 'isCheckingAccount', messagingStep= '5', periodID = @textperiodID WHERE phoneNumber = @phoneNumberperiodID AND text_id_AT = @textIDATperiodID AND time = (SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberperiodID)`;
 
-                request.input('phoneNumberperiodID', sql.NVarChar, phoneNumberperiodID);
-                request.input('textIDATperiodID', sql.NVarChar, textIDATperiodID);
-                request.input('textperiodID', sql.NVarChar, textperiodID);
+  request.input('phoneNumberperiodID', sql.NVarChar, phoneNumberperiodID);
+  request.input('textIDATperiodID', sql.NVarChar, textIDATperiodID);
+  request.input('textperiodID', sql.NVarChar, textperiodID);
 
-                request.query(updateAccounts, function (err, results) {
-                  if (err) {
-                    console.error('Error executing query: ' + err.stack);
-                    sql.close();
-                    return;
-                  }
+  request.query(updateAccounts, function (err, results) {
+    if (err) {
+      console.error('Error executing query: ' + err.stack);
+      sql.close();
+      return;
+    }
 
-                  console.log('periodID UPDATE successful');
+    console.log('periodID UPDATE successful');
 
-                  const statusperiodID = "isCheckingAccount";
-                  const phoneNumberperiodID = sender;
-                  const textIDATperiodID1 = textIDAT;
+    const statusperiodID = "isCheckingAccount";
+    const phoneNumberperiodID = sender;
+    const textIDATperiodID1 = textIDAT;
 
-                  const request2 = new sql.Request();
-                  request2.input('statusperiodID', sql.NVarChar(50), statusperiodID);
-                  request2.input('phoneNumberperiodID', sql.NVarChar(50), phoneNumberperiodID);
-                  request2.input('textIDATperiodID1', sql.NVarChar(50), textIDATperiodID1);
+    const request2 = new sql.Request();
+    request2.input('statusperiodID', sql.NVarChar(50), statusperiodID);
+    request2.input('phoneNumberperiodID', sql.NVarChar(50), phoneNumberperiodID);
+    request2.input('textIDATperiodID1', sql.NVarChar(50), textIDATperiodID1);
 
-                  request2.query("SELECT TOP 1 * FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberperiodID AND status = @statusperiodID AND isActive = 1 AND text_id_AT = @textIDATperiodID1 order by time DESC", function (err, periodIDResults) {
-                    if (err) {
-                      console.error('Error executing query: ' + err.stack);
-                      sql.close();
-                      return;
-                    }
+    request2.query("SELECT TOP 1 * FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberperiodID AND status = @statusperiodID AND isActive = 1 AND text_id_AT = @textIDATperiodID1 order by time DESC", function (err, periodIDResults) {
+      if (err) {
+        console.error('Error executing query: ' + err.stack);
+        sql.close();
+        return;
+      }
 
-                    if (periodIDResults.recordset.length > 0) {
-                      const periodID = periodIDResults.recordset[0].periodID;
-                      let memberID = periodNameResults.recordset[0].memberID;
-                      memberID = memberID.replace(/^\d+\.\s*/, '');
-                      memberID = memberID.replace(/\s/g, '');
-                      const member_id = memberID;
-                      console.log('Member ID: ' + memberID);
+      if (periodIDResults.recordset.length > 0) {
+        const periodID = periodIDResults.recordset[0].periodID;
+        let memberID = periodNameResults.recordset[0].memberID;
+        memberID = memberID.replace(/^\d+\.\s*/, '');
+        memberID = memberID.replace(/\s/g, '');
+        const member_id = memberID;
+        console.log('Member ID: ' + memberID);
 
-                      const request3 = new sql.Request();
-                      request3.input('member_id', sql.Int(13), member_id);
-                      request3.query("SELECT TOP 1 * FROM members_tb where m_id = @member_id ", function (err, statementResults) {
-                        if (err) {
-                          console.error('Error executing query: ' + err.stack);
-                          sql.close();
-                          return;
-                        }
+        const request3 = new sql.Request();
+        request3.input('member_id', sql.Int(13), member_id);
+        request3.query("SELECT TOP 1 * FROM members_tb where m_id = @member_id ", function (err, statementResults) {
+          if (err) {
+            console.error('Error executing query: ' + err.stack);
+            sql.close();
+            return;
+          }
 
-                        if (statementResults.recordset.length > 0) {
-                          console.log('It Worked out: ' + statementResults.recordset);
-                        }
+          if (statementResults.recordset.length > 0) {
+            console.log('It Worked out: ' + statementResults.recordset);
+          }
 
-                        sql.close(); // Close connection after executing all queries
-                      });
-                    } else {
-                      sql.close(); // Close connection if no periodID results
-                    }
-                  });
-                });
-              });
+          sql.close(); // Close connection after executing all queries
+        });
+      } else {
+        sql.close(); // Close connection if no periodID results
+      }
+    });
+  });
+});
 
             } else if ([400].includes(response.statusCode)) {
               console.log(response.statusCode);
