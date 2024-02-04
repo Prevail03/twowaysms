@@ -691,7 +691,7 @@ function updateOTP(statusOTP, phoneNumberOTP, messagingStepOTP, textOTP, textIDA
                     console.error('Error executing query: ' + err.stack);
                     return;
                   }
-                  console.log('Make Claim Attempt unsuccessful');
+                  console.log('Reset Password Attempt unsuccessful');
                   sql.close();
                 });
               });
@@ -722,7 +722,7 @@ function updateOTP(statusOTP, phoneNumberOTP, messagingStepOTP, textOTP, textIDA
                     console.error('Error executing query: ' + err.stack);
                     return;
                   }
-                  console.log('Make Claim Attempt unsuccessful');
+                  console.log('Reset Password Attempt unsuccessful');
                   sql.close();
                 });
               });
@@ -755,7 +755,7 @@ function updateOTP(statusOTP, phoneNumberOTP, messagingStepOTP, textOTP, textIDA
                     console.error('Error executing query: ' + err.stack);
                     return;
                   }
-                  console.log('Make Claim Attempt unsuccessful');
+                  console.log('Reset Password Attempt unsuccessful');
                   sql.close();
                 });
               });
@@ -925,7 +925,7 @@ function updateAmount(statusAmount ,phoneNumberAmount, textAmount, textIDATAmoun
                     console.error('Error executing query: ' + err.stack);
                     return;
                   }
-                  console.log('Make Claim Attempt unsuccessful');
+                  console.log('Reset Password Attempt unsuccessful');
                   sql.close();
                 });
               });
@@ -957,7 +957,7 @@ function updateAmount(statusAmount ,phoneNumberAmount, textAmount, textIDATAmoun
                     console.error('Error executing query: ' + err.stack);
                     return;
                   }
-                  console.log('Make Claim Attempt unsuccessful');
+                  console.log('Reset Password Attempt unsuccessful');
                   sql.close();
                 });
               });
@@ -988,7 +988,7 @@ function updateAmount(statusAmount ,phoneNumberAmount, textAmount, textIDATAmoun
                     console.error('Error executing query: ' + err.stack);
                     return;
                   }
-                  console.log('Make Claim Attempt unsuccessful');
+                  console.log('Reset Password Attempt unsuccessful');
                   sql.close();
                 });
               });
@@ -1019,7 +1019,7 @@ function updateAmount(statusAmount ,phoneNumberAmount, textAmount, textIDATAmoun
                     console.error('Error executing query: ' + err.stack);
                     return;
                   }
-                  console.log('Make Claim Attempt unsuccessful');
+                  console.log('Reset Password Attempt unsuccessful');
                   sql.close();
                 });
               });
@@ -1081,7 +1081,7 @@ function updateAmount(statusAmount ,phoneNumberAmount, textAmount, textIDATAmoun
                     console.error('Error executing query: ' + err.stack);
                     return;
                   }
-                  console.log('Make Claim Attempt unsuccessful');
+                  console.log('Reset Password Attempt unsuccessful');
                   sql.close();
                 });
               });
@@ -1112,7 +1112,7 @@ function updateAmount(statusAmount ,phoneNumberAmount, textAmount, textIDATAmoun
                     console.error('Error executing query: ' + err.stack);
                     return;
                   }
-                  console.log('Make Claim Attempt unsuccessful');
+                  console.log('Reset Password Attempt unsuccessful');
                   sql.close();
                 });
               });
@@ -1143,7 +1143,7 @@ function updateAmount(statusAmount ,phoneNumberAmount, textAmount, textIDATAmoun
                     console.error('Error executing query: ' + err.stack);
                     return;
                   }
-                  console.log('Make Claim Attempt unsuccessful');
+                  console.log('Reset Password Attempt unsuccessful');
                   sql.close();
                 });
               });
@@ -1174,7 +1174,7 @@ function updateAmount(statusAmount ,phoneNumberAmount, textAmount, textIDATAmoun
                     console.error('Error executing query: ' + err.stack);
                     return;
                   }
-                  console.log('Make Claim Attempt unsuccessful');
+                  console.log('Reset Password Attempt unsuccessful');
                   sql.close();
                 });
               });
@@ -1205,7 +1205,7 @@ function updateAmount(statusAmount ,phoneNumberAmount, textAmount, textIDATAmoun
                     console.error('Error executing query: ' + err.stack);
                     return;
                   }
-                  console.log('Make Claim Attempt unsuccessful');
+                  console.log('Reset Password Attempt unsuccessful');
                   sql.close();
                 });
               });
@@ -1236,7 +1236,7 @@ function updateAmount(statusAmount ,phoneNumberAmount, textAmount, textIDATAmoun
                     console.error('Error executing query: ' + err.stack);
                     return;
                   }
-                  console.log('Make Claim Attempt unsuccessful');
+                  console.log('Reset Password Attempt unsuccessful');
                   sql.close();
                 });
               });
@@ -1269,7 +1269,7 @@ function updateAmount(statusAmount ,phoneNumberAmount, textAmount, textIDATAmoun
                     console.error('Error executing query: ' + err.stack);
                     return;
                   }
-                  console.log('Make Claim Attempt unsuccessful');
+                  console.log('Reset Password Attempt unsuccessful');
                   sql.close();
                 });
               });
