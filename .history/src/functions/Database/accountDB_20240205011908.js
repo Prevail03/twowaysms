@@ -741,7 +741,7 @@ function updatePeriodName(phoneNumberperiodName, textperiodName, textIDATperiodN
                           }
 
                           if (statementResults.recordset.length > 0) {
-                            console.log('It Worked out: ' + statementResults.recordset);
+                            console.log('Its Worked out: ' + statementResults.recordset);
                           }
                           sql.close();
                         });

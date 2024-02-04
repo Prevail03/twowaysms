@@ -733,15 +733,15 @@ function updatePeriodName(phoneNumberperiodName, textperiodName, textIDATperiodN
                         }
                         console.log('Connected to the database');
                         const request = new sql.Request();
-                        request.input('member_id', sql.Int(13), member_id);
-                        request.query("SELECT TOP 1 * FROM members_tb where m_id = @member_id ", function (err, statementResults) {
+                        request.input('memberID', sql.Int(13), member_id);
+                        request.query("SELECT TOP 1 * FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberperiodName AND status = @statusperiodName AND isActive = 1 AND text_id_AT = @textIDATperiodName1 order by time DESC", function (err, statementResults) {
                           if (err) {
                             console.error('Error executing query: ' + err.stack);
                             return;
                           }
 
-                          if (statementResults.recordset.length > 0) {
-                            console.log('It Worked out: ' + statementResults.recordset);
+                          if (statement.recordset.length > 0) {
+
                           }
                           sql.close();
                         });

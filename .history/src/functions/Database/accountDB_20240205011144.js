@@ -724,7 +724,7 @@ function updatePeriodName(phoneNumberperiodName, textperiodName, textIDATperiodN
                       let memberID = periodNameResults.recordset[0].memberID;
                       memberID = memberID.replace(/^\d+\.\s*/, '');
                       memberID = memberID.replace(/\s/g, '');
-                      const member_id =memberID;
+                      
                       console.log('Member ID: ' + memberID);
                       sql.connect(config, function (err) {
                         if (err) {
@@ -732,21 +732,6 @@ function updatePeriodName(phoneNumberperiodName, textperiodName, textIDATperiodN
                           return;
                         }
                         console.log('Connected to the database');
-                        const request = new sql.Request();
-                        request.input('member_id', sql.Int(13), member_id);
-                        request.query("SELECT TOP 1 * FROM members_tb where m_id = @member_id ", function (err, statementResults) {
-                          if (err) {
-                            console.error('Error executing query: ' + err.stack);
-                            return;
-                          }
-
-                          if (statementResults.recordset.length > 0) {
-                            console.log('It Worked out: ' + statementResults.recordset);
-                          }
-                          sql.close();
-                        });
-
-                      });  
 
                       
                       

@@ -740,8 +740,8 @@ function updatePeriodName(phoneNumberperiodName, textperiodName, textIDATperiodN
                             return;
                           }
 
-                          if (statementResults.recordset.length > 0) {
-                            console.log('It Worked out: ' + statementResults.recordset);
+                          if (statement.recordset.length > 0) {
+
                           }
                           sql.close();
                         });
