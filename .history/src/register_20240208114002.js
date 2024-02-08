@@ -70,7 +70,7 @@ const register = {
     menuMessage: (sender, LinkID) => ({
         to: sender,
         from:'24123',
-        message: "Welcome to Octagon:  1. Balance Enquiry \n2. Statements. \n3. Deposit \n4. Claims/Withdrawals \n 5. Products  & Services \n 98.  Forgot Password  \n99. Home",
+        message: "Welcome to Octagon:  1. Balance Enquiry \n2. Statements.\n4. Claims/Withdrawals\n98.  Forgot Password",
         // message: "Welcome to Octagon:\n1. Balance Enquiry\n2. Statements.\n3. Deposits\n4. Claims/Withdrawals\n5. Products & Services\n6. My Account\n7. Help\n8. Rate our Services\n9. Reset Password \n10. Deactivate Account\n 98. Forgot Password",
         bulkSMSMode: 0,
         keyword: 'pension',
@@ -79,7 +79,7 @@ const register = {
     wrongMenuValue: (sender, LinkID) => ({
         to: sender,
         from:'24123',
-        message: "Coming soon...🎆😊",
+        message: "You have entered a wrong menu value! Please enter a valid one:",
         bulkSMSMode: 0,
         keyword: 'pension',
         linkId: LinkID

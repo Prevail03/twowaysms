@@ -79,7 +79,7 @@ const register = {
     wrongMenuValue: (sender, LinkID) => ({
         to: sender,
         from:'24123',
-        message: "Coming soon...🎆😊",
+        message: "Dear esteemed customer, the menu value you have entered  is still under development: ",
         bulkSMSMode: 0,
         keyword: 'pension',
         linkId: LinkID

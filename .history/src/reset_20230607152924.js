@@ -90,7 +90,7 @@ const reset={
      
     },
     confirmation: (sender,LinkID) => {
-        messageToCustomer = "Your password has been successfully changed .If this wasn't you, contact us at support@octagonafrica.com ";
+        messageToCustomer = "Your password has been successfully changed .If this wasn't you, your account may have been compromised and you should contact us at support@octagonafrica.com ";
         return {
             to: sender,
             from:'24123',
