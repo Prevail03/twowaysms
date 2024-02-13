@@ -21,7 +21,7 @@ function updateRatingValue(statusRateValue, phoneNumberRateValue, messagingRateV
     });
   });
 }
-function updateReason(sender, statusReason, phoneNumberReason, messagingStepReason, textReason, config, textIDATReason, rate, sms) {
+function updateReason(sender, statusReason, phoneNumberReason, messagingStepReason, textReason, config, textIDATReason, rate) {
   sql.connect(config, function (err) {
     if (err) {
       console.error('Error connecting to the database: ' + err.stack);
