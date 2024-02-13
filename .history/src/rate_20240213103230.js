@@ -9,16 +9,16 @@ const rate = {
           linkId: LinkID
       };
   },
-  // startRating: (sender, LinkID) => {
-  //   return {
-  //       to: sender,
-  //       from:'24123',
-  //       message: "Dear Esteemed Customer, Welcome to Octagon Africa. To provide a rating, please provide us with the following information.\nPlease enter your password:",
-  //       bulkSMSMode: 0,
-  //       keyword: 'pension',
-  //       linkId: LinkID
-  //   };
-  // },
+  startRating: (sender, LinkID) => {
+    return {
+        to: sender,
+        from:'24123',
+        message: "Dear Esteemed Customer, Welcome to Octagon Africa. To provide a rating, please provide us with the following information.\nPlease enter your password:",
+        bulkSMSMode: 0,
+        keyword: 'pension',
+        linkId: LinkID
+    };
+  },
   reasonmessage: (sender, LinkID) => {
     return {
         to: sender,
@@ -29,21 +29,11 @@ const rate = {
         linkId: LinkID
     };
   },
-  successmessage: (sender, LinkID) => {
+  succesmessage: (sender, LinkID) => {
     return {
         to: sender,
         from:'24123',
-        message: "Your feedback has been successfully received. Thanks for your continued support!.",
-        bulkSMSMode: 0,
-        keyword: 'pension',
-        linkId: LinkID
-    };
-  },
-  wrongResponse: (sender, LinkID) => {
-    return {
-        to: sender,
-        from:'24123',
-        message: "Invalid response:!!",
+        message: "Give us the reasons for your rating.",
         bulkSMSMode: 0,
         keyword: 'pension',
         linkId: LinkID

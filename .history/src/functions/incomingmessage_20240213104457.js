@@ -5,7 +5,6 @@ const handleAccountCheck = require('./handleAccountCheck');
 const handlePasswordReset = require('./handlePasswordReset');
 const handleForgotPassword = require('./handleForgotPassword');
 const handleClaims = require('./handleClaims');
-const handleRating = require('./handleRating');
 const reset =require('../reset');
 const claims = require('../claims');
 const products = require('../products');
@@ -262,7 +261,7 @@ function handleIncomingMessage(textMessage, sender, textId, phoneNumber, config,
                         });
                     }else if(textMessage == 6){
                         console.log("Rate us  Workflow");
-                        sms.sendPremium(rate.ratemessage(sender, LinkID));
+                        sms.sendPremium(rate.startClaims(sender, LinkID));
                         const messagingStep = "1";
                         const status = "isRating";
                         const insertQuery = "INSERT INTO two_way_sms_tb (text, text_id_AT, messagingStep, phoneNumber, status, isActive) VALUES (@text, @text_id_AT, @messagingStep, @phoneNumber, @status, @isActive)";

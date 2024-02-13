@@ -33,17 +33,7 @@ const rate = {
     return {
         to: sender,
         from:'24123',
-        message: "Your feedback has been successfully received. Thanks for your continued support!.",
-        bulkSMSMode: 0,
-        keyword: 'pension',
-        linkId: LinkID
-    };
-  },
-  wrongResponse: (sender, LinkID) => {
-    return {
-        to: sender,
-        from:'24123',
-        message: "Invalid response:!!",
+        message: "Give us the reasons for your rating.",
         bulkSMSMode: 0,
         keyword: 'pension',
         linkId: LinkID

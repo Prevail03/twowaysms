@@ -48,6 +48,6 @@ const rate = {
         keyword: 'pension',
         linkId: LinkID
     };
-  },
+},
 }
 module.exports = rate;
