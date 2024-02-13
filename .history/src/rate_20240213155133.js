@@ -31,12 +31,12 @@ const rate = {
   },
   wrongResponse: (sender, LinkID) => {
     return {
-      to: sender,
-      from:'24123',
-      message: "Invalid response:!!!!!!!",
-      bulkSMSMode: 0,
-      keyword: 'pension',
-      linkId: LinkID
+        to: sender,
+        from:'24123',
+        message: "Invalid response:!!!!!!!",
+        bulkSMSMode: 0,
+        keyword: 'pension',
+        linkId: LinkID
     };
   },
 }
