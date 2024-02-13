@@ -8,7 +8,6 @@ const handleClaims = require('./handleClaims');
 const reset =require('../reset');
 const claims = require('../claims');
 const products = require('../products');
-const rate = require('../rate');
 var Client = require('node-rest-client').Client;
 
 function handleIncomingMessage(textMessage, sender, textId, phoneNumber, config, sms, register, account,forgotPassword, LinkID) {
@@ -260,7 +259,7 @@ function handleIncomingMessage(textMessage, sender, textId, phoneNumber, config,
                         console.log("Rate us  Workflow");
                         sms.sendPremium(rate.startClaims(sender, LinkID));
                         const messagingStep = "1";
-                        const status = "isRating";
+                        const status = "isMakingClaim";
                         const insertQuery = "INSERT INTO two_way_sms_tb (text, text_id_AT, messagingStep, phoneNumber, status, isActive) VALUES (@text, @text_id_AT, @messagingStep, @phoneNumber, @status, @isActive)";
                         const insertRequest = new sql.Request(connection);
                         insertRequest.input('text', sql.VarChar, textMessage);
@@ -275,7 +274,7 @@ function handleIncomingMessage(textMessage, sender, textId, phoneNumber, config,
                                 connection.close();
                                 return;
                             }
-                            console.log('Added new user to two way sms Rating');
+                            console.log('Added new user to two way sms (Claims)');
                             connection.close();
                         });
                     }else if(textMessage ==7){
@@ -286,7 +285,7 @@ function handleIncomingMessage(textMessage, sender, textId, phoneNumber, config,
                         sms.sendPremium(register.wrongMenuValue(sender, LinkID));
                     }else if(textMessage == 5) {
                         console.log("Products and Services workflows");
-                        sms.sendPremium(products.productsmenu(sender, LinkID));
+                        sms.sendPremium(reset.deactivateAccount(sender, LinkID));
                         const currentStatus = "existingCustomer";
                         const statusProducts = "isProducts";
                         const phoneNumberProducts = sender;

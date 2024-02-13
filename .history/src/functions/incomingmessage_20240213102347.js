@@ -8,7 +8,6 @@ const handleClaims = require('./handleClaims');
 const reset =require('../reset');
 const claims = require('../claims');
 const products = require('../products');
-const rate = require('../rate');
 var Client = require('node-rest-client').Client;
 
 function handleIncomingMessage(textMessage, sender, textId, phoneNumber, config, sms, register, account,forgotPassword, LinkID) {

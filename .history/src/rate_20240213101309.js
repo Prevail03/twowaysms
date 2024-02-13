@@ -1,4 +1,3 @@
-
 const products = {
   productsmenu: (sender, LinkID) => {
       return {
@@ -10,6 +9,5 @@ const products = {
           linkId: LinkID
       };
   },
-  
 }
 module.exports = products;

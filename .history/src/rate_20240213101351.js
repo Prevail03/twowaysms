@@ -1,6 +1,5 @@
-
-const products = {
-  productsmenu: (sender, LinkID) => {
+const rate = {
+  menumessage: (sender, LinkID) => {
       return {
           to: sender,
           from:'24123',
@@ -10,6 +9,5 @@ const products = {
           linkId: LinkID
       };
   },
-  
 }
-module.exports = products;
+module.exports = rate;

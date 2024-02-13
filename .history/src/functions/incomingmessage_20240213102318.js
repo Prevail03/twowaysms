@@ -8,7 +8,6 @@ const handleClaims = require('./handleClaims');
 const reset =require('../reset');
 const claims = require('../claims');
 const products = require('../products');
-const rate = require('../rate');
 var Client = require('node-rest-client').Client;
 
 function handleIncomingMessage(textMessage, sender, textId, phoneNumber, config, sms, register, account,forgotPassword, LinkID) {
@@ -286,7 +285,7 @@ function handleIncomingMessage(textMessage, sender, textId, phoneNumber, config,
                         sms.sendPremium(register.wrongMenuValue(sender, LinkID));
                     }else if(textMessage == 5) {
                         console.log("Products and Services workflows");
-                        sms.sendPremium(products.productsmenu(sender, LinkID));
+                        sms.sendPremium(reset.productsmenu(sender, LinkID));
                         const currentStatus = "existingCustomer";
                         const statusProducts = "isProducts";
                         const phoneNumberProducts = sender;
