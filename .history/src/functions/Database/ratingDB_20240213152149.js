@@ -17,6 +17,7 @@ function updateRatingValue(statusRateValue, phoneNumberRateValue, messagingRateV
         return;
       }
       console.log('Rating Value UPDATE successful');
+
       sql.close();
     });
   });
