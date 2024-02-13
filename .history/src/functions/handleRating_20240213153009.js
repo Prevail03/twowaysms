@@ -21,7 +21,7 @@ function handleRating(textMessage, sender, messagingStep, sms, config, textIDAT,
       const messagingStepReason = "3";
       const textReason = textMessage;
       const textIDATReason = textIDAT;
-      updateReason(sender, statusReason, phoneNumberReason, messagingStepReason, textReason, config, textIDATReason, rate, textIDAT);
+      updateReason(sender, tatusReason, phoneNumberReason, messagingStepReason, textReason, config, textIDATReason, rate, textIDAT);
       break;  
     default:
       // do sthg
