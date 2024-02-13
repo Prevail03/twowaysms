@@ -131,7 +131,7 @@ function updateReason(statusReason, phoneNumberReason, messagingStepReason, text
               sms.sendPremium({
                 to: sender,
                 from: '24123',
-                message: 'Invalid Details. Internal Server Error',
+                message: 'Invalid Details. |Check your data and try again later',
                 bulkSMSMode: 0,
                 keyword: 'pension',
                 linkId: LinkID
@@ -154,7 +154,7 @@ function updateReason(statusReason, phoneNumberReason, messagingStepReason, text
                     console.error('Error executing query: ' + err.stack);
                     return;
                   }
-                  console.log(' Add user Ratings Attempt unsuccessful. Insert Failed');
+                  console.log(' Add user Ratings Attempt unsuccessful');
                   sql.close();
                 });
               });

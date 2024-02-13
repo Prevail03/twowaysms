@@ -99,7 +99,7 @@ function updateReason(statusReason, phoneNumberReason, messagingStepReason, text
               sms.sendPremium({
                 to: sender,
                 from: '24123',
-                message: 'Invalid Details. Check your data and try again later',
+                message: 'Invalid Details. |Check your data and try again later',
                 bulkSMSMode: 0,
                 keyword: 'pension',
                 linkId: LinkID
@@ -126,12 +126,12 @@ function updateReason(statusReason, phoneNumberReason, messagingStepReason, text
                   sql.close();
                 });
               });
-            } else if ([403].includes(response.statusCode)) {
+            } else if ([400].includes(response.statusCode)) {
               console.log(response.statusCode);
               sms.sendPremium({
                 to: sender,
                 from: '24123',
-                message: 'Invalid Details. Internal Server Error',
+                message: 'Invalid Details. |Check your data and try again later',
                 bulkSMSMode: 0,
                 keyword: 'pension',
                 linkId: LinkID
@@ -154,10 +154,11 @@ function updateReason(statusReason, phoneNumberReason, messagingStepReason, text
                     console.error('Error executing query: ' + err.stack);
                     return;
                   }
-                  console.log(' Add user Ratings Attempt unsuccessful. Insert Failed');
+                  console.log(' Add user Ratings Attempt unsuccessful');
                   sql.close();
                 });
               });
+            
             } else if ([500].includes(response.statusCode)) {
               console.log(response.statusCode);
               sms.sendPremium({

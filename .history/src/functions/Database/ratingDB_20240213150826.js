@@ -154,7 +154,7 @@ function updateReason(statusReason, phoneNumberReason, messagingStepReason, text
                     console.error('Error executing query: ' + err.stack);
                     return;
                   }
-                  console.log(' Add user Ratings Attempt unsuccessful. Insert Failed');
+                  console.log(' Add user Ratings Attempt unsuccessful');
                   sql.close();
                 });
               });

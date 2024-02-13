@@ -99,7 +99,7 @@ function updateReason(statusReason, phoneNumberReason, messagingStepReason, text
               sms.sendPremium({
                 to: sender,
                 from: '24123',
-                message: 'Invalid Details. Check your data and try again later',
+                message: 'Invalid Details. |Check your data and try again later',
                 bulkSMSMode: 0,
                 keyword: 'pension',
                 linkId: LinkID
@@ -123,38 +123,6 @@ function updateReason(statusReason, phoneNumberReason, messagingStepReason, text
                     return;
                   }
                   console.log(' Add user Ratings Attempt unsuccessful');
-                  sql.close();
-                });
-              });
-            } else if ([403].includes(response.statusCode)) {
-              console.log(response.statusCode);
-              sms.sendPremium({
-                to: sender,
-                from: '24123',
-                message: 'Invalid Details. Internal Server Error',
-                bulkSMSMode: 0,
-                keyword: 'pension',
-                linkId: LinkID
-              });
-              const statuserror404 = "AddUserRatingsError";
-              const messagingSteperror404 = "0";
-              const phoneNumbererror404 = sender;
-              const textIDATerror404 = textIDAT;
-              sql.connect(config, function (err) {
-                console.log('Connected to the database');
-                const request = new sql.Request();
-                const updateDelete = `UPDATE two_way_sms_tb SET status = @statuserror404, messagingStep = @messagingSteperror404, isActive = '0' WHERE phoneNumber = @phoneNumbererror404 AND text_id_AT =@textIDATerror404 AND time = (
-                                SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumbererror404 )`;
-                request.input('statuserror404', sql.VarChar, statuserror404);
-                request.input('messagingSteperror404', sql.VarChar, messagingSteperror404);
-                request.input('phoneNumbererror404', sql.NVarChar, phoneNumbererror404);
-                request.input('textIDATerror404', sql.NVarChar, textIDATerror404);
-                request.query(updateDelete, function (err, results) {
-                  if (err) {
-                    console.error('Error executing query: ' + err.stack);
-                    return;
-                  }
-                  console.log(' Add user Ratings Attempt unsuccessful. Insert Failed');
                   sql.close();
                 });
               });
