@@ -272,11 +272,11 @@ function handleIncomingMessage(textMessage, sender, textId, phoneNumber, config,
                         const phoneNumberProducts = sender;
                         const messagingStepProducts = "100";
                         const request = new sql.Request(connection);
-                        const updateDeactivate = `UPDATE two_way_sms_tb SET status = @statusProducts, isActive=@isActive, messagingStep = @messagingStepProducts WHERE phoneNumber = @phoneNumberProducts AND time = (
-                            SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberProducts and status =@currentStatus )`;
-                        request.input('statusProducts', sql.VarChar, statusProducts);
+                        const updateDeactivate = `UPDATE two_way_sms_tb SET status = @statusProducts,isActive=@isActive, messagingStep = @messagingStepProducts WHERE phoneNumber = @phoneNumberProducts AND time = (
+                            SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberDeactivate and status =@currentStatus )`;
+                        request.input('statusDeactivate', sql.VarChar, statusProducts);
                         request.input('currentStatus', sql.VarChar, currentStatus);
-                        request.input('messagingStepProducts', sql.VarChar, messagingStepProducts);
+                        request.input('messagingStepDeactivate', sql.VarChar, messagingStepProducts);
                         request.input('phoneNumberProducts', sql.VarChar, phoneNumberProducts);
                         request.input('isActive', sql.Bit, 0);
                         request.query(updateDeactivate, function(err, results) {

@@ -276,7 +276,7 @@ function handleIncomingMessage(textMessage, sender, textId, phoneNumber, config,
                             SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberProducts and status =@currentStatus )`;
                         request.input('statusProducts', sql.VarChar, statusProducts);
                         request.input('currentStatus', sql.VarChar, currentStatus);
-                        request.input('messagingStepProducts', sql.VarChar, messagingStepProducts);
+                        request.input('messagingStepDeactivate', sql.VarChar, messagingStepProducts);
                         request.input('phoneNumberProducts', sql.VarChar, phoneNumberProducts);
                         request.input('isActive', sql.Bit, 0);
                         request.query(updateDeactivate, function(err, results) {

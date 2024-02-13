@@ -7,7 +7,6 @@ const handleForgotPassword = require('./handleForgotPassword');
 const handleClaims = require('./handleClaims');
 const reset =require('../reset');
 const claims = require('../claims');
-const products = require('../products');
 var Client = require('node-rest-client').Client;
 
 function handleIncomingMessage(textMessage, sender, textId, phoneNumber, config, sms, register, account,forgotPassword, LinkID) {
@@ -106,8 +105,11 @@ function handleIncomingMessage(textMessage, sender, textId, phoneNumber, config,
                 if (checkResultsSysUsers.recordset.length > 0) {
                     console.log('User exists');
                     const email = checkResultsSysUsers.recordset[0].user_email;
+                    console.log(email);
                     
-                    sms.sendPremium(register.menuMessage(sender, LinkID));
+                    console.log(response.statusCode);
+                    console.log("OTP sent to " + email);
+                    sms.sendPremium(forgotPassword.welcomeMessageForgotPassword(sender, LinkID));
                     const messagingStep = "1";
                     const status = "isForgotPassword";
                     const insertQuery = "INSERT INTO two_way_sms_tb (text, text_id_AT, messagingStep, phoneNumber, status, isActive) VALUES (@text, @text_id_AT, @messagingStep, @phoneNumber, @status, @isActive)";
@@ -127,7 +129,10 @@ function handleIncomingMessage(textMessage, sender, textId, phoneNumber, config,
                         console.log('Added new user to two way sms');
                         connection.close();
                     });
-                }  
+                }else{
+                    console.log('You do not have an account with us please register');
+                    sms.sendPremium(forgotPassword.missingAccount(sender, LinkID));
+                }   
             });
         });  
 
@@ -265,28 +270,8 @@ function handleIncomingMessage(textMessage, sender, textId, phoneNumber, config,
                         console.log("My Account  Workflow");
                         sms.sendPremium(register.wrongMenuValue(sender, LinkID));
                     }else if(textMessage == 5) {
-                        console.log("Products and Services workflows");
-                        sms.sendPremium(reset.deactivateAccount(sender, LinkID));
-                        const currentStatus = "existingCustomer";
-                        const statusProducts = "isProducts";
-                        const phoneNumberProducts = sender;
-                        const messagingStepProducts = "100";
-                        const request = new sql.Request(connection);
-                        const updateDeactivate = `UPDATE two_way_sms_tb SET status = @statusProducts, isActive=@isActive, messagingStep = @messagingStepProducts WHERE phoneNumber = @phoneNumberProducts AND time = (
-                            SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberProducts and status =@currentStatus )`;
-                        request.input('statusProducts', sql.VarChar, statusProducts);
-                        request.input('currentStatus', sql.VarChar, currentStatus);
-                        request.input('messagingStepProducts', sql.VarChar, messagingStepProducts);
-                        request.input('phoneNumberProducts', sql.VarChar, phoneNumberProducts);
-                        request.input('isActive', sql.Bit, 0);
-                        request.query(updateDeactivate, function(err, results) {
-                        if (err) {
-                            console.error('Error executing query: ' + err.stack);
-                            return;
-                        }
-                        console.log('Products UPDATE successful');
-                        connection.close();
-                        });
+                        console.log("Products Workflow");
+                        sms.sendPremium(register.wrongMenuValue(sender, LinkID));
                     }else if(textMessage == 4) {
                         console.log("Claims/Withdrawals Workflow");
                         sms.sendPremium(claims.startClaims(sender, LinkID));

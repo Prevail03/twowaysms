@@ -7,7 +7,6 @@ const handleForgotPassword = require('./handleForgotPassword');
 const handleClaims = require('./handleClaims');
 const reset =require('../reset');
 const claims = require('../claims');
-const products = require('../products');
 var Client = require('node-rest-client').Client;
 
 function handleIncomingMessage(textMessage, sender, textId, phoneNumber, config, sms, register, account,forgotPassword, LinkID) {
@@ -272,19 +271,19 @@ function handleIncomingMessage(textMessage, sender, textId, phoneNumber, config,
                         const phoneNumberProducts = sender;
                         const messagingStepProducts = "100";
                         const request = new sql.Request(connection);
-                        const updateDeactivate = `UPDATE two_way_sms_tb SET status = @statusProducts, isActive=@isActive, messagingStep = @messagingStepProducts WHERE phoneNumber = @phoneNumberProducts AND time = (
-                            SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberProducts and status =@currentStatus )`;
-                        request.input('statusProducts', sql.VarChar, statusProducts);
+                        const updateDeactivate = `UPDATE two_way_sms_tb SET status = @statusDeactivate,isActive=@isActive, messagingStep = @messagingStepDeactivate WHERE phoneNumber = @phoneNumberDeactivate AND time = (
+                            SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberDeactivate and status =@currentStatus )`;
+                        request.input('statusDeactivate', sql.VarChar, statusProducts);
                         request.input('currentStatus', sql.VarChar, currentStatus);
-                        request.input('messagingStepProducts', sql.VarChar, messagingStepProducts);
+                        request.input('messagingStepDeactivate', sql.VarChar, messagingStepProducts);
                         request.input('phoneNumberProducts', sql.VarChar, phoneNumberProducts);
-                        request.input('isActive', sql.Bit, 0);
+                        request.input('isActive', sql.Bit, 1);
                         request.query(updateDeactivate, function(err, results) {
                         if (err) {
                             console.error('Error executing query: ' + err.stack);
                             return;
                         }
-                        console.log('Products UPDATE successful');
+                        console.log('Products Account UPDATE successful');
                         connection.close();
                         });
                     }else if(textMessage == 4) {
