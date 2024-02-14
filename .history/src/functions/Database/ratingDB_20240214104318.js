@@ -87,7 +87,7 @@ function updateReason(sender, statusReason, phoneNumberReason, messagingStepReas
                     sql.close();
                     return;
                   }
-                  
+                  sms.sendPremium(rate.successmessage(sender,LinkID));
                   console.log('Ratings UPDATE successful');
                   sql.close(); 
                 });
@@ -193,7 +193,6 @@ function updateReason(sender, statusReason, phoneNumberReason, messagingStepReas
               });
             } else {
               console.log(response.statusCode);
-              process.exit();
             }
           });
         }

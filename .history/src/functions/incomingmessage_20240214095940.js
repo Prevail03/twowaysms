@@ -184,7 +184,7 @@ function handleIncomingMessage(textMessage, sender, textId, phoneNumber, config,
                             handleRating(textMessage, sender, messagingStep, sms, config, textIDAT, LinkID, rate, account);
                         break;
                         case 'isProducts':
-                            handleProductsAndServices(textMessage, sender, messagingStep, sms, config, textIDAT, LinkID, products);
+                            handleRating(textMessage, sender, messagingStep, sms, config, textIDAT, LinkID, rate, account);
                         break;
                         default:
                             sms.sendPremium(register.defaultMessage(sender, LinkID));
@@ -360,15 +360,12 @@ function handleIncomingMessage(textMessage, sender, textId, phoneNumber, config,
                                 sms.sendPremium(register.menuMessage(sender, LinkID));
                                 // ... Handle existing record logic ...
                                 const status = "existingCustomer";
-                                const user_id =  checkResultsSysUsers.recordset[0].user_id;
-                                const insertQuery = "INSERT INTO two_way_sms_tb (text, text_id_AT, phoneNumber, status, user_id) VALUES (@text, @text_id_AT, @phoneNumber, @status, @user_id)";
+                                const insertQuery = "INSERT INTO two_way_sms_tb (text, text_id_AT, phoneNumber, status) VALUES (@text, @text_id_AT, @phoneNumber, @status)";
                                 const insertRequest = new sql.Request(connection);
                                 insertRequest.input('text', sql.VarChar, textMessage);
                                 insertRequest.input('text_id_AT', sql.VarChar, textId);
                                 insertRequest.input('phoneNumber', sql.VarChar, phoneNumber);
                                 insertRequest.input('status', sql.VarChar, status);
-                                insertRequest.input('user_id', sql.VarChar, user_id);
-
                                 insertRequest.query(insertQuery, function(insertErr, insertResults) {
                                     if (insertErr) {
                                         console.error('Error executing insertQuery: ' + insertErr.stack);

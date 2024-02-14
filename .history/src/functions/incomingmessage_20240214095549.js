@@ -183,9 +183,6 @@ function handleIncomingMessage(textMessage, sender, textId, phoneNumber, config,
                         case 'isRating':
                             handleRating(textMessage, sender, messagingStep, sms, config, textIDAT, LinkID, rate, account);
                         break;
-                        case 'isProducts':
-                            handleProductsAndServices(textMessage, sender, messagingStep, sms, config, textIDAT, LinkID, products);
-                        break;
                         default:
                             sms.sendPremium(register.defaultMessage(sender, LinkID));
                             console.log('Unknown status: ' + status);
@@ -297,7 +294,7 @@ function handleIncomingMessage(textMessage, sender, textId, phoneNumber, config,
                         const currentStatus = "existingCustomer";
                         const statusProducts = "isProducts";
                         const phoneNumberProducts = sender;
-                        const messagingStepProducts = "1";
+                        const messagingStepProducts = "100";
                         const request = new sql.Request(connection);
                         const updateDeactivate = `UPDATE two_way_sms_tb SET status = @statusProducts, isActive=@isActive, messagingStep = @messagingStepProducts WHERE phoneNumber = @phoneNumberProducts AND time = (
                             SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberProducts and status =@currentStatus )`;
@@ -360,15 +357,12 @@ function handleIncomingMessage(textMessage, sender, textId, phoneNumber, config,
                                 sms.sendPremium(register.menuMessage(sender, LinkID));
                                 // ... Handle existing record logic ...
                                 const status = "existingCustomer";
-                                const user_id =  checkResultsSysUsers.recordset[0].user_id;
-                                const insertQuery = "INSERT INTO two_way_sms_tb (text, text_id_AT, phoneNumber, status, user_id) VALUES (@text, @text_id_AT, @phoneNumber, @status, @user_id)";
+                                const insertQuery = "INSERT INTO two_way_sms_tb (text, text_id_AT, phoneNumber, status) VALUES (@text, @text_id_AT, @phoneNumber, @status)";
                                 const insertRequest = new sql.Request(connection);
                                 insertRequest.input('text', sql.VarChar, textMessage);
                                 insertRequest.input('text_id_AT', sql.VarChar, textId);
                                 insertRequest.input('phoneNumber', sql.VarChar, phoneNumber);
                                 insertRequest.input('status', sql.VarChar, status);
-                                insertRequest.input('user_id', sql.VarChar, user_id);
-
                                 insertRequest.query(insertQuery, function(insertErr, insertResults) {
                                     if (insertErr) {
                                         console.error('Error executing insertQuery: ' + insertErr.stack);

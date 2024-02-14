@@ -87,7 +87,7 @@ function updateReason(sender, statusReason, phoneNumberReason, messagingStepReas
                     sql.close();
                     return;
                   }
-                  
+                  sms.sendPremium(rate.successmessage(sender,LinkID));
                   console.log('Ratings UPDATE successful');
                   sql.close(); 
                 });
@@ -122,7 +122,6 @@ function updateReason(sender, statusReason, phoneNumberReason, messagingStepReas
                   }
                   console.log(' Add user Ratings Attempt unsuccessful');
                   sql.close();
-                  process.exit();
                 });
               });
             } else if ([403].includes(response.statusCode)) {
@@ -155,7 +154,6 @@ function updateReason(sender, statusReason, phoneNumberReason, messagingStepReas
                   }
                   console.log(' Add user Ratings Attempt unsuccessful. Insert Failed');
                   sql.close();
-                  process.exit();
                 });
               });
             } else if ([500].includes(response.statusCode)) {
@@ -188,12 +186,10 @@ function updateReason(sender, statusReason, phoneNumberReason, messagingStepReas
                   }
                   console.log('Add user Ratings Attempt unsuccessful');
                   sql.close();
-                  process.exit();
                 });
               });
             } else {
               console.log(response.statusCode);
-              process.exit();
             }
           });
         }

@@ -21,7 +21,6 @@ function handleRating(textMessage, sender, messagingStep, sms, config, textIDAT,
       const textReason = textMessage;
       const textIDATReason = textIDAT;
       updateReason(sender, statusReason, phoneNumberReason, messagingStepReason, textReason, config, textIDATReason, rate, textIDAT, sms, LinkID);
-      sms.sendPremium(rate.successmessage(sender,LinkID)); 
       break;  
     default:
       // do sthg
