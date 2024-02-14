@@ -1,5 +1,5 @@
 const sql = require('mssql');
-const { updateLastname } = require('./Database/productsDB');
+const { updateLastname } = require('./Database/registerDB');
 var Client = require('node-rest-client').Client;
 
 
@@ -26,14 +26,7 @@ function handleProductsAndServices(textMessage, sender, messagingStep, sms, conf
       const statusIPP = "isProducts";
       const phoneNumberIPP = sender;
       const messagingStepIPP = "3";
-      const productDescription = textMessage;
-      // let textIPP = '';
-      // if(productDescription == 1){
-      //   textIPP = 'IPP';
-      // }else if(productDescription == 2){
-      //   textIPP = 'Jistawishe';
-      // }
-      const textIPP = "IPP";
+      const textIPP = textMessage;
       const textIDATIPP = textIDAT;
       updateProductDescription(sender, statusIPP, phoneNumberIPP, messagingStepIPP, textIPP, config, textIDATIPP, textIDAT, sms, LinkID);
       sms.sendPremium(products.enterfirstname(sender,LinkID));

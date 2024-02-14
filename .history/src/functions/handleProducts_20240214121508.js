@@ -1,5 +1,5 @@
 const sql = require('mssql');
-const { updateLastname } = require('./Database/productsDB');
+const { updateLastname } = require('./Database/registerDB');
 var Client = require('node-rest-client').Client;
 
 
@@ -19,23 +19,16 @@ function handleProductsAndServices(textMessage, sender, messagingStep, sms, conf
         textMessageProduct = 'Pension';
         messagingStepPension = 10;
       }
-      updatePensionMessagingStep(statusIsPension, phoneNumberPension, messagingStepPension, textMessageProduct, config, textIDATPension);
+      updatePensionMessagingStep(statusIsPension, phoneNumberPension, messagingStepPension, textMessage, config, textIDATPension);
       sms.sendPremium(products.pensionProducts(sender,LinkID));
     break;
     case 2:
       const statusIPP = "isProducts";
       const phoneNumberIPP = sender;
       const messagingStepIPP = "3";
-      const productDescription = textMessage;
-      // let textIPP = '';
-      // if(productDescription == 1){
-      //   textIPP = 'IPP';
-      // }else if(productDescription == 2){
-      //   textIPP = 'Jistawishe';
-      // }
-      const textIPP = "IPP";
+      const textIPP = textMessage;
       const textIDATIPP = textIDAT;
-      updateProductDescription(sender, statusIPP, phoneNumberIPP, messagingStepIPP, textIPP, config, textIDATIPP, textIDAT, sms, LinkID);
+      updateReason(sender, statusIPP, phoneNumberIPP, messagingStepIPP, textIPP, config, textIDATIPP, textIDAT, sms, LinkID);
       sms.sendPremium(products.enterfirstname(sender,LinkID));
     break;  
     case 3:
@@ -115,11 +108,11 @@ function handleProductsAndServices(textMessage, sender, messagingStep, sms, conf
     case 9:
       const statusAmount = "isProducts";
       const phoneNumberAmount = sender;
-      const messagingStepAmount = "20";
+      const messagingStepAmount = "7";
       const textAmount = textMessage;
       const textIDATAmount = textIDAT;
       updateAmount(sender, statusAmount, phoneNumberAmount, messagingStepAmount, textAmount, config, textIDATAmount, textIDAT, sms, LinkID);
-      // sms.sendPremium(products.enteremail(sender,LinkID));
+      sms.sendPremium(products.enteremail(sender,LinkID));
     break;
 
   }

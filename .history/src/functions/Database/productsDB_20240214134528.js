@@ -218,11 +218,11 @@ function updateAmount(sender, statusAmount, phoneNumberAmount, messagingStepAmou
           var addNewUserRating = new Client();
           // set content-type header and data as json in args parameter
           var args = {
-            data: { product: product, productDescription: productDescription, firstname: firstname, lastname: lastname, email: email, national_ID: national_ID, phoneNumber: phoneNumberAmount, methodOfPayment: methodOfPayment, modeOfPayment: modeOfPayment, mount: amount},
+            data: { identifier: phoneNumberAmount, ratingReason: ratingReason, ratingValue: ratingValue},
             headers: { "Content-Type": "application/json" }
           };
           console.log(args);
-          addNewUserRating.post("https://api.octagonafrica.com/v1/user/onboardnewclients", args, function (data, response) {
+          addNewUserRating.post("https://api.octagonafrica.com/v1/user/adduserratings", args, function (data, response) {
             if ([200].includes(response.statusCode)) {
               console.log(response.statusCode);
               sql.connect(config, function (err) {

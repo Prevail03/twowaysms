@@ -1,5 +1,5 @@
 const sql = require('mssql');
-const { updateLastname } = require('./Database/productsDB');
+const { updateLname } = require('./Database/productsDB');
 var Client = require('node-rest-client').Client;
 
 

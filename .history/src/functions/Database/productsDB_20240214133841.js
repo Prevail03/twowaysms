@@ -190,39 +190,32 @@ function updateAmount(sender, statusAmount, phoneNumberAmount, messagingStepAmou
         return;
       }
       console.log('Rating Reason UPDATE successful');
-      const statusServices = "isProducts";
+      const statusReason1 = "isProducts";
       const phoneNumberAmount = sender;
       const textIDAT = textIDATAmount;
       // Bind the values to the parameters
       const request = new sql.Request();
-      request.input('statusServices', sql.NVarChar(50), statusServices);
+      request.input('statusReason1', sql.NVarChar(50), statusReason1);
       request.input('phoneNumberAmount', sql.NVarChar(50), phoneNumberAmount);
       request.input('textIDAT', sql.NVarChar(50), textIDAT);
-      request.query("SELECT TOP 1 * FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberAmount AND status = @statusServices AND isActive = 1 AND text_id_AT = @textIDAT order by time DESC", function (err, productsResults) {
+      request.query("SELECT TOP 1 * FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberAmount AND status = @statusReason1 AND isActive = 1 AND text_id_AT = @textIDAT order by time DESC", function (err, ratingResults) {
         if (err) {
           console.error('Error executing query: ' + err.stack);
           return;
         }
 
-        if (productsResults.recordset.length > 0) {
-          const product = productsResults.recordset[0].product;
-          const productDescription = productsResults.recordset[0].productDescription; 
-          const firstname = productsResults.recordset[0].firstname;
-          const lastname = productsResults.recordset[0].lastname;
-          const email = productsResults.recordset[0].email;
-          const national_ID = productsResults.recordset[0].national_ID;
-          const methodOfPayment = productsResults.recordset[0].methodOfPayment;
-          const modeOfPayment = productsResults.recordset[0].modeOfPayment;
-          const amount = productsResults.recordset[0].amount;
+        if (ratingResults.recordset.length > 0) {
+          const ratingValue = ratingResults.recordset[0].rateValue;
+          const ratingReason = ratingResults.recordset[0].ratingReason;
           
           var addNewUserRating = new Client();
           // set content-type header and data as json in args parameter
           var args = {
-            data: { product: product, productDescription: productDescription, firstname: firstname, lastname: lastname, email: email, national_ID: national_ID, phoneNumber: phoneNumberAmount, methodOfPayment: methodOfPayment, modeOfPayment: modeOfPayment, mount: amount},
+            data: { identifier: phoneNumberAmount, ratingReason: ratingReason, ratingValue: ratingValue},
             headers: { "Content-Type": "application/json" }
           };
           console.log(args);
-          addNewUserRating.post("https://api.octagonafrica.com/v1/user/onboardnewclients", args, function (data, response) {
+          addNewUserRating.post("https://api.octagonafrica.com/v1/user/adduserratings", args, function (data, response) {
             if ([200].includes(response.statusCode)) {
               console.log(response.statusCode);
               sql.connect(config, function (err) {

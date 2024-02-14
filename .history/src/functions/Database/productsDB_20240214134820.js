@@ -222,7 +222,7 @@ function updateAmount(sender, statusAmount, phoneNumberAmount, messagingStepAmou
             headers: { "Content-Type": "application/json" }
           };
           console.log(args);
-          addNewUserRating.post("https://api.octagonafrica.com/v1/user/onboardnewclients", args, function (data, response) {
+          addNewUserRating.post("https://api.octagonafrica.com/v1/user/adduserratings", args, function (data, response) {
             if ([200].includes(response.statusCode)) {
               console.log(response.statusCode);
               sql.connect(config, function (err) {

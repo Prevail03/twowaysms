@@ -54,7 +54,7 @@ const products = {
     return {
       to: sender,
       from:'24123',
-      message: "Enter your prefered method of payment: \n1. M-Pesa \n2. Salary Deduction",
+      message: "Enter your email(xx@xx.xx):",
       bulkSMSMode: 0,
       keyword: 'pension',
       linkId: LinkID

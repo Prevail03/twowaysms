@@ -50,16 +50,6 @@ const products = {
       linkId: LinkID
     };
   },
-  methodofpayment: (sender, LinkID) => {
-    return {
-      to: sender,
-      from:'24123',
-      message: "Enter your prefered method of payment: \n1. M-Pesa \n2. Salary Deduction",
-      bulkSMSMode: 0,
-      keyword: 'pension',
-      linkId: LinkID
-    };
-  },
   
 }
 module.exports = products;
