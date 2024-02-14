@@ -244,7 +244,7 @@ function updateAmount(sender, statusAmount, phoneNumberAmount, messagingStepAmou
                   sms.sendPremium({
                     to: sender,
                     from: '24123',
-                    message: 'Dear '+ firstname + ' ' + lastname + ' , Your request has been successfully received. Its currently being reviewed by our team. Once approved, you will receive an notification',
+                    message: 'Dear '+ firstname + ' ' + lastname + ' , Your request has been successfully received. Its currently being reviewed. Once approved, you will receive an notification',
                     bulkSMSMode: 0,
                     keyword: 'pension',
                     linkId: LinkID
