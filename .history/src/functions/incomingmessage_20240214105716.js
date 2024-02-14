@@ -363,7 +363,7 @@ function handleIncomingMessage(textMessage, sender, textId, phoneNumber, config,
                                 const user_id =  checkResultsSysUsers.recordset[0].user_id;
                                 console.log(user_id);
                                 // process.exit();
-                                const insertQuery = "INSERT INTO two_way_sms_tb (text, text_id_AT, phoneNumber, status, user_id) VALUES (@text, @text_id_AT, @phoneNumber, @status, @user_id)";
+                                const insertQuery = "INSERT INTO two_way_sms_tb (text, text_id_AT, phoneNumber, status, user_id) VALUES (@text, @text_id_AT, @phoneNumber, @status)";
                                 const insertRequest = new sql.Request(connection);
                                 insertRequest.input('text', sql.VarChar, textMessage);
                                 insertRequest.input('text_id_AT', sql.VarChar, textId);
