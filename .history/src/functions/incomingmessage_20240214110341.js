@@ -369,7 +369,7 @@ function handleIncomingMessage(textMessage, sender, textId, phoneNumber, config,
                                 insertRequest.input('text_id_AT', sql.VarChar, textId);
                                 insertRequest.input('phoneNumber', sql.VarChar, phoneNumber);
                                 insertRequest.input('status', sql.VarChar, status);
-                                insertRequest.input('user_id', sql.NChar, user_id);
+                                insertRequest.input('user_id', sql.NChar(13), user_id);
                                 insertRequest.query(insertQuery, function(insertErr, insertResults) {
                                     if (insertErr) {
                                         console.error('Error executing insertQuery: ' + insertErr.stack);

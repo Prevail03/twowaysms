@@ -360,7 +360,7 @@ function handleIncomingMessage(textMessage, sender, textId, phoneNumber, config,
                                 sms.sendPremium(register.menuMessage(sender, LinkID));
                                 // ... Handle existing record logic ...
                                 const status = "existingCustomer";
-                                const user_id =  checkResultsSysUsers.recordset[0].user_id.toString();
+                                const user_id =  checkResultsSysUsers.recordset[0].user_id;
                                 console.log(user_id);
                                 // process.exit();
                                 const insertQuery = "INSERT INTO two_way_sms_tb (text, text_id_AT, phoneNumber, status, user_id) VALUES (@text, @text_id_AT, @phoneNumber, @status, @user_id)";
@@ -369,7 +369,7 @@ function handleIncomingMessage(textMessage, sender, textId, phoneNumber, config,
                                 insertRequest.input('text_id_AT', sql.VarChar, textId);
                                 insertRequest.input('phoneNumber', sql.VarChar, phoneNumber);
                                 insertRequest.input('status', sql.VarChar, status);
-                                insertRequest.input('user_id', sql.NChar, user_id);
+                                insertRequest.input('user_id', sql.NChar(13), user_id);
                                 insertRequest.query(insertQuery, function(insertErr, insertResults) {
                                     if (insertErr) {
                                         console.error('Error executing insertQuery: ' + insertErr.stack);
