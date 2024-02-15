@@ -123,7 +123,7 @@ function handleProductsAndServices(textMessage, sender, messagingStep, sms, conf
     case 9:
       const statusAmount = "isProducts";
       const phoneNumberAmount = sender;
-      const messagingStepAmount = "1pdate 0";
+      const messagingStepAmount = "10";
       const textAmount = textMessage;
       const textIDATAmount = textIDAT;
       updateAmount(sender, statusAmount, phoneNumberAmount, messagingStepAmount, textAmount, config, textIDATAmount, textIDAT, sms, LinkID);
