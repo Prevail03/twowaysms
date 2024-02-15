@@ -24,7 +24,6 @@ function handleProductsAndServices(textMessage, sender, messagingStep, sms, conf
         process.exit();
       }
       console.log(textMessageProduct);
-      console.log(messagingStepPension);
       updatePensionMessagingStep(statusIsPension, phoneNumberPension, messagingStepPension, textMessageProduct, config, textIDATPension);
       sms.sendPremium(products.pensionProducts(sender,LinkID));
     break;
