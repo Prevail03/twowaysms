@@ -2,7 +2,6 @@ const sql = require('mssql');
 var Client = require('node-rest-client').Client;
 
 function updatePensionMessagingStep(statusIsPension, phoneNumberPension, messagingStepPension, textMessageProduct, config, textIDATPension) {
-  console.log(messagingStepPension);
   sql.connect(config, function (err) {
     const request = new sql.Request();
     const updateProductsAndServices = `UPDATE two_way_sms_tb SET status = @statusIsPension, messagingStep = @messagingStepPension, product = @textMessageProduct WHERE phoneNumber = @phoneNumberPension AND text_id_AT = @textIDATPension AND time = (
