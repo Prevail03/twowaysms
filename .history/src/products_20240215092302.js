@@ -70,11 +70,11 @@ const products = {
       linkId: LinkID
     };
   },
-  modefpayment: (sender, LinkID) => {
+  methodofpayment: (sender, LinkID) => {
     return {
       to: sender,
       from:'24123',
-      message: "Enter your prefered mode of payment: \n1. Monthly \n2. Quaterly \n3.Half Yearly \n4.Yearly",
+      message: "Enter your prefered mode of payment: \n1. M-Pesa \n2. Salary Deduction",
       bulkSMSMode: 0,
       keyword: 'pension',
       linkId: LinkID
