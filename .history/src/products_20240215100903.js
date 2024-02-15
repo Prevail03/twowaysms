@@ -94,7 +94,7 @@ const products = {
     return {
       to: sender,
       from:'24123',
-      message: "Enter the amount you wish to comntribute",
+      message: "Invalid response",
       bulkSMSMode: 0,
       keyword: 'pension',
       linkId: LinkID
