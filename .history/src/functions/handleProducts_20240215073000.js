@@ -15,13 +15,9 @@ function handleProductsAndServices(textMessage, sender, messagingStep, sms, conf
       if(textMessageSent == 1){
         textMessageProduct = 'Pension';
         messagingStepPension = 2;
-      // }else if(textMessageSent == 2){
-      //   textMessageProduct = 'Pension';
-      //   messagingStepPension = 10;
-      // }
-      }else{
-        sms.sendPremium(products.comingsoon(sender,LinkID));
-        process.exit();
+      }else if(textMessageSent == 2){
+        textMessageProduct = 'Pension';
+        messagingStepPension = 10;
       }
       updatePensionMessagingStep(statusIsPension, phoneNumberPension, messagingStepPension, textMessageProduct, config, textIDATPension);
       sms.sendPremium(products.pensionProducts(sender,LinkID));
@@ -76,7 +72,7 @@ function handleProductsAndServices(textMessage, sender, messagingStep, sms, conf
       const textNationalID = textMessage;
       const textIDATNationalID = textIDAT;
       updateNationalID(sender, statusNationalID, phoneNumberNationalID, messagingStepNationalID, textNationalID, config, textIDATNationalID, textIDAT, sms, LinkID);
-      sms.sendPremium(products.methodofpayment(sender,LinkID));
+      sms.sendPremium(products.enteremail(sender,LinkID));
     break;
     case 7:
       const statusMethodOfPayment = "isProducts";
@@ -95,7 +91,7 @@ function handleProductsAndServices(textMessage, sender, messagingStep, sms, conf
       }
       const textIDATMethodOfPayment = textIDAT;
       updateMethodOfPayment(sender, statusMethodOfPayment, phoneNumberMethodOfPayment, messagingStepMethodOfPayment, textMethodOfPayment, config, textIDATMethodOfPayment, textIDAT, sms, LinkID);
-      sms.sendPremium(products.modeofpayment(sender,LinkID));
+      sms.sendPremium(products.methodofpayment(sender,LinkID));
     break;
     case 8:
       const statusModeOfPayment = "isProducts";

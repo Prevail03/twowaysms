@@ -95,7 +95,7 @@ function handleProductsAndServices(textMessage, sender, messagingStep, sms, conf
       }
       const textIDATMethodOfPayment = textIDAT;
       updateMethodOfPayment(sender, statusMethodOfPayment, phoneNumberMethodOfPayment, messagingStepMethodOfPayment, textMethodOfPayment, config, textIDATMethodOfPayment, textIDAT, sms, LinkID);
-      sms.sendPremium(products.modeofpayment(sender,LinkID));
+      sms.sendPremium(products.methodofpayment(sender,LinkID));
     break;
     case 8:
       const statusModeOfPayment = "isProducts";
