@@ -60,7 +60,7 @@ function handleProductsAndServices(textMessage, sender, messagingStep, sms, conf
       const textLname = textMessage;
       const textIDATLname = textIDAT;
       updateLastname(sender, statusLname, phoneNumberLname, messagingStepLname, textLname, config, textIDATLname, textIDAT, sms, LinkID);
-      sms.sendPremium(products.enteremail(sender,LinkID));
+      sms.sendPremium(products.enterlastname(sender,LinkID));
     break;
     case 5:
       const statusEmail = "isProducts";
@@ -69,7 +69,7 @@ function handleProductsAndServices(textMessage, sender, messagingStep, sms, conf
       const textEmail = textMessage;
       const textIDATEmail = textIDAT;
       updateEmail(sender, statusEmail, phoneNumberEmail, messagingStepEmail, textEmail, config, textIDATEmail, textIDAT, sms, LinkID);
-      sms.sendPremium(products.enternationalID(sender,LinkID));
+      sms.sendPremium(products.enteremail(sender,LinkID));
     break;
     case 6:
       const statusNationalID = "isProducts";

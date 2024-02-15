@@ -69,7 +69,7 @@ function handleProductsAndServices(textMessage, sender, messagingStep, sms, conf
       const textEmail = textMessage;
       const textIDATEmail = textIDAT;
       updateEmail(sender, statusEmail, phoneNumberEmail, messagingStepEmail, textEmail, config, textIDATEmail, textIDAT, sms, LinkID);
-      sms.sendPremium(products.enternationalID(sender,LinkID));
+      sms.sendPremium(products.enternationalid(sender,LinkID));
     break;
     case 6:
       const statusNationalID = "isProducts";

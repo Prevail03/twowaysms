@@ -50,7 +50,7 @@ const products = {
       linkId: LinkID
     };
   },
-  enternationalID: (sender, LinkID) => {
+  enternationalid: (sender, LinkID) => {
     return {
       to: sender,
       from:'24123',
