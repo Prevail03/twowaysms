@@ -14,7 +14,7 @@ const products = {
     return {
       to: sender,
       from:'24123',
-      message: "Our pension products are : \n1. Jistawishe IPP.",
+      message: "Our pension products are : \n1. Jistawishe",
       bulkSMSMode: 0,
       keyword: 'pension',
       linkId: LinkID

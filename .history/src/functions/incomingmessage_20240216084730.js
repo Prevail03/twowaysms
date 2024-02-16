@@ -7,12 +7,10 @@ const handleForgotPassword = require('./handleForgotPassword');
 const handleClaims = require('./handleClaims');
 const handleRating = require('./handleRating');
 const handleProductsAndServices = require('./handleProducts');
-const handleBalanceEnquiry = require('./handleBalanceEnquiry');
 const reset =require('../reset');
 const claims = require('../claims');
 const products = require('../products');
 const rate = require('../rate');
-const balance = require('../balance');
 var Client = require('node-rest-client').Client;
 
 function handleIncomingMessage(textMessage, sender, textId, phoneNumber, config, sms, register, account,forgotPassword, LinkID) {
@@ -189,9 +187,6 @@ function handleIncomingMessage(textMessage, sender, textId, phoneNumber, config,
                         case 'isProducts':
                             handleProductsAndServices(textMessage, sender, messagingStep, sms, config, textIDAT, LinkID, products);
                         break;
-                        case 'isBalance':
-                            handleBalanceEnquiry(textMessage, sender, messagingStep, sms, config, textIDAT, LinkID, products);
-                        break;
                         default:
                             sms.sendPremium(register.defaultMessage(sender, LinkID));
                             console.log('Unknown status: ' + status);
@@ -347,7 +342,7 @@ function handleIncomingMessage(textMessage, sender, textId, phoneNumber, config,
                         sms.sendPremium(register.wrongMenuValue(sender, LinkID));
                     }else if(textMessage == 1) {
                         console.log("Balance Enquiry Workflow");
-                        sms.sendPremium(balance.startClaims(sender, LinkID));
+                        sms.sendPremium(nalance.startClaims(sender, LinkID));
                         const messagingStep = "1";
                         const status = "isBalance";
                         const insertQuery = "INSERT INTO two_way_sms_tb (text, text_id_AT, messagingStep, phoneNumber, status, isActive) VALUES (@text, @text_id_AT, @messagingStep, @phoneNumber, @status, @isActive)";
@@ -364,7 +359,7 @@ function handleIncomingMessage(textMessage, sender, textId, phoneNumber, config,
                                 connection.close();
                                 return;
                             }
-                            console.log('Added new user to two way sms (Balance Enquiry)');
+                            console.log('Added new user to two way sms (Claims)');
                             connection.close();
                         });
                     }else {

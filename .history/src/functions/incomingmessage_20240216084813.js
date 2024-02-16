@@ -7,12 +7,11 @@ const handleForgotPassword = require('./handleForgotPassword');
 const handleClaims = require('./handleClaims');
 const handleRating = require('./handleRating');
 const handleProductsAndServices = require('./handleProducts');
-const handleBalanceEnquiry = require('./handleBalanceEnquiry');
 const reset =require('../reset');
 const claims = require('../claims');
 const products = require('../products');
 const rate = require('../rate');
-const balance = require('../balance');
+const balance = require('../rate');
 var Client = require('node-rest-client').Client;
 
 function handleIncomingMessage(textMessage, sender, textId, phoneNumber, config, sms, register, account,forgotPassword, LinkID) {
@@ -189,9 +188,6 @@ function handleIncomingMessage(textMessage, sender, textId, phoneNumber, config,
                         case 'isProducts':
                             handleProductsAndServices(textMessage, sender, messagingStep, sms, config, textIDAT, LinkID, products);
                         break;
-                        case 'isBalance':
-                            handleBalanceEnquiry(textMessage, sender, messagingStep, sms, config, textIDAT, LinkID, products);
-                        break;
                         default:
                             sms.sendPremium(register.defaultMessage(sender, LinkID));
                             console.log('Unknown status: ' + status);
@@ -364,7 +360,7 @@ function handleIncomingMessage(textMessage, sender, textId, phoneNumber, config,
                                 connection.close();
                                 return;
                             }
-                            console.log('Added new user to two way sms (Balance Enquiry)');
+                            console.log('Added new user to two way sms (Claims)');
                             connection.close();
                         });
                     }else {

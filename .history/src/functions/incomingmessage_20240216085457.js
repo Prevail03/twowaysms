@@ -7,7 +7,6 @@ const handleForgotPassword = require('./handleForgotPassword');
 const handleClaims = require('./handleClaims');
 const handleRating = require('./handleRating');
 const handleProductsAndServices = require('./handleProducts');
-const handleBalanceEnquiry = require('./handleBalanceEnquiry');
 const reset =require('../reset');
 const claims = require('../claims');
 const products = require('../products');
@@ -188,9 +187,6 @@ function handleIncomingMessage(textMessage, sender, textId, phoneNumber, config,
                         break;
                         case 'isProducts':
                             handleProductsAndServices(textMessage, sender, messagingStep, sms, config, textIDAT, LinkID, products);
-                        break;
-                        case 'isBalance':
-                            handleBalanceEnquiry(textMessage, sender, messagingStep, sms, config, textIDAT, LinkID, products);
                         break;
                         default:
                             sms.sendPremium(register.defaultMessage(sender, LinkID));

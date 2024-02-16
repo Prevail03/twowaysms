@@ -39,7 +39,7 @@ function handleProductsAndServices(textMessage, sender, messagingStep, sms, conf
       // }else if(productDescription == 2){
       //   textIPP = 'Jistawishe';
       // }
-      const textIPP = "Jistawishe IPP";
+      const textIPP = "Jistawishe";
       const textIDATIPP = textIDAT;
       updateProductDescription(sender, statusIPP, phoneNumberIPP, messagingStepIPP, textIPP, config, textIDATIPP, textIDAT, sms, LinkID);
       sms.sendPremium(products.enterfirstname(sender,LinkID));
