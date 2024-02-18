@@ -22,18 +22,18 @@ function updateRatingValue(statusRateValue, phoneNumberRateValue, messagingRateV
   });
 }
 
-function updateService(sender, statusService, phoneNumberService, messagingStepService, textService, config, textIDATService, rate, textIDAT, sms, LinkID) {
+function updateService(statusService, phoneNumberService, messagingStepService, textService, config, textIDATService) {
   console.log(textIDATService);
   sql.connect(config, function (err) {
     const request = new sql.Request();
-    const updateServices = `UPDATE two_way_sms_tb SET status = @statusService, messagingStep = @messagingStepService, ratingService = @textService WHERE phoneNumber = @phoneNumberService AND text_id_AT = @textIDATService AND time = (
+    const updateDelete = `UPDATE two_way_sms_tb SET status = @statusService, messagingStep = @messagingStepService, ratingService = @textService WHERE phoneNumber = @phoneNumberService AND text_id_AT = @textIDATService AND time = (
   SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberService )`;
     request.input('statusService', sql.VarChar, statusService);
     request.input('messagingStepService', sql.VarChar, messagingStepService);
     request.input('phoneNumberService', sql.NVarChar, phoneNumberService);
     request.input('textService', sql.VarChar, textService);
-    request.input('textIDATService', sql.NVarChar, textIDATService);
-    request.query(updateServices, function (err, results) {
+    request.input('textIDATService', sql.VarChar, textIDATService);
+    request.query(updateDelete, function (err, results) {
       if (err) {
         console.error('Error executing query: ' + err.stack);
         return;

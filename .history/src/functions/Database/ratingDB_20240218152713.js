@@ -22,7 +22,7 @@ function updateRatingValue(statusRateValue, phoneNumberRateValue, messagingRateV
   });
 }
 
-function updateService(sender, statusService, phoneNumberService, messagingStepService, textService, config, textIDATService, rate, textIDAT, sms, LinkID) {
+function updateService(sender, statusService, phoneNumberService, messagingStepService, textService, config, textIDATService, rate, textIDAT, sms, LinkID); {
   console.log(textIDATService);
   sql.connect(config, function (err) {
     const request = new sql.Request();
