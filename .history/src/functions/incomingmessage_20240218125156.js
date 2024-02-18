@@ -275,7 +275,7 @@ function handleIncomingMessage(textMessage, sender, textId, phoneNumber, config,
                         const currentStatus = "existingCustomer";
                         const statusRating = "isCheckingAccount";
                         const phoneNumberRating = sender;
-                        const messagingStepRating= "1";
+                        const messagingStepRating= "3";
                         const request = new sql.Request(connection);
                         const updateAccounts = `UPDATE two_way_sms_tb SET status = @statusRating,isActive=@isActive, messagingStep = @messagingStepRating WHERE phoneNumber = @phoneNumberRating AND time = (
                             SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberRating and status =@currentStatus )`;

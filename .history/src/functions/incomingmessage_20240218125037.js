@@ -273,23 +273,23 @@ function handleIncomingMessage(textMessage, sender, textId, phoneNumber, config,
                         console.log("Rate us  Workflow");
                         sms.sendPremium(rate.services(sender, LinkID));
                         const currentStatus = "existingCustomer";
-                        const statusRating = "isCheckingAccount";
-                        const phoneNumberRating = sender;
-                        const messagingStepRating= "1";
+                        const statusAccounts = "isCheckingAccount";
+                        const phoneNumberAccounts = sender;
+                        const messagingStepAccounts= "3";
                         const request = new sql.Request(connection);
-                        const updateAccounts = `UPDATE two_way_sms_tb SET status = @statusRating,isActive=@isActive, messagingStep = @messagingStepRating WHERE phoneNumber = @phoneNumberRating AND time = (
-                            SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberRating and status =@currentStatus )`;
-                        request.input('statusRating', sql.VarChar, statusRating);
+                        const updateAccounts = `UPDATE two_way_sms_tb SET status = @statusAccounts,isActive=@isActive, messagingStep = @messagingStepAccounts WHERE phoneNumber = @phoneNumberAccounts AND time = (
+                            SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberAccounts and status =@currentStatus )`;
+                        request.input('statusAccounts', sql.VarChar, statusAccounts);
                         request.input('currentStatus', sql.VarChar, currentStatus);
-                        request.input('messagingStepRating', sql.VarChar, messagingStepRating);
-                        request.input('phoneNumberRating', sql.VarChar, phoneNumberRating);
+                        request.input('messagingStepAccounts', sql.VarChar, messagingStepAccounts);
+                        request.input('phoneNumberAccounts', sql.VarChar, phoneNumberAccounts);
                         request.input('isActive', sql.Bit, 1);
                         request.query(updateAccounts, function(err, results) {
                         if (err) {
                             console.error('Error executing query: ' + err.stack);
                             return;
                         }
-                        console.log('Rating UPDATE successful');
+                        console.log('Tating UPDATE successful');
                         connection.close();
                         });
                     }else if(textMessage ==7){

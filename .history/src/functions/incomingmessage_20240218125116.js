@@ -275,13 +275,13 @@ function handleIncomingMessage(textMessage, sender, textId, phoneNumber, config,
                         const currentStatus = "existingCustomer";
                         const statusRating = "isCheckingAccount";
                         const phoneNumberRating = sender;
-                        const messagingStepRating= "1";
+                        const messagingStepAccounts= "3";
                         const request = new sql.Request(connection);
-                        const updateAccounts = `UPDATE two_way_sms_tb SET status = @statusRating,isActive=@isActive, messagingStep = @messagingStepRating WHERE phoneNumber = @phoneNumberRating AND time = (
+                        const updateAccounts = `UPDATE two_way_sms_tb SET status = @statusRating,isActive=@isActive, messagingStep = @messagingStepAccounts WHERE phoneNumber = @phoneNumberRating AND time = (
                             SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberRating and status =@currentStatus )`;
                         request.input('statusRating', sql.VarChar, statusRating);
                         request.input('currentStatus', sql.VarChar, currentStatus);
-                        request.input('messagingStepRating', sql.VarChar, messagingStepRating);
+                        request.input('messagingStepAccounts', sql.VarChar, messagingStepAccounts);
                         request.input('phoneNumberRating', sql.VarChar, phoneNumberRating);
                         request.input('isActive', sql.Bit, 1);
                         request.query(updateAccounts, function(err, results) {
@@ -289,7 +289,7 @@ function handleIncomingMessage(textMessage, sender, textId, phoneNumber, config,
                             console.error('Error executing query: ' + err.stack);
                             return;
                         }
-                        console.log('Rating UPDATE successful');
+                        console.log('Tating UPDATE successful');
                         connection.close();
                         });
                     }else if(textMessage ==7){
