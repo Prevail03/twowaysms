@@ -5,8 +5,16 @@ var Client = require('node-rest-client').Client;
 
 function handleRating(textMessage, sender, messagingStep, sms, config, textIDAT, LinkID, rate, account) {
   switch (parseInt(messagingStep)) {
+    case 2:    
+      const statusRateValue = "isRating";
+      const phoneNumberRateValue = sender;
+      const messagingRateValue = "3";
+      const textRateValue = textMessage;
+      const textIDATRateValue = textIDAT;
+      updateRatingValue(statusRateValue, phoneNumberRateValue, messagingRateValue, textRateValue, config, textIDATRateValue);
+      sms.sendPremium(rate.reasonmessage(sender,LinkID));
+      break;
     case 1:
-      console.log(textIDATService);
       const statusService = "isRating";
       const phoneNumberService = sender;
       const messagingStepService = "2";
@@ -30,15 +38,6 @@ function handleRating(textMessage, sender, messagingStep, sms, config, textIDAT,
       updateService(sender, statusService, phoneNumberService, messagingStepService, textService, config, textIDATService, rate, textIDAT, sms, LinkID);
       sms.sendPremium(rate.services(sender,LinkID)); 
     break;
-    case 2:    
-      const statusRateValue = "isRating";
-      const phoneNumberRateValue = sender;
-      const messagingRateValue = "3";
-      const textRateValue = textMessage;
-      const textIDATRateValue = textIDAT;
-      updateRatingValue(statusRateValue, phoneNumberRateValue, messagingRateValue, textRateValue, config, textIDATRateValue);
-      sms.sendPremium(rate.reasonmessage(sender,LinkID));
-      break;
     case 3:
       const statusReason = "isRating";
       const phoneNumberReason = sender;
