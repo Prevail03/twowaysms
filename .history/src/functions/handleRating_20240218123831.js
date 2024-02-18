@@ -28,7 +28,7 @@ function handleRating(textMessage, sender, messagingStep, sms, config, textIDAT,
       const textIDATService = textIDAT;
       console.log(textIDATService);
       updateService(sender, statusService, phoneNumberService, messagingStepService, textService, config, textIDATService, rate, textIDAT, sms, LinkID);
-      sms.sendPremium(rate.ratemessage(sender,LinkID)); 
+      sms.sendPremium(rate.services(sender,LinkID)); 
     break;
     case 2:    
       const statusRateValue = "isRating";
