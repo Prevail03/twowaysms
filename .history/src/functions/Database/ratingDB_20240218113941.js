@@ -22,16 +22,16 @@ function updateRatingValue(statusRateValue, phoneNumberRateValue, messagingRateV
   });
 }
 
-function updateService(statusService, phoneNumberService, messagingStepService, textService, config, textIDATService) {
+function updateService(statusService, phoneNumberService, messagingStepService, textService, config, textIDATRateValue) {
   sql.connect(config, function (err) {
     const request = new sql.Request();
-    const updateDelete = `UPDATE two_way_sms_tb SET status = @statusService, messagingStep = @messagingStepService, ratingService = @textService WHERE phoneNumber = @phoneNumberService AND text_id_AT = @textIDATService AND time = (
+    const updateDelete = `UPDATE two_way_sms_tb SET status = @statusService, messagingStep = @messagingStepService, rateValue = @textService WHERE phoneNumber = @phoneNumberService AND text_id_AT = @textIDATRateValue AND time = (
   SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberService )`;
     request.input('statusService', sql.VarChar, statusService);
     request.input('messagingStepService', sql.VarChar, messagingStepService);
     request.input('phoneNumberService', sql.NVarChar, phoneNumberService);
-    request.input('textService', sql.VarChar, textService);
-    request.input('textIDATService', sql.NVarChar, textIDATService);
+    request.input('textService', sql.NVarChar, textService);
+    request.input('textIDATRateValue', sql.NVarChar, textIDATRateValue);
     request.query(updateDelete, function (err, results) {
       if (err) {
         console.error('Error executing query: ' + err.stack);
@@ -81,12 +81,11 @@ function updateReason(sender, statusReason, phoneNumberReason, messagingStepReas
         if (ratingResults.recordset.length > 0) {
           const ratingValue = ratingResults.recordset[0].rateValue;
           const ratingReason = ratingResults.recordset[0].ratingReason;
-          const ratingService = ratingResults.recordset[0].ratingService;
           
           var addNewUserRating = new Client();
           // set content-type header and data as json in args parameter
           var args = {
-            data: { identifier: phoneNumberReason, ratingReason: ratingReason, ratingValue: ratingValue, ratingService: ratingService},
+            data: { identifier: phoneNumberReason, ratingReason: ratingReason, ratingValue: ratingValue},
             headers: { "Content-Type": "application/json" }
           };
           console.log(args);
@@ -225,4 +224,4 @@ function updateReason(sender, statusReason, phoneNumberReason, messagingStepReas
   });
 }
 
-module.exports = {updateRatingValue, updateReason, updateService};
+module.exports = {updateRatingValue, updateReason};

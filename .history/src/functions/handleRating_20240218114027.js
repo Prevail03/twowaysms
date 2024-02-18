@@ -34,6 +34,7 @@ function handleRating(textMessage, sender, messagingStep, sms, config, textIDAT,
         }else{
           textService = 'Unkown Service';
         }
+        
         const textIDATService = textIDAT;
         updateService(sender, statusService, phoneNumberService, messagingStepService, textService, config, textIDATService, rate, textIDAT, sms, LinkID);
         sms.sendPremium(rate.successmessage(sender,LinkID)); 

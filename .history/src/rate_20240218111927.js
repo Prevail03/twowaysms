@@ -33,7 +33,7 @@ const rate = {
     return {
         to: sender,
         from:'24123',
-        message: "Which Service did you use?\n1. Balance Enquiry\n2. Statements.\n3. Deposits\n4. Claims/Withdrawals\n5. Products & Services",
+        message: "Your feedback has been successfully received. Thanks for your continued support!.",
         bulkSMSMode: 0,
         keyword: 'pension',
         linkId: LinkID

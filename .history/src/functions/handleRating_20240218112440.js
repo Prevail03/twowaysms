@@ -1,7 +1,7 @@
 const sql = require('mssql');
 var Client = require('node-rest-client').Client;
 
- const {updateRatingValue, updateReason, updateService} = require('./Database/ratingDB');
+ const {updateRatingValue, updateReason} = require('./Database/ratingDB');
 
 function handleRating(textMessage, sender, messagingStep, sms, config, textIDAT, LinkID, rate, account) {
   switch (parseInt(messagingStep)) {
@@ -29,11 +29,8 @@ function handleRating(textMessage, sender, messagingStep, sms, config, textIDAT,
           textService = 'Deposits';
         }else if(service == 4){
           textService = 'Claims/Withdrawals';
-        }else if(service == 5){
-          textService = 'Products & Services';
-        }else{
-          textService = 'Unkown Service';
         }
+        
         const textIDATService = textIDAT;
         updateService(sender, statusService, phoneNumberService, messagingStepService, textService, config, textIDATService, rate, textIDAT, sms, LinkID);
         sms.sendPremium(rate.successmessage(sender,LinkID)); 

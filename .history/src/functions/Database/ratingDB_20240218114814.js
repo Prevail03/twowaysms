@@ -81,7 +81,6 @@ function updateReason(sender, statusReason, phoneNumberReason, messagingStepReas
         if (ratingResults.recordset.length > 0) {
           const ratingValue = ratingResults.recordset[0].rateValue;
           const ratingReason = ratingResults.recordset[0].ratingReason;
-          const ratingService = ratingResults.recordset[0].ratingService;
           
           var addNewUserRating = new Client();
           // set content-type header and data as json in args parameter
