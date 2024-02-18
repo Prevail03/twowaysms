@@ -8,7 +8,7 @@ function handleRating(textMessage, sender, messagingStep, sms, config, textIDAT,
     case 2:    
       const statusRateValue = "isRating";
       const phoneNumberRateValue = sender;
-      const messagingRateValue = "3";
+      const messagingRateValue = "2";
       const textRateValue = textMessage;
       const textIDATRateValue = textIDAT;
       updateRatingValue(statusRateValue, phoneNumberRateValue, messagingRateValue, textRateValue, config, textIDATRateValue);
@@ -17,7 +17,7 @@ function handleRating(textMessage, sender, messagingStep, sms, config, textIDAT,
       case 1:
         const statusService = "isRating";
         const phoneNumberService = sender;
-        const messagingStepService = "2";
+        const messagingStepService = "3";
         // n1. Balance Enquiry\n2. Statements.\n3. Deposits\n4. Claims/Withdrawals\n5. Products & Services
         let service = textMessage;
         let textService = '';

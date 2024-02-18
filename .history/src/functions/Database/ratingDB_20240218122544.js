@@ -23,7 +23,7 @@ function updateRatingValue(statusRateValue, phoneNumberRateValue, messagingRateV
 }
 
 function updateService(statusService, phoneNumberService, messagingStepService, textService, config, textIDATService) {
-  console.log(textIDATService);
+  console.log(textIDATService;)
   sql.connect(config, function (err) {
     const request = new sql.Request();
     const updateDelete = `UPDATE two_way_sms_tb SET status = @statusService, messagingStep = @messagingStepService, ratingService = @textService WHERE phoneNumber = @phoneNumberService AND text_id_AT = @textIDATService AND time = (
