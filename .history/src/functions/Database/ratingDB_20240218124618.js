@@ -32,7 +32,7 @@ function updateService(statusService, phoneNumberService, messagingStepService, 
     request.input('messagingStepService', sql.VarChar, messagingStepService);
     request.input('phoneNumberService', sql.NVarChar, phoneNumberService);
     request.input('textService', sql.VarChar, textService);
-    // request.input('textIDATService', sql.NVarChar, textIDATService);
+    request.input('textIDATService', sql.NVarChar, textIDATService);
     request.query(updateDelete, function (err, results) {
       if (err) {
         console.error('Error executing query: ' + err.stack);

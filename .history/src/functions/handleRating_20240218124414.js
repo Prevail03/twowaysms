@@ -10,7 +10,7 @@ function handleRating(textMessage, sender, messagingStep, sms, config, textIDAT,
       const phoneNumberService = sender;
       const messagingStepService = "2";
       // n1. Balance Enquiry\n2. Statements.\n3. Deposits\n4. Claims/Withdrawals\n5. Products & Services
-      const service = textMessage;
+      let service = textMessage;
       let textService = '';
       if(service == 1){
         textService = 'Balance Enquiry';
@@ -27,7 +27,7 @@ function handleRating(textMessage, sender, messagingStep, sms, config, textIDAT,
       }
       const textIDATService = textIDAT;
       updateService(sender, statusService, phoneNumberService, messagingStepService, textService, config, textIDATService, rate, textIDAT, sms, LinkID);
-      sms.sendPremium(rate.ratemessage(sender,LinkID));
+      sms.sendPremium(rate.ratemessage(sender,LinkID)); 
     break;
     case 2:    
       const statusRateValue = "isRating";
