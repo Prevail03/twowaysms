@@ -459,7 +459,7 @@ function updateDescription(phoneNumberDescription, textDescription, textIDATDesc
           console.log(memberID);
           var getBalance = new Client();
           var args = {
-            data: { memberID: memberID },
+            data: { description: description },
             headers: { "Content-Type": "application/json" }
           };
           getBalance.get("https://api.octagonafrica.com/v1/accounts/balance", args, function (data, response) {
