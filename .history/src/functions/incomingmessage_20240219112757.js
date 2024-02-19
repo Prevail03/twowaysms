@@ -366,7 +366,7 @@ function handleIncomingMessage(textMessage, sender, textId, phoneNumber, config,
                             console.error('Error executing query: ' + err.stack);
                             return;
                         }
-                        console.log('Balance Enquiry UPDATE successful');
+                        console.log('Reset Password UPDATE successful');
                         connection.close();
                         });
                     }else {

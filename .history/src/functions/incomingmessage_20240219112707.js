@@ -356,17 +356,17 @@ function handleIncomingMessage(textMessage, sender, textId, phoneNumber, config,
                         const request = new sql.Request(connection);
                         const updateBalance = `UPDATE two_way_sms_tb SET status = @statusBalance, isActive=@isActive, messagingStep = @messagingStepBalance WHERE phoneNumber = @phoneNumberBalance AND time = (
                             SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberBalance and status =@currentStatus )`;
-                        request.input('statusBalance', sql.VarChar, statusBalance);
+                        request.input('statusAccounts', sql.VarChar, statusAccounts);
                         request.input('currentStatus', sql.VarChar, currentStatus);
-                        request.input('messagingStepBalance', sql.VarChar, messagingStepBalance);
-                        request.input('phoneNumberBalance', sql.VarChar, phoneNumberBalance);
+                        request.input('messagingStepAccounts', sql.VarChar, messagingStepAccounts);
+                        request.input('phoneNumberAccounts', sql.VarChar, phoneNumberAccounts);
                         request.input('isActive', sql.Bit, 1);
                         request.query(updateAccounts, function(err, results) {
                         if (err) {
                             console.error('Error executing query: ' + err.stack);
                             return;
                         }
-                        console.log('Balance Enquiry UPDATE successful');
+                        console.log('Reset Password UPDATE successful');
                         connection.close();
                         });
                     }else {

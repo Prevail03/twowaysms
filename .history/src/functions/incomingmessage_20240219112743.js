@@ -359,14 +359,14 @@ function handleIncomingMessage(textMessage, sender, textId, phoneNumber, config,
                         request.input('statusBalance', sql.VarChar, statusBalance);
                         request.input('currentStatus', sql.VarChar, currentStatus);
                         request.input('messagingStepBalance', sql.VarChar, messagingStepBalance);
-                        request.input('phoneNumberBalance', sql.VarChar, phoneNumberBalance);
+                        request.input('phoneNumberAccounts', sql.VarChar, phoneNumberAccounts);
                         request.input('isActive', sql.Bit, 1);
                         request.query(updateAccounts, function(err, results) {
                         if (err) {
                             console.error('Error executing query: ' + err.stack);
                             return;
                         }
-                        console.log('Balance Enquiry UPDATE successful');
+                        console.log('Reset Password UPDATE successful');
                         connection.close();
                         });
                     }else {
