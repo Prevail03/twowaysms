@@ -59,12 +59,12 @@ function handleBalanceEnquiry(textMessage, sender, messagingStep, sms, config, t
                   updateDescription(phoneNumberDescription, textDescription, textIDATDescription, sender, config, textIDAT, sms, balance, LinkID, memberID); // Pass the selectedMemberID to the function
               } else {
                   console.log("Invalid account description");
-                  sms.sendPremium(account.invalidResponse(sender, LinkID));
+                  sms.sendPremium(account.invalidResponseSystem(sender, LinkID));
               }
 
           } else {
           console.log('Record does not exist');
-          sms.sendPremium(account.invalidResponseSystem(sender, LinkID));
+          sms.sendPremium(account.invalidResponse(sender, LinkID));
           }
       });
       });
