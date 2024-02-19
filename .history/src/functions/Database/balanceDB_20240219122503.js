@@ -481,7 +481,7 @@ function updateDescription(phoneNumberDescription, textDescription, textIDATDesc
                 const phoneNumberPeriodsEntry = sender;
                 const textIDATPeriodsEntry = textIDAT;
                 
-                const updateAllPeriods = `UPDATE two_way_sms_tb SET status = @statusPeriodsEntry  ,messagingStep= '100', isActive = 100  WHERE phoneNumber = @phoneNumberPeriodsEntry AND text_id_AT =@textIDATPeriodsEntry AND time = (
+                const updateAllPeriods = `UPDATE two_way_sms_tb SET status = @statusPeriodsEntry  messagingStep= '100', isActive = 100,  WHERE phoneNumber = @phoneNumberPeriodsEntry AND text_id_AT =@textIDATPeriodsEntry AND time = (
                          SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberPeriodsEntry )`;
                 request.input('statusPeriodsEntry', sql.VarChar, statusPeriodsEntry);
                 // request.input('messagingPeriodsEntry', sql.VarChar, messagingPeriodsEntry);
@@ -522,7 +522,7 @@ function updateDescription(phoneNumberDescription, textDescription, textIDATDesc
                 }
                 console.log('Connected to the database');
                 const request = new sql.Request();
-                const statuserror404 = "GetBalanceFailed";
+                const statuserror404 = "FetchPeriodsFailed";
                 const messagingSteperror404 = "0";
                 const phoneNumbererror404 = sender;
                 const textIDATerror404 = textIDAT;
@@ -537,7 +537,7 @@ function updateDescription(phoneNumberDescription, textDescription, textIDATDesc
                     console.error('Error executing query: ' + err.stack);
                     return;
                   }
-                  console.log(' Generate Member Balance Attempt unsuccessful');
+                  console.log(' Generate Member Statement Attempt unsuccessful');
                   sql.close();
                 });
               });
@@ -558,7 +558,7 @@ function updateDescription(phoneNumberDescription, textDescription, textIDATDesc
                 }
                 console.log('Connected to the database');
                 const request = new sql.Request();
-                const statuserror500 = "GetBalanceFailed";
+                const statuserror500 = "FetchPeriodsFailed";
                 const messagingSteperror500 = "0";
                 const phoneNumbererror500 = sender;
                 const textIDATerror500 = textIDAT;
@@ -573,7 +573,7 @@ function updateDescription(phoneNumberDescription, textDescription, textIDATDesc
                     console.error('Error executing query: ' + err.stack);
                     return;
                   }
-                  console.log(' Generate Member Balance Attempt unsuccessful');
+                  console.log(' Generate Member Statement Attempt unsuccessful');
                   sql.close();
                 });
               });

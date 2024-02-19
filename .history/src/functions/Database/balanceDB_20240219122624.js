@@ -537,7 +537,7 @@ function updateDescription(phoneNumberDescription, textDescription, textIDATDesc
                     console.error('Error executing query: ' + err.stack);
                     return;
                   }
-                  console.log(' Generate Member Balance Attempt unsuccessful');
+                  console.log(' Generate Member Statement Attempt unsuccessful');
                   sql.close();
                 });
               });
@@ -573,7 +573,7 @@ function updateDescription(phoneNumberDescription, textDescription, textIDATDesc
                     console.error('Error executing query: ' + err.stack);
                     return;
                   }
-                  console.log(' Generate Member Balance Attempt unsuccessful');
+                  console.log(' Generate Member Statement Attempt unsuccessful');
                   sql.close();
                 });
               });
