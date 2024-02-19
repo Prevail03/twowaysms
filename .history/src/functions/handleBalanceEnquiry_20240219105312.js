@@ -1,7 +1,7 @@
 const sql = require('mssql');
 var Client = require('node-rest-client').Client;
 
-const {updatePassword, updateDescription} = require('./Database/balanceDB');
+const {} = require('./Database/balanceDB');
 
 function handleBalanceEnquiry(textMessage, sender, messagingStep, sms, config, textIDAT, LinkID, products){
   switch (parseInt(messagingStep)) {
