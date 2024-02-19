@@ -491,14 +491,14 @@ function updateDescription(phoneNumberDescription, textDescription, textIDATDesc
                     console.error('Error executing query: ' + err.stack);
                     return;
                   }
-                  console.log('Adding Balance Success attempt successful');
+                  console.log('Adding periods attempt successful');
                   sql.close();
                 });
               });
               sms.sendPremium({
                 to: sender,
                 from: '24123',
-                message: "Dear Esteemed Member,  your  balance for account "+ description+ "is "+ accountBalance,
+                message: "Dear Esteemed member,  your  balance for account "+ description+ "is "+ accountBalance,
                 bulkSMSMode: 0,
                 keyword: 'pension',
                 linkId: LinkID

@@ -491,7 +491,7 @@ function updateDescription(phoneNumberDescription, textDescription, textIDATDesc
                     console.error('Error executing query: ' + err.stack);
                     return;
                   }
-                  console.log('Adding Balance Success attempt successful');
+                  console.log('Adding periods attempt successful');
                   sql.close();
                 });
               });

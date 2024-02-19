@@ -454,51 +454,54 @@ function updateDescription(phoneNumberDescription, textDescription, textIDATDesc
         }
 
         if (descriptionResults.recordset.length > 0) {
-          const memberID = descriptionResults.recordset[0].memberID;
           const description = descriptionResults.recordset[0].description;
-          console.log(memberID);
-          var getBalance = new Client();
+          console.log(description);
+          var fetchPeriodsClient = new Client();
           var args = {
             data: { description: description },
             headers: { "Content-Type": "application/json" }
           };
-          getBalance.get("https://api.octagonafrica.com/v1/accounts/balance", args, function (data, response) {
+          fetchPeriodsClient.get("https://api.octagonafrica.com/v1/accounts/pension/periods/twoway", args, function (data, response) {
             if ([200].includes(response.statusCode)) {
               console.log(response.statusCode);
-              const balances = data.data;
-              console.log(balances);
-              const accountBalance = data.data.accountBalance;
-              // const user_fullname = data.data.user_full_names;
-              
+              const periods = data.data;
+              // console.log(periods);
+              let finalMessage = "";
+              let preMessage = "Available periods are: \n";
+              for (let i = 0; i < periods.length; i++) {
+                const period_name = periods[i].period_name;
+                finalMessage += `${i + 1}. ${period_name}.\n`;
+              }
+              console.log("Available periods are: \n" + finalMessage);
 
               sql.connect(config, function (err) {
                 console.log('Connected to the database');
                 const request = new sql.Request();
-                const statusPeriodsEntry = "isBalanceSuccess";
+                const statusPeriodsEntry = "isBalance";
                 // const messagingPeriodsEntry = "0";
                 const phoneNumberPeriodsEntry = sender;
                 const textIDATPeriodsEntry = textIDAT;
-                
-                const updateAllPeriods = `UPDATE two_way_sms_tb SET status = @statusPeriodsEntry  messagingStep= '100', isActive = 100,  WHERE phoneNumber = @phoneNumberPeriodsEntry AND text_id_AT =@textIDATPeriodsEntry AND time = (
+                const allPeriods = finalMessage;
+                const updateAllPeriods = `UPDATE two_way_sms_tb SET status = @statusPeriodsEntry, allPeriods =@allPeriods   WHERE phoneNumber = @phoneNumberPeriodsEntry AND text_id_AT =@textIDATPeriodsEntry AND time = (
                          SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberPeriodsEntry )`;
                 request.input('statusPeriodsEntry', sql.VarChar, statusPeriodsEntry);
                 // request.input('messagingPeriodsEntry', sql.VarChar, messagingPeriodsEntry);
                 request.input('phoneNumberPeriodsEntry', sql.NVarChar, phoneNumberPeriodsEntry);
                 request.input('textIDATPeriodsEntry', sql.NVarChar, textIDATPeriodsEntry);
-                // request.input('allPeriods', sql.NVarChar, allPeriods);
+                request.input('allPeriods', sql.NVarChar, allPeriods);
                 request.query(updateAllPeriods, function (err, results) {
                   if (err) {
                     console.error('Error executing query: ' + err.stack);
                     return;
                   }
-                  console.log('Adding Balance Success attempt successful');
+                  console.log('Adding periods attempt successful');
                   sql.close();
                 });
               });
               sms.sendPremium({
                 to: sender,
                 from: '24123',
-                message: "Dear Esteemed Member,  your  balance for account "+ description+ "is "+ accountBalance,
+                message: preMessage + finalMessage,
                 bulkSMSMode: 0,
                 keyword: 'pension',
                 linkId: LinkID

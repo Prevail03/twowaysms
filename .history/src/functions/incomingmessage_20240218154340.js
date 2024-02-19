@@ -190,7 +190,7 @@ function handleIncomingMessage(textMessage, sender, textId, phoneNumber, config,
                             handleProductsAndServices(textMessage, sender, messagingStep, sms, config, textIDAT, LinkID, products);
                         break;
                         case 'isBalance':
-                            handleBalanceEnquiry(textMessage, sender, messagingStep, sms, config, textIDAT, LinkID, balance);
+                            handleBalanceEnquiry(textMessage, sender, messagingStep, sms, config, textIDAT, LinkID, blance);
                         break;
                         default:
                             sms.sendPremium(register.defaultMessage(sender, LinkID));
