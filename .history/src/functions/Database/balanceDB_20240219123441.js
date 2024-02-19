@@ -613,12 +613,12 @@ function updateDescription(phoneNumberDescription, textDescription, textIDATDesc
                   sql.close();
                 });
               });
-            }else if ([404].includes(response.statusCode)) {
+            } else if ([403].includes(response.statusCode)) {
               console.log(response.statusCode);
               sms.sendPremium({
                 to: sender,
                 from: '24123',
-                message: 'Dear customer, Your account does not exist. Please contact your scheme adminstrator or contact support at support@octagonafrica.com or call 0709986000',
+                message: 'Dear Esteemed Customer, Your account is inactive  please contact your scheme adminstrator or contact support at support@octagonafrica.com or call 0709986000',
                 bulkSMSMode: 0,
                 keyword: 'pension',
                 linkId: LinkID
@@ -649,43 +649,43 @@ function updateDescription(phoneNumberDescription, textDescription, textIDATDesc
                   sql.close();
                 });
               });
-            }else if ([409].includes(response.statusCode)) {
-              console.log(response.statusCode);
-              sms.sendPremium({
-                to: sender,
-                from: '24123',
-                message: 'Dear Esteemed Customer, the scheme code provided for your account does not exist.  Please contact your scheme adminstrator or contact support at support@octagonafrica.com or call 0709986000',
-                bulkSMSMode: 0,
-                keyword: 'pension',
-                linkId: LinkID
-              });
-              sql.connect(config, function (err) {
-                if (err) {
-                  console.error('Error connecting to the database: ' + err.stack);
-                  return;
-                }
-                console.log('Connected to the database');
-                const request = new sql.Request();
-                const statuserror404 = "GetBalanceFailed";
-                const messagingSteperror404 = "0";
-                const phoneNumbererror404 = sender;
-                const textIDATerror404 = textIDAT;
-                const updateDelete = `UPDATE two_way_sms_tb SET status = @statuserror404, messagingStep = @messagingSteperror404  WHERE phoneNumber = @phoneNumbererror404 AND text_id_AT =@textIDATerror404 AND time = (
-                            SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumbererror404 )`;
-                request.input('statuserror404', sql.VarChar, statuserror404);
-                request.input('messagingSteperror404', sql.VarChar, messagingSteperror404);
-                request.input('phoneNumbererror404', sql.NVarChar, phoneNumbererror404);
-                request.input('textIDATerror404', sql.NVarChar, textIDATerror404);
-                request.query(updateDelete, function (err, results) {
+              }else if ([400].includes(response.statusCode)) {
+                console.log(response.statusCode);
+                sms.sendPremium({
+                  to: sender,
+                  from: '24123',
+                  message: 'Invalid Details or Missing Data. Try again later!!!!',
+                  bulkSMSMode: 0,
+                  keyword: 'pension',
+                  linkId: LinkID
+                });
+                sql.connect(config, function (err) {
                   if (err) {
-                    console.error('Error executing query: ' + err.stack);
+                    console.error('Error connecting to the database: ' + err.stack);
                     return;
                   }
-                  console.log(' Generate Member Balance Attempt unsuccessful');
-                  sql.close();
+                  console.log('Connected to the database');
+                  const request = new sql.Request();
+                  const statuserror404 = "GetBalanceFailed";
+                  const messagingSteperror404 = "0";
+                  const phoneNumbererror404 = sender;
+                  const textIDATerror404 = textIDAT;
+                  const updateDelete = `UPDATE two_way_sms_tb SET status = @statuserror404, messagingStep = @messagingSteperror404  WHERE phoneNumber = @phoneNumbererror404 AND text_id_AT =@textIDATerror404 AND time = (
+                              SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumbererror404 )`;
+                  request.input('statuserror404', sql.VarChar, statuserror404);
+                  request.input('messagingSteperror404', sql.VarChar, messagingSteperror404);
+                  request.input('phoneNumbererror404', sql.NVarChar, phoneNumbererror404);
+                  request.input('textIDATerror404', sql.NVarChar, textIDATerror404);
+                  request.query(updateDelete, function (err, results) {
+                    if (err) {
+                      console.error('Error executing query: ' + err.stack);
+                      return;
+                    }
+                    console.log(' Generate Member Balance Attempt unsuccessful');
+                    sql.close();
+                  });
                 });
-              });
-            }
+              }
             else {
               console.log(response.statusCode);
             }

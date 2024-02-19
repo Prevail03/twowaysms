@@ -618,7 +618,7 @@ function updateDescription(phoneNumberDescription, textDescription, textIDATDesc
               sms.sendPremium({
                 to: sender,
                 from: '24123',
-                message: 'Dear customer, Your account does not exist. Please contact your scheme adminstrator or contact support at support@octagonafrica.com or call 0709986000',
+                message: '',
                 bulkSMSMode: 0,
                 keyword: 'pension',
                 linkId: LinkID
@@ -649,12 +649,12 @@ function updateDescription(phoneNumberDescription, textDescription, textIDATDesc
                   sql.close();
                 });
               });
-            }else if ([409].includes(response.statusCode)) {
+            }else if ([400].includes(response.statusCode)) {
               console.log(response.statusCode);
               sms.sendPremium({
                 to: sender,
                 from: '24123',
-                message: 'Dear Esteemed Customer, the scheme code provided for your account does not exist.  Please contact your scheme adminstrator or contact support at support@octagonafrica.com or call 0709986000',
+                message: 'Invalid Details or Missing Data. Try again later!!!!',
                 bulkSMSMode: 0,
                 keyword: 'pension',
                 linkId: LinkID
