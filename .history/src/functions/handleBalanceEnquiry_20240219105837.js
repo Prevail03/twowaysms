@@ -57,7 +57,7 @@ function handleBalanceEnquiry(textMessage, sender, messagingStep, sms, config, t
                   memberID = selectedMemberID;
                   console.log("Account Description: " + textDescription);
 
-                  updateDescription(phoneNumberDescription, textDescription, textIDATDescription, sender, config, textIDAT, sms, balance, LinkID, memberID); // Pass the selectedMemberID to the function
+                  updateDescription(phoneNumberDescription, textDescription, textIDATDescription, sender, config, textIDAT, sms, account, LinkID, memberID); // Pass the selectedMemberID to the function
               } else {
                   console.log("Invalid account description");
                   sms.sendPremium(account.invalidResponse(sender, LinkID));
