@@ -455,12 +455,9 @@ function updateDescription(phoneNumberDescription, textDescription, textIDATDesc
         }
 
         if (descriptionResults.recordset.length > 0) {
-          let memberID = descriptionResults.recordset[0].memberID;
+          const memberID = descriptionResults.recordset[0].memberID;
           const description = descriptionResults.recordset[0].description;
-          memberID = memberID.replace(/^\d+\.\s*/, '');
-          memberID = memberID.replace(/\s/g, '');
-
-          console.log( "member ID" + memberID);
+          console.log(memberID);
           var getBalance = new Client();
           var args = {
             data: { memberID: memberID },
