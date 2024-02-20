@@ -458,7 +458,6 @@ function updateDescription(phoneNumberDescription, textDescription, textIDATDesc
         if (descriptionResults.recordset.length > 0) {
           let memberID = descriptionResults.recordset[0].memberID;
           const description = descriptionResults.recordset[0].description.replace(/\s+/g, '');
-          const user_full_names = descriptionResults.recordset[0].user_full_names.replace(/\s+/g, '');
           memberID = memberID.replace(/^\d+\.\s*/, '');
           memberID = memberID.replace(/\s/g, '');
 
@@ -502,8 +501,8 @@ function updateDescription(phoneNumberDescription, textDescription, textIDATDesc
               sms.sendPremium({
                 to: sender,
                 from: '24123',
-                message: "Dear "+ user_full_names +",  your  balance for account "+ description+ " is "+ accountBalance,
-                bulkSMSMode: 0, 
+                message: "Dear Esteemed Member,  your  balance for account "+ description+ " is "+ accountBalance,
+                bulkSMSMode: 0,
                 keyword: 'pension',
                 linkId: LinkID
               });

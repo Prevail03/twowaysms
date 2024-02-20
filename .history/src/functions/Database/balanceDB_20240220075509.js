@@ -190,7 +190,6 @@ function  updatePassword(phoneNumberPassword, textPassword, textIDATPassword, se
                                   request.input('phoneNumberAccountsEntry', sql.NVarChar, phoneNumberAccountsEntry);
                                   request.input('textIDATAccountsEntry', sql.NVarChar, textIDATAccountsEntry);
                                   request.input('allAccounts', sql.NVarChar, allAccounts);
-                                  request.input('user_fullname', sql.NVarChar, user_fullname);
                                   request.query(updateAllAccounts, function (err, results) {
                                     if (err) {
                                       console.error('Error executing query: ' + err.stack);
@@ -458,7 +457,6 @@ function updateDescription(phoneNumberDescription, textDescription, textIDATDesc
         if (descriptionResults.recordset.length > 0) {
           let memberID = descriptionResults.recordset[0].memberID;
           const description = descriptionResults.recordset[0].description.replace(/\s+/g, '');
-          const user_full_names = descriptionResults.recordset[0].user_full_names.replace(/\s+/g, '');
           memberID = memberID.replace(/^\d+\.\s*/, '');
           memberID = memberID.replace(/\s/g, '');
 
@@ -502,8 +500,8 @@ function updateDescription(phoneNumberDescription, textDescription, textIDATDesc
               sms.sendPremium({
                 to: sender,
                 from: '24123',
-                message: "Dear "+ user_full_names +",  your  balance for account "+ description+ " is "+ accountBalance,
-                bulkSMSMode: 0, 
+                message: "Dear Esteemed Member,  your  balance for account "+ description+ " is "+ accountBalance,
+                bulkSMSMode: 0,
                 keyword: 'pension',
                 linkId: LinkID
               });
