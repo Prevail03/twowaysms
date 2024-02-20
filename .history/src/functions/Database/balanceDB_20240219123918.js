@@ -500,7 +500,7 @@ function updateDescription(phoneNumberDescription, textDescription, textIDATDesc
               sms.sendPremium({
                 to: sender,
                 from: '24123',
-                message: "Dear Esteemed Member,  your  balance for account "+ description+ " is "+ accountBalance,
+                message: "Dear Esteemed Member,  your  balance for account "+ description+ "is "+ accountBalance,
                 bulkSMSMode: 0,
                 keyword: 'pension',
                 linkId: LinkID
