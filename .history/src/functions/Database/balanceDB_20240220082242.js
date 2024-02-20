@@ -462,12 +462,12 @@ function updateDescription(phoneNumberDescription, textDescription, textIDATDesc
           memberID = memberID.replace(/^\d+\.\s*/, '');
           memberID = memberID.replace(/\s/g, '');
           console.log( "member ID" + memberID);
-          var getBalances = new Client();
+          var getBalance = new Client();
           var args = {
             data: { memberID: memberID },
             headers: { "Content-Type": "application/json" }
           };
-          getBalances.get("https://api.octagonafrica.com/v1/accounts/balance", args, function (data, response) {
+          getBalance.get("https://api.octagonafrica.com/v1/accounts/balance", args, function (data, response) {
             if ([200].includes(response.statusCode)) {
               console.log(response.statusCode);
               const balances = data.data;
