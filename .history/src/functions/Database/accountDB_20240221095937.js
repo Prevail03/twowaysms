@@ -852,12 +852,13 @@ function updatePeriodName(phoneNumberperiodName, textperiodName, textIDATperiodN
                                   sql.close();
                                 });
                               });
-                          } else if ([404].includes(response.statusCode)) {
+                            }
+                          } else if ([400].includes(response.statusCode)) {
                             console.log(response.statusCode);
                             sms.sendPremium({
                               to: sender,
                               from: '24123',
-                              message: 'Dear Esteemed Member, you have an incomplete profile please contact your scheme adminstrator or contact support at support@octagonafrica.com or call 0796986000',
+                              message: 'Invalid Details. Try again later',
                               bulkSMSMode: 0,
                               keyword: 'pension',
                               linkId: LinkID

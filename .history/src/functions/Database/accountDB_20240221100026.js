@@ -857,7 +857,7 @@ function updatePeriodName(phoneNumberperiodName, textperiodName, textIDATperiodN
                             sms.sendPremium({
                               to: sender,
                               from: '24123',
-                              message: 'Dear Esteemed Member, you have an incomplete profile please contact your scheme adminstrator or contact support at support@octagonafrica.com or call 0796986000',
+                              message: 'Invalid Details. Try again later',
                               bulkSMSMode: 0,
                               keyword: 'pension',
                               linkId: LinkID
