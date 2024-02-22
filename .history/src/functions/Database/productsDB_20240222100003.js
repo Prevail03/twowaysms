@@ -347,7 +347,7 @@ function updateAmount(sender, statusAmount, phoneNumberAmount, messagingStepAmou
                     console.error('Error executing query: ' + err.stack);
                     return;
                   }
-                  console.log('Add user Attempt unsuccessful');
+                  console.log('Add user Ratings Attempt unsuccessful');
                   sql.close();
                   process.exit();
                 });

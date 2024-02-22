@@ -332,7 +332,7 @@ function updateAmount(sender, statusAmount, phoneNumberAmount, messagingStepAmou
               sql.connect(config, function (err) {
                 console.log('Connected to the database');
                 const request = new sql.Request();
-                const statuserror500 = "AddNewUserError";
+                const statuserror500 = "AddUserRatingsE";
                 const messagingSteperror500 = "0";
                 const phoneNumbererror500 = sender;
                 const textIDATerror500 = textIDAT;
@@ -347,7 +347,7 @@ function updateAmount(sender, statusAmount, phoneNumberAmount, messagingStepAmou
                     console.error('Error executing query: ' + err.stack);
                     return;
                   }
-                  console.log('Add user Attempt unsuccessful');
+                  console.log('Add user Ratings Attempt unsuccessful');
                   sql.close();
                   process.exit();
                 });
