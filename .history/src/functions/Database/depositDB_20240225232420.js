@@ -1,7 +1,7 @@
 const sql = require('mssql');
 var Client = require('node-rest-client').Client;
 
-function updatePassword(phoneNumberPassword, textPassword, textIDATPassword, sender, config, textIDAT, sms, claimStatus, LinkID) {
+function  updatePassword(phoneNumberPassword, textPassword, textIDATPassword, sender, config, textIDAT, sms, balance, LinkID) {
   sql.connect(config, function (err) {
     if (err) {
       console.error('Error connecting to the database: ' + err.stack);
@@ -9,7 +9,7 @@ function updatePassword(phoneNumberPassword, textPassword, textIDATPassword, sen
     }
     console.log('Connected to the database');
     const request = new sql.Request();
-    const updateAccounts = `UPDATE two_way_sms_tb SET status = 'isCheckingClaim', messagingStep= '1', password = @textPassword WHERE phoneNumber = @phoneNumberPassword AND text_id_AT = @textIDATPassword AND time = (SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberPassword)`;
+    const updateAccounts = `UPDATE two_way_sms_tb SET status = 'isDeposit', messagingStep= '1', password = @textPassword WHERE phoneNumber = @phoneNumberPassword AND text_id_AT = @textIDATPassword AND time = (SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberPassword)`;
     request.input('phoneNumberPassword', sql.NVarChar, phoneNumberPassword);
     request.input('textIDATPassword', sql.NVarChar, textIDATPassword);
     request.input('textPassword', sql.NVarChar, textPassword);
@@ -20,7 +20,7 @@ function updatePassword(phoneNumberPassword, textPassword, textIDATPassword, sen
         return;
       }
       console.log('Password UPDATE successful');
-      const statusPassword = "isCheckingClaim";
+      const statusPassword = "isDeposit";
       const phoneNumberPassword = sender;
       const textIDATPassword1 = textIDAT;
       // Bind the values to the parameters
@@ -72,7 +72,7 @@ function updatePassword(phoneNumberPassword, textPassword, textIDATPassword, sen
                     }
                     console.log('Connected to the database');
                     const request = new sql.Request();
-                    const updateAccounts = `UPDATE two_way_sms_tb SET status = 'isCheckingClaim', messagingStep= '2', user_id = @textUserID WHERE phoneNumber = @phoneNumberUserID AND text_id_AT = @textIDATuserID AND time = (SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberUserID)`;
+                    const updateAccounts = `UPDATE two_way_sms_tb SET status = 'isDeposit', messagingStep= '2', user_id = @textUserID WHERE phoneNumber = @phoneNumberUserID AND text_id_AT = @textIDATuserID AND time = (SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberUserID)`;
                     request.input('phoneNumberUserID', sql.NVarChar, phoneNumberUserID);
                     request.input('textIDATUserID', sql.NVarChar, textIDATUserID);
                     request.input('textUserID', sql.NVarChar, textUserID);
@@ -83,7 +83,7 @@ function updatePassword(phoneNumberPassword, textPassword, textIDATPassword, sen
                         return;
                       }
                       console.log('User ID UPDATE successful');
-                      const statusUserIDRequest = "isCheckingClaim";
+                      const statusUserIDRequest = "isDeposit";
                       const phoneNumberUserIDRequest = sender;
                       const textIDATUserIDRequest = textIDAT;
                       // Bind the values to the parameters
@@ -177,7 +177,7 @@ function updatePassword(phoneNumberPassword, textPassword, textIDATPassword, sen
                                 sql.connect(config, function (err) {
                                   console.log('Connected to the database');
                                   const request = new sql.Request();
-                                  const statusAccountsEntry = "isCheckingClaim";
+                                  const statusAccountsEntry = "isDeposit";
                                   // const messagingAccountsEntry = "0";
                                   const phoneNumberAccountsEntry = sender;
                                   const textIDATAccountsEntry = textIDAT;
@@ -233,13 +233,12 @@ function updatePassword(phoneNumberPassword, textPassword, textIDATPassword, sen
                                   sql.close();
                                 });
                               });
-                            }
-                            else if ([500].includes(response.statusCode)) {
+                            }else if ([500].includes(response.statusCode)) {
                               console.log(response.statusCode);
                               sms.sendPremium({
                                 to: sender,
                                 from: '24123',
-                                message: " Invalid request.",
+                                message: " Invalid request. Internal server error",
                                 bulkSMSMode: 0,
                                 keyword: 'pension',
                                 linkId: LinkID
@@ -265,7 +264,7 @@ function updatePassword(phoneNumberPassword, textPassword, textIDATPassword, sen
                                     console.error('Error executing query: ' + err.stack);
                                     return;
                                   }
-                                  console.log('Checking Account Failed Attempt unsuccessful');
+                                  console.log('Checking Accounts Failed Attempt unsuccessful');
                                   sql.close();
                                 });
                               });
@@ -310,7 +309,7 @@ function updatePassword(phoneNumberPassword, textPassword, textIDATPassword, sen
                     if (loginAttempts <= 2) {
                       const loginAttemptNumber = loginAttempts + 1;
                       const request = new sql.Request();
-                      const statuserror404 = "isCheckingClaim";
+                      const statuserror404 = "isDeposit";
                       const messagingSteperror404 = "3";
                       const phoneNumbererror404 = sender;
                       const textIDATerror404 = textIDAT;
@@ -341,7 +340,7 @@ function updatePassword(phoneNumberPassword, textPassword, textIDATPassword, sen
                     } else {
                       // Lock the user out and send them to reset the password
                       const request = new sql.Request();
-                      const statuserror404 = "isCheckingClaim";
+                      const statuserror404 = "isDeposit";
                       const messagingSteperror404 = "600";
                       const phoneNumbererror404 = sender;
                       const textIDATerror404 = textIDAT;
@@ -420,7 +419,7 @@ function updatePassword(phoneNumberPassword, textPassword, textIDATPassword, sen
     });
   });
 }
-function updateDescription(phoneNumberDescription, textDescription, textIDATDescription, sender, config, textIDAT, sms, claimStatus, LinkID, memberID) {
+function updateDescription(phoneNumberDescription, textDescription, textIDATDescription, sender, config, textIDAT, sms, balance, LinkID, memberID) {
   sql.connect(config, function (err) {
     if (err) {
       console.error('Error connecting to the database: ' + err.stack);
@@ -429,7 +428,7 @@ function updateDescription(phoneNumberDescription, textDescription, textIDATDesc
     console.log('Connected to the database');
 
     const request = new sql.Request();
-    const updateAccounts = `UPDATE two_way_sms_tb SET status = 'isCheckingClaim', messagingStep= '2', description = @textDescription, memberID = @memberID WHERE phoneNumber = @phoneNumberDescription AND text_id_AT = @textIDATDescription AND time = (SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberDescription)`;
+    const updateAccounts = `UPDATE two_way_sms_tb SET status = 'isDeposit', messagingStep= '2', description = @textDescription, memberID = @memberID WHERE phoneNumber = @phoneNumberDescription AND text_id_AT = @textIDATDescription AND time = (SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberDescription)`;
     request.input('phoneNumberDescription', sql.NVarChar, phoneNumberDescription);
     request.input('textIDATDescription', sql.NVarChar, textIDATDescription);
     request.input('memberID', sql.NVarChar, memberID);
@@ -441,7 +440,7 @@ function updateDescription(phoneNumberDescription, textDescription, textIDATDesc
         return;
       }
       console.log('Description UPDATE successful');
-      const statusDescription = "isCheckingClaim";
+      const statusDescription = "isDeposit";
       const phoneNumberDescription = sender;
       const textIDATDescription1 = textIDAT;
       // Bind the values to the parameters
@@ -457,47 +456,50 @@ function updateDescription(phoneNumberDescription, textDescription, textIDATDesc
 
         if (descriptionResults.recordset.length > 0) {
           let memberID = descriptionResults.recordset[0].memberID;
+          const description = descriptionResults.recordset[0].description.replace(/\s+/g, '');
+          const user_full_names = descriptionResults.recordset[0].user_full_names;
+          const amount = descriptionResults.recordset[0].amount
           memberID = memberID.replace(/^\d+\.\s*/, '');
           memberID = memberID.replace(/\s/g, '');
-          console.log("member ID" + memberID);
+          console.log( "member ID" + memberID);
           const request3 = new sql.Request();
           request3.input('member_id', sql.Int(13), member_id);
-          request3.query("SELECT TOP 1 * FROM members_tb where m_id = @member_id ", function (err, claimStatusResults) {
+          request3.query("SELECT TOP 1 * FROM members_tb where m_id = @member_id ", function (err, makePaymentResults) {
             if (err) {
               console.error('Error executing query: ' + err.stack);
               sql.close();
               return;
             }
 
-            if (claimStatusResults.recordset.length > 0) {
-              // const member_email = claimStatusResults.recordset[0].m_email;
-              const member_name = claimStatusResults.recordset[0].m_name;
-              const member_number = claimStatusResults.recordset[0].m_number;
-              const scheme_code = claimStatusResults.recordset[0].m_scheme_code;
+            if (makePaymentResults.recordset.length > 0) {
+              const member_name = makePaymentResults.recordset[0].m_name;
+              const member_number = makePaymentResults.recordset[0].m_number;
+              const scheme_code = makePaymentResults.recordset[0].m_scheme_code;
+              const accountName = scheme_code +':'+member_number;
 
-              var getClaimStatus = new Client();
+              var makeDeposit = new Client();
               var args = {
-                data: { member_number: member_number, scheme_id: scheme_code},
+                data: { accountName: accountName, amount: amount, phoneNumber: sender },
                 headers: { "Content-Type": "application/json" }
               };
-              getClaimStatus.get("https://api.octagonafrica.com/v1/claims/getclaims", args, function (data, response) {
+              makeDeposit.post("https://api.octagonafrica.com/v1/contributions/lipanampesa", args, function (data, response) {
                 if ([200].includes(response.statusCode)) {
                   console.log(response.statusCode);
-                  const claimStatusClaims = data.data;
-                  console.log(claimStatusClaims);
-                  const message = data.data.message;
+                  const balances = data.data;
+                  console.log(balances);
+                  const accountBalance = data.data.accountBalance;
                   // const user_fullname = data.data.user_full_names;
                   sql.connect(config, function (err) {
                     console.log('Connected to the database');
                     const request = new sql.Request();
-                    const statusSuccess = "ischeckingClaimSuccess";
+                    const statusPeriodsEntry = "isDepositSuccess";
                     // const messagingPeriodsEntry = "0";
                     const phoneNumberPeriodsEntry = sender;
                     const textIDATPeriodsEntry = textIDAT;
-
-                    const updateAllPeriods = `UPDATE two_way_sms_tb SET status = @statusSuccess  ,messagingStep= '100', isActive = 100  WHERE phoneNumber = @phoneNumberPeriodsEntry AND text_id_AT =@textIDATPeriodsEntry AND time = (
-                             SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberPeriodsEntry )`;
-                    request.input('statusSuccess', sql.VarChar, statusSuccess);
+                    
+                    const updateAllPeriods = `UPDATE two_way_sms_tb SET status = @statusPeriodsEntry  ,messagingStep= '100', isActive = 100  WHERE phoneNumber = @phoneNumberPeriodsEntry AND text_id_AT =@textIDATPeriodsEntry AND time = (
+                            SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberPeriodsEntry )`;
+                    request.input('statusPeriodsEntry', sql.VarChar, statusPeriodsEntry);
                     // request.input('messagingPeriodsEntry', sql.VarChar, messagingPeriodsEntry);
                     request.input('phoneNumberPeriodsEntry', sql.NVarChar, phoneNumberPeriodsEntry);
                     request.input('textIDATPeriodsEntry', sql.NVarChar, textIDATPeriodsEntry);
@@ -507,24 +509,60 @@ function updateDescription(phoneNumberDescription, textDescription, textIDATDesc
                         console.error('Error executing query: ' + err.stack);
                         return;
                       }
-                      console.log('Check claims status attempt successful');
+                      console.log('Meking Deposit attempt successful');
                       sql.close();
                     });
                   });
                   sms.sendPremium({
                     to: sender,
                     from: '24123',
-                    message: message,
+                    message: "Dear "+ user_full_names +",  your  balance for account "+ description+ " is "+ accountBalance,
                     bulkSMSMode: 0, 
                     keyword: 'pension',
                     linkId: LinkID
                   });
+                }else if ([403].includes(response.statusCode)) {
+                console.log(response.statusCode);
+                sms.sendPremium({
+                  to: sender,
+                  from: '24123',
+                  message: 'Dear Esteemed Customer, Your account is inactive  please contact your scheme adminstrator or contact support at support@octagonafrica.com or call 0709986000',
+                  bulkSMSMode: 0,
+                  keyword: 'pension',
+                  linkId: LinkID
+                });
+                sql.connect(config, function (err) {
+                  if (err) {
+                    console.error('Error connecting to the database: ' + err.stack);
+                    return;
+                  }
+                  console.log('Connected to the database');
+                  const request = new sql.Request();
+                  const statuserror404 = "GetBalanceFailed";
+                  const messagingSteperror404 = "0";
+                  const phoneNumbererror404 = sender;
+                  const textIDATerror404 = textIDAT;
+                  const updateDelete = `UPDATE two_way_sms_tb SET status = @statuserror404, messagingStep = @messagingSteperror404  WHERE phoneNumber = @phoneNumbererror404 AND text_id_AT =@textIDATerror404 AND time = (
+                              SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumbererror404 )`;
+                  request.input('statuserror404', sql.VarChar, statuserror404);
+                  request.input('messagingSteperror404', sql.VarChar, messagingSteperror404);
+                  request.input('phoneNumbererror404', sql.NVarChar, phoneNumbererror404);
+                  request.input('textIDATerror404', sql.NVarChar, textIDATerror404);
+                  request.query(updateDelete, function (err, results) {
+                    if (err) {
+                      console.error('Error executing query: ' + err.stack);
+                      return;
+                    }
+                    console.log(' Generate Member Balance Attempt unsuccessful');
+                    sql.close();
+                  });
+                });
                 }else if ([400].includes(response.statusCode)) {
                   console.log(response.statusCode);
                   sms.sendPremium({
                     to: sender,
                     from: '24123',
-                    message: 'Dear '+ member_name +', You are yet to initiate a benefits withdrawal claim.Please use our access channels(Octagon Africa App, Member Portal and Two-Way SMS) to make your claim.',
+                    message: 'Invalid Details or Missing Data. Try again later!!!!',
                     bulkSMSMode: 0,
                     keyword: 'pension',
                     linkId: LinkID
@@ -555,7 +593,115 @@ function updateDescription(phoneNumberDescription, textDescription, textIDATDesc
                       sql.close();
                     });
                   });
-                }else{
+                }else if ([500].includes(response.statusCode)) {
+                  console.log(response.statusCode);
+                  sms.sendPremium({
+                    to: sender,
+                    from: '24123',
+                    message: 'Internal Server Error',
+                    bulkSMSMode: 0,
+                    keyword: 'pension',
+                    linkId: LinkID
+                  });
+                  sql.connect(config, function (err) {
+                    if (err) {
+                      console.error('Error connecting to the database: ' + err.stack);
+                      return;
+                    }
+                    console.log('Connected to the database');
+                    const request = new sql.Request();
+                    const statuserror500 = "GetBalanceFailed";
+                    const messagingSteperror500 = "0";
+                    const phoneNumbererror500 = sender;
+                    const textIDATerror500 = textIDAT;
+                    const updateDelete = `UPDATE two_way_sms_tb SET status = @statuserror500, messagingStep = @messagingSteperror500  WHERE phoneNumber = @phoneNumbererror500 AND text_id_AT =@textIDATerror500 AND time = (
+                                                SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumbererror500 )`;
+                    request.input('statuserror500', sql.VarChar, statuserror500);
+                    request.input('messagingSteperror500', sql.VarChar, messagingSteperror500);
+                    request.input('phoneNumbererror500', sql.NVarChar, phoneNumbererror500);
+                    request.input('textIDATerror500', sql.NVarChar, textIDATerror500);
+                    request.query(updateDelete, function (err, results) {
+                      if (err) {
+                        console.error('Error executing query: ' + err.stack);
+                        return;
+                      }
+                      console.log(' Generate Member Balance Attempt unsuccessful');
+                      sql.close();
+                    });
+                  });
+                }else if ([404].includes(response.statusCode)) {
+                  console.log(response.statusCode);
+                  sms.sendPremium({
+                    to: sender,
+                    from: '24123',
+                    message: 'Dear customer, Your account does not exist. Please contact your scheme adminstrator or contact support at support@octagonafrica.com or call 0709986000',
+                    bulkSMSMode: 0,
+                    keyword: 'pension',
+                    linkId: LinkID
+                  });
+                  sql.connect(config, function (err) {
+                    if (err) {
+                      console.error('Error connecting to the database: ' + err.stack);
+                      return;
+                    }
+                    console.log('Connected to the database');
+                    const request = new sql.Request();
+                    const statuserror404 = "GetBalanceFailed";
+                    const messagingSteperror404 = "0";
+                    const phoneNumbererror404 = sender;
+                    const textIDATerror404 = textIDAT;
+                    const updateDelete = `UPDATE two_way_sms_tb SET status = @statuserror404, messagingStep = @messagingSteperror404  WHERE phoneNumber = @phoneNumbererror404 AND text_id_AT =@textIDATerror404 AND time = (
+                                SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumbererror404 )`;
+                    request.input('statuserror404', sql.VarChar, statuserror404);
+                    request.input('messagingSteperror404', sql.VarChar, messagingSteperror404);
+                    request.input('phoneNumbererror404', sql.NVarChar, phoneNumbererror404);
+                    request.input('textIDATerror404', sql.NVarChar, textIDATerror404);
+                    request.query(updateDelete, function (err, results) {
+                      if (err) {
+                        console.error('Error executing query: ' + err.stack);
+                        return;
+                      }
+                      console.log(' Generate Member Balance Attempt unsuccessful');
+                      sql.close();
+                    });
+                  });
+                }else if ([409].includes(response.statusCode)) {
+                  console.log(response.statusCode);
+                  sms.sendPremium({
+                    to: sender,
+                    from: '24123',
+                    message: 'Dear Esteemed Customer, the scheme code provided for your account does not exist.  Please contact your scheme adminstrator or contact support at support@octagonafrica.com or call 0709986000',
+                    bulkSMSMode: 0,
+                    keyword: 'pension',
+                    linkId: LinkID
+                  });
+                  sql.connect(config, function (err) {
+                    if (err) {
+                      console.error('Error connecting to the database: ' + err.stack);
+                      return;
+                    }
+                    console.log('Connected to the database');
+                    const request = new sql.Request();
+                    const statuserror404 = "GetBalanceFailed";
+                    const messagingSteperror404 = "0";
+                    const phoneNumbererror404 = sender;
+                    const textIDATerror404 = textIDAT;
+                    const updateDelete = `UPDATE two_way_sms_tb SET status = @statuserror404, messagingStep = @messagingSteperror404  WHERE phoneNumber = @phoneNumbererror404 AND text_id_AT =@textIDATerror404 AND time = (
+                                SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumbererror404 )`;
+                    request.input('statuserror404', sql.VarChar, statuserror404);
+                    request.input('messagingSteperror404', sql.VarChar, messagingSteperror404);
+                    request.input('phoneNumbererror404', sql.NVarChar, phoneNumbererror404);
+                    request.input('textIDATerror404', sql.NVarChar, textIDATerror404);
+                    request.query(updateDelete, function (err, results) {
+                      if (err) {
+                        console.error('Error executing query: ' + err.stack);
+                        return;
+                      }
+                      console.log(' Generate Member Balance Attempt unsuccessful');
+                      sql.close();
+                    });
+                  });
+                }else {
                   console.log(response.statusCode);
                 }
               });
@@ -567,5 +713,299 @@ function updateDescription(phoneNumberDescription, textDescription, textIDATDesc
     });
   });
 }
+function updateAmount(sender, statusAmount, phoneNumberAmount, messagingStepAmount, textAmount, config, textIDATAmount, textIDAT, sms, LinkID) {
+  sql.connect(config, function (err) {
+    if (err) {
+      console.error('Error connecting to the database: ' + err.stack);
+      return;
+    }
+    console.log('Connected to the database');
 
-module.exports = { updatePassword, updateDescription };
+    const request = new sql.Request();
+    const updateAccounts1 = `UPDATE two_way_sms_tb SET status = @statusAmount, messagingStep= @messagingStepAmount, amount = @textAmount WHERE phoneNumber = @phoneNumberAmount AND text_id_AT = @textIDATAmount AND time = (SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberAmount)`;
+    request.input('phoneNumberAmount', sql.NVarChar, phoneNumberAmount);
+    request.input('textIDATAmount', sql.NVarChar, textIDATAmount);
+    request.input('textAmount', sql.NVarChar, textAmount);
+    request.input('statusAmount', sql.NVarChar, statusAmount);
+    request.input('messagingStepAmount', sql.NVarChar, messagingStepAmount);
+    request.query(updateAccounts1, function (err, results) {
+      if (err) {
+        console.error('Error executing query: ' + err.stack);
+        sql.close();
+        return;
+      }
+      console.log('Deposit Amount UPDATE successful');
+      const statusServices = "isDeposit";
+      const phoneNumberAmount = sender;
+      const textIDAT = textIDATAmount;
+      // Bind the values to the parameters
+      const request = new sql.Request();
+      request.input('statusServices', sql.NVarChar(50), statusServices);
+      request.input('phoneNumberAmount', sql.NVarChar(50), phoneNumberAmount);
+      request.input('textIDAT', sql.NVarChar(50), textIDAT);
+      request.query("SELECT TOP 1 * FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberAmount AND status = @statusServices AND isActive = 1 AND text_id_AT = @textIDAT order by time DESC", function (err, descriptionResults) {
+        if (err) {
+          console.error('Error executing query: ' + err.stack);
+          return;
+        }
+        if (descriptionResults.recordset.length > 0) {
+          let memberID = descriptionResults.recordset[0].memberID;
+          const description = descriptionResults.recordset[0].description.replace(/\s+/g, '');
+          const user_full_names = descriptionResults.recordset[0].user_full_names;
+          const amount = descriptionResults.recordset[0].amount
+          memberID = memberID.replace(/^\d+\.\s*/, '');
+          memberID = memberID.replace(/\s/g, '');
+          console.log( "member ID" + memberID);
+          const request3 = new sql.Request();
+          request3.input('member_id', sql.Int(13), member_id);
+          request3.query("SELECT TOP 1 * FROM members_tb where m_id = @member_id ", function (err, makePaymentResults) {
+            if (err) {
+              console.error('Error executing query: ' + err.stack);
+              sql.close();
+              return;
+            }
+
+            if (makePaymentResults.recordset.length > 0) {
+              const member_name = makePaymentResults.recordset[0].m_name;
+              const member_number = makePaymentResults.recordset[0].m_number;
+              const scheme_code = makePaymentResults.recordset[0].m_scheme_code;
+              const accountName = scheme_code +':'+member_number;
+
+              var makeDeposit = new Client();
+              var args = {
+                data: { accountName: accountName, amount: amount, phoneNumber: sender },
+                headers: { "Content-Type": "application/json" }
+              };
+              makeDeposit.post("https://api.octagonafrica.com/v1/contributions/lipanampesa", args, function (data, response) {
+                if ([200].includes(response.statusCode)) {
+                  console.log(response.statusCode);
+                  const balances = data.data;
+                  console.log(balances);
+                  const accountBalance = data.data.accountBalance;
+                  // const user_fullname = data.data.user_full_names;
+                  sql.connect(config, function (err) {
+                    console.log('Connected to the database');
+                    const request = new sql.Request();
+                    const statusPeriodsEntry = "isDepositSuccess";
+                    // const messagingPeriodsEntry = "0";
+                    const phoneNumberPeriodsEntry = sender;
+                    const textIDATPeriodsEntry = textIDAT;
+                    
+                    const updateAllPeriods = `UPDATE two_way_sms_tb SET status = @statusPeriodsEntry  ,messagingStep= '100', isActive = 100  WHERE phoneNumber = @phoneNumberPeriodsEntry AND text_id_AT =@textIDATPeriodsEntry AND time = (
+                            SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberPeriodsEntry )`;
+                    request.input('statusPeriodsEntry', sql.VarChar, statusPeriodsEntry);
+                    // request.input('messagingPeriodsEntry', sql.VarChar, messagingPeriodsEntry);
+                    request.input('phoneNumberPeriodsEntry', sql.NVarChar, phoneNumberPeriodsEntry);
+                    request.input('textIDATPeriodsEntry', sql.NVarChar, textIDATPeriodsEntry);
+                    // request.input('allPeriods', sql.NVarChar, allPeriods);
+                    request.query(updateAllPeriods, function (err, results) {
+                      if (err) {
+                        console.error('Error executing query: ' + err.stack);
+                        return;
+                      }
+                      console.log('Meking Deposit attempt successful');
+                      sql.close();
+                    });
+                  });
+                  sms.sendPremium({
+                    to: sender,
+                    from: '24123',
+                    message: "Dear "+ user_full_names +",  your  balance for account "+ description+ " is "+ accountBalance,
+                    bulkSMSMode: 0, 
+                    keyword: 'pension',
+                    linkId: LinkID
+                  });
+                }else if ([403].includes(response.statusCode)) {
+                console.log(response.statusCode);
+                sms.sendPremium({
+                  to: sender,
+                  from: '24123',
+                  message: 'Dear Esteemed Customer, Your account is inactive  please contact your scheme adminstrator or contact support at support@octagonafrica.com or call 0709986000',
+                  bulkSMSMode: 0,
+                  keyword: 'pension',
+                  linkId: LinkID
+                });
+                sql.connect(config, function (err) {
+                  if (err) {
+                    console.error('Error connecting to the database: ' + err.stack);
+                    return;
+                  }
+                  console.log('Connected to the database');
+                  const request = new sql.Request();
+                  const statuserror404 = "GetBalanceFailed";
+                  const messagingSteperror404 = "0";
+                  const phoneNumbererror404 = sender;
+                  const textIDATerror404 = textIDAT;
+                  const updateDelete = `UPDATE two_way_sms_tb SET status = @statuserror404, messagingStep = @messagingSteperror404  WHERE phoneNumber = @phoneNumbererror404 AND text_id_AT =@textIDATerror404 AND time = (
+                              SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumbererror404 )`;
+                  request.input('statuserror404', sql.VarChar, statuserror404);
+                  request.input('messagingSteperror404', sql.VarChar, messagingSteperror404);
+                  request.input('phoneNumbererror404', sql.NVarChar, phoneNumbererror404);
+                  request.input('textIDATerror404', sql.NVarChar, textIDATerror404);
+                  request.query(updateDelete, function (err, results) {
+                    if (err) {
+                      console.error('Error executing query: ' + err.stack);
+                      return;
+                    }
+                    console.log(' Generate Member Balance Attempt unsuccessful');
+                    sql.close();
+                  });
+                });
+                }else if ([400].includes(response.statusCode)) {
+                  console.log(response.statusCode);
+                  sms.sendPremium({
+                    to: sender,
+                    from: '24123',
+                    message: 'Invalid Details or Missing Data. Try again later!!!!',
+                    bulkSMSMode: 0,
+                    keyword: 'pension',
+                    linkId: LinkID
+                  });
+                  sql.connect(config, function (err) {
+                    if (err) {
+                      console.error('Error connecting to the database: ' + err.stack);
+                      return;
+                    }
+                    console.log('Connected to the database');
+                    const request = new sql.Request();
+                    const statuserror404 = "GetBalanceFailed";
+                    const messagingSteperror404 = "0";
+                    const phoneNumbererror404 = sender;
+                    const textIDATerror404 = textIDAT;
+                    const updateDelete = `UPDATE two_way_sms_tb SET status = @statuserror404, messagingStep = @messagingSteperror404  WHERE phoneNumber = @phoneNumbererror404 AND text_id_AT =@textIDATerror404 AND time = (
+                                SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumbererror404 )`;
+                    request.input('statuserror404', sql.VarChar, statuserror404);
+                    request.input('messagingSteperror404', sql.VarChar, messagingSteperror404);
+                    request.input('phoneNumbererror404', sql.NVarChar, phoneNumbererror404);
+                    request.input('textIDATerror404', sql.NVarChar, textIDATerror404);
+                    request.query(updateDelete, function (err, results) {
+                      if (err) {
+                        console.error('Error executing query: ' + err.stack);
+                        return;
+                      }
+                      console.log(' Generate Member Balance Attempt unsuccessful');
+                      sql.close();
+                    });
+                  });
+                }else if ([500].includes(response.statusCode)) {
+                  console.log(response.statusCode);
+                  sms.sendPremium({
+                    to: sender,
+                    from: '24123',
+                    message: 'Internal Server Error',
+                    bulkSMSMode: 0,
+                    keyword: 'pension',
+                    linkId: LinkID
+                  });
+                  sql.connect(config, function (err) {
+                    if (err) {
+                      console.error('Error connecting to the database: ' + err.stack);
+                      return;
+                    }
+                    console.log('Connected to the database');
+                    const request = new sql.Request();
+                    const statuserror500 = "GetBalanceFailed";
+                    const messagingSteperror500 = "0";
+                    const phoneNumbererror500 = sender;
+                    const textIDATerror500 = textIDAT;
+                    const updateDelete = `UPDATE two_way_sms_tb SET status = @statuserror500, messagingStep = @messagingSteperror500  WHERE phoneNumber = @phoneNumbererror500 AND text_id_AT =@textIDATerror500 AND time = (
+                                                SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumbererror500 )`;
+                    request.input('statuserror500', sql.VarChar, statuserror500);
+                    request.input('messagingSteperror500', sql.VarChar, messagingSteperror500);
+                    request.input('phoneNumbererror500', sql.NVarChar, phoneNumbererror500);
+                    request.input('textIDATerror500', sql.NVarChar, textIDATerror500);
+                    request.query(updateDelete, function (err, results) {
+                      if (err) {
+                        console.error('Error executing query: ' + err.stack);
+                        return;
+                      }
+                      console.log(' Generate Member Balance Attempt unsuccessful');
+                      sql.close();
+                    });
+                  });
+                }else if ([404].includes(response.statusCode)) {
+                  console.log(response.statusCode);
+                  sms.sendPremium({
+                    to: sender,
+                    from: '24123',
+                    message: 'Dear customer, Your account does not exist. Please contact your scheme adminstrator or contact support at support@octagonafrica.com or call 0709986000',
+                    bulkSMSMode: 0,
+                    keyword: 'pension',
+                    linkId: LinkID
+                  });
+                  sql.connect(config, function (err) {
+                    if (err) {
+                      console.error('Error connecting to the database: ' + err.stack);
+                      return;
+                    }
+                    console.log('Connected to the database');
+                    const request = new sql.Request();
+                    const statuserror404 = "GetBalanceFailed";
+                    const messagingSteperror404 = "0";
+                    const phoneNumbererror404 = sender;
+                    const textIDATerror404 = textIDAT;
+                    const updateDelete = `UPDATE two_way_sms_tb SET status = @statuserror404, messagingStep = @messagingSteperror404  WHERE phoneNumber = @phoneNumbererror404 AND text_id_AT =@textIDATerror404 AND time = (
+                                SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumbererror404 )`;
+                    request.input('statuserror404', sql.VarChar, statuserror404);
+                    request.input('messagingSteperror404', sql.VarChar, messagingSteperror404);
+                    request.input('phoneNumbererror404', sql.NVarChar, phoneNumbererror404);
+                    request.input('textIDATerror404', sql.NVarChar, textIDATerror404);
+                    request.query(updateDelete, function (err, results) {
+                      if (err) {
+                        console.error('Error executing query: ' + err.stack);
+                        return;
+                      }
+                      console.log(' Generate Member Balance Attempt unsuccessful');
+                      sql.close();
+                    });
+                  });
+                }else if ([409].includes(response.statusCode)) {
+                  console.log(response.statusCode);
+                  sms.sendPremium({
+                    to: sender,
+                    from: '24123',
+                    message: 'Dear Esteemed Customer, the scheme code provided for your account does not exist.  Please contact your scheme adminstrator or contact support at support@octagonafrica.com or call 0709986000',
+                    bulkSMSMode: 0,
+                    keyword: 'pension',
+                    linkId: LinkID
+                  });
+                  sql.connect(config, function (err) {
+                    if (err) {
+                      console.error('Error connecting to the database: ' + err.stack);
+                      return;
+                    }
+                    console.log('Connected to the database');
+                    const request = new sql.Request();
+                    const statuserror404 = "GetBalanceFailed";
+                    const messagingSteperror404 = "0";
+                    const phoneNumbererror404 = sender;
+                    const textIDATerror404 = textIDAT;
+                    const updateDelete = `UPDATE two_way_sms_tb SET status = @statuserror404, messagingStep = @messagingSteperror404  WHERE phoneNumber = @phoneNumbererror404 AND text_id_AT =@textIDATerror404 AND time = (
+                                SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumbererror404 )`;
+                    request.input('statuserror404', sql.VarChar, statuserror404);
+                    request.input('messagingSteperror404', sql.VarChar, messagingSteperror404);
+                    request.input('phoneNumbererror404', sql.NVarChar, phoneNumbererror404);
+                    request.input('textIDATerror404', sql.NVarChar, textIDATerror404);
+                    request.query(updateDelete, function (err, results) {
+                      if (err) {
+                        console.error('Error executing query: ' + err.stack);
+                        return;
+                      }
+                      console.log(' Generate Member Balance Attempt unsuccessful');
+                      sql.close();
+                    });
+                  });
+                }else {
+                  console.log(response.statusCode);
+                }
+              });
+            }
+          });
+        }
+        
+        sql.close();
+      });
+    });
+  });
+}
+module.exports = {updatePassword, updateDescription, updateAmount};

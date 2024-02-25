@@ -190,7 +190,7 @@ function updateAmount(sender, statusAmount, phoneNumberAmount, messagingStepAmou
         sql.close();
         return;
       }
-      console.log('Product Amount UPDATE successful');
+      console.log('Rating Reason UPDATE successful');
       const statusServices = "isProducts";
       const phoneNumberAmount = sender;
       const textIDAT = textIDATAmount;

@@ -70,9 +70,9 @@ function handleDeposit(textMessage, sender, messagingStep, sms, config, textIDAT
     break;
 
     case 3:
-      const statusAmount = "isDeposit";
+      const statusAmount = "isProducts";
       const phoneNumberAmount = sender;
-      const messagingStepAmount = "4";
+      const messagingStepAmount = "10";
       const textAmount = textMessage;
       const textIDATAmount = textIDAT;
       updateAmount(sender, statusAmount, phoneNumberAmount, messagingStepAmount, textAmount, config, textIDATAmount, textIDAT, sms, LinkID);

@@ -560,7 +560,7 @@ function updateDescription(phoneNumberDescription, textDescription, textIDATDesc
                 }
               });
             }
-          });
+            });
         }
         sql.close();
       });

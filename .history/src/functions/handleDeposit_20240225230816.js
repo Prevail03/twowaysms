@@ -1,14 +1,14 @@
 const sql = require('mssql');
 var Client = require('node-rest-client').Client;
 
-const {updatePassword, updateDescription, updateAmount} = require('./Database/depositDB');
-function handleDeposit(textMessage, sender, messagingStep, sms, config, textIDAT, LinkID, deposit, account){
+const {updatePassword, updateDescription} = require('./Database/depositDB');
+function handleDeposit(textMessage, sender, messagingStep, sms, config, textIDAT, LinkID, claimStatus, account){
   switch (parseInt(messagingStep)) {
     case 1:
       const phoneNumberPassword = sender;
       const textPassword = textMessage;
       const textIDATPassword = textIDAT;
-      updatePassword(phoneNumberPassword, textPassword, textIDATPassword, sender, config, textIDAT, sms, deposit, LinkID);
+      updatePassword(phoneNumberPassword, textPassword, textIDATPassword, sender, config, textIDAT, sms, claimStatus, LinkID);
     break;
 
     case 2:
@@ -55,7 +55,7 @@ function handleDeposit(textMessage, sender, messagingStep, sms, config, textIDAT
                   memberID = selectedMemberID;
                   console.log("Account Description: " + textDescription);
 
-                  updateDescription(phoneNumberDescription, textDescription, textIDATDescription, sender, config, textIDAT, sms, deposit, LinkID, memberID); // Pass the selectedMemberID to the function
+                  updateDescription(phoneNumberDescription, textDescription, textIDATDescription, sender, config, textIDAT, sms, claimStatus, LinkID, memberID); // Pass the selectedMemberID to the function
               } else {
                   console.log("Invalid account description");
                   sms.sendPremium(account.invalidResponse(sender, LinkID));
@@ -67,15 +67,6 @@ function handleDeposit(textMessage, sender, messagingStep, sms, config, textIDAT
           }
       });
       });
-    break;
-
-    case 3:
-      const statusAmount = "isDeposit";
-      const phoneNumberAmount = sender;
-      const messagingStepAmount = "4";
-      const textAmount = textMessage;
-      const textIDATAmount = textIDAT;
-      updateAmount(sender, statusAmount, phoneNumberAmount, messagingStepAmount, textAmount, config, textIDATAmount, textIDAT, sms, LinkID);
     break;
   }
 }

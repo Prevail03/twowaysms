@@ -68,15 +68,6 @@ function handleDeposit(textMessage, sender, messagingStep, sms, config, textIDAT
       });
       });
     break;
-
-    case 3:
-      const statusAmount = "isDeposit";
-      const phoneNumberAmount = sender;
-      const messagingStepAmount = "4";
-      const textAmount = textMessage;
-      const textIDATAmount = textIDAT;
-      updateAmount(sender, statusAmount, phoneNumberAmount, messagingStepAmount, textAmount, config, textIDATAmount, textIDAT, sms, LinkID);
-    break;
   }
 }
 module.exports = handleDeposit;

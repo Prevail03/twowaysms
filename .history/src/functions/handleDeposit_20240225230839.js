@@ -1,7 +1,7 @@
 const sql = require('mssql');
 var Client = require('node-rest-client').Client;
 
-const {updatePassword, updateDescription, updateAmount} = require('./Database/depositDB');
+const {updatePassword, updateDescription} = require('./Database/depositDB');
 function handleDeposit(textMessage, sender, messagingStep, sms, config, textIDAT, LinkID, deposit, account){
   switch (parseInt(messagingStep)) {
     case 1:
@@ -67,15 +67,6 @@ function handleDeposit(textMessage, sender, messagingStep, sms, config, textIDAT
           }
       });
       });
-    break;
-
-    case 3:
-      const statusAmount = "isDeposit";
-      const phoneNumberAmount = sender;
-      const messagingStepAmount = "4";
-      const textAmount = textMessage;
-      const textIDATAmount = textIDAT;
-      updateAmount(sender, statusAmount, phoneNumberAmount, messagingStepAmount, textAmount, config, textIDATAmount, textIDAT, sms, LinkID);
     break;
   }
 }
