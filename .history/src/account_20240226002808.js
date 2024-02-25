@@ -106,7 +106,7 @@ const account = {
             linkId: LinkID
         };
     },
-    invalidResponse1: (sender, LinkID) => {
+    invalidResponse: (sender, LinkID) => {
         return {
             to: sender,
             from:'24123',

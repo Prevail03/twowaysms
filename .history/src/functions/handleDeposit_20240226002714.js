@@ -1,15 +1,14 @@
 const sql = require('mssql');
 var Client = require('node-rest-client').Client;
 
-const {updatePassword, updateDescription} = require('./Database/balanceDB');
-
-function handleBalanceEnquiry(textMessage, sender, messagingStep, sms, config, textIDAT, LinkID, claimStatus, account){
+const {updatePassword, updateDescription, updateAmount} = require('./Database/depositDB');
+function handleDeposit(textMessage, sender, messagingStep, sms, config, textIDAT, LinkID, deposit, account){
   switch (parseInt(messagingStep)) {
     case 1:
       const phoneNumberPassword = sender;
       const textPassword = textMessage;
       const textIDATPassword = textIDAT;
-      updatePassword(phoneNumberPassword, textPassword, textIDATPassword, sender, config, textIDAT, sms, claimStatus, LinkID);
+      updatePassword(phoneNumberPassword, textPassword, textIDATPassword, sender, config, textIDAT, sms, deposit, LinkID);
     break;
 
     case 2:
@@ -56,19 +55,28 @@ function handleBalanceEnquiry(textMessage, sender, messagingStep, sms, config, t
                   memberID = selectedMemberID;
                   console.log("Account Description: " + textDescription);
 
-                  updateDescription(phoneNumberDescription, textDescription, textIDATDescription, sender, config, textIDAT, sms, claimStatus, LinkID, memberID); // Pass the selectedMemberID to the function
+                  updateDescription(phoneNumberDescription, textDescription, textIDATDescription, sender, config, textIDAT, sms, deposit, LinkID, memberID); // Pass the selectedMemberID to the function
               } else {
                   console.log("Invalid account description");
-                  sms.sendPremium(claimStatus.invalidResponse(sender, LinkID));
+                  sms.sendPremium(deposit.invalidResponse(sender, LinkID));
               }
 
           } else {
           console.log('Record does not exist');
-          sms.sendPremium(claimStatus.invalidResponseSystem(sender, LinkID));
+          sms.sendPremium(account.invalidResponseSystem(sender, LinkID));
           }
       });
       });
     break;
+
+    case 3:
+      const statusAmount = "isDeposit";
+      const phoneNumberAmount = sender;
+      const messagingStepAmount = "4";
+      const textAmount = textMessage;
+      const textIDATAmount = textIDAT;
+      updateAmount(sender, statusAmount, phoneNumberAmount, messagingStepAmount, textAmount, config, textIDATAmount, textIDAT, sms, LinkID);
+    break;
   }
 }
-module.exports = handleBalanceEnquiry;
+module.exports = handleDeposit;
