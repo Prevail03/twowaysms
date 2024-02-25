@@ -495,7 +495,7 @@ function updateAmount(sender, statusAmount, phoneNumberAmount, messagingStepAmou
           memberID = memberID.replace(/^\d+\.\s*/, '');
           memberID = memberID.replace(/\s/g, '');
           console.log( "member ID" + memberID);
-          const member_id = memberID;
+          const member_id = memberID
           const request3 = new sql.Request();
           request3.input('member_id', sql.Int(13), member_id);
           request3.query("SELECT TOP 1 * FROM members_tb where m_id = @member_id ", function (err, makePaymentResults) {
