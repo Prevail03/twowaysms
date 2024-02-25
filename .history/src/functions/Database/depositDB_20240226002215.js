@@ -419,7 +419,7 @@ function  updatePassword(phoneNumberPassword, textPassword, textIDATPassword, se
     });
   });
 }
-function  updateDescription(phoneNumberDescription, textDescription, textIDATDescription, sender, config, textIDAT, sms, deposit, LinkID, memberID) {
+function updateDescription(phoneNumberDescription, textDescription, textIDATDescription, sender, config, textIDAT, sms, deposit, LinkID, memberID) {
   sql.connect(config, function (err) {
     if (err) {
       console.error('Error connecting to the database: ' + err.stack);
