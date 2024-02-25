@@ -443,7 +443,7 @@ function  updateDescription(phoneNumberDescription, textDescription, textIDATDes
         sms.sendPremium({
           to: sender,
           from: '24123',
-          message: "Enter the amount you wish to deposit",
+          message: "Enter the Amount you wish to deposit",
           bulkSMSMode: 0, 
           keyword: 'pension',
           linkId: LinkID
