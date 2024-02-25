@@ -1,15 +1,14 @@
-const deposit = {
-  startDeposit: (sender, LinkID) => {
+const claimStatus = {
+  startClaimsStatusEnquiry: (sender, LinkID) => {
     return {
       to: sender,
       from:'24123',
-      message: "Dear Esteemed Customer, Welcome to Octagon Africa. To make a deposit, please provide us with the following information.\nPlease enter your password:",
+      message: "Dear Esteemed Customer, Welcome to Octagon Africa. To check your claim status, please provide us with the following information.\nPlease enter your password:",
       bulkSMSMode: 0,
       keyword: 'pension',
       linkId: LinkID
     };
   },
-
   invalidResponse: (sender, LinkID) => {
     return {
         to: sender,
@@ -29,6 +28,7 @@ const deposit = {
         keyword: 'pension',
         linkId: LinkID
     };
-  },
+},
+
 }
-module.exports = deposit;
+module.exports = claimStatus;
