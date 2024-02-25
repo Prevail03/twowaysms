@@ -8,14 +8,12 @@ const handleClaims = require('./handleClaims');
 const handleRating = require('./handleRating');
 const handleProductsAndServices = require('./handleProducts');
 const handleBalanceEnquiry = require('./handleBalanceEnquiry');
-const handleClaimStatus = require('./handleClaimStatus');
 const reset =require('../reset');
 const claims = require('../claims');
 const products = require('../products');
 const rate = require('../rate');
 const balance = require('../balance');
 const deposit = require('../deposit');
-const claimStatus = require('../claimStatus');
 const { values } = require('lodash');
 var Client = require('node-rest-client').Client;
 
@@ -195,13 +193,10 @@ function handleIncomingMessage(textMessage, sender, textId, phoneNumber, config,
                             handleProductsAndServices(textMessage, sender, messagingStep, sms, config, textIDAT, LinkID, products);
                         break;
                         case 'isBalance':
-                            handleBalanceEnquiry(textMessage, sender, messagingStep, sms, config, textIDAT, LinkID, balance ,account);
+                            handleBalanceEnquiry(textMessage, sender, messagingStep, sms, config, textIDAT, LinkID, balance);
                         break;
                         case 'isDeposit':
                             handleDeposit(textMessage, sender, messagingStep, sms, config, textIDAT, LinkID, deposit);
-                        break;
-                        case 'isCheckingClaim':
-                            handleClaimStatus(textMessage, sender, messagingStep, sms, config, textIDAT, LinkID, claimStatus, account);
                         break;
                         default:
                             sms.sendPremium(register.defaultMessage(sender, LinkID));
@@ -310,23 +305,23 @@ function handleIncomingMessage(textMessage, sender, textId, phoneNumber, config,
                         console.log("Check Claim Status Workflow");
                         sms.sendPremium(products.productsmenu(sender, LinkID));
                         const currentStatus = "existingCustomer";
-                        const statusClaimStatus = "isCheckingClaim";
+                        const statusClaimStatus = "isProducts";
                         const phoneNumberClaimStatus = sender;
-                        const messagingStepClaimStatus = "1";
+                        const messagingStepProducts = "1";
                         const request = new sql.Request(connection);
-                        const updateClaimStatus = `UPDATE two_way_sms_tb SET status = @statusClaimStatus, isActive=@isActive, messagingStep = @messagingStepClaimStatus WHERE phoneNumber = @phoneNumberClaimStatus AND time = (
+                        const updateDeactivate = `UPDATE two_way_sms_tb SET status = @statusProducts, isActive=@isActive, messagingStep = @messagingStepProducts WHERE phoneNumber = @phoneNumberClaimStatus AND time = (
                             SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberClaimStatus and status =@currentStatus )`;
-                        request.input('statusClaimStatus', sql.VarChar, statusClaimStatus);
+                        request.input('statusProducts', sql.VarChar, statusProducts);
                         request.input('currentStatus', sql.VarChar, currentStatus);
-                        request.input('messagingStepClaimStatus', sql.VarChar, messagingStepClaimStatus);
+                        request.input('messagingStepProducts', sql.VarChar, messagingStepProducts);
                         request.input('phoneNumberClaimStatus', sql.VarChar, phoneNumberClaimStatus);
                         request.input('isActive', sql.Bit, 1);
-                        request.query(updateClaimStatus, function(err, results) {
+                        request.query(updateDeactivate, function(err, results) {
                         if (err) {
                             console.error('Error executing query: ' + err.stack);
                             return;
                         }
-                        console.log('Claim Status UPDATE Successful');
+                        console.log('Products UPDATE successful');
                         connection.close();
                         });
 

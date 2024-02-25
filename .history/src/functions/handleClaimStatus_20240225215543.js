@@ -1,14 +1,15 @@
 const sql = require('mssql');
+var Client = require('node-rest-client').Client;
 
 const {updatePassword, updateDescription} = require('./Database/balanceDB');
 
-function handleBalanceEnquiry(textMessage, sender, messagingStep, sms, config, textIDAT, LinkID, balance, account){
+function handleBalanceEnquiry(textMessage, sender, messagingStep, sms, config, textIDAT, LinkID, claimStatus, account){
   switch (parseInt(messagingStep)) {
     case 1:
       const phoneNumberPassword = sender;
       const textPassword = textMessage;
       const textIDATPassword = textIDAT;
-      updatePassword(phoneNumberPassword, textPassword, textIDATPassword, sender, config, textIDAT, sms, balance, LinkID);
+      updatePassword(phoneNumberPassword, textPassword, textIDATPassword, sender, config, textIDAT, sms, claimStatus, LinkID);
     break;
 
     case 2:
@@ -55,7 +56,7 @@ function handleBalanceEnquiry(textMessage, sender, messagingStep, sms, config, t
                   memberID = selectedMemberID;
                   console.log("Account Description: " + textDescription);
 
-                  updateDescription(phoneNumberDescription, textDescription, textIDATDescription, sender, config, textIDAT, sms, balance, LinkID, memberID); // Pass the selectedMemberID to the function
+                  updateDescription(phoneNumberDescription, textDescription, textIDATDescription, sender, config, textIDAT, sms, claimStatus, LinkID, memberID); // Pass the selectedMemberID to the function
               } else {
                   console.log("Invalid account description");
                   sms.sendPremium(account.invalidResponse(sender, LinkID));
@@ -68,7 +69,6 @@ function handleBalanceEnquiry(textMessage, sender, messagingStep, sms, config, t
       });
       });
     break;
-
   }
 }
 module.exports = handleBalanceEnquiry;

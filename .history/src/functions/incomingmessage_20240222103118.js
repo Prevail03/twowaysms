@@ -8,15 +8,11 @@ const handleClaims = require('./handleClaims');
 const handleRating = require('./handleRating');
 const handleProductsAndServices = require('./handleProducts');
 const handleBalanceEnquiry = require('./handleBalanceEnquiry');
-const handleClaimStatus = require('./handleClaimStatus');
 const reset =require('../reset');
 const claims = require('../claims');
 const products = require('../products');
 const rate = require('../rate');
 const balance = require('../balance');
-const deposit = require('../deposit');
-const claimStatus = require('../claimStatus');
-const { values } = require('lodash');
 var Client = require('node-rest-client').Client;
 
 function handleIncomingMessage(textMessage, sender, textId, phoneNumber, config, sms, register, account,forgotPassword, LinkID) {
@@ -195,13 +191,7 @@ function handleIncomingMessage(textMessage, sender, textId, phoneNumber, config,
                             handleProductsAndServices(textMessage, sender, messagingStep, sms, config, textIDAT, LinkID, products);
                         break;
                         case 'isBalance':
-                            handleBalanceEnquiry(textMessage, sender, messagingStep, sms, config, textIDAT, LinkID, balance ,account);
-                        break;
-                        case 'isDeposit':
-                            handleDeposit(textMessage, sender, messagingStep, sms, config, textIDAT, LinkID, deposit);
-                        break;
-                        case 'isCheckingClaim':
-                            handleClaimStatus(textMessage, sender, messagingStep, sms, config, textIDAT, LinkID, claimStatus, account);
+                            handleBalanceEnquiry(textMessage, sender, messagingStep, sms, config, textIDAT, LinkID, balance);
                         break;
                         default:
                             sms.sendPremium(register.defaultMessage(sender, LinkID));
@@ -306,30 +296,9 @@ function handleIncomingMessage(textMessage, sender, textId, phoneNumber, config,
                     }else if(textMessage ==7){
                         console.log("Help us  Workflow");
                         sms.sendPremium(register.wrongMenuValue(sender, LinkID));
-                    }else if(textMessage == 8) {
-                        console.log("Check Claim Status Workflow");
-                        sms.sendPremium(products.productsmenu(sender, LinkID));
-                        const currentStatus = "existingCustomer";
-                        const statusClaimStatus = "isCheckingClaim";
-                        const phoneNumberClaimStatus = sender;
-                        const messagingStepClaimStatus = "1";
-                        const request = new sql.Request(connection);
-                        const updateClaimStatus = `UPDATE two_way_sms_tb SET status = @statusClaimStatus, isActive=@isActive, messagingStep = @messagingStepClaimStatus WHERE phoneNumber = @phoneNumberClaimStatus AND time = (
-                            SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberClaimStatus and status =@currentStatus )`;
-                        request.input('statusClaimStatus', sql.VarChar, statusClaimStatus);
-                        request.input('currentStatus', sql.VarChar, currentStatus);
-                        request.input('messagingStepClaimStatus', sql.VarChar, messagingStepClaimStatus);
-                        request.input('phoneNumberClaimStatus', sql.VarChar, phoneNumberClaimStatus);
-                        request.input('isActive', sql.Bit, 1);
-                        request.query(updateClaimStatus, function(err, results) {
-                        if (err) {
-                            console.error('Error executing query: ' + err.stack);
-                            return;
-                        }
-                        console.log('Claim Status UPDATE Successful');
-                        connection.close();
-                        });
-
+                    // }else if(textMessage == 6) {
+                    //     console.log("My Account  Workflow");
+                    //     sms.sendPremium(register.wrongMenuValue(sender, LinkID));
                     }else if(textMessage == 5) {
                         console.log("Products and Services workflows");
                         sms.sendPremium(products.productsmenu(sender, LinkID));
@@ -378,25 +347,24 @@ function handleIncomingMessage(textMessage, sender, textId, phoneNumber, config,
                     }else if(textMessage == 3) {
                         console.log("Deposit Workflow");
                         sms.sendPremium(register.wrongMenuValue(sender, LinkID));
-                        process.exit();
                         const currentStatus = "existingCustomer";
                         const statusDeposit = "isDeposit";
                         const phoneNumberDeposit = sender;
                         const messagingStepDeposit= "1";
                         const request = new sql.Request(connection);
-                        const updateDeposit = `UPDATE two_way_sms_tb SET status = @statusDeposit, isActive=@isActive, messagingStep = @messagingStepDeposit WHERE phoneNumber = @phoneNumberDeposit AND time = (
-                            SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberDeposit and status =@currentStatus )`;
-                        request.input('statusDeposit', sql.VarChar, statusDeposit);
+                        const updateDeposit = `UPDATE two_way_sms_tb SET status = @statusDeposit, isActive=@isActive, messagingStep = @messagingStepDeposit WHERE phoneNumber = @phoneNumberBalance AND time = (
+                            SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberBalance and status =@currentStatus )`;
+                        request.input('statusBalance', sql.VarChar, statusBalance);
                         request.input('currentStatus', sql.VarChar, currentStatus);
-                        request.input('messagingStepDeposit', sql.VarChar, messagingStepDeposit);
-                        request.input('phoneNumberDeposit', sql.VarChar, phoneNumberDeposit);
+                        request.input('messagingStepBalance', sql.VarChar, messagingStepBalance);
+                        request.input('phoneNumberBalance', sql.VarChar, phoneNumberBalance);
                         request.input('isActive', sql.Bit, 1);
                         request.query(updateDeposit, function(err, results) {
                         if (err) {
                             console.error('Error executing query: ' + err.stack);
                             return;
                         }
-                        console.log('Deposit UPDATE successful');
+                        console.log('Balance Enquiry UPDATE successful');
                         connection.close();
                         });
                     }else if(textMessage == 1) {

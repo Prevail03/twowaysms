@@ -1,14 +1,15 @@
 const sql = require('mssql');
+var Client = require('node-rest-client').Client;
 
 const {updatePassword, updateDescription} = require('./Database/balanceDB');
 
-function handleBalanceEnquiry(textMessage, sender, messagingStep, sms, config, textIDAT, LinkID, balance, account){
+function handleBalanceEnquiry(textMessage, sender, messagingStep, sms, config, textIDAT, LinkID, claimStatus, account){
   switch (parseInt(messagingStep)) {
     case 1:
       const phoneNumberPassword = sender;
       const textPassword = textMessage;
       const textIDATPassword = textIDAT;
-      updatePassword(phoneNumberPassword, textPassword, textIDATPassword, sender, config, textIDAT, sms, balance, LinkID);
+      updatePassword(phoneNumberPassword, textPassword, textIDATPassword, sender, config, textIDAT, sms, claimStatus, LinkID);
     break;
 
     case 2:
@@ -68,7 +69,6 @@ function handleBalanceEnquiry(textMessage, sender, messagingStep, sms, config, t
       });
       });
     break;
-
   }
 }
 module.exports = handleBalanceEnquiry;

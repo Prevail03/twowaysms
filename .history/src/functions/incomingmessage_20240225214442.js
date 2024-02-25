@@ -8,14 +8,12 @@ const handleClaims = require('./handleClaims');
 const handleRating = require('./handleRating');
 const handleProductsAndServices = require('./handleProducts');
 const handleBalanceEnquiry = require('./handleBalanceEnquiry');
-const handleClaimStatus = require('./handleClaimStatus');
 const reset =require('../reset');
 const claims = require('../claims');
 const products = require('../products');
 const rate = require('../rate');
 const balance = require('../balance');
 const deposit = require('../deposit');
-const claimStatus = require('../claimStatus');
 const { values } = require('lodash');
 var Client = require('node-rest-client').Client;
 
@@ -195,13 +193,13 @@ function handleIncomingMessage(textMessage, sender, textId, phoneNumber, config,
                             handleProductsAndServices(textMessage, sender, messagingStep, sms, config, textIDAT, LinkID, products);
                         break;
                         case 'isBalance':
-                            handleBalanceEnquiry(textMessage, sender, messagingStep, sms, config, textIDAT, LinkID, balance ,account);
+                            handleBalanceEnquiry(textMessage, sender, messagingStep, sms, config, textIDAT, LinkID, balance);
                         break;
                         case 'isDeposit':
                             handleDeposit(textMessage, sender, messagingStep, sms, config, textIDAT, LinkID, deposit);
                         break;
                         case 'isCheckingClaim':
-                            handleClaimStatus(textMessage, sender, messagingStep, sms, config, textIDAT, LinkID, claimStatus, account);
+                            handleDeposit(textMessage, sender, messagingStep, sms, config, textIDAT, LinkID, claimStatus);
                         break;
                         default:
                             sms.sendPremium(register.defaultMessage(sender, LinkID));

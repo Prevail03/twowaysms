@@ -2,7 +2,7 @@ const sql = require('mssql');
 
 const {updatePassword, updateDescription} = require('./Database/balanceDB');
 
-function handleBalanceEnquiry(textMessage, sender, messagingStep, sms, config, textIDAT, LinkID, balance, account){
+function handleBalanceEnquiry(textMessage, sender, messagingStep, sms, config, textIDAT, LinkID, balance){
   switch (parseInt(messagingStep)) {
     case 1:
       const phoneNumberPassword = sender;

@@ -195,13 +195,13 @@ function handleIncomingMessage(textMessage, sender, textId, phoneNumber, config,
                             handleProductsAndServices(textMessage, sender, messagingStep, sms, config, textIDAT, LinkID, products);
                         break;
                         case 'isBalance':
-                            handleBalanceEnquiry(textMessage, sender, messagingStep, sms, config, textIDAT, LinkID, balance ,account);
+                            handleBalanceEnquiry(textMessage, sender, messagingStep, sms, config, textIDAT, LinkID, balance,account);
                         break;
                         case 'isDeposit':
                             handleDeposit(textMessage, sender, messagingStep, sms, config, textIDAT, LinkID, deposit);
                         break;
                         case 'isCheckingClaim':
-                            handleClaimStatus(textMessage, sender, messagingStep, sms, config, textIDAT, LinkID, claimStatus, account);
+                            handleClaimStatus(textMessage, sender, messagingStep, sms, config, textIDAT, LinkID, claimStatus);
                         break;
                         default:
                             sms.sendPremium(register.defaultMessage(sender, LinkID));
