@@ -559,7 +559,7 @@ function updateAmount(sender, statusAmount, phoneNumberAmount, messagingStepAmou
               }
               console.log('Connected to the database');
               const request = new sql.Request();
-              const statuserror404 = "GDepositFailed";
+              const statuserror404 = "GetBalanceFailed";
               const messagingSteperror404 = "0";
               const phoneNumbererror404 = sender;
               const textIDATerror404 = textIDAT;
@@ -595,7 +595,7 @@ function updateAmount(sender, statusAmount, phoneNumberAmount, messagingStepAmou
                 }
                 console.log('Connected to the database');
                 const request = new sql.Request();
-                const statuserror404 = "GDepositFailed";
+                const statuserror404 = "GetBalanceFailed";
                 const messagingSteperror404 = "0";
                 const phoneNumbererror404 = sender;
                 const textIDATerror404 = textIDAT;
@@ -631,7 +631,7 @@ function updateAmount(sender, statusAmount, phoneNumberAmount, messagingStepAmou
                 }
                 console.log('Connected to the database');
                 const request = new sql.Request();
-                const statuserror500 = "GDepositFailed";
+                const statuserror500 = "GetBalanceFailed";
                 const messagingSteperror500 = "0";
                 const phoneNumbererror500 = sender;
                 const textIDATerror500 = textIDAT;
@@ -667,7 +667,7 @@ function updateAmount(sender, statusAmount, phoneNumberAmount, messagingStepAmou
                 }
                 console.log('Connected to the database');
                 const request = new sql.Request();
-                const statuserror404 = "GDepositFailed";
+                const statuserror404 = "GetBalanceFailed";
                 const messagingSteperror404 = "0";
                 const phoneNumbererror404 = sender;
                 const textIDATerror404 = textIDAT;
@@ -703,7 +703,7 @@ function updateAmount(sender, statusAmount, phoneNumberAmount, messagingStepAmou
                 }
                 console.log('Connected to the database');
                 const request = new sql.Request();
-                const statuserror404 = "GDepositFailed";
+                const statuserror404 = "GetBalanceFailed";
                 const messagingSteperror404 = "0";
                 const phoneNumbererror404 = sender;
                 const textIDATerror404 = textIDAT;
