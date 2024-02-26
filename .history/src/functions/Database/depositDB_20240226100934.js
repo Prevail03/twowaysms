@@ -489,7 +489,7 @@ function updateAmount(sender, statusAmount, phoneNumberAmount, messagingStepAmou
         }
         if (descriptionResults.recordset.length > 0) {
           // let memberID = descriptionResults.recordset[0].memberID;
-          const description = descriptionResults.recordset[0].description?.replace(/\s+/g, '') || '';
+          //const description = descriptionResults.recordset[0].description.replace(/\s+/g, '');
           const user_full_names = descriptionResults.recordset[0].user_full_names;
           const amount = descriptionResults.recordset[0].amount;
           const member_name = makePaymentResults.recordset[0].m_name;
