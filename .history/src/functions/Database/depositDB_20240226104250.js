@@ -492,7 +492,6 @@ function updateAmount(sender, statusAmount, phoneNumberAmount, messagingStepAmou
           const description = descriptionResults.recordset[0].description?.replace(/\s+/g, '') || '';
           const user_full_names = descriptionResults.recordset[0].user_full_names;
           const amount = descriptionResults.recordset[0].amount;
-          console.log(amount);
           const member_name = descriptionResults.recordset[0].m_name;
           const member_number = descriptionResults.recordset[0].m_number;
           const scheme_code = descriptionResults.recordset[0].m_scheme_code;
