@@ -482,7 +482,7 @@ function updateAmount(sender, statusAmount, phoneNumberAmount, messagingStepAmou
       request2.input('statusServices', sql.NVarChar(50), statusServices);
       request2.input('phoneNumberAmount', sql.NVarChar(50), phoneNumberAmount);
       request2.input('textIDAT', sql.NVarChar(50), textIDAT);
-      request2.query("SELECT TOP 1 * FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberAmount AND status = @statusServices AND isActive = 1 AND text_id_AT = @textIDAT order by time DESC", function (err, descriptionResults) {
+      request.query("SELECT TOP 1 * FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberAmount AND status = @statusServices AND isActive = 1 AND text_id_AT = @textIDAT order by time DESC", function (err, descriptionResults) {
         if (err) {
           console.error('Error executing query: ' + err.stack);
           return;
