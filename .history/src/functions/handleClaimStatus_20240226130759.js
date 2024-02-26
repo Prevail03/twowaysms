@@ -3,7 +3,6 @@ var Client = require('node-rest-client').Client;
 
 const {updatePassword, updateDescription} = require('./Database/claimStatusDB');
 
-
 function handleBalanceEnquiry(textMessage, sender, messagingStep, sms, config, textIDAT, LinkID, claimStatus, account){
   switch (parseInt(messagingStep)) {
     case 1:
