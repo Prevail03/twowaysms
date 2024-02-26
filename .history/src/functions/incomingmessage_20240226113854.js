@@ -307,7 +307,7 @@ function handleIncomingMessage(textMessage, sender, textId, phoneNumber, config,
                     }else if(textMessage ==8){
                         console.log("Help us  Workflow");
                         sms.sendPremium(register.wrongMenuValue(sender, LinkID));
-                    }else if(textMessage == 7) {
+                    }else if(textMessage == 89 {
                         console.log("Check Claim Status Workflow");
                         sms.sendPremium(products.startClaimsStatusEnquiry(sender, LinkID));
                         const currentStatus = "existingCustomer";
@@ -317,19 +317,20 @@ function handleIncomingMessage(textMessage, sender, textId, phoneNumber, config,
                         const request = new sql.Request(connection);
                         const updateClaimStatus = `UPDATE two_way_sms_tb SET status = @statusClaimStatus, isActive=@isActive, messagingStep = @messagingStepClaimStatus WHERE phoneNumber = @phoneNumberClaimStatus AND time = (
                             SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberClaimStatus and status =@currentStatus )`;
-                            request.input('statusClaimStatus', sql.VarChar, statusClaimStatus);
-                            request.input('currentStatus', sql.VarChar, currentStatus);
-                            request.input('messagingStepClaimStatus', sql.VarChar, messagingStepClaimStatus);
-                            request.input('phoneNumberClaimStatus', sql.VarChar, phoneNumberClaimStatus);
-                            request.input('isActive', sql.Bit, 1);
-                            request.query(updateClaimStatus, function(err, results) {
-                            if (err) {
-                                console.error('Error executing query: ' + err.stack);
-                                return;
-                            }
-                            console.log('Claim Status UPDATE Successful');
-                            connection.close();
+                        request.input('statusClaimStatus', sql.VarChar, statusClaimStatus);
+                        request.input('currentStatus', sql.VarChar, currentStatus);
+                        request.input('messagingStepClaimStatus', sql.VarChar, messagingStepClaimStatus);
+                        request.input('phoneNumberClaimStatus', sql.VarChar, phoneNumberClaimStatus);
+                        request.input('isActive', sql.Bit, 1);
+                        request.query(updateClaimStatus, function(err, results) {
+                        if (err) {
+                            console.error('Error executing query: ' + err.stack);
+                            return;
+                        }
+                        console.log('Claim Status UPDATE Successful');
+                        connection.close();
                         });
+
                     }else if(textMessage == 5) {
                         console.log("Products and Services workflows");
                         sms.sendPremium(products.productsmenu(sender, LinkID));
