@@ -507,7 +507,7 @@ function updateDescription(phoneNumberDescription, textDescription, textIDATDesc
                         console.error('Error executing query: ' + err.stack);
                         return;
                       }
-                      console.log('Check claims status attempt successfull');
+                      console.log('Check claims status attempt successful');
                       sql.close();
                     });
                   });
