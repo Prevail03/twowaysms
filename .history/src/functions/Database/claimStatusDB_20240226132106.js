@@ -465,7 +465,7 @@ function updateDescription(phoneNumberDescription, textDescription, textIDATDesc
                 data: { member_number: member_number, scheme_id: scheme_code},
                 headers: { "Content-Type": "application/json" }
               };
-              console.log(args);
+              consol.log(args);
               getClaimStatus.get("https://api.octagonafrica.com/v1/claims/getclaims", args, function (data, response) {
                 if ([200].includes(response.statusCode)) {
                   console.log(response.statusCode);
