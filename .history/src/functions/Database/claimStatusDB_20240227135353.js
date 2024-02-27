@@ -80,7 +80,6 @@ function updatePassword(phoneNumberPassword, textPassword, textIDATPassword, sen
                     keyword: 'pension',
                     linkId: LinkID
                   });
-                  
                   const phoneNumberUserID = sender;
                   // const textUserID = ID;
                   const textIDATUserID = textIDAT;

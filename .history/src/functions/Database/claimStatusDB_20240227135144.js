@@ -71,16 +71,7 @@ function updatePassword(phoneNumberPassword, textPassword, textIDATPassword, sen
                       finalMessage += `as at ${claim.as_at_date}. The amount claimed= ${claim.amount}.\n`;
                   });
 
-                  console.log(finalMessage);
-                  sms.sendPremium({
-                    to: sender,
-                    from: '24123',
-                    message: finalMessage,
-                    bulkSMSMode: 0,
-                    keyword: 'pension',
-                    linkId: LinkID
-                  });
-                  
+                  console.log(finalMessage); 
                   const phoneNumberUserID = sender;
                   // const textUserID = ID;
                   const textIDATUserID = textIDAT;
