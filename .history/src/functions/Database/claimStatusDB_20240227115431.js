@@ -61,21 +61,8 @@ function updatePassword(phoneNumberPassword, textPassword, textIDATPassword, sen
               getClaimStatus.get("https://api.octagonafrica.com/v1/claims/listclaim", args, function (data, response) {
                 if (response.statusCode === 200) {
                   console.log(response.statusCode);
-                   
                   const claim_data = data.claim_data;
-
-                  const preMessage = "Dear esteemed client below are your claims: \n";
-
-                  let finalMessage = preMessage;
-                  claim_data.forEach((claim, index) => {
-                      finalMessage += `${index + 1}. ${claim.member_name}, Your claim stage is ${claim.claim_stage}, `;
-                      if (claim.next_action) {
-                          finalMessage += `the next action is ${claim.next_action}, `;
-                      }
-                      finalMessage += `for the scheme ${claim.schemeName} as at date ${claim.as_at_date}. The amount you are claiming is ${claim.amount}.\n`;
-                  });
-
-                  console.log(finalMessage); 
+                  const preMessage = "Dear " + user_fullname +"below are your claims"
                   const phoneNumberUserID = sender;
                   // const textUserID = ID;
                   const textIDATUserID = textIDAT;
@@ -86,7 +73,7 @@ function updatePassword(phoneNumberPassword, textPassword, textIDATPassword, sen
                     }
                     console.log('Connected to the database');
                     const request = new sql.Request();
-                    const updateAccounts = `UPDATE two_way_sms_tb SET status = 'isCheckingClaim', messagingStep= '2' WHERE phoneNumber = @phoneNumberUserID AND text_id_AT = @textIDATuserID AND time = (SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberUserID)`;
+                    const updateAccounts = `UPDATE two_way_sms_tb SET status = 'isCheckingClaim', messagingStep= '2', user_id = @textUserID WHERE phoneNumber = @phoneNumberUserID AND text_id_AT = @textIDATuserID AND time = (SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberUserID)`;
                     request.input('phoneNumberUserID', sql.NVarChar, phoneNumberUserID);
                     request.input('textIDATUserID', sql.NVarChar, textIDATUserID);
                     request.input('textUserID', sql.NVarChar, textUserID);

@@ -61,23 +61,10 @@ function updatePassword(phoneNumberPassword, textPassword, textIDATPassword, sen
               getClaimStatus.get("https://api.octagonafrica.com/v1/claims/listclaim", args, function (data, response) {
                 if (response.statusCode === 200) {
                   console.log(response.statusCode);
-                   
-                  const claim_data = data.claim_data;
-
-                  const preMessage = "Dear esteemed client below are your claims: \n";
-
-                  let finalMessage = preMessage;
-                  claim_data.forEach((claim, index) => {
-                      finalMessage += `${index + 1}. ${claim.member_name}, Your claim stage is ${claim.claim_stage}, `;
-                      if (claim.next_action) {
-                          finalMessage += `the next action is ${claim.next_action}, `;
-                      }
-                      finalMessage += `for the scheme ${claim.schemeName} as at date ${claim.as_at_date}. The amount you are claiming is ${claim.amount}.\n`;
-                  });
-
-                  console.log(finalMessage); 
+                  const ID = data.data;
+                  console.log(JSON.stringify(ID));
                   const phoneNumberUserID = sender;
-                  // const textUserID = ID;
+                  const textUserID = ID;
                   const textIDATUserID = textIDAT;
                   sql.connect(config, function (err) {
                     if (err) {
@@ -86,7 +73,7 @@ function updatePassword(phoneNumberPassword, textPassword, textIDATPassword, sen
                     }
                     console.log('Connected to the database');
                     const request = new sql.Request();
-                    const updateAccounts = `UPDATE two_way_sms_tb SET status = 'isCheckingClaim', messagingStep= '2' WHERE phoneNumber = @phoneNumberUserID AND text_id_AT = @textIDATuserID AND time = (SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberUserID)`;
+                    const updateAccounts = `UPDATE two_way_sms_tb SET status = 'isCheckingClaim', messagingStep= '2', user_id = @textUserID WHERE phoneNumber = @phoneNumberUserID AND text_id_AT = @textIDATuserID AND time = (SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberUserID)`;
                     request.input('phoneNumberUserID', sql.NVarChar, phoneNumberUserID);
                     request.input('textIDATUserID', sql.NVarChar, textIDATUserID);
                     request.input('textUserID', sql.NVarChar, textUserID);
@@ -97,7 +84,200 @@ function updatePassword(phoneNumberPassword, textPassword, textIDATPassword, sen
                         return;
                       }
                       console.log('User ID UPDATE successful');
-                      
+                      const statusUserIDRequest = "isCheckingClaim";
+                      const phoneNumberUserIDRequest = sender;
+                      const textIDATUserIDRequest = textIDAT;
+                      // Bind the values to the parameters
+                      const request = new sql.Request();
+                      request.input('statusUserIDRequest', sql.NVarChar(50), statusUserIDRequest);
+                      request.input('phoneNumberUserIDRequest', sql.NVarChar(50), phoneNumberUserIDRequest);
+                      request.input('textIDATUserIDRequest', sql.VarChar(100), textIDATUserIDRequest);
+                      request.query("SELECT TOP 1 * FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberUserIDRequest AND status = @statusUserIDRequest AND isActive = 1 AND text_id_AT = @textIDATUserIDRequest order by time DESC", function (err, userIDResults) {
+                        if (err) {
+                          console.error('Error executing query: ' + err.stack);
+                          return;
+                        }
+                        if (userIDResults.recordset.length > 0) {
+                          const userID = userIDResults.recordset[0].user_id;
+                          var fetchClient = new Client();
+                          // set content-type header and data as json in args parameter
+                          var args = {
+                            data: { user_id: userID },
+                            headers: { "Content-Type": "application/json" }
+                          };
+                          fetchClient.get("https://api.octagonafrica.com/v1/accounts", args, function (data, response) {
+
+                            if ([200].includes(response.statusCode)) {
+                              // success code
+                              console.log(response.statusCode)
+                              const insurance = data.insurance;
+                              const pension = data.pension;
+                              const trust = data.trust;
+                              const total_accounts = data.total_accounts;
+                              if (total_accounts === 0) {
+                                const finalMessage = "Dear Esteemed Member,\nSome of your details are missing. Please contact support at support@octagonafrica.com or call 0709 986 000 to update your details.\n1. National ID Number(Please send a copy of  front and back of your ID).";
+                                sms.sendPremium({
+                                  to: sender,
+                                  from: '24123',
+                                  message: finalMessage,
+                                  bulkSMSMode: 0,
+                                  keyword: 'pension',
+                                  linkId: LinkID
+                                });
+                              } else {
+                                // const totalAccounts = insurance.total_accounts;
+                                const totalAccountsInsurance = insurance.total_accounts;
+                                const insuranceData = insurance.data;
+                                const totalAccountsPension = pension.total_accounts;
+                                const pensionData = pension.data;
+                                //Dear customer here are yoour accoiunt  
+                                let preAccounts = "Dear " + user_fullname + ", Here are your accounts:\n";
+                                let insuranceMessage = "";
+                                let insuranceMessage1 = "";
+                                let memberInsuranceIDs = "";
+                                let memberPensionIDs = "";
+                                for (let i = 0; i < totalAccountsInsurance; i++) {
+                                  insuranceMessage += (i + 1) + ". " + insuranceData[i].Code + "\n";
+                                  insuranceMessage1 += (i + 1) + ". " + insuranceData[i].Code + ",\n";
+                                  memberInsuranceIDs += (i + 1) + ". " + insuranceData[i].ID + ",\n"
+                                  console.log((i + 1) + ". Account Description:", insuranceData[i].Code, "Name: ", insuranceData[i].Description, ". Active Since: ", insuranceData[i].dateFrom);
+                                }
+
+                                let pensionMessage = "";
+                                let pensionMessage1 = "";
+                                for (let i = 0; i < totalAccountsPension; i++) {
+                                  pensionMessage += (i + 1 + totalAccountsInsurance) + ". " + pensionData[i].Code + "\n";
+                                  pensionMessage1 += (i + 1 + totalAccountsInsurance) + ". " + pensionData[i].Code + ",\n";
+                                  memberPensionIDs += (i + 1 + totalAccountsInsurance) + ". " + pensionData[i].ID + ",\n";
+                                  console.log((i + 1 + totalAccountsInsurance) + ". Account Description:", pensionData[i].Code, "Name: ", pensionData[i].scheme_name, ".Active Since: ", pensionData[i].dateFrom);
+                                }
+                                console.log(insuranceMessage1 + "\n");
+                                console.log(pensionMessage1 + "\n");
+                                console.log("Insurance:", memberInsuranceIDs + "\n");
+                                console.log("Pension:", memberPensionIDs + "\n");
+
+                                const statusMessage = insuranceMessage1 + "," + pensionMessage1;
+                                console.log(statusMessage + "\n");
+                                const memberIDS = memberInsuranceIDs + "," + memberPensionIDs;
+                                console.log(memberIDS + "\n");
+                                // let statusArray = statusMessage.split("\n").map((item) => item.replace(/^\d+\.\s*/, ''));
+                                // console.log(statusArray);
+
+                                // let postAccounts = "Please provide us with your membership number so that we can provide you with a member statement. ";
+                                const finalMessage = preAccounts + insuranceMessage + pensionMessage;
+                                //Send your sms
+                                console.log(LinkID)
+                                sms.sendPremium({
+                                  to: sender,
+                                  from: '24123',
+                                  message: finalMessage,
+                                  bulkSMSMode: 0,
+                                  keyword: 'pension',
+                                  linkId: LinkID
+                                });
+                                sql.connect(config, function (err) {
+                                  console.log('Connected to the database');
+                                  const request = new sql.Request();
+                                  const statusAccountsEntry = "isCheckingClaim";
+                                  // const messagingAccountsEntry = "0";
+                                  const phoneNumberAccountsEntry = sender;
+                                  const textIDATAccountsEntry = textIDAT;
+                                  const allAccounts = statusMessage;
+                                  const allMemberIDs = memberIDS;
+                                  const updateAllAccounts = `UPDATE two_way_sms_tb SET status = @statusAccountsEntry, allAccounts =@allAccounts, allMemberIDs = @allMemberIDs, user_full_names =@user_fullname WHERE phoneNumber = @phoneNumberAccountsEntry AND text_id_AT =@textIDATAccountsEntry AND time = (
+                                           SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberAccountsEntry )`;
+                                  request.input('statusAccountsEntry', sql.VarChar, statusAccountsEntry);
+                                  request.input('allMemberIDs', sql.VarChar, allMemberIDs);
+                                  request.input('phoneNumberAccountsEntry', sql.NVarChar, phoneNumberAccountsEntry);
+                                  request.input('textIDATAccountsEntry', sql.NVarChar, textIDATAccountsEntry);
+                                  request.input('allAccounts', sql.NVarChar, allAccounts);
+                                  request.input('user_fullname', sql.NVarChar, user_fullname);
+                                  request.query(updateAllAccounts, function (err, results) {
+                                    if (err) {
+                                      console.error('Error executing query: ' + err.stack);
+                                      return;
+                                    }
+                                    console.log('Adding  accounts Attempt successful');
+                                    sql.close();
+                                  });
+                                });
+                              }
+                            } else if ([400].includes(response.statusCode)) {
+                              console.log(response.statusCode);
+                              sms.sendPremium({
+                                to: sender,
+                                from: '24123',
+                                message: "Dear esteemed member, You do not have an account with us. Send an email  to support@octagonafrica.com",
+                                bulkSMSMode: 0,
+                                keyword: 'pension',
+                                linkId: LinkID
+                              });
+                              sql.connect(config, function (err) {
+                                console.log('Connected to the database');
+                                const request = new sql.Request();
+                                const statuserror404 = "isBalanceFailed";
+                                const messagingSteperror404 = "0";
+                                const phoneNumbererror404 = sender;
+                                const textIDATerror404 = textIDAT;
+                                const updateFail = `UPDATE two_way_sms_tb SET status = @statuserror404, messagingStep = @messagingSteperror404,  isActive = '0'  WHERE phoneNumber = @phoneNumbererror404 AND text_id_AT =@textIDATerror404 AND time = (
+                                         SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumbererror404 )`;
+                                request.input('statuserror404', sql.VarChar, statuserror404);
+                                request.input('messagingSteperror404', sql.VarChar, messagingSteperror404);
+                                request.input('phoneNumbererror404', sql.NVarChar, phoneNumbererror404);
+                                request.input('textIDATerror404', sql.NVarChar, textIDATerror404);
+                                request.query(updateFail, function (err, results) {
+                                  if (err) {
+                                    console.error('Error executing query: ' + err.stack);
+                                    return;
+                                  }
+                                  console.log(' Checking account failed Attempt unsuccessful');
+                                  sql.close();
+                                });
+                              });
+                            }
+                            else if ([500].includes(response.statusCode)) {
+                              console.log(response.statusCode);
+                              sms.sendPremium({
+                                to: sender,
+                                from: '24123',
+                                message: " Invalid request.",
+                                bulkSMSMode: 0,
+                                keyword: 'pension',
+                                linkId: LinkID
+                              });
+                              sql.connect(config, function (err) {
+                                if (err) {
+                                  console.error('Error connecting to the database: ' + err.stack);
+                                  return;
+                                }
+                                const request = new sql.Request();
+                                const statuserror500 = "isBalanceFailed";
+                                const messagingSteperror500 = "0";
+                                const phoneNumbererror500 = sender;
+                                const textIDATerror500 = textIDAT;
+                                const updateFail = `UPDATE two_way_sms_tb SET status = @statuserror500, messagingStep = @messagingSteperror500, isActive = '0'  WHERE phoneNumber = @phoneNumbererror500 AND text_id_AT =@textIDATerror500 AND time = (
+                                 SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumbererror500 )`;
+                                request.input('statuserror500', sql.VarChar, statuserror500);
+                                request.input('messagingSteperror500', sql.VarChar, messagingSteperror500);
+                                request.input('phoneNumbererror500', sql.NVarChar, phoneNumbererror500);
+                                request.input('textIDATerror500', sql.NVarChar, textIDATerror500);
+                                request.query(updateFail, function (err, results) {
+                                  if (err) {
+                                    console.error('Error executing query: ' + err.stack);
+                                    return;
+                                  }
+                                  console.log('Checking Account Failed Attempt unsuccessful');
+                                  sql.close();
+                                });
+                              });
+                            } else {
+                              // error code
+                              console.log(response.statusCode);
+                            }
+                          });
+                        }
+                        sql.close();
+                      });
                     });
                   });
                 } else if (response.statusCode === 400) {
@@ -205,7 +385,7 @@ function updatePassword(phoneNumberPassword, textPassword, textIDATPassword, sen
                         console.error('Error executing query: ' + err.stack);
                         return;
                       }
-                      console.log('Get Claim Status unsuccessful');
+                      console.log(' Get Claim Status unsuccessful');
                       sql.close();
                     });
                   });
