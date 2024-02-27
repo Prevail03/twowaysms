@@ -137,7 +137,7 @@ function updatePassword(phoneNumberPassword, textPassword, textIDATPassword, sen
                   sms.sendPremium({
                     to: sender,
                     from: '24123',
-                    message: 'Dear '+ user_fullname+ '. You do not have a pension account with us ',
+                    message: 'Dear '+ user_fullname+ 'You do not have a pension account with us ',
                     bulkSMSMode: 0,
                     keyword: 'pension',
                     linkId: LinkID
