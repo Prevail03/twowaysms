@@ -63,12 +63,13 @@ function updatePassword(phoneNumberPassword, textPassword, textIDATPassword, sen
                 if (response.statusCode === 200) {
                   console.log(response.statusCode);
                   const claim_data = data.claim_data;
-                  const preMessage = "Dear "+ user_fullname +" below are your claims: \n";
+                  const preMessage = "Dear esteemed client below are your claims: \n";
                   let finalMessage = preMessage;
                   claim_data.forEach((claim, index) => {
-                      finalMessage += `${index + 1}. Claim with amount  ${claim.amount},  is at  ${claim.claim_stage} as at ${claim.as_at_date}. `;
+                      finalMessage += `${index + 1}.  Your claim stage is ${claim.claim_stage}, `;
+                      
+                      finalMessage += `as at ${claim.as_at_date}. The amount claimed= ${claim.amount}.\n`;
                   });
-                  // claim with amout  is at state asy iat 
 
                   console.log(finalMessage);
                   sms.sendPremium({
