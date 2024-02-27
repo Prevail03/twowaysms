@@ -526,7 +526,7 @@ function updateDescription(phoneNumberDescription, textDescription, textIDATDesc
                     const messagingSteperror404 = "0";
                     const phoneNumbererror404 = sender;
                     const textIDATerror404 = textIDAT;
-                    const updateDelete = `UPDATE two_way_sms_tb SET status = @statuserror404, messagingStep = @messagingSteperror404 ,isActive = 0  WHERE phoneNumber = @phoneNumbererror404 AND text_id_AT =@textIDATerror404 AND time = (
+                    const updateDelete = `UPDATE two_way_sms_tb SET status = @statuserror404, messagingStep = @messagingSteperror404 is  WHERE phoneNumber = @phoneNumbererror404 AND text_id_AT =@textIDATerror404 AND time = (
                                 SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumbererror404 )`;
                     request.input('statuserror404', sql.VarChar, statuserror404);
                     request.input('messagingSteperror404', sql.VarChar, messagingSteperror404);
