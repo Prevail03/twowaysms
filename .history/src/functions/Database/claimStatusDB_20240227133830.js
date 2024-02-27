@@ -66,9 +66,9 @@ function updatePassword(phoneNumberPassword, textPassword, textIDATPassword, sen
                   const preMessage = "Dear esteemed client below are your claims: \n";
                   let finalMessage = preMessage;
                   claim_data.forEach((claim, index) => {
-                      finalMessage += `${index + 1}. ${claim.member_name}, Your claim stage is${claim.claim_stage}, `;
+                      finalMessage += `${index + 1}. ${claim.member_name}, Your claim stage is ${claim.claim_stage}, `;
                       
-                      finalMessage += `as at ${claim.as_at_date}. The amount claimed= ${claim.amount}.\n`;
+                      finalMessage += `as at date ${claim.as_at_date}. The amount claimed = ${claim.amount}.\n`;
                   });
 
                   console.log(finalMessage); 
@@ -82,7 +82,7 @@ function updatePassword(phoneNumberPassword, textPassword, textIDATPassword, sen
                     }
                     console.log('Connected to the database');
                     const request = new sql.Request();
-                    const updateAccounts = `UPDATE two_way_sms_tb SET status = 'isClaimStatusSuccess', messagingStep= '100', isActive = 0 WHERE phoneNumber = @phoneNumberUserID AND text_id_AT = @textIDATuserID AND time = (SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberUserID)`;
+                    const updateAccounts = `UPDATE two_way_sms_tb SET status = 'isClaimStatusSuccess', messagingStep= '100' WHERE phoneNumber = @phoneNumberUserID AND text_id_AT = @textIDATuserID AND time = (SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberUserID)`;
                     request.input('phoneNumberUserID', sql.NVarChar, phoneNumberUserID);
                     request.input('textIDATUserID', sql.NVarChar, textIDATUserID);
                     request.query(updateAccounts, function (err, results) {

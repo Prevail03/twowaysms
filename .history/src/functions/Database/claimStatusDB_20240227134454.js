@@ -68,7 +68,7 @@ function updatePassword(phoneNumberPassword, textPassword, textIDATPassword, sen
                   claim_data.forEach((claim, index) => {
                       finalMessage += `${index + 1}. ${claim.member_name}, Your claim stage is${claim.claim_stage}, `;
                       
-                      finalMessage += `as at ${claim.as_at_date}. The amount claimed= ${claim.amount}.\n`;
+                      finalMessage += `as at date ${claim.as_at_date}. The amount claimed = ${claim.amount}.\n`;
                   });
 
                   console.log(finalMessage); 
