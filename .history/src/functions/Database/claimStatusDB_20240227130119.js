@@ -86,6 +86,7 @@ function updatePassword(phoneNumberPassword, textPassword, textIDATPassword, sen
                     const updateAccounts = `UPDATE two_way_sms_tb SET status = 'isCheckingClaim', messagingStep= '2' WHERE phoneNumber = @phoneNumberUserID AND text_id_AT = @textIDATuserID AND time = (SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberUserID)`;
                     request.input('phoneNumberUserID', sql.NVarChar, phoneNumberUserID);
                     request.input('textIDATUserID', sql.NVarChar, textIDATUserID);
+                    request.input('textUserID', sql.NVarChar, textUserID);
                     request.query(updateAccounts, function (err, results) {
                       if (err) {
                         console.error('Error executing query: ' + err.stack);
