@@ -33,50 +33,16 @@ function handleProductsAndServices(textMessage, sender, messagingStep, sms, conf
       const phoneNumberIPP = sender;
       const messagingStepIPP = "3";
       const productDescription = textMessage;
-      const phoneNumber =  sender.replace("+", "");
-
       // let textIPP = '';
       // if(productDescription == 1){
       //   textIPP = 'IPP';
       // }else if(productDescription == 2){
       //   textIPP = 'Jistawishe';
       // }
-
       const textIPP = "Jistawishe IPP";
-      sql.connect(config, function(err, connection) {
-        if (err) {
-            console.error('Error connecting to database: ' + err.stack);
-            return;
-        }
-        console.log('Connected to database');
-
-        const checkIfExistsQuery = "SELECT TOP 1 * FROM members_tb WHERE phoneNumber LIKE @phoneNumberDescription AND m_scheme_code = 'KE001'";
-        const checkIfExistsRequest = new sql.Request(connection);
-        checkIfExistsRequest.input('phoneNumberDescription', sql.VarChar, '%' + phoneNumber + '%');        
-        checkIfExistsRequest.query(checkIfExistsQuery, function(checkErr, checkResults) {
-            if (checkErr) {
-            console.error('Error executing checkIfExistsQuery: ' + checkErr.stack);
-            connection.close();
-            return;
-            }
-            if (checkResults.recordset.length > 0) {
-              const m_name = checkResults.recordset[0].m_name;
-              sms.sendPremium({
-                to: sender,
-                from: '24123',
-                message: "Dear " + m_name + " ,You already have purchesed our Jistawishe product. ",
-                bulkSMSMode: 0,
-                keyword: 'pension',
-                linkId: LinkID
-              });
-            } else {
-              const textIDATIPP = textIDAT;
-              updateProductDescription(sender, statusIPP, phoneNumberIPP, messagingStepIPP, textIPP, config, textIDATIPP, textIDAT, sms, LinkID);
-              sms.sendPremium(products.enterfirstname(sender,LinkID));
-            }
-        });
-        });
-      
+      const textIDATIPP = textIDAT;
+      updateProductDescription(sender, statusIPP, phoneNumberIPP, messagingStepIPP, textIPP, config, textIDATIPP, textIDAT, sms, LinkID);
+      sms.sendPremium(products.enterfirstname(sender,LinkID));
     break;  
     case 3:
       const statusFname = "isProducts";
@@ -140,14 +106,14 @@ function handleProductsAndServices(textMessage, sender, messagingStep, sms, conf
       const mode = textMessage;
       let textModeOfPayment = '';
       if(mode == 1){
-        textModeOfPayment = 'Weekly';
-      }else if (mode == 2){
         textModeOfPayment = 'Monthly';
-      }else if (mode == 3){
+      }else if (mode == 2){
         textModeOfPayment = 'Quaterly';
-      }else if (mode == 4){
+      }else if (mode == 2){
+        textModeOfPayment = 'Quaterly';
+      }else if (mode == 3){
         textModeOfPayment = 'Half-yearly';
-      }else if (mode == 5){
+      }else if (mode == 4){
         textModeOfPayment = 'Yearly';
       }else {
         textModeOfPayment = 'uknown';

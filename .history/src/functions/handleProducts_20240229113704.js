@@ -60,23 +60,15 @@ function handleProductsAndServices(textMessage, sender, messagingStep, sms, conf
             return;
             }
             if (checkResults.recordset.length > 0) {
-              const m_name = checkResults.recordset[0].m_name;
-              sms.sendPremium({
-                to: sender,
-                from: '24123',
-                message: "Dear " + m_name + " ,You already have purchesed our Jistawishe product. ",
-                bulkSMSMode: 0,
-                keyword: 'pension',
-                linkId: LinkID
-              });
+                
             } else {
-              const textIDATIPP = textIDAT;
-              updateProductDescription(sender, statusIPP, phoneNumberIPP, messagingStepIPP, textIPP, config, textIDATIPP, textIDAT, sms, LinkID);
-              sms.sendPremium(products.enterfirstname(sender,LinkID));
+            //
             }
         });
         });
-      
+      const textIDATIPP = textIDAT;
+      updateProductDescription(sender, statusIPP, phoneNumberIPP, messagingStepIPP, textIPP, config, textIDATIPP, textIDAT, sms, LinkID);
+      sms.sendPremium(products.enterfirstname(sender,LinkID));
     break;  
     case 3:
       const statusFname = "isProducts";

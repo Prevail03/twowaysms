@@ -75,7 +75,7 @@ const products = {
     return {
       to: sender,
       from:'24123',
-      message: "Enter your prefered mode of payment: \n1. Weekly \n2. Monthly \n3. Quaterly \n4. Half Yearly \n5. Yearly",
+      message: "Enter your prefered mode of payment: \n1. Monthly \n2. Quaterly \n3. Half Yearly \n4. Yearly",
       bulkSMSMode: 0,
       keyword: 'pension',
       linkId: LinkID
@@ -95,7 +95,7 @@ const products = {
     return {
       to: sender,
       from:'24123',
-      message: "Enter the amount you wish to contribute",
+      message: "Enter the amount you wish to comntribute",
       bulkSMSMode: 0,
       keyword: 'pension',
       linkId: LinkID

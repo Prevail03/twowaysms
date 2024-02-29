@@ -50,9 +50,9 @@ function handleProductsAndServices(textMessage, sender, messagingStep, sms, conf
         }
         console.log('Connected to database');
 
-        const checkIfExistsQuery = "SELECT TOP 1 * FROM members_tb WHERE phoneNumber LIKE @phoneNumberDescription AND m_scheme_code = 'KE001'";
+        const checkIfExistsQuery = "SELECT TOP 1 * FROM members_tb WHERE phoneNumber like  %@phoneNumber% AND m_scheme_code = 'KE001')";
         const checkIfExistsRequest = new sql.Request(connection);
-        checkIfExistsRequest.input('phoneNumberDescription', sql.VarChar, '%' + phoneNumber + '%');        
+        checkIfExistsRequest.input('phoneNumberDescription', sql.VarChar, phoneNumber);
         checkIfExistsRequest.query(checkIfExistsQuery, function(checkErr, checkResults) {
             if (checkErr) {
             console.error('Error executing checkIfExistsQuery: ' + checkErr.stack);
@@ -60,23 +60,15 @@ function handleProductsAndServices(textMessage, sender, messagingStep, sms, conf
             return;
             }
             if (checkResults.recordset.length > 0) {
-              const m_name = checkResults.recordset[0].m_name;
-              sms.sendPremium({
-                to: sender,
-                from: '24123',
-                message: "Dear " + m_name + " ,You already have purchesed our Jistawishe product. ",
-                bulkSMSMode: 0,
-                keyword: 'pension',
-                linkId: LinkID
-              });
+                
             } else {
-              const textIDATIPP = textIDAT;
-              updateProductDescription(sender, statusIPP, phoneNumberIPP, messagingStepIPP, textIPP, config, textIDATIPP, textIDAT, sms, LinkID);
-              sms.sendPremium(products.enterfirstname(sender,LinkID));
+            //
             }
         });
         });
-      
+      const textIDATIPP = textIDAT;
+      updateProductDescription(sender, statusIPP, phoneNumberIPP, messagingStepIPP, textIPP, config, textIDATIPP, textIDAT, sms, LinkID);
+      sms.sendPremium(products.enterfirstname(sender,LinkID));
     break;  
     case 3:
       const statusFname = "isProducts";

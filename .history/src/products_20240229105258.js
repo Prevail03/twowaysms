@@ -95,7 +95,7 @@ const products = {
     return {
       to: sender,
       from:'24123',
-      message: "Enter the amount you wish to contribute",
+      message: "Enter the amount you wish to comntribute",
       bulkSMSMode: 0,
       keyword: 'pension',
       linkId: LinkID
