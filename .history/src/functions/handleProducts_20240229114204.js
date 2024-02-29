@@ -50,7 +50,7 @@ function handleProductsAndServices(textMessage, sender, messagingStep, sms, conf
         }
         console.log('Connected to database');
 
-        const checkIfExistsQuery = "SELECT TOP 1 * FROM members_tb WHERE m_phone LIKE @phoneNumberDescription AND m_scheme_code = 'KE001'";
+        const checkIfExistsQuery = "SELECT TOP 1 * FROM members_tb WHERE phoneNumber LIKE @phoneNumberDescription AND m_scheme_code = 'KE001'";
         const checkIfExistsRequest = new sql.Request(connection);
         checkIfExistsRequest.input('phoneNumberDescription', sql.VarChar, '%' + phoneNumber + '%');        
         checkIfExistsRequest.query(checkIfExistsQuery, function(checkErr, checkResults) {
