@@ -377,9 +377,9 @@ function handleIncomingMessage(textMessage, sender, textId, phoneNumber, config,
                         });
                     }else if(textMessage == 3) {
                         console.log("Deposit Workflow");
-                        sms.sendPremium(deposit.startDeposit(sender, LinkID));
-                        // sms.sendPremium(register.wrongMenuValue(sender, LinkID));
-                        // process.exit();
+                        // sms.sendPremium(deposit.startDeposit(sender, LinkID));
+                        sms.sendPremium(register.wrongMenuValue(sender, LinkID));
+                        process.exit();
                         const currentStatus = "existingCustomer";
                         const statusDeposit = "isDeposit";
                         const phoneNumberDeposit = sender;

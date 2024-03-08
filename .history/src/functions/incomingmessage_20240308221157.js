@@ -5,8 +5,19 @@ const handleAccountCheck = require('./handleAccountCheck');
 const handlePasswordReset = require('./handlePasswordReset');
 const handleForgotPassword = require('./handleForgotPassword');
 const handleClaims = require('./handleClaims');
+const handleRating = require('./handleRating');
+const handleProductsAndServices = require('./handleProducts');
+const handleBalanceEnquiry = require('./handleBalanceEnquiry');
+const handleClaimStatus = require('./handleClaimStatus');
+const handleDeposit = require('./handleDeposit');
 const reset =require('../reset');
 const claims = require('../claims');
+const products = require('../products');
+const rate = require('../rate');
+const balance = require('../balance');
+const deposit = require('../deposit');
+const claimStatus = require('../claimStatus');
+const { values } = require('lodash');
 var Client = require('node-rest-client').Client;
 
 function handleIncomingMessage(textMessage, sender, textId, phoneNumber, config, sms, register, account,forgotPassword, LinkID) {
@@ -21,7 +32,7 @@ function handleIncomingMessage(textMessage, sender, textId, phoneNumber, config,
             let phone= phoneNumber;
             phone = phone.replace("+", "");
             console.log('Phone: ' + phone);
-            const checkIfExistsQuerySysUsers = "SELECT TOP 1 * FROM sys_users_tb WHERE user_mobile LIKE '%' + @phoneNumber + '%' OR user_phone LIKE '%' + @phoneNumber + '%'";
+            const checkIfExistsQuerySysUsers = "SELECT TOP 1 * FROM sys_users_tb WHERE user_mobile = @phoneNumber OR user_phone = @phoneNumber";
             const checkIfExistsRequestSysUsers = new sql.Request(connection);
             checkIfExistsRequestSysUsers.input('phoneNumber', sql.VarChar, phone);
             checkIfExistsRequestSysUsers.query(checkIfExistsQuerySysUsers, function(checkErrSysUsers, checkResultsSysUsers) {
@@ -79,7 +90,59 @@ function handleIncomingMessage(textMessage, sender, textId, phoneNumber, config,
                 }   
             });
         });        
-        ///main workflow 
+        
+
+    }else if(textMessage == 99){
+        console.log('Return Home Work Flow');
+        sql.connect(config, function(err, connection) {
+            if (err) {
+                console.error('Error connecting to database: ' + err.stack);
+                return;
+            }
+            console.log('Connected to database');
+            let phone= phoneNumber;
+            phone = phone.replace("+", "");
+            console.log('Phone: ' + phone);
+            const checkIfExistsQuerySysUsers = "SELECT TOP 1 * FROM sys_users_tb WHERE user_mobile = @phoneNumber OR user_phone = @phoneNumber";
+            const checkIfExistsRequestSysUsers = new sql.Request(connection);
+            checkIfExistsRequestSysUsers.input('phoneNumber', sql.VarChar, phone);
+            checkIfExistsRequestSysUsers.query(checkIfExistsQuerySysUsers, function(checkErrSysUsers, checkResultsSysUsers) {
+                if (checkErrSysUsers) {
+                    console.error('Error executing checkIfExistsQuerySysUsers: ' + checkErrSysUsers.stack);
+                    connection.close();
+                    return;
+                }
+                // Record exists in sys_users_tb
+                if (checkResultsSysUsers.recordset.length > 0) {
+                    console.log('User exists');
+                    const email = checkResultsSysUsers.recordset[0].user_email;
+                    
+                    sms.sendPremium(register.menuMessage(sender, LinkID));
+                    const messagingStep = "1";
+                    const status = "isForgotPassword";
+                    const insertQuery = "INSERT INTO two_way_sms_tb (text, text_id_AT, messagingStep, phoneNumber, status, isActive) VALUES (@text, @text_id_AT, @messagingStep, @phoneNumber, @status, @isActive)";
+                    const insertRequest = new sql.Request(connection);
+                    insertRequest.input('text', sql.VarChar, textMessage);
+                    insertRequest.input('text_id_AT', sql.VarChar, textId);
+                    insertRequest.input('phoneNumber', sql.VarChar, phoneNumber);
+                    insertRequest.input('status', sql.VarChar, status);
+                    insertRequest.input('messagingStep', sql.VarChar, messagingStep);
+                    insertRequest.input('isActive', sql.Bit, 1);
+                    insertRequest.query(insertQuery, function(insertErr, insertResults) {
+                        if (insertErr) {
+                            console.error('Error executing insertQuery: ' + insertErr.stack);
+                            connection.close();
+                            return;
+                        }
+                        console.log('Added new user to two way sms');
+                        sms.sendPremium(register.menuMessage(sender, LinkID));
+                        connection.close();
+                    });
+                }  
+            });
+        });  
+
+    ///main workflow 
     }else{ 
         sql.connect(config, function(err, connection) {
             if (err) {
@@ -125,6 +188,21 @@ function handleIncomingMessage(textMessage, sender, textId, phoneNumber, config,
                         break;    
                         case 'isMakingClaim':
                             handleClaims(textMessage, sender, messagingStep, sms, config, textIDAT, LinkID, claims,account);
+                        break;
+                        case 'isRating':
+                            handleRating(textMessage, sender, messagingStep, sms, config, textIDAT, LinkID, rate, account);
+                        break;
+                        case 'isProducts':
+                            handleProductsAndServices(textMessage, sender, messagingStep, sms, config, textIDAT, LinkID, products);
+                        break;
+                        case 'isBalance':
+                            handleBalanceEnquiry(textMessage, sender, messagingStep, sms, config, textIDAT, LinkID, balance ,account);
+                        break;
+                        case 'isDeposit':
+                            handleDeposit(textMessage, sender, messagingStep, sms, config, textIDAT, LinkID, deposit);
+                        break;
+                        case 'isCheckingClaim':
+                            handleClaimStatus(textMessage, sender, messagingStep, sms, config, textIDAT, LinkID, claimStatus, account);
                         break;
                         default:
                             sms.sendPremium(register.defaultMessage(sender, LinkID));
@@ -203,18 +281,78 @@ function handleIncomingMessage(textMessage, sender, textId, phoneNumber, config,
                         console.log('Deactivate Account UPDATE successful');
                         connection.close();
                         });
-                    }else if(textMessage == 8){
+                    }else if(textMessage == 6){
                         console.log("Rate us  Workflow");
-                        sms.sendPremium(register.wrongMenuValue(sender, LinkID));
-                    }else if(textMessage ==7){
+                        sms.sendPremium(rate.services(sender, LinkID));
+                        const currentStatus = "existingCustomer";
+                        const statusRating = "isRating";
+                        const phoneNumberRating = sender;
+                        const messagingStepRating= "1";
+                        const request = new sql.Request(connection);
+                        const updateAccounts = `UPDATE two_way_sms_tb SET status = @statusRating,isActive=@isActive, messagingStep = @messagingStepRating WHERE phoneNumber = @phoneNumberRating AND time = (
+                            SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberRating and status =@currentStatus )`;
+                        request.input('statusRating', sql.VarChar, statusRating);
+                        request.input('currentStatus', sql.VarChar, currentStatus);
+                        request.input('messagingStepRating', sql.VarChar, messagingStepRating);
+                        request.input('phoneNumberRating', sql.VarChar, phoneNumberRating);
+                        request.input('isActive', sql.Bit, 1);
+                        request.query(updateAccounts, function(err, results) {
+                        if (err) {
+                            console.error('Error executing query: ' + err.stack);
+                            return;
+                        }
+                        console.log('Rating UPDATE successful');
+                        connection.close();
+                        });
+                    }else if(textMessage ==8){
                         console.log("Help us  Workflow");
                         sms.sendPremium(register.wrongMenuValue(sender, LinkID));
-                    }else if(textMessage == 6) {
-                        console.log("My Account  Workflow");
-                        sms.sendPremium(register.wrongMenuValue(sender, LinkID));
+                    }else if(textMessage == 7) {
+                        console.log("Check Claim Status Workflow");
+                        sms.sendPremium(claimStatus.startClaimsStatusEnquiry(sender, LinkID));
+                        const currentStatus = "existingCustomer";
+                        const statusClaimStatus = "isCheckingClaim";
+                        const phoneNumberClaimStatus = sender;
+                        const messagingStepClaimStatus = "1";
+                        const request = new sql.Request(connection);
+                        const updateClaimStatus = `UPDATE two_way_sms_tb SET status = @statusClaimStatus, isActive=@isActive, messagingStep = @messagingStepClaimStatus WHERE phoneNumber = @phoneNumberClaimStatus AND time = (
+                            SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberClaimStatus and status =@currentStatus )`;
+                            request.input('statusClaimStatus', sql.VarChar, statusClaimStatus);
+                            request.input('currentStatus', sql.VarChar, currentStatus);
+                            request.input('messagingStepClaimStatus', sql.VarChar, messagingStepClaimStatus);
+                            request.input('phoneNumberClaimStatus', sql.VarChar, phoneNumberClaimStatus);
+                            request.input('isActive', sql.Bit, 1);
+                            request.query(updateClaimStatus, function(err, results) {
+                            if (err) {
+                                console.error('Error executing query: ' + err.stack);
+                                return;
+                            }
+                            console.log('Claim Status UPDATE Successful');
+                            connection.close();
+                        });
                     }else if(textMessage == 5) {
-                        console.log("Products Workflow");
-                        sms.sendPremium(register.wrongMenuValue(sender, LinkID));
+                        console.log("Products and Services workflows");
+                        sms.sendPremium(products.productsmenu(sender, LinkID));
+                        const currentStatus = "existingCustomer";
+                        const statusProducts = "isProducts";
+                        const phoneNumberProducts = sender;
+                        const messagingStepProducts = "1";
+                        const request = new sql.Request(connection);
+                        const updateDeactivate = `UPDATE two_way_sms_tb SET status = @statusProducts, isActive=@isActive, messagingStep = @messagingStepProducts WHERE phoneNumber = @phoneNumberProducts AND time = (
+                            SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberProducts and status =@currentStatus )`;
+                        request.input('statusProducts', sql.VarChar, statusProducts);
+                        request.input('currentStatus', sql.VarChar, currentStatus);
+                        request.input('messagingStepProducts', sql.VarChar, messagingStepProducts);
+                        request.input('phoneNumberProducts', sql.VarChar, phoneNumberProducts);
+                        request.input('isActive', sql.Bit, 1);
+                        request.query(updateDeactivate, function(err, results) {
+                        if (err) {
+                            console.error('Error executing query: ' + err.stack);
+                            return;
+                        }
+                        console.log('Products UPDATE successful');
+                        connection.close();
+                        });
                     }else if(textMessage == 4) {
                         console.log("Claims/Withdrawals Workflow");
                         sms.sendPremium(claims.startClaims(sender, LinkID));
@@ -239,14 +377,56 @@ function handleIncomingMessage(textMessage, sender, textId, phoneNumber, config,
                         });
                     }else if(textMessage == 3) {
                         console.log("Deposit Workflow");
+                        // sms.sendPremium(deposit.startDeposit(sender, LinkID));
                         sms.sendPremium(register.wrongMenuValue(sender, LinkID));
+                        process.exit();
+                        const currentStatus = "existingCustomer";
+                        const statusDeposit = "isDeposit";
+                        const phoneNumberDeposit = sender;
+                        const messagingStepDeposit= "1";
+                        const request = new sql.Request(connection);
+                        const updateDeposit = `UPDATE two_way_sms_tb SET status = @statusDeposit, isActive=@isActive, messagingStep = @messagingStepDeposit WHERE phoneNumber = @phoneNumberDeposit AND time = (
+                            SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberDeposit and status =@currentStatus )`;
+                        request.input('statusDeposit', sql.VarChar, statusDeposit);
+                        request.input('currentStatus', sql.VarChar, currentStatus);
+                        request.input('messagingStepDeposit', sql.VarChar, messagingStepDeposit);
+                        request.input('phoneNumberDeposit', sql.VarChar, phoneNumberDeposit);
+                        request.input('isActive', sql.Bit, 1);
+                        request.query(updateDeposit, function(err, results) {
+                        if (err) {
+                            console.error('Error executing query: ' + err.stack);
+                            return;
+                        }
+                        console.log('Deposit UPDATE successful');
+                        connection.close();
+                        });
                     }else if(textMessage == 1) {
                         console.log("Balance Enquiry Workflow");
-                        sms.sendPremium(register.wrongMenuValue(sender, LinkID));
+                        sms.sendPremium(balance.startBalanceInquiry(sender, LinkID));
+                        const currentStatus = "existingCustomer";
+                        const statusBalance = "isBalance";
+                        const phoneNumberBalance = sender;
+                        const messagingStepBalance= "1";
+                        const request = new sql.Request(connection);
+                        const updateBalance = `UPDATE two_way_sms_tb SET status = @statusBalance, isActive=@isActive, messagingStep = @messagingStepBalance WHERE phoneNumber = @phoneNumberBalance AND time = (
+                            SELECT MAX(time) FROM two_way_sms_tb WHERE phoneNumber = @phoneNumberBalance and status =@currentStatus )`;
+                        request.input('statusBalance', sql.VarChar, statusBalance);
+                        request.input('currentStatus', sql.VarChar, currentStatus);
+                        request.input('messagingStepBalance', sql.VarChar, messagingStepBalance);
+                        request.input('phoneNumberBalance', sql.VarChar, phoneNumberBalance);
+                        request.input('isActive', sql.Bit, 1);
+                        request.query(updateBalance, function(err, results) {
+                        if (err) {
+                            console.error('Error executing query: ' + err.stack);
+                            return;
+                        }
+                        console.log('Balance Enquiry UPDATE successful');
+                        connection.close();
+                        });
                     }else {
                         let phone= phoneNumber;
                         phone = phone.replace("+", "");
-                        const checkIfExistsQuerySysUsers = "SELECT TOP 1 * FROM sys_users_tb WHERE user_mobile LIKE '%' + @phoneNumber + '%' OR user_phone LIKE '%' + @phoneNumber + '%'";
+                        const checkIfExistsQuerySysUsers = "SELECT TOP 1 * FROM sys_users_tb WHERE user_mobile = @phoneNumber OR user_phone = @phoneNumber";
                         const checkIfExistsRequestSysUsers = new sql.Request(connection);
                         checkIfExistsRequestSysUsers.input('phoneNumber', sql.VarChar, phone);
                         checkIfExistsRequestSysUsers.query(checkIfExistsQuerySysUsers, function(checkErrSysUsers, checkResultsSysUsers) {
@@ -261,12 +441,16 @@ function handleIncomingMessage(textMessage, sender, textId, phoneNumber, config,
                                 sms.sendPremium(register.menuMessage(sender, LinkID));
                                 // ... Handle existing record logic ...
                                 const status = "existingCustomer";
-                                const insertQuery = "INSERT INTO two_way_sms_tb (text, text_id_AT, phoneNumber, status) VALUES (@text, @text_id_AT, @phoneNumber, @status)";
+                                const user_id =  checkResultsSysUsers.recordset[0].user_id.toString();
+                                console.log(user_id);
+                                // process.exit();
+                                const insertQuery = "INSERT INTO two_way_sms_tb (text, text_id_AT, phoneNumber, status, user_id) VALUES (@text, @text_id_AT, @phoneNumber, @status, @user_id)";
                                 const insertRequest = new sql.Request(connection);
                                 insertRequest.input('text', sql.VarChar, textMessage);
                                 insertRequest.input('text_id_AT', sql.VarChar, textId);
                                 insertRequest.input('phoneNumber', sql.VarChar, phoneNumber);
                                 insertRequest.input('status', sql.VarChar, status);
+                                insertRequest.input('user_id', sql.NChar, user_id);
                                 insertRequest.query(insertQuery, function(insertErr, insertResults) {
                                     if (insertErr) {
                                         console.error('Error executing insertQuery: ' + insertErr.stack);
@@ -277,7 +461,7 @@ function handleIncomingMessage(textMessage, sender, textId, phoneNumber, config,
                                     connection.close();
                                 });
                                 // Record does not exist in sys_users_tb == a new conversion
-                                } else {
+                            } else {
                                     sms.sendPremium(register.newCustomer(sender, LinkID));
                                     console.log('Start Registration Process');
                                     // ... Handle registration process logic ... //
