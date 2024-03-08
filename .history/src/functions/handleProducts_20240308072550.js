@@ -37,9 +37,9 @@ function handleProductsAndServices(textMessage, sender, messagingStep, sms, conf
 
       let textIPP = '';
       if(productDescription == 1){
-        textIPP = 'Jistawishe IPP';
+        textIPP = 'IPP';
       }else if(productDescription == 2){
-        textIPP = 'Babygal Personal Pension Scheme';
+        textIPP = 'Jistawishe';
       }
 
       //const textIPP = "Jistawishe IPP";
